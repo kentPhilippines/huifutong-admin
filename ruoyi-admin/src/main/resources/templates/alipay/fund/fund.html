@@ -141,7 +141,18 @@
                 {
                     field: 'todayDealAmount',
                     title: '当日交易',
-                    sortable: true
+                    sortable: true,
+                    formatter : function (value, row, index) {
+                        if(row.userType == 2 ){
+                            var table = '<ul>'
+                            table += '<li>' + '当日入款：' + row.todayDealAmount + '</li>'
+                            table += '<li>' + '当日出款：' + row.todayOtherWitAmount + '</li>'
+                            table += '</ul>'
+                            return table;
+                        }else{
+                            return  row.todayDealAmount;
+                        }
+                    }
                 }, {
                     field: 'todayAgentProfit',
                     title: '当日代理利润',

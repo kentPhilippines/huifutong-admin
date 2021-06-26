@@ -19,7 +19,7 @@
             <div class="col-sm-8" th:if="${listFund.size()} ne 0">
                 <select class="form-control" id="userId" name="userId" required>
                     <option value="">请选择卡商</option>
-                    <option th:each="userIdList : ${listFund}" th:text="${userIdList.userId}"
+                    <option th:each="userIdList : ${listFund}" th:text="${userIdList.userId}+'，【当日收款】：' +${userIdList.todayDealAmount} "
                             th:value="${userIdList.userId}"></option>
                 </select>
             </div>

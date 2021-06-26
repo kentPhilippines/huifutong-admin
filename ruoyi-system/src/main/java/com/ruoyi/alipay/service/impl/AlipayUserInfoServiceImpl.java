@@ -240,4 +240,10 @@ public class AlipayUserInfoServiceImpl implements IAlipayUserInfoService {
     public int upUserAgents(Long id) {
         return alipayUserInfoMapper.upUserAgents(id);
     }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayUserInfo> findUserUserAllToBank() {
+        return alipayUserInfoMapper.findUserUserAllToBank();
+    }
 }

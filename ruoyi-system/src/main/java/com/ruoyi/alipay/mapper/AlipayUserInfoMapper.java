@@ -187,4 +187,8 @@ public interface AlipayUserInfoMapper {
 
     @Update("update alipay_user_info set  isAgent  = 1 where id = #{id}")
     int upUserAgents(Long id);
+
+
+    @Select("select *  from alipay_user_info where remitOrderState = 1 ")
+    List<AlipayUserInfo> findUserUserAllToBank();
 }

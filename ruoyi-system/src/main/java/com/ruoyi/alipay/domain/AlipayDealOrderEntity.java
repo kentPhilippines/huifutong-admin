@@ -111,6 +111,15 @@ public class AlipayDealOrderEntity extends BaseEntity {
      */
     @Excel(name = "关联渠道账户")
     private String orderQrUser;
+    private String orderQrUser1;
+
+    public String getOrderQrUser1() {
+        return orderQrUser1;
+    }
+
+    public void setOrderQrUser1(String orderQrUser1) {
+        this.orderQrUser1 = orderQrUser1;
+    }
 
     /**
      * 关联二维码

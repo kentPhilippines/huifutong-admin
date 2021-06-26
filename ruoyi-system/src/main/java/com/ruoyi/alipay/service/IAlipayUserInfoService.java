@@ -161,4 +161,11 @@ public interface IAlipayUserInfoService {
      * @return
      */
     int upUserAgents(Long id);
+
+
+    /**
+     * 查询当前可以可以出款的卡商
+     * @return
+     */
+    List<AlipayUserInfo> findUserUserAllToBank();
 }

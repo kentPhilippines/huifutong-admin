@@ -140,8 +140,19 @@ public class SysUserController extends BaseController {
      */
     @GetMapping("/edit/{userId}")
     public String edit(@PathVariable("userId") Long userId, ModelMap mmap) {
+        List<SysRole> sysRoles = roleService.selectRoleAll();
+        String operName = ShiroUtils.getSysUser().getLoginName();
+        if (!ADMIN.equals(operName)) {
+            List<SysRole> roleList = new ArrayList<>();
+            for (SysRole role : sysRoles) {
+                if (role.getRoleId() == 113) {
+                    roleList.add(role);
+                }
+            }
+            sysRoles = roleList;
+        }
         mmap.put("user", userService.selectUserById(userId));
-        mmap.put("roles", roleService.selectRolesByUserId(userId));
+        mmap.put("roles", sysRoles);
         mmap.put("posts", postService.selectPostsByUserId(userId));
         return prefix + "/edit";
     }

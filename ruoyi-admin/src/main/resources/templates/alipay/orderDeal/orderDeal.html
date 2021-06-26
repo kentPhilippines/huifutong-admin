@@ -27,6 +27,10 @@
                             <span>商户账号：</span>
                             <input type="text" name="orderAccount"/>
                         </li>
+                        <li>
+                            <span>码商账号：</span>
+                            <input type="text" name="orderQrUser1"/>
+                        </li>
                         <li class="select-selectpicker">
                             <label>货币类型： </label>
                             <select class="selectpicker" data-none-selected-text="请选择" id="currency"
@@ -238,11 +242,15 @@
                         if (row.orderStatus === '2') {
                             actions.push('<a class="btn btn-warning btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="renotify(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>重新通知</a> ');
                         }
+                        if (row.orderStatus === '2' && row.orderType == 4) {
+                            actions.push('<a class="btn btn-danger btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="onUpdataOrder(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>转发财务</a> ');
+                        }
                         if (row.orderStatus != 7 && row.orderStatus != '2') {
                             actions.push('<a class="btn btn-danger btn-xs ' + updataOrder + '" href="javascript:void(0)" onclick="onUpdataOrder(\'' + row.id + '\')"><i class="fa fa-google-wallet"></i>转发财务</a> ');
                         }
                         if (row.orderStatus === '1' && row.orderType == 4) {
                             actions.push('<a class="btn btn-warning btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="updateBankCard(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>修改出款卡商</a> ');
+                            actions.push('<a class="btn btn-warning btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="updateBankCardMore(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>拆单出款</a> ');
                         }
                         return actions.join('');
                     }
@@ -265,6 +273,10 @@
     }
 
     function updateBankCard(orderId) {
+        $.modal.open("修改渠道", $.operate.openUrl(orderId));
+    }
+
+    function updateBankCardMore(orderId) {
         $.modal.open("修改渠道", $.operate.openUrl(orderId));
     }
 

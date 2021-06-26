@@ -80,8 +80,11 @@
             },
                 {
                     field: 'id',
-                    title: '数据id',
-                    visible: false
+                    title: '卡商id',
+                    formatter: function (value, item, index) {
+                        value += 60000;
+                        return '<span> '+value+'</span>';
+                    }
                 },
                 {
                     field: 'userId',

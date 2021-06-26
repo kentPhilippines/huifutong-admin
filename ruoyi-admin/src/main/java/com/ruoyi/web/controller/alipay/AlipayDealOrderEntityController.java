@@ -4,14 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
-import com.ruoyi.alipay.domain.AlipayDealOrderEntity;
-import com.ruoyi.alipay.domain.AlipayProductEntity;
-import com.ruoyi.alipay.domain.AlipayUserFundEntity;
-import com.ruoyi.alipay.domain.AlipayUserRateEntity;
-import com.ruoyi.alipay.service.IAlipayDealOrderEntityService;
-import com.ruoyi.alipay.service.IAlipayProductService;
-import com.ruoyi.alipay.service.IAlipayUserFundEntityService;
-import com.ruoyi.alipay.service.IAlipayUserRateEntityService;
+import com.ruoyi.alipay.domain.*;
+import com.ruoyi.alipay.service.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.StaticConstants;
 import com.ruoyi.common.core.controller.BaseController;
@@ -31,9 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -81,6 +73,9 @@ public class AlipayDealOrderEntityController extends BaseController {
     @RequiresPermissions("orderDeal:qr:list")
     @ResponseBody
     public TableDataInfo list(AlipayDealOrderEntity alipayDealOrderEntity) {
+       if(StrUtil.isNotEmpty(alipayDealOrderEntity.getOrderQrUser1())) {
+           alipayDealOrderEntity.setOrderQrUser(alipayDealOrderEntity.getOrderQrUser1());
+       }
         startPage();
         List<AlipayDealOrderEntity> list = alipayDealOrderEntityService
                 .selectAlipayDealOrderEntityList(alipayDealOrderEntity);
@@ -104,8 +99,9 @@ public class AlipayDealOrderEntityController extends BaseController {
             if (ObjectUtil.isNotNull(product)) {
                 order.setRetain1(product.getProductName());
             }
-            order.setUserName(userCollect.get(order.getOrderAccount()).getUserName());
-
+            if(ObjectUtil.isNotNull(userCollect.get(order.getOrderAccount()))) {
+                order.setUserName(userCollect.get(order.getOrderAccount()).getUserName());
+            }
         }
         userCollect = null;
         AlipayDealOrderEntity deal = alipayDealOrderEntityService.selectAlipayDealOrderEntityListSum(alipayDealOrderEntity);
@@ -133,18 +129,44 @@ public class AlipayDealOrderEntityController extends BaseController {
         return toAjax(i);
     }
 
-
+    @Autowired
+    IAlipayUserInfoService iAlipayUserInfoServiceImpl;
     /**
      * 代付主交易订单修改卡商账户
      *
-     * @param userId 这里其实为 订单号
+     * @param
      * @return
      */
     @GetMapping("/updateBankCardShow/{userId}")
     @RequiresPermissions("orderDeal:qr:status:updateBankCardShow")
     public String updateBankCardShow(ModelMap mmap, @PathVariable("userId") String orderId) {
         List<AlipayUserFundEntity> listFund = alipayUserFundEntityService.findUserFundAllToBank();
-        mmap.put("listFund", listFund);
+        List<AlipayUserInfo> listInfo =   iAlipayUserInfoServiceImpl.findUserUserAllToBank();
+        ConcurrentHashMap<String, AlipayUserInfo> userMap = listInfo.stream().collect(Collectors.toConcurrentMap(AlipayUserInfo::getUserId, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
+        List<AlipayUserFundEntity> list = new ArrayList<>();
+        for(AlipayUserFundEntity fund  : listFund){
+            AlipayUserInfo alipayUserInfo = userMap.get(fund.getUserId());
+            if(null != alipayUserInfo){
+                list.add(fund);//满足的出款账户
+            }
+        }
+        //入款金额 - 出款金额   差额最小  且根据入款金额排序
+        Collections.sort(list, new Comparator<AlipayUserFundEntity>() {
+            @Override
+            public int compare(AlipayUserFundEntity o1, AlipayUserFundEntity o2) {
+            int i = 1 ;
+            if  ( ( o1.getTodayDealAmount() - o1.getTodayOtherWitAmount())  > ( o2.getTodayDealAmount()- o2.getTodayOtherWitAmount()) ){
+                i = 1 ;
+            } else{
+                i = -1;
+            };
+                return i;
+            }
+        });
+
+
+
+        mmap.put("listFund", list);
         mmap.put("orderId", orderId);
         return prefix + "/updateBankCardEdit";
     }

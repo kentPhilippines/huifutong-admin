@@ -76,6 +76,15 @@ public class AlipayUserFundEntity extends BaseEntity {
      */
     @Excel(name = "现金账户【当前可取现】")
     private Double cashBalance;
+    private Double todayOtherWitAmount;
+
+    public Double getTodayOtherWitAmount() {
+        return todayOtherWitAmount;
+    }
+
+    public void setTodayOtherWitAmount(Double todayOtherWitAmount) {
+        this.todayOtherWitAmount = todayOtherWitAmount;
+    }
 
     /**
      * 充值点数
