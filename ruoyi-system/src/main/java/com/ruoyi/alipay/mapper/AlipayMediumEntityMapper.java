@@ -1,6 +1,7 @@
 package com.ruoyi.alipay.mapper;
 
 import com.ruoyi.alipay.domain.AlipayMediumEntity;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -66,4 +67,6 @@ public interface AlipayMediumEntityMapper {
      * @return 结果
      */
     public int deleteAlipayMediumEntityByIds(String[] ids);
+
+    AlipayMediumEntity findUserId(@Param("mediumNumber") String mediumNumber);
 }

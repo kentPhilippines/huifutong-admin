@@ -34,12 +34,12 @@ public interface AlipayDealOrderEntityMapper {
     List<AlipayDealOrderEntity> selectAlipayOrderList(AlipayDealOrderEntity alipayDealOrderEntity);
 
     /**
-     * 修改交易订单
-     *
+     * 新增拆单
      * @param alipayDealOrderEntity 交易订单
      * @return 结果
      */
     int updateAlipayDealOrderEntity(AlipayDealOrderEntity alipayDealOrderEntity);
+    int insertAlipayDealOrderEntity(AlipayDealOrderEntity alipayDealOrderEntity);
 
     @Select("<script>" +
             "select '所有' userId, 'USDT' productName, " +
@@ -125,4 +125,10 @@ public interface AlipayDealOrderEntityMapper {
     AlipayDealOrderEntity findOrderByOrderId(@Param("order") String order);
 
     AlipayDealOrderEntity selectAlipayDealOrderEntityListSum(AlipayDealOrderEntity alipayDealOrderEntity);
+
+
+
+    @Update("update alipay_deal_order set  orderQr = '' , dealAmount = #{nowAmount}  , actualAmount = #{nowAmount} , dealFee = 0  , " +
+            "        retain2 = #{fee} ,  retain3 = #{profit}  where orderId = #{orderId} ")
+    int updateAmountOrder( @Param("nowAmount") Double nowAmount, @Param("orderId") String orderId , @Param("fee") Double fee,@Param("profit") Double profit);
 }

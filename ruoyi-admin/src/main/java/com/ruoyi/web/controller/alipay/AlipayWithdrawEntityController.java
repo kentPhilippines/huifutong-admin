@@ -151,7 +151,14 @@ public class AlipayWithdrawEntityController extends BaseController {
     public String qrEdit(@PathVariable("id") Long id, ModelMap mmap) {
         AlipayWithdrawEntity alipayWithdrawEntity = alipayWithdrawEntityService.selectAlipayWithdrawEntityById(id);
         mmap.put("alipayWithdrawEntity", alipayWithdrawEntity);
-        return prefix + "/edit";
+        List<AlipayUserFundEntity> rateList = alipayUserFundEntityService.findUserFundRate();//查询所有渠道账户
+        AlipayProductEntity alipayProductEntity = new AlipayProductEntity();
+        alipayProductEntity.setStatus(1);
+        alipayProductEntity.setProductCode("1");
+        List<AlipayProductEntity> productlist = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
+        mmap.put("channelList", rateList);
+        mmap.put("productList", productlist);
+        return prefix + "/editQr";
     }
 
     /**

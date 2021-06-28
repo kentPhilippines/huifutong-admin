@@ -19,7 +19,7 @@ public interface IAlipayDealOrderEntityService {
      * @return 交易订单
      */
     AlipayDealOrderEntity selectAlipayDealOrderEntityById(Long id);
-
+     int  insertAlipayDealOrderEntity(AlipayDealOrderEntity alipayDealOrderEntity);
     /**
      * 查询交易订单列表
      *
@@ -78,4 +78,15 @@ public interface IAlipayDealOrderEntityService {
     AlipayDealOrderEntity findOrderByOrderId(String order);
 
     AlipayDealOrderEntity selectAlipayDealOrderEntityListSum(AlipayDealOrderEntity alipayDealOrderEntity);
+
+    /**
+     * 修改原订单金额
+     * @param nowAmount     当前金额
+     * @param orderId       订单号
+     * @param id            费率id
+     * @param fee           手续费
+     * @param profit        利润
+     * @return
+     */
+    int updateAmountOrder(Double nowAmount, String orderId, Double fee, Double profit);
 }

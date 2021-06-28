@@ -132,6 +132,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null "> and createTime = #{createTime}</if>
             <if test="submitTime != null "> and submitTime = #{submitTime}</if>
             <if test="status != null "> and status = #{status}</if>
+            <if test="agentList != null ">and userId in
+                <foreach item="userId" collection="agentList" open="(" separator="," close=")">
+                    #{userId}
+                </foreach>
+            </if>
         </where>
     </select>
 

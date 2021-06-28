@@ -1030,6 +1030,7 @@ var table = {
         operate: {
             // 提交数据
             submit: function (url, type, dataType, data, callback) {
+           debugger;
                 var config = {
                     url: url,
                     type: type,

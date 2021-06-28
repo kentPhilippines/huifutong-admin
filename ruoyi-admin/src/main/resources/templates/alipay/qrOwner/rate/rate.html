@@ -15,6 +15,10 @@
                             <p>码商账户：</p>
                             <input type="text" name="userId"/>
                         </li>
+                        <li>
+                            <p>上级卡商代理：</p>
+                            <input type="text" name="agentUserId"/>
+                        </li>
                         <li class="select-selectpicker">
                             <label>通道状态：</label>
                             <select name="switchs" th:with="type=${@dict.getType('userSwitchs')}" class="selectpicker"

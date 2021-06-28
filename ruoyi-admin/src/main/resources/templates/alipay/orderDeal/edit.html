@@ -31,9 +31,9 @@
             <div class="col-sm-8">
                     <span class="form-control" style="border: 0;">
                         <span th:text="${alipayDealOrderEntity.orderQr}"></span>
-                      <!--  <a href="javascript:void(0);" title="点击查看二维码图片" style="margin-left: 10px;"
-                           th:data="${alipayDealOrderEntity.orderQr}" onclick="showCode(this.getAttribute('data'))"><i
-                                class="fa fa-search-plus"></i>查看二维码</a>-->
+                       <a href="javascript:void(0);" title="点击查看出款凭证" style="margin-left: 10px;"
+                           th:data="${alipayDealOrderEntity.payImg}" onclick="showCode(this.getAttribute('data'))"><i
+                                class="fa fa-search-plus"></i>查看出款凭证</a>
                     </span>
             </div>
         </div>
@@ -137,7 +137,7 @@
 <script th:inline="javascript">
     let prefix = ctx + "alipay/orderDeal/showCode/";
     function showCode(id) {
-        $.modal.openCode(null, prefix + id, '400px', '500px', null);
+        $.modal.openCode(null, prefix + id, '800px', '800px', null);
     }
 </script>
 </body>

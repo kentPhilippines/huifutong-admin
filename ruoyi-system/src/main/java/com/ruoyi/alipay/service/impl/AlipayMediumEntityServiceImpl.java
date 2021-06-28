@@ -103,4 +103,10 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     public int deleteAlipayMediumEntityById(Long id) {
         return alipayMediumEntityMapper.deleteAlipayMediumEntityById(id);
     }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public AlipayMediumEntity findUserId(String med) {
+        return alipayMediumEntityMapper.findUserId(med);
+    }
 }

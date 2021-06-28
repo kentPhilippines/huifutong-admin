@@ -30,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="retain2" column="retain2"/>
         <result property="retain3" column="retain3"/>
         <result property="retain4" column="retain4"/>
+        <result property="payImg" column="payImg"/>
         <result property="currency" column="currency"/>
         <result property="txhash" column="txhash"/>
         <result property="sunCountAmount" column="sunCountAmount"/>
@@ -38,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectAlipayDealOrderEntityVo">
-        select id, orderId,currency, associatedId, orderStatus, dealAmount, dealFee, actualAmount, orderType, orderAccount, orderQrUser, orderQr, externalOrderId, generationIp, dealDescribe, notify, back, isNotify, createTime, submitTime, feeId, status, retain1, retain2, retain3, retain4 , txhash from alipay_deal_order
+        select id, orderId,currency, associatedId, orderStatus, dealAmount, dealFee, actualAmount, orderType, orderAccount, orderQrUser, orderQr, externalOrderId, generationIp, dealDescribe, notify, back, isNotify, createTime, submitTime, feeId, status, retain1, retain2, retain3, retain4 , txhash,payImg  from alipay_deal_order
     </sql>
     <select id="selectAlipayDealOrderEntityList" parameterType="AlipayDealOrderEntity" resultMap="AlipayDealOrderEntityResult">
         <include refid="selectAlipayDealOrderEntityVo"/>
@@ -107,7 +108,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="orderType != null  and orderType != ''">orderType,</if>
             <if test="orderAccount != null  and orderAccount != ''">orderAccount,</if>
             <if test="orderQrUser != null  and orderQrUser != ''">orderQrUser,</if>
-            <if test="orderQr != null  and orderQr != ''">orderQr,</if>
+            <if test="orderQr != null ">orderQr,</if>
             <if test="externalOrderId != null  and externalOrderId != ''">externalOrderId,</if>
             <if test="generationIp != null  and generationIp != ''">generationIp,</if>
             <if test="dealDescribe != null  and dealDescribe != ''">dealDescribe,</if>
@@ -133,7 +134,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="orderType != null  and orderType != ''">#{orderType},</if>
             <if test="orderAccount != null  and orderAccount != ''">#{orderAccount},</if>
             <if test="orderQrUser != null  and orderQrUser != ''">#{orderQrUser},</if>
-            <if test="orderQr != null  and orderQr != ''">#{orderQr},</if>
+            <if test="orderQr != null ">#{orderQr},</if>
             <if test="externalOrderId != null  and externalOrderId != ''">#{externalOrderId},</if>
             <if test="generationIp != null  and generationIp != ''">#{generationIp},</if>
             <if test="dealDescribe != null  and dealDescribe != ''">#{dealDescribe},</if>

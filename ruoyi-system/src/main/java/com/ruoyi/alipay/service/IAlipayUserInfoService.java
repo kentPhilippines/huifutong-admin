@@ -168,4 +168,6 @@ public interface IAlipayUserInfoService {
      * @return
      */
     List<AlipayUserInfo> findUserUserAllToBank();
+
+    List<AlipayUserInfo> findUserUserAllToBankNot();
 }

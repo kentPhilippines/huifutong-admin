@@ -1,8 +1,12 @@
 package com.ruoyi.web.controller.alipay;
 
+import cn.hutool.core.util.StrUtil;
 import com.ruoyi.alipay.domain.AlipayProductEntity;
+import com.ruoyi.alipay.domain.AlipayUserInfo;
 import com.ruoyi.alipay.domain.AlipayUserRateEntity;
 import com.ruoyi.alipay.service.IAlipayProductService;
+import com.ruoyi.alipay.service.IAlipayUserFundEntityService;
+import com.ruoyi.alipay.service.IAlipayUserInfoService;
 import com.ruoyi.alipay.service.IAlipayUserRateEntityService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -15,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +37,8 @@ public class QrOwnerRateController extends BaseController {
     private IAlipayUserRateEntityService alipayUserRateEntityService;
 
     @Autowired
+    private IAlipayUserInfoService alipayUserInfoService;
+    @Autowired
     IAlipayProductService iAlipayProductService;
 
     @GetMapping()
@@ -43,13 +50,26 @@ public class QrOwnerRateController extends BaseController {
         modelMap.put("productList", list);
         return prefix + "/rate";
     }
-
+    @Autowired
+    private IAlipayUserFundEntityService alipayUserFundEntityService;
     /**
      * 查询用户产品费率列表
      */
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(AlipayUserRateEntity alipayUserRateEntity) {
+
+        List<AlipayUserInfo> userList = new ArrayList<>();
+        List<String> userNameList = new ArrayList<>();
+        if (StrUtil.isNotEmpty(alipayUserRateEntity.getAgentUserId())) {
+            userList = alipayUserFundEntityService.findUserByAgent(alipayUserRateEntity.getAgentUserId());
+        }
+        if (userList.size() > 0) {
+            for (AlipayUserInfo user : userList) {
+                userNameList.add(user.getUserId());
+            }
+            alipayUserRateEntity.setAgentList(userNameList);
+        }
         startPage();
         List<AlipayUserRateEntity> list = alipayUserRateEntityService.selectUserRateEntityList_qr(alipayUserRateEntity);
         return getDataTable(list);
@@ -63,8 +83,10 @@ public class QrOwnerRateController extends BaseController {
         AlipayProductEntity alipayProductEntity = new AlipayProductEntity();
         alipayProductEntity.setStatus(1);
         //查询产品类型下拉菜单
+        List<AlipayUserInfo> userinfo =  alipayUserInfoService.findUserUserAllToBankNot();
         List<AlipayProductEntity> list = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
         modelMap.put("productList", list);
+        modelMap.put("userinfo", userinfo);
         return prefix + "/add";
     }
 

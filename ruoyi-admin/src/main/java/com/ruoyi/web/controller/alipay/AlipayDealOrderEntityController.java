@@ -122,6 +122,7 @@ public class AlipayDealOrderEntityController extends BaseController {
     @PostMapping("/updataOrder")
     @RequiresPermissions("orderDeal:qr:status")
     @ResponseBody
+    @Log(title = "订单转交财务", businessType = BusinessType.UPDATE)
     public AjaxResult updataOrder(String id) {
         AlipayDealOrderEntity order = alipayDealOrderEntityService.selectAlipayDealOrderEntityById(Long.valueOf(id));
         order.setOrderStatus("7");//人工处理
@@ -139,6 +140,7 @@ public class AlipayDealOrderEntityController extends BaseController {
      */
     @GetMapping("/updateBankCardShow/{userId}")
     @RequiresPermissions("orderDeal:qr:status:updateBankCardShow")
+    @Log(title = "修改出款卡商或拆单", businessType = BusinessType.INSERT)
     public String updateBankCardShow(ModelMap mmap, @PathVariable("userId") String orderId) {
         List<AlipayUserFundEntity> listFund = alipayUserFundEntityService.findUserFundAllToBank();
         List<AlipayUserInfo> listInfo =   iAlipayUserInfoServiceImpl.findUserUserAllToBank();
@@ -156,16 +158,23 @@ public class AlipayDealOrderEntityController extends BaseController {
             public int compare(AlipayUserFundEntity o1, AlipayUserFundEntity o2) {
             int i = 1 ;
             if  ( ( o1.getTodayDealAmount() - o1.getTodayOtherWitAmount())  > ( o2.getTodayDealAmount()- o2.getTodayOtherWitAmount()) ){
-                i = 1 ;
+                i = -1 ;
             } else{
-                i = -1;
+                i = 1;
             };
                 return i;
             }
         });
-
-
-
+        if(StrUtil.isNotEmpty(orderId)){
+            String[] split = orderId.split("====");
+            if(split.length > 1  && StrUtil.isNotEmpty(split[1])){
+                if(split[1].equals("amount")){
+                    mmap.put("listFund", list);
+                    mmap.put("orderId", split[0]);
+                    return prefix + "/updateBankCardEditMore";
+                }
+            }
+        }
         mmap.put("listFund", list);
         mmap.put("orderId", orderId);
         return prefix + "/updateBankCardEdit";
@@ -189,6 +198,45 @@ public class AlipayDealOrderEntityController extends BaseController {
         return toAjax(alipayDealOrderEntityService.updateOrderQr(orderId, userId, "", rate.getId(), fee, profit));
     }
 
+    /**
+     * 代付主交易订单修改卡商账户
+     */
+    @PostMapping("/updateBankCardMore")
+    @RequiresPermissions("orderDeal:qr:status:updateBankCard")
+    @ResponseBody
+    @Log(title = "确认拆单", businessType = BusinessType.INSERT)
+    public AjaxResult updateBankCard(String orderId, String userId,String amount) {
+        AlipayDealOrderEntity orderEntityList = alipayDealOrderEntityService.findOrderByOrderId(orderId);
+        AlipayUserRateEntity rate = iAlipayUserRateEntityService.findWitRate(userId);
+        Double dealAmount = orderEntityList.getDealAmount();
+        Double nowAmount =  dealAmount - Double.valueOf(amount);    //原代付订单现在金额
+        Double fee = rate.getFee();
+        fee = fee * nowAmount;
+        Double profit = Double.valueOf(orderEntityList.getRetain3());
+        profit = Double.valueOf(orderEntityList.getDealFee()) - fee;
+        int a = alipayDealOrderEntityService.updateAmountOrder(nowAmount,orderId,fee,profit);
+        orderEntityList.setOrderId(findOderId(orderEntityList.getOrderId()));
+        orderEntityList.setOrderQrUser(userId);
+        orderEntityList.setOrderQr("");
+        orderEntityList.setDealAmount(Double.valueOf(amount));
+        orderEntityList.setActualAmount(Double.valueOf(amount));
+        orderEntityList.setDealFee(0.0);
+        orderEntityList.setExternalOrderId("");
+        orderEntityList.setCreateTime(null);
+        orderEntityList.setSubmitTime(null);
+        orderEntityList.setCreatetime(null);
+        orderEntityList.setFeeId(rate.getId().intValue());
+        return toAjax(  alipayDealOrderEntityService.insertAlipayDealOrderEntity(orderEntityList));
+    }
+      String  findOderId(String orderId){
+          AlipayDealOrderEntity orderByOrderId = alipayDealOrderEntityService.findOrderByOrderId(orderId);
+          if(null != orderByOrderId){
+              orderId += "_1";
+              return findOderId(orderId);
+          }
+          return orderId;
+
+        }
 
     /**
      * 导出交易订单列表
@@ -219,6 +267,7 @@ public class AlipayDealOrderEntityController extends BaseController {
      * @param mmap
      * @return
      */
+    @Log(title = "查看交易凭证", businessType = BusinessType.INSERT)
     @GetMapping("/showCode/{imgId}")
     public String showCode(@PathVariable("imgId") String imgId, ModelMap mmap) {
         //获取二维码服务器地址

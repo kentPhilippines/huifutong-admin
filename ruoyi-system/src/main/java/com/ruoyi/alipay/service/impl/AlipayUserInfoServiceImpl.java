@@ -246,4 +246,10 @@ public class AlipayUserInfoServiceImpl implements IAlipayUserInfoService {
     public List<AlipayUserInfo> findUserUserAllToBank() {
         return alipayUserInfoMapper.findUserUserAllToBank();
     }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayUserInfo> findUserUserAllToBankNot() {
+        return alipayUserInfoMapper.findUserUserAllToBankNot();
+    }
 }

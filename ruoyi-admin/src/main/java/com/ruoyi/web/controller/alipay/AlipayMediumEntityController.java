@@ -1,17 +1,26 @@
 package com.ruoyi.web.controller.alipay;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.ruoyi.alipay.domain.AlipayFileListEntity;
+import com.ruoyi.alipay.domain.MediumQueue;
 import com.ruoyi.alipay.service.IAlipayFileListEntityService;
+import com.ruoyi.common.constant.StaticConstants;
+import com.ruoyi.framework.util.DictionaryUtils;
+import com.ruoyi.framework.util.ShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.alipay.domain.AlipayMediumEntity;
@@ -144,6 +153,28 @@ public class AlipayMediumEntityController extends BaseController {
     public AjaxResult remove(String ids) {
         return toAjax(alipayMediumEntityService.deleteAlipayMediumEntityByIds(ids));
     }
+    @Log(title = "剔除银行卡", businessType = BusinessType.UPDATE)
+    @PostMapping("/removeQueue/{id}")
+    @ResponseBody
+    public AjaxResult removeQueue(@PathVariable("id")String id) {
+        String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);//主服务器ip+port
+        String url = ipPort + "/medium" + "/off-medium-qr";
+        Map<String,Object> map = new HashMap();
+        map.put("mediumNumber",id);
+        String s = HttpUtil.post(url,  map );
+        return toAjax(1);
+    }
+    @Log(title = "优先银行卡", businessType = BusinessType.UPDATE)
+    @PostMapping("/first")
+    @ResponseBody
+    public AjaxResult first(AlipayMediumEntity alipayMediumEntity  ) {
+
+        logger.info("银行卡："+alipayMediumEntity.getMediumNumber()+"分组号："+alipayMediumEntity.getMediumId()+",操作人："+ ShiroUtils.getLoginName());
+        String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);//主服务器ip+port
+        String url = ipPort + "/out/pushCard?cardInfo="+alipayMediumEntity.getMediumNumber()+"&userId="+alipayMediumEntity.getMediumId();
+        String s = HttpUtil.get(url);
+        return toAjax(1);
+    }
 
 
     /**
@@ -158,6 +189,48 @@ public class AlipayMediumEntityController extends BaseController {
         mmap.put("codeList", list);
         return code_prefix + "/group_code_list" ;
     }
+    @Autowired
+    private DictionaryUtils dictionaryUtils;
+    @GetMapping("/mediumQueue")
+    public String mediumQueue() {
+        return prefix + "/mediumQueue" ;
+    }
+
+    /**
+     * 查询收款媒介列列表
+     */
+    @PostMapping("/listQueue")
+    @ResponseBody
+    public TableDataInfo listQueue(AlipayMediumEntity alipayMediumEntity) {
+        List<MediumQueue> list = new ArrayList<MediumQueue>();
+        String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);//主服务器ip+port
+        String url = ipPort + "/out" + "/findQueue?cardInfo="+alipayMediumEntity.getQrcodeId();
+        String s = HttpUtil.get(url);
+        logger.info("【收到队列数据为："+s+"】");
+        List<AlipayMediumEntity> listQueue = new ArrayList<>();
+        try {
+            JSONObject jsonObject = JSONUtil.parseObj(s);
+            Object result = jsonObject.get("result");
+            JSONArray objects = JSONUtil.parseArray(result);
+            logger.info("当前获取队列数据总条数："+objects.size());
+            for (int i = 0; i < objects.size(); i++) {
+                AlipayMediumEntity med = new AlipayMediumEntity();
+                JSONObject queue = objects.getJSONObject(i);
+                String bankId = queue.getStr("bankId");//卡号
+                String score = queue.getStr("score");//排序
+                String gourp = queue.getStr("gourp");//分组
+                med.setMediumId(gourp);
+                med.setMountLimit(score);
+                med.setMediumNumber(bankId);
+                listQueue.add(med);
+            }
+
+        }catch (Exception x){
+
+        }
+        return getDataTable(listQueue);
+    }
+
 
 
 }

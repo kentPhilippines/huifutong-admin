@@ -34,6 +34,12 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
         return alipayDealOrderEntityMapper.selectAlipayDealOrderEntityById(id);
     }
 
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public int insertAlipayDealOrderEntity(AlipayDealOrderEntity alipayDealOrderEntity) {
+        return alipayDealOrderEntityMapper.insertAlipayDealOrderEntity(alipayDealOrderEntity);
+    }
+
     /**
      * 查询交易订单列表
      *
@@ -114,6 +120,12 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public AlipayDealOrderEntity selectAlipayDealOrderEntityListSum(AlipayDealOrderEntity alipayDealOrderEntity) {
         return alipayDealOrderEntityMapper.selectAlipayDealOrderEntityListSum(alipayDealOrderEntity);
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public int updateAmountOrder(Double nowAmount, String orderId,  Double fee, Double profit) {
+        return alipayDealOrderEntityMapper.updateAmountOrder(nowAmount,orderId,fee,profit);
     }
 
 }

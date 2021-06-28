@@ -44,7 +44,7 @@ public interface AlipayUserInfoMapper {
             "<if test=\"params.endTime != null and params.endTime != ''\">" +
             " and date_format(u.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')" +
             "</if>" +
-            " order by switchs desc, createTime desc " +
+            " order by switchs desc  " +
             "</script>")
     List<AlipayUserInfo> selectAliaUserInfoList(AlipayUserInfo alipayUserInfo);
 
@@ -189,6 +189,8 @@ public interface AlipayUserInfoMapper {
     int upUserAgents(Long id);
 
 
-    @Select("select *  from alipay_user_info where remitOrderState = 1 ")
+    @Select("select *  from alipay_user_info where remitOrderState = 1  and userType = 2")
     List<AlipayUserInfo> findUserUserAllToBank();
+    @Select("select *  from alipay_user_info where  userType = 2")
+    List<AlipayUserInfo> findUserUserAllToBankNot();
 }

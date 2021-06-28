@@ -66,4 +66,6 @@ public interface IAlipayMediumEntityService {
      * @return 结果
      */
     public int deleteAlipayMediumEntityById(Long id);
+
+    AlipayMediumEntity findUserId(String med);
 }
