@@ -29,11 +29,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectAlipayMediumEntityVo">
-        select id, mediumId, mediumNumber, mediumHolder, mediumNote, mediumPhone, qrcodeId, code, createTime, submitTime, status, isDeal,
-
+        select id, mediumId, mediumNumber, mediumHolder, mediumNote, mediumPhone, qrcodeId,
+         code, createTime, submitTime, status, isDeal,
          attr,bankcode,account,mountNow,mountSystem,mountLimit,notfiyMask
-
-
          from alipay_medium
     </sql>
 
@@ -41,16 +39,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectAlipayMediumEntityVo"/>
         <where>
             isDeal = 2
-            <if test="mediumHolder != null  and mediumHolder != ''"> and mediumHolder = #{mediumHolder}</if>
+            <if test="mediumHolder != null  and mediumHolder != ''"> and mediumHolder like concat('%', #{mediumHolder}, '%')</if>
             <if test="mediumNote != null  and mediumNote != ''"> and mediumNote = #{mediumNote}</if>
             <if test="mediumPhone != null  and mediumPhone != ''"> and mediumPhone = #{mediumPhone}</if>
             <if test="qrcodeId != null  and qrcodeId != ''"> and qrcodeId = #{qrcodeId}</if>
+            <if test="account != null  and account != ''"> and account like concat('%', #{account}, '%')</if>
+            <if test="mediumNumber != null  and mediumNumber != ''"> and mediumNumber like concat('%', #{mediumNumber}, '%')</if>
             <if test="code != null  and code != ''"> and code = #{code}</if>
             <if test="createTime != null "> and createTime = #{createTime}</if>
             <if test="submitTime != null "> and submitTime = #{submitTime}</if>
             <if test="status != null "> and status = #{status}</if>
         </where>
-        order by qrcodeId, createTime desc
+        order by   createTime desc
     </select>
     
     <select id="selectAlipayMediumEntityById" parameterType="Long" resultMap="AlipayMediumEntityResult">

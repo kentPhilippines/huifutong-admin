@@ -19,6 +19,18 @@
                             <span>手机号：</span>
                             <input type="text" name="mediumPhone"/>
                         </li>
+                        <li>
+                            <span>银行卡号：</span>
+                            <input type="text" name="mediumNumber"/>
+                        </li>
+                        <li>
+                            <span>开户人：</span>
+                            <input type="text" name="mediumHolder"/>
+                        </li>
+                        <li>
+                            <span>开户行：</span>
+                            <input type="text" name="account"/>
+                        </li>
                         <li class="select-selectpicker">
                             <label>媒介类型：</label>
                             <select id="code" name="code" th:with="type=${@dict.getType('medium_type')}"

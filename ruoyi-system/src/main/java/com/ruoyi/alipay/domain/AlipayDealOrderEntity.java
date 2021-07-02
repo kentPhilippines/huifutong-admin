@@ -51,6 +51,16 @@ public class AlipayDealOrderEntity extends BaseEntity {
     private Long id;
     private String userName;
     private String payImg;
+    private String payInfo;
+
+    public String getPayInfo() {
+        return payInfo;
+    }
+
+    public void setPayInfo(String payInfo) {
+        this.payInfo = payInfo;
+    }
+
     public String getPayImg() {
         return payImg;
     }
