@@ -128,4 +128,10 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
         return alipayDealOrderEntityMapper.updateAmountOrder(nowAmount,orderId,fee,profit);
     }
 
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public int updateUnLock(Long id) {
+        return alipayDealOrderEntityMapper.updateUnLock(id);
+    }
+
 }

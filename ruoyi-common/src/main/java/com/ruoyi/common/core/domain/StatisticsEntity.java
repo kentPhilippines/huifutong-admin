@@ -14,6 +14,17 @@ public class StatisticsEntity extends BaseEntity implements Serializable {
     private String agentAmount;
     private String userAgent;
 
+    private String grossCost;
+
+
+    public String getGrossCost() {
+        return grossCost;
+    }
+
+    public void setGrossCost(String grossCost) {
+        this.grossCost = grossCost;
+    }
+
     @Excel(name = "货币类型")
     private String currency;
 

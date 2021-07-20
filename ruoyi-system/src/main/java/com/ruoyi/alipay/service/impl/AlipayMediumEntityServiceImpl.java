@@ -30,6 +30,7 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
      * @return 收款媒介列
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public AlipayMediumEntity selectAlipayMediumEntityById(Long id) {
         return alipayMediumEntityMapper.selectAlipayMediumEntityById(id);
     }
@@ -53,6 +54,7 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int insertAlipayMediumEntity(AlipayMediumEntity alipayMediumEntity) {
         alipayMediumEntity.setCreateTime(DateUtils.getNowDate());
         return alipayMediumEntityMapper.insertAlipayMediumEntity(alipayMediumEntity);
@@ -89,6 +91,7 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int deleteAlipayMediumEntityByIds(String ids) {
         return alipayMediumEntityMapper.deleteAlipayMediumEntityByIds(Convert.toStrArray(ids));
     }
@@ -100,6 +103,7 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int deleteAlipayMediumEntityById(Long id) {
         return alipayMediumEntityMapper.deleteAlipayMediumEntityById(id);
     }

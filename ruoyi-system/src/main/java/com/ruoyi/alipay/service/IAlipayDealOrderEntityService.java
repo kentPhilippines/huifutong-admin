@@ -89,4 +89,12 @@ public interface IAlipayDealOrderEntityService {
      * @return
      */
     int updateAmountOrder(Double nowAmount, String orderId, Double fee, Double profit);
+
+
+    /**
+     * 解锁
+     * @param id
+     * @return
+     */
+    int updateUnLock(Long id);
 }

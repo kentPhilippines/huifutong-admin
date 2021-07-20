@@ -31,7 +31,8 @@ import java.util.*;
  *
  * @author ruoyi
  */
-public class ExcelUtil<T> {
+public class
+ExcelUtil<T> {
     private static final Logger log = LoggerFactory.getLogger(ExcelUtil.class);
 
     /**

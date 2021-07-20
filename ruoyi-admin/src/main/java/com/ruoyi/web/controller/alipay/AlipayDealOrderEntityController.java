@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.alipay;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
@@ -46,6 +48,8 @@ public class AlipayDealOrderEntityController extends BaseController {
     @Autowired
     private IAlipayDealOrderEntityService alipayDealOrderEntityService;
     @Autowired
+    private IAlipayWithdrawEntityService iAlipayWithdrawEntityService;
+    @Autowired
     private ISysUserService userService;
     @Autowired
     private IAlipayProductService iAlipayProductService;
@@ -64,8 +68,10 @@ public class AlipayDealOrderEntityController extends BaseController {
         mmap.put("rateList", rateList);
         return prefix + "/orderDeal";
     }
+
     @Autowired
     private IAlipayUserFundEntityService alipayUserFundEntityService;
+
     /**
      * 查询交易订单列表
      */
@@ -73,9 +79,9 @@ public class AlipayDealOrderEntityController extends BaseController {
     @RequiresPermissions("orderDeal:qr:list")
     @ResponseBody
     public TableDataInfo list(AlipayDealOrderEntity alipayDealOrderEntity) {
-       if(StrUtil.isNotEmpty(alipayDealOrderEntity.getOrderQrUser1())) {
-           alipayDealOrderEntity.setOrderQrUser(alipayDealOrderEntity.getOrderQrUser1());
-       }
+        if (StrUtil.isNotEmpty(alipayDealOrderEntity.getOrderQrUser1())) {
+            alipayDealOrderEntity.setOrderQrUser(alipayDealOrderEntity.getOrderQrUser1());
+        }
         startPage();
         List<AlipayDealOrderEntity> list = alipayDealOrderEntityService
                 .selectAlipayDealOrderEntityList(alipayDealOrderEntity);
@@ -99,7 +105,7 @@ public class AlipayDealOrderEntityController extends BaseController {
             if (ObjectUtil.isNotNull(product)) {
                 order.setRetain1(product.getProductName());
             }
-            if(ObjectUtil.isNotNull(userCollect.get(order.getOrderAccount()))) {
+            if (ObjectUtil.isNotNull(userCollect.get(order.getOrderAccount()))) {
                 order.setUserName(userCollect.get(order.getOrderAccount()).getUserName());
             }
         }
@@ -132,6 +138,7 @@ public class AlipayDealOrderEntityController extends BaseController {
 
     @Autowired
     IAlipayUserInfoService iAlipayUserInfoServiceImpl;
+
     /**
      * 代付主交易订单修改卡商账户
      *
@@ -143,12 +150,12 @@ public class AlipayDealOrderEntityController extends BaseController {
     @Log(title = "修改出款卡商或拆单", businessType = BusinessType.INSERT)
     public String updateBankCardShow(ModelMap mmap, @PathVariable("userId") String orderId) {
         List<AlipayUserFundEntity> listFund = alipayUserFundEntityService.findUserFundAllToBank();
-        List<AlipayUserInfo> listInfo =   iAlipayUserInfoServiceImpl.findUserUserAllToBank();
+        List<AlipayUserInfo> listInfo = iAlipayUserInfoServiceImpl.findUserUserAllToBank();
         ConcurrentHashMap<String, AlipayUserInfo> userMap = listInfo.stream().collect(Collectors.toConcurrentMap(AlipayUserInfo::getUserId, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
         List<AlipayUserFundEntity> list = new ArrayList<>();
-        for(AlipayUserFundEntity fund  : listFund){
+        for (AlipayUserFundEntity fund : listFund) {
             AlipayUserInfo alipayUserInfo = userMap.get(fund.getUserId());
-            if(null != alipayUserInfo){
+            if (null != alipayUserInfo) {
                 list.add(fund);//满足的出款账户
             }
         }
@@ -156,23 +163,32 @@ public class AlipayDealOrderEntityController extends BaseController {
         Collections.sort(list, new Comparator<AlipayUserFundEntity>() {
             @Override
             public int compare(AlipayUserFundEntity o1, AlipayUserFundEntity o2) {
-            int i = 1 ;
-            if  ( ( o1.getTodayDealAmount() - o1.getTodayOtherWitAmount())  > ( o2.getTodayDealAmount()- o2.getTodayOtherWitAmount()) ){
-                i = -1 ;
-            } else{
-                i = 1;
-            };
+                int i = 1;
+                if ((o1.getTodayDealAmount() - o1.getTodayOtherWitAmount()) > (o2.getTodayDealAmount() - o2.getTodayOtherWitAmount())) {
+                    i = -1;
+                } else {
+                    i = 1;
+                }
+                ;
                 return i;
             }
         });
-        if(StrUtil.isNotEmpty(orderId)){
+        if (StrUtil.isNotEmpty(orderId)) {
             String[] split = orderId.split("====");
-            if(split.length > 1  && StrUtil.isNotEmpty(split[1])){
-                if(split[1].equals("amount")){
+            if (split.length > 1 && StrUtil.isNotEmpty(split[1])) {
+                if (split[1].equals("amount")) {
                     mmap.put("listFund", list);
                     mmap.put("orderId", split[0]);
                     return prefix + "/updateBankCardEditMore";
                 }
+            }
+        }
+        AlipayDealOrderEntity order = alipayDealOrderEntityService.findOrderByOrderId(orderId);
+        if( 1 == order.getLockWit()){
+            Date lockWitTime = order.getLockWitTime();
+            if (DateUtil.isExpired(lockWitTime, DateField.SECOND, Integer.valueOf(600), new Date())) {
+                mmap.put("errorMessage", "当前订单已锁定，请解锁后重新配置");
+                return prefix + "/business";
             }
         }
         mmap.put("listFund", list);
@@ -205,16 +221,19 @@ public class AlipayDealOrderEntityController extends BaseController {
     @RequiresPermissions("orderDeal:qr:status:updateBankCard")
     @ResponseBody
     @Log(title = "确认拆单", businessType = BusinessType.INSERT)
-    public AjaxResult updateBankCard(String orderId, String userId,String amount) {
+    public AjaxResult updateBankCard(String orderId, String userId, String amount) {
         AlipayDealOrderEntity orderEntityList = alipayDealOrderEntityService.findOrderByOrderId(orderId);
         AlipayUserRateEntity rate = iAlipayUserRateEntityService.findWitRate(userId);
         Double dealAmount = orderEntityList.getDealAmount();
-        Double nowAmount =  dealAmount - Double.valueOf(amount);    //原代付订单现在金额
+        if(dealAmount  <   Double.valueOf(amount)){
+            return error("金额超限制");
+        }
+        Double nowAmount = dealAmount - Double.valueOf(amount);    //原代付订单现在金额
         Double fee = rate.getFee();
         fee = fee * nowAmount;
         Double profit = Double.valueOf(orderEntityList.getRetain3());
         profit = Double.valueOf(orderEntityList.getDealFee()) - fee;
-        int a = alipayDealOrderEntityService.updateAmountOrder(nowAmount,orderId,fee,profit);
+        int a = alipayDealOrderEntityService.updateAmountOrder(nowAmount, orderId, fee, profit);
         orderEntityList.setOrderId(findOderId(orderEntityList.getOrderId()));
         orderEntityList.setOrderQrUser(userId);
         orderEntityList.setOrderQr("");
@@ -225,23 +244,24 @@ public class AlipayDealOrderEntityController extends BaseController {
         orderEntityList.setCreateTime(null);
         orderEntityList.setSubmitTime(null);
         orderEntityList.setCreatetime(null);
+        orderEntityList.setLockWit(0);
         orderEntityList.setFeeId(rate.getId().intValue());
-        return toAjax(  alipayDealOrderEntityService.insertAlipayDealOrderEntity(orderEntityList));
+        return toAjax(alipayDealOrderEntityService.insertAlipayDealOrderEntity(orderEntityList));
     }
-      String  findOderId(String orderId){
-          AlipayDealOrderEntity orderByOrderId = alipayDealOrderEntityService.findOrderByOrderId(orderId);
-          if(null != orderByOrderId){
-              orderId += "_1";
-              return findOderId(orderId);
-          }
-          return orderId;
 
+    String findOderId(String orderId) {
+        AlipayDealOrderEntity orderByOrderId = alipayDealOrderEntityService.findOrderByOrderId(orderId);
+        if (null != orderByOrderId) {
+            orderId += "_1";
+            return findOderId(orderId);
         }
+        return orderId;
+
+    }
 
     /**
      * 导出交易订单列表
      */
-    @RequiresPermissions("orderDeal:qr:export")
     @Log(title = "码商交易订单", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
@@ -251,15 +271,22 @@ public class AlipayDealOrderEntityController extends BaseController {
         ExcelUtil<AlipayDealOrderEntity> util = new ExcelUtil<AlipayDealOrderEntity>(AlipayDealOrderEntity.class);
         return util.exportExcel(list, "orderDeal");
     }
+
     /**
      * 显示交易订单详情
      */
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Long id, ModelMap mmap) {
         AlipayDealOrderEntity alipayDealOrderEntity = alipayDealOrderEntityService.selectAlipayDealOrderEntityById(id);
+        String orderType = alipayDealOrderEntity.getOrderType();
+        if ("4".equals(orderType)) {
+            AlipayWithdrawEntity witOrder = iAlipayWithdrawEntityService.findWitOrder(alipayDealOrderEntity.getAssociatedId());
+            mmap.put("wit", witOrder);
+        }
         mmap.put("alipayDealOrderEntity", alipayDealOrderEntity);
         return prefix + "/edit";
     }
+
     /**
      * 显示二维码
      *
@@ -290,6 +317,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         mapParam.put("orderId", alipayDealOrderEntity.getOrderId());
         return HttpUtils.adminGet2Gateway(mapParam, ipPort + urlPath);
     }
+
     /**
      * 显示统计table
      */
@@ -315,6 +343,23 @@ public class AlipayDealOrderEntityController extends BaseController {
             }
         }
         return getDataTable(list);
+    }
+
+
+    @Log(title = "客服审核确认出款", businessType = BusinessType.UPDATE)
+    @PostMapping("/enterPay")
+    @ResponseBody
+    public AjaxResult enterPay(AlipayDealOrderEntity alipayDealOrderEntity) {
+        alipayDealOrderEntity.setEnterPay("1");
+        alipayDealOrderEntity.setEnterPayTime(new Date());
+        return toAjax(alipayDealOrderEntityService.updateAlipayDealOrderEntity(alipayDealOrderEntity));
+    }
+
+    @Log(title = "解锁出款订单", businessType = BusinessType.UPDATE)
+    @PostMapping("/unLockPay")
+    @ResponseBody
+    public AjaxResult unLockPay(AlipayDealOrderEntity alipayDealOrderEntity) {
+        return toAjax(alipayDealOrderEntityService.updateUnLock(alipayDealOrderEntity.getId()));
     }
 
 

@@ -52,6 +52,36 @@ public class AlipayDealOrderEntity extends BaseEntity {
     private String userName;
     private String payImg;
     private String payInfo;
+    private Integer lockWit;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date lockWitTime;
+   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date enterPayTime;
+
+
+    public Date getEnterPayTime() {
+        return enterPayTime;
+    }
+
+    public void setEnterPayTime(Date enterPayTime) {
+        this.enterPayTime = enterPayTime;
+    }
+
+    public Date getLockWitTime() {
+        return lockWitTime;
+    }
+
+    public void setLockWitTime(Date lockWitTime) {
+        this.lockWitTime = lockWitTime;
+    }
+
+    public Integer getLockWit() {
+        return lockWit;
+    }
+
+    public void setLockWit(Integer lockWit) {
+        this.lockWit = lockWit;
+    }
 
     public String getPayInfo() {
         return payInfo;
@@ -115,6 +145,7 @@ public class AlipayDealOrderEntity extends BaseEntity {
     /**
      * 订单类型:1交易,2系统加款
      */
+    @Excel(name = "实际到账金额")
     private String orderType;
 
     /**
@@ -129,6 +160,15 @@ public class AlipayDealOrderEntity extends BaseEntity {
     @Excel(name = "关联渠道账户")
     private String orderQrUser;
     private String orderQrUser1;
+    private String enterPay;//1卡商代付已审核，0卡商代付未审核
+
+    public String getEnterPay() {
+        return enterPay;
+    }
+
+    public void setEnterPay(String enterPay) {
+        this.enterPay = enterPay;
+    }
 
     public String getOrderQrUser1() {
         return orderQrUser1;
@@ -141,6 +181,7 @@ public class AlipayDealOrderEntity extends BaseEntity {
     /**
      * 关联二维码
      */
+    @Excel(name = "交易媒介")
     private String orderQr;
 
     /**
@@ -193,7 +234,7 @@ public class AlipayDealOrderEntity extends BaseEntity {
     /**
      * 备用字段添加业务使用
      */
-    @Excel(name = "交易产品", readConverterExp = "ALIPAY_SCAN=支付宝扫码,ALIPAY_H5=支付宝H5," +
+    @Excel(name = "交易产品", readConverterExp = "WIT_BANK=卡商出款,ALIPAY_H5=支付宝H5," +
             "BANK_R=银行卡转卡,YUANSAHNFUTOBANK=云闪付转卡,ALIPAYTOBANK=支付宝转卡,ALIPAYTOBANKH5=支付宝转卡H5," +
             "WECHARTOBANK=微信转卡,WANGYIN01=网银快捷,ALIPAYSCANTOABNK=支付宝扫码转卡")
     private String retain1;
@@ -201,6 +242,7 @@ public class AlipayDealOrderEntity extends BaseEntity {
     /**
      * 备用字段添加业务使用
      */
+    @Excel(name = "渠道成本")
     private String retain2;
     @Excel(name = "USDT-hash")
     private String txhash;
@@ -239,13 +281,12 @@ public class AlipayDealOrderEntity extends BaseEntity {
     /**
      * 备用字段添加业务使用
      */
-    @Excel(name = "备用字段添加业务使用")
+    @Excel(name = "利润")
     private String retain3;
 
     /**
      * 备用字段添加业务使用
      */
-    @Excel(name = "备用字段添加业务使用")
     private String retain4;
 
     public void setId(Long id) {

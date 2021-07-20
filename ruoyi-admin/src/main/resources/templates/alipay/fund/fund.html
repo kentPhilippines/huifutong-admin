@@ -108,16 +108,24 @@
                 },
                 {
                     field: 'userName',
-                    title: '账户名称 '
+                    title: '账户名称 ',
+                    formatter : function (value, row, index) {
+                        if(row.userType == 2 ){
+                            var table = '<ul>'
+                            table += '<li>' + '昵称：' + row.userName + '</li>'
+                            table += '<li>' + '状态：' + row.payInfo + '</li>'
+                            table += '</ul>'
+                            return table;
+                        }else{
+                            return  row.userName;
+                        }
+                    }
                 },
-               /* {
+              /*  {
                     field: 'cashBalance',
                     title: '现金账户 '
-                },
-                {
-                    field: 'rechargeNumber',
-                    title: '充值点数'
                 },*/
+
                 {
                     field: 'freezeBalance',
                     title: '冻结账户',
@@ -126,6 +134,27 @@
                 {
                     field: 'accountBalance',
                     title: '可取现金额 ',
+                    sortable: true,
+                    formatter : function (value, row, index) {
+                        if(row.userType == 2 ){
+                            var table = '<ul>'
+                            if( (row.accountBalance  - row.sumProfit) < 0  ){
+                                table += '<li  style="background-color: red" >' + '滚动资金：' +  ( row.accountBalance  - row.sumProfit  ) + '</li>'
+                            }else{
+                                table += '<li>' + '滚动资金：' +  ( row.accountBalance  - row.sumProfit  ) + '</li>'
+                            }
+                            table += '<li>' + '累计盈利：' + row.sumProfit + '</li>'
+                            table += '<li>' + '当日盈利：' + row.todayProfit + '</li>'
+                            table += '</ul>'
+                            return table;
+                        } else {
+                            return  row.accountBalance;
+                        }
+                    }
+                },
+                {
+                    field: 'sumProfit',
+                    title: '累计佣金',
                     sortable: true
                 },
                 {

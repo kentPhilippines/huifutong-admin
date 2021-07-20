@@ -3,8 +3,10 @@ package com.ruoyi.web.controller.alipay;
 import com.google.common.collect.Maps;
 import com.ruoyi.alipay.domain.AlipayAmountEntity;
 import com.ruoyi.alipay.domain.AlipayUserFundEntity;
+import com.ruoyi.alipay.domain.AlipayUserInfo;
 import com.ruoyi.alipay.service.IAlipayAmountEntityService;
 import com.ruoyi.alipay.service.IAlipayUserFundEntityService;
+import com.ruoyi.alipay.service.IAlipayUserInfoService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.StaticConstants;
 import com.ruoyi.common.core.controller.BaseController;
@@ -29,6 +31,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 用户资金账户Controller
@@ -63,6 +68,8 @@ public class AlipayUserFundEntityController extends BaseController {
         return prefix + "/fundBak";
     }
 
+    @Autowired
+    private IAlipayUserInfoService alipayUserInfoService;
     /**
      * 查询用户资金账户列表
      */
@@ -75,7 +82,31 @@ public class AlipayUserFundEntityController extends BaseController {
                 .selectAlipayUserFundEntityList(alipayUserFundEntity);
         AlipayUserFundEntity userFundCardEntity = null;
 
-
+        List<AlipayUserInfo> userUserAllToBankNot = alipayUserInfoService.findUserUserAllToBankNot();
+        ConcurrentHashMap<String, AlipayUserInfo> userCollect = userUserAllToBankNot.stream().collect(Collectors.toConcurrentMap(AlipayUserInfo::getUserId, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
+        for(AlipayUserFundEntity fundEntity     : list          )   {
+            AlipayUserInfo alipayUserInfo = userCollect.get(fundEntity.getUserId());
+            if(null != alipayUserInfo ){
+                Integer switchs = alipayUserInfo.getSwitchs();//1  开启
+                Integer receiveOrderState = alipayUserInfo.getReceiveOrderState();// 2 暂停接单
+                Integer remitOrderState = alipayUserInfo.getRemitOrderState();//2 暂停接单
+                String payInfo = "";
+                if( 1 != switchs ){
+                    payInfo += "主关闭:";
+                }
+                if( 1  == receiveOrderState ){
+                    payInfo += "接单开启:";
+                } else {
+                    payInfo += "接单关闭:";
+                }
+                if( 1   == remitOrderState ){
+                    payInfo += "代付开启";
+                } else {
+                    payInfo += "代付关闭";
+                }
+                fundEntity.setPayInfo(payInfo);
+            }
+        }
         if (null != alipayUserFundEntity.getUserType() && "2".equals(alipayUserFundEntity.getUserType().toString())) {
             userFundCardEntity = alipayUserFundEntityService.findSumFundC();
             list.add(0, userFundCardEntity);

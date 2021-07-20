@@ -189,7 +189,7 @@ public interface AlipayUserInfoMapper {
     int upUserAgents(Long id);
 
 
-    @Select("select *  from alipay_user_info where remitOrderState = 1  and userType = 2")
+    @Select("select *  from alipay_user_info where remitOrderState = 1  and switchs = 1 and userType = 2")
     List<AlipayUserInfo> findUserUserAllToBank();
     @Select("select *  from alipay_user_info where  userType = 2")
     List<AlipayUserInfo> findUserUserAllToBankNot();

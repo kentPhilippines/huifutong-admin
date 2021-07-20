@@ -41,6 +41,15 @@
                                         th:value="${dict.dictValue}"></option>
                             </select>
                         </li>
+                        <li class="select-selectpicker">
+                            <label>状态：</label>
+                            <select id="status" name="status" class="selectpicker"
+                                    data-none-selected-text="请选择">
+                                <option value="" >所有</option>
+                                <option value="1" th:default="1">开启</option>
+                                <option value="0">关闭</option>
+                            </select>
+                        </li>
                         <li class="select-time">
                             <span>创建时间：</span>
                             <input type="text" class="time-input" id="startTime" placeholder="开始时间"
@@ -124,11 +133,11 @@
                 },
                 {
                     field: 'mountSystem',
-                    title: '系统收款'
+                    title: '交易余额'
                 },
                 {
                     field: 'mountNow',
-                    title: '实际余额'
+                    title: '参考余额'
                 },
 
                 {
@@ -165,7 +174,8 @@
                     formatter: function (value, row, index) {
                         var actions = [];
 
-                        actions.push('<a class="btn btn-info btn-xs ' + codeFlag + '" href="javascript:void(0)" onclick="$.operate.codeList(\'' + row.mediumId + '\')"><i class="fa fa-search-plus"></i>二维码</a> ');
+                   //     actions.push('<a class="btn btn-info btn-xs ' + codeFlag + '" href="javascript:void(0)" onclick="$.operate.codeList(\'' + row.mediumId + '\')"><i class="fa fa-search-plus"></i>二维码</a> ');
+                        actions.push('<a class="btn btn-info btn-xs ' + codeFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-play-circle-o"></i>修改业务金额</a> ');
 
                         actions.push('<a class="btn btn-primary btn-xs ' + editAmountById + '" href="/alipay/medium/editAmount/' + row.id + '")"><i class="fa fa-play-circle-o"></i>修改收款限制金额</a> ');
                         actions.push('<a class="btn btn-primary btn-xs ' + editAmountByCode + '" href="/alipay/medium/editAmountByCode/' + row.code + '")"><i class="fa fa-play-circle-o"></i>修改同种媒介收款限制金额</a> ');
@@ -174,6 +184,25 @@
                 }]
         };
         $.table.init(options);
+    });
+
+    //初始化时间
+    layui.use('laydate', function () {
+        const laydate = layui.laydate;
+        laydate.render({
+            elem: '#startTime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            type: 'datetime',
+            value: new Date().toLocaleDateString().replace(/\//g, "-") + " 00:00:00",
+            isInitValue: true
+        });
+        laydate.render({
+            elem: '#endTime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            type: 'datetime',
+            value: new Date().toLocaleDateString().replace(/\//g, "-") + " 23:59:59",
+            isInitValue: true
+        });
     });
 </script>
 </body>

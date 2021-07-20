@@ -219,8 +219,14 @@ public class AlipayMediumEntityController extends BaseController {
                 String bankId = queue.getStr("bankId");//卡号
                 String score = queue.getStr("score");//排序
                 String gourp = queue.getStr("gourp");//分组
+                String bankName = queue.getStr("bankName");// 银行名字
+                String userId = queue.getStr("userId");// 银行名字
+                String bankAccount = queue.getStr("bankAccount");// 开户人姓名
+                String amount = queue.getStr("amount");// 开户人姓名
                 med.setMediumId(gourp);
                 med.setMountLimit(score);
+                med.setQrcodeId(userId);
+                med.setMediumNote(bankName+":"+bankAccount+":参考余额:"+amount);
                 med.setMediumNumber(bankId);
                 listQueue.add(med);
             }

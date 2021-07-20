@@ -29,19 +29,26 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">交易详情：</label>
             <div class="col-sm-8">
-                    <span class="form-control" style="border: 0;">
+                        <p th:if="${alipayDealOrderEntity.orderType == '4' }" th:text="${'入款信息：'+wit.bankNo + ':' + wit.accname + ':' + wit.bankName + ':' + wit.amount  }"></p>
                         <p th:text="${alipayDealOrderEntity.orderQr}"></p>
-                        <p th:text="${alipayDealOrderEntity.payInfo}"></p>
-                       <a href="javascript:void(0);" title="点击查看出款凭证" style="margin-left: 10px;"
+                        <p th:text="${ '支付数据' + alipayDealOrderEntity.payInfo}"></p>
+                        <p th:text="${'确认时间：'+alipayDealOrderEntity.submitTime}"></p>
+                        <a th:if="${alipayDealOrderEntity.orderType == '4' }" href="javascript:void(0);" title="点击查看出款凭证" style="margin-left: 10px;"
                            th:data="${alipayDealOrderEntity.payImg}" onclick="showCode(this.getAttribute('data'))"><i
                                 class="fa fa-search-plus"></i>查看出款凭证</a>
-                    </span>
+                    </textarea>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">商户账号：</label>
             <div class="col-sm-8">
                 <span class="form-control" style="border: 0;" th:text="${alipayDealOrderEntity.orderAccount}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">交易金额：</label>
+            <div class="col-sm-8">
+                <span class="form-control" style="border: 0;" th:text="${alipayDealOrderEntity.dealAmount}"></span>
             </div>
         </div>
         <div class="form-group">
@@ -78,14 +85,13 @@
                       th:text="交易"></span>
                 <span class="form-control" style="border: 0;" th:if="${alipayDealOrderEntity.orderType eq '2'}"
                       th:text="系统加款"></span>
+                <span class="form-control" style="border: 0;" th:if="${alipayDealOrderEntity.orderType eq '3'}"
+                      th:text="卡商充值"></span>
+                <span class="form-control" style="border: 0;" th:if="${alipayDealOrderEntity.orderType eq '4'}"
+                      th:text="卡商出款"></span>
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">交易金额：</label>
-            <div class="col-sm-8">
-                <span class="form-control" style="border: 0;" th:text="${alipayDealOrderEntity.dealAmount}"></span>
-            </div>
-        </div>
+
         <div class="form-group">
             <label class="col-sm-3 control-label">手续费：</label>
             <div class="col-sm-8">

@@ -70,4 +70,12 @@ public interface AlipayWithdrawEntityMapper {
     List<AlipayWithdrawEntity> findWitLimit(@Param("starTime") String starTime, @Param("endTime") String endTime, @Param("page") Integer page, @Param("size") Integer size);
 
     AlipayWithdrawEntity selectAlipayWithdrawEntityListSum(AlipayWithdrawEntity alipayWithdrawEntity);
+
+
+    /**
+     * 查询代付订单
+     * @return
+     */
+    @Select("select * from alipay_withdraw where   orderId = #{orderId}")
+    AlipayWithdrawEntity findWitOrder(@Param("orderId")String orderId);
 }

@@ -46,6 +46,7 @@ public interface AlipayDealOrderEntityMapper {
             "coalesce(sum(dealAmount),0) totalAmount," +
             "coalesce(sum(case orderStatus when 2 then dealAmount else 0 end),0) successAmount," +
             "coalesce(sum(case orderStatus when 2 then retain3 else 0 end),0) profit," +
+            "coalesce(sum(case orderStatus when 2 then retain2 else 0 end),0) grossCost," +
             "count(*) totalCount," +
             "count(case orderStatus when 2 then id else null end) successCount " +
             "from alipay_deal_order where createTime between #{statisticsEntity.params.dayStart}" +
@@ -56,6 +57,7 @@ public interface AlipayDealOrderEntityMapper {
             "coalesce(sum(dealAmount),0) totalAmount," +
             "coalesce(sum(case orderStatus when 2 then dealAmount else 0 end),0) successAmount," +
             "coalesce(sum(case orderStatus when 2 then retain3 else 0 end),0) profit," +
+            "coalesce(sum(case orderStatus when 2 then retain2 else 0 end),0) grossCost," +
             "count(*) totalCount," +
             "count(case orderStatus when 2 then id else null end) successCount " +
             "from alipay_deal_order where createTime between #{statisticsEntity.params.dayStart}" +
@@ -66,6 +68,7 @@ public interface AlipayDealOrderEntityMapper {
             "coalesce(sum(dealAmount),0.00) totalAmount," +
             "coalesce(sum(case orderStatus when 2 then dealAmount else 0 end),0) successAmount," +
             "coalesce(sum(case orderStatus when 2 then o.retain3 else 0 end),0) profit," +
+            "coalesce(sum(case orderStatus when 2 then o.retain2 else 0 end),0) grossCost," +
             "count(*) totalCount," +
             "count(case orderStatus when 2 then o.id else null end) successCount " +
             "from alipay_deal_order o left join alipay_product p on o.retain1 = p.productId " +
@@ -116,7 +119,7 @@ public interface AlipayDealOrderEntityMapper {
 
 
     @Update("update alipay_deal_order set orderQrUser = #{userId} ,orderQr = '' , " +
-            "retain2 = #{fee} , feeId =#{feeId}  ,retain3 = #{profit} where orderId = #{orderId} ")
+            "retain2 = #{fee} , feeId =#{feeId}  ,retain3 = #{profit} , lockWit  = 0  ,  enterPayTime  = null  where orderId = #{orderId} ")
     int updateOrderQr(@Param("orderId") String orderId, @Param("userId") String userId,
                       @Param("orderQr") String orderQr, @Param("feeId") Long feeId,
                       @Param("fee") Double fee, @Param("profit") Double profit);
@@ -131,4 +134,8 @@ public interface AlipayDealOrderEntityMapper {
     @Update("update alipay_deal_order set  orderQr = '' , dealAmount = #{nowAmount}  , actualAmount = #{nowAmount} , dealFee = 0  , " +
             "        retain2 = #{fee} ,  retain3 = #{profit}  where orderId = #{orderId} ")
     int updateAmountOrder( @Param("nowAmount") Double nowAmount, @Param("orderId") String orderId , @Param("fee") Double fee,@Param("profit") Double profit);
+
+    @Update("update alipay_deal_order set  lockWit = 0  " +
+            "      where id = #{id} ")
+    int updateUnLock(Long id);
 }

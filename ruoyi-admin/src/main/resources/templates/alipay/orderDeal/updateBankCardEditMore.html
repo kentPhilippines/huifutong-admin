@@ -3,10 +3,12 @@
 <head>
     <th:block th:include="include :: header('渠道变更')"/>
     <th:block th:include="include :: datetimepicker-css"/>
+    <th:block th:include="include :: select2-css" />
+
 </head>
 <body class="white-bg">
 <div class="wrapper wrapper-content animated fadeInRight ibox-content">
-    <form class="form-horizontal m" id="form-orderDeal-edit">
+    <form class="form-horizontal m" id="form-rate-add">
         <div class="form-group">
             <label class="col-sm-3 control-label">平台订单：</label>
             <div class="col-sm-8">
@@ -26,19 +28,20 @@
             <div class="col-sm-8" th:if="${listFund.size()} ne 0">
                 <select class="form-control" id="userId" name="userId" required>
                     <option value="">请选择卡商</option>
-                    <option th:each="userIdList : ${listFund}" th:text="${userIdList.userId}+'，【当日收款】：' +${userIdList.todayDealAmount} "
+                    <option th:each="userIdList : ${listFund}" th:text="${userIdList.userId}+'：'+${userIdList.userName}+'，【当日收款】：' +${userIdList.todayDealAmount} +'，【当日出款】：' +${userIdList.todayOtherWitAmount} "
                             th:value="${userIdList.userId}"></option>
                 </select>
             </div>
             <div class="col-sm-8" th:if="${listFund.size()} eq 0">
                 <input class="form-control" id="flag" name="flag" readonly required
-                       style="border-width: 0;background-color:white; color: red;" type="text" value="未找到任何产品类型">
+                       style="border-width: 0;background-color:white; color: red;" type="text" value="未找到任何卡商">
             </div>
         </div>
     </form>
 </div>
 <th:block th:include="include :: footer"/>
 <th:block th:include="include :: datetimepicker-js"/>
+<th:block th:include="include :: select2-js" />
 <script th:inline="javascript">
     let prefix = ctx + "alipay/orderDeal";
     $("#form-orderDeal-edit").validate({
@@ -47,7 +50,7 @@
 
     function submitHandler() {
         if ($.validate.form()) {
-            $.operate.save(prefix + "/updateBankCardMore", $('#form-orderDeal-edit').serialize());
+            $.operate.save(prefix + "/updateBankCardMore", $('#form-rate-add').serialize());
         }
     }
 </script>

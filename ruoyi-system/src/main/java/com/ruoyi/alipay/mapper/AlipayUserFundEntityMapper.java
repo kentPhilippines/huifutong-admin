@@ -120,7 +120,24 @@ public interface AlipayUserFundEntityMapper {
     AlipayUserFundEntity findFundBak(@Param("starTime") String starTime, @Param("userId") String userId, @Param("endTime") String endTime);
 
 
-    List<AlipayUserFundEntity> findFundBakList(AlipayUserFundEntity alipayUserFundEntity);
+
+    @Select("<script>" +
+            "        select id, userId, userName, cashBalance, rechargeNumber, freezeBalance, accountBalance,\n" +
+            "         sumDealAmount, sumRechargeAmount, sumProfit, sumAgentProfit, sumOrderCount, todayDealAmount,\n" +
+            "         todayProfit, todayOrderCount, todayAgentProfit, userType, agent, isAgent,todayWitAmount,\n" +
+            "        createTime, submitTime  , todayOtherWitAmount  from alipay_user_fund_bak" +
+            "  where  1=1 " +
+            "<if test = \"alipayUserFundEntity.userId != null and alipayUserFundEntity.userId != ''\">" +
+            "and userId = #{alipayUserFundEntity.userId} " +
+            "</if>" +
+            "<if test = \"alipayUserFundEntity.userName != null and alipayUserFundEntity.userName != ''\">" +
+            "and userName = #{alipayUserFundEntity.userName} " +
+            "</if>" +
+            "<if test = \"alipayUserFundEntity.userType != null and alipayUserFundEntity.userType != ''\">" +
+            "and userType = #{alipayUserFundEntity.userType} " +
+            "</if>" +
+            "</script>")
+    List<AlipayUserFundEntity> findFundBakList(@Param("alipayUserFundEntity") AlipayUserFundEntity alipayUserFundEntity);
 
     @Select("select userId ,currency  from alipay_user_fund where   userId = #{userId}")
     AlipayUserFundEntity findUserFundCurrencyById(@Param("userId") String userId);

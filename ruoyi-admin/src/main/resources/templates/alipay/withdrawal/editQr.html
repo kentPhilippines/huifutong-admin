@@ -119,6 +119,9 @@
            onclick="approval('2');">成功 </a>
         <a name="reject" class="btn btn-w-m btn-danger" href="javascript:void(0)"
            onclick="googleBind('3');"> 置为失败</a>
+        <a class="btn btn-w-m btn-danger" href="javascript:void(0)" name="reject"
+           th:if="${  (alipayWithdrawEntity.orderStatus == 1 ||  alipayWithdrawEntity.orderStatus == '1'   )  }"
+           onclick="approval('100');"> 推送出款</a>
     </div>
 </div>
 <th:block th:include="include :: footer"/>

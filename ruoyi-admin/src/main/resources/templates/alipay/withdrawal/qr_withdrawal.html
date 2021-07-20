@@ -146,6 +146,17 @@
                     title: '实际到账'
                 },
                 {
+                    field: 'retain1',
+                    title: '类型',
+                    footerFormatter:function (rows) {
+                        if (rows.retain1 === '1') {
+                            return '押金';
+                        } else if (rows.retain1 === '2') {
+                            return '佣金';
+                        }
+                    }
+                },
+                {
                     field: 'createTime',
                     title: '创建时间'
                 },
