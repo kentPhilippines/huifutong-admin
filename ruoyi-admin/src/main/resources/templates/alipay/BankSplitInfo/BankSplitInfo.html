@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('银行流水明细')"/>
+    <th:block th:include="include :: bootstrap-select-css"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <span>银行卡名称：</span>
+                            <input type="text" name="bankName"/>
+                        </li>
+                        <li>
+                            <span>手机号：</span>
+                            <input type="text" name="phoneId"/>
+                        </li>
+                        <li>
+                            <span>银行卡号：</span>
+                            <input type="text" name="bankId"/>
+                        </li>
+                        <li>
+                            <span>用户id：</span>
+                            <input type="text" name="userId"/>
+                        </li>
+                        <li>
+                            <span>交易类型：</span>
+                            <input type="text" name="transactionType"/>
+                        </li>
+                        <li class="select-time">
+                            <span>交易时间：</span>
+                            <input type="text" class="time-input" id="startTime" placeholder="开始时间"
+                                   name="params[beginTransactionDate]"/>
+                            <span>-</span>
+                            <input type="text" class="time-input" id="endTime" placeholder="结束时间"
+                                   name="params[endTransactionDate]"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: bootstrap-select-js"/>
+<script th:inline="javascript">
+    const mediumType = [[${@dict.getType('medium_type')}]];
+    var prefix = ctx + "alipay/BankSplitInfo";
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            exportUrl: prefix + "/export",
+            modalName: "银行流水明细",
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'id',
+                    title: 'ID',
+                    visible: false
+                },
+                {
+                    field: 'bankName',
+                    title: '银行卡名称',
+                },
+                {
+                    field: 'balance',
+                    title: '余额',
+                },
+                {
+                    field: 'transactionDate',
+                    title: '交易时间'
+                },
+                {
+                    field: 'transactionAmount',
+                    title: '交易金额'
+                },
+                {
+                    field: 'orderNo',
+                    title: '订单号'
+                },
+                {
+                    field: 'userId',
+                    title: '用户id'
+                },
+                {
+                    field: 'transactionType',
+                    title: '交易类型'
+                },
+                {
+                    field: 'phoneId',
+                    title: '手机号'
+                },
+                {
+                    field: 'bankId',
+                    title: '银行卡号'
+                }]
+        };
+        $.table.init(options);
+    });
+    //初始化时间
+    layui.use('laydate', function () {
+        const laydate = layui.laydate;
+        laydate.render({
+            elem: '#startTime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            type: 'datetime',
+            value: new Date().toLocaleDateString().replace(/\//g, "-") + " 00:00:00",
+            isInitValue: true
+        });
+        laydate.render({
+            elem: '#endTime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            type: 'datetime',
+            value: new Date().toLocaleDateString().replace(/\//g, "-") + " 23:59:59",
+            isInitValue: true
+        });
+    });
+</script>
+</body>
+</html>

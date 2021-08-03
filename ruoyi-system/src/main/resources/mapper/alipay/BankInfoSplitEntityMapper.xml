@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.alipay.mapper.BankInfoSplitEntityMapper">
+
+    <resultMap type="BankInfoSplitEntity" id="BankInfoSplitResult">
+        <result property="id" column="id"/>
+        <result property="originText" column="origin_text"/>
+        <result property="bankName" column="bank_name"/>
+        <result property="typeDetail" column="type_detail"/>
+        <result property="balance" column="balance"/>
+        <result property="transactionDate" column="transaction_date"/>
+        <result property="transactionAmount" column="transaction_amount"/>
+        <result property="myselfTailNumber" column="myself_tail_number"/>
+        <result property="counterpartyTailNumber" column="counterparty_tail_number"/>
+        <result property="checkKey" column="check_key"/>
+        <result property="orderNo" column="orderNo"/>
+        <result property="counterpartyAccountName" column="counterparty_account_name"/>
+        <result property="transactionType" column="transaction_type"/>
+        <result property="phoneId" column="phone_id"/>
+        <result property="resultText" column="result_text"/>
+        <result property="userId" column="user_id"/>
+        <result property="bankId" column="bank_id"/>
+        <result property="mark" column="mark"/>
+    </resultMap>
+    <select id="selectBankInfoSplitEntity" parameterType="BankInfoSplitEntity" resultMap="BankInfoSplitResult">
+        select id,
+        bank_name,
+        balance,
+        transaction_date,
+        transaction_amount,
+        orderNo,
+        user_id,
+        counterparty_account_name,
+        transaction_type,
+        phone_id,
+        bank_id
+        from bankinfo_split_entity
+        <where>
+            transaction_date between #{params.beginTransactionDate} and #{params.endTransactionDate}
+            <if test="bankName != null  and bankName != ''">and bank_name = #{bankName}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+            <if test="transactionType != null  and transactionType != ''">and transaction_type = #{transactionType}</if>
+            <if test="phoneId != null  and phoneId != ''">and phone_id = #{phoneId}</if>
+            <if test="bankId != null  and bankId != ''">and bank_id = #{bankId}</if>
+       </where>
+    </select>
+
+</mapper>
