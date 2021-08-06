@@ -36,7 +36,7 @@
         transaction_type,
         phone_id,
         bank_id
-        from bankinfo_split_entity
+        from bankInfo_split_entity
         <where>
             transaction_date between #{params.beginTransactionDate} and #{params.endTransactionDate}
             <if test="bankName != null  and bankName != ''">and bank_name = #{bankName}</if>
