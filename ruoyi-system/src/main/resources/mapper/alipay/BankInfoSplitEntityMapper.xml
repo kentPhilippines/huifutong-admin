@@ -16,6 +16,7 @@
         <result property="counterpartyTailNumber" column="counterparty_tail_number"/>
         <result property="checkKey" column="check_key"/>
         <result property="orderNo" column="orderNo"/>
+        <result property="createTime"    column="createTime"/>
         <result property="counterpartyAccountName" column="counterparty_account_name"/>
         <result property="transactionType" column="transaction_type"/>
         <result property="phoneId" column="phone_id"/>
@@ -27,8 +28,11 @@
     <select id="selectBankInfoSplitEntity" parameterType="BankInfoSplitEntity" resultMap="BankInfoSplitResult">
         select id,
         bank_name,
+        origin_text,
+        type_detail,
         balance,
         transaction_date,
+        createTime,
         transaction_amount,
         orderNo,
         user_id,
@@ -38,13 +42,43 @@
         bank_id
         from bankInfo_split_entity
         <where>
-            transaction_date between #{params.beginTransactionDate} and #{params.endTransactionDate}
+            createTime between #{params.beginTransactionDate} and #{params.endTransactionDate}
             <if test="bankName != null  and bankName != ''">and bank_name = #{bankName}</if>
             <if test="userId != null and userId != ''">and user_id = #{userId}</if>
             <if test="transactionType != null  and transactionType != ''">and transaction_type = #{transactionType}</if>
             <if test="phoneId != null  and phoneId != ''">and phone_id = #{phoneId}</if>
             <if test="bankId != null  and bankId != ''">and bank_id = #{bankId}</if>
-       </where>
+        </where>
     </select>
 
+    <select id="selectBankTransactionRecord" parameterType="BankInfoSplitEntity"
+            resultType="com.ruoyi.alipay.domain.BankTransactionRecord">
+        select bank_id                                as bankId,
+               user_id                                as userId,
+               COALESCE(sum(transaction_amount), '0') as totalIncome,
+               (select COALESCE(sum(transaction_amount), '0')
+                from (select distinct origin_text, bank_id, user_id, transaction_type, transaction_amount
+                      from bankinfo_split_entity
+                      where createTime between #{params.beginTransactionDate} and #{params.endTransactionDate}
+                    ) as tmp1
+                where bank_id = bankId
+                  and user_id = userId
+                  and transaction_type = 'expenditure'
+               )                                      as totalExpenditure,
+               (select balance
+                from bankinfo_split_entity
+                where bank_id = bankId
+                  and user_id = userId
+                  and createTime between #{params.beginTransactionDate} and #{params.endTransactionDate}
+                order by transaction_date desc
+                                                         limit 1)                              as currentBalance
+        from (select distinct origin_text, bank_id, user_id, transaction_type, transaction_amount
+            from bankinfo_split_entity
+            where createTime between #{params.beginTransactionDate} and #{params.endTransactionDate}
+            ) as tmp
+        where transaction_type = 'income'
+        <if test="bankId != null  and bankId != ''">and bank_id = #{bankId}</if>
+        <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+        group by bank_id, user_id
+    </select>
 </mapper>

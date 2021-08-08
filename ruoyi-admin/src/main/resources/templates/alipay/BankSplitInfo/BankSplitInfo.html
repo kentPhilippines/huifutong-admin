@@ -27,12 +27,18 @@
                             <span>用户id：</span>
                             <input type="text" name="userId"/>
                         </li>
-                        <li>
-                            <span>交易类型：</span>
-                            <input type="text" name="transactionType"/>
+                        <li class="select-selectpicker">
+                            <label>交易类型：</label>
+                            <select name="transactionType" th:with="type=${@dict.getType('bank_info_transaction_type')}"
+                                    class="selectpicker"
+                                    data-none-selected-text="请选择">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+                                        th:value="${dict.dictValue}"></option>
+                            </select>
                         </li>
                         <li class="select-time">
-                            <span>交易时间：</span>
+                            <span>创建时间：</span>
                             <input type="text" class="time-input" id="startTime" placeholder="开始时间"
                                    name="params[beginTransactionDate]"/>
                             <span>-</span>
@@ -76,16 +82,20 @@
                     visible: false
                 },
                 {
+                    field: 'originText',
+                    title: '原始短信'
+                },
+                {
+                    field: 'bankId',
+                    title: '银行卡号'
+                },
+                {
                     field: 'bankName',
                     title: '银行卡名称',
                 },
                 {
                     field: 'balance',
                     title: '余额',
-                },
-                {
-                    field: 'transactionDate',
-                    title: '交易时间'
                 },
                 {
                     field: 'transactionAmount',
@@ -108,8 +118,12 @@
                     title: '手机号'
                 },
                 {
-                    field: 'bankId',
-                    title: '银行卡号'
+                    field: 'transactionDate',
+                    title: '交易时间'
+                },
+                {
+                    field: 'createTime',
+                    title: '创建时间'
                 }]
         };
         $.table.init(options);

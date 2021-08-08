@@ -2,6 +2,7 @@ package com.ruoyi.alipay.service;
 
 
 import com.ruoyi.alipay.domain.BankInfoSplitEntity;
+import com.ruoyi.alipay.domain.BankTransactionRecord;
 
 import java.util.List;
 
@@ -19,7 +20,14 @@ public interface IBankInfoSplitResultService {
      * @param bankInfoSplitEntity
      * @return 结果
      */
-    public List<BankInfoSplitEntity> selectBankInfoSplitResult(BankInfoSplitEntity bankInfoSplitEntity);
+    public List<BankInfoSplitEntity> selectBankInfoSplitResult(BankInfoSplitEntity bankInfoSplitEntity);    /**
+     /**
+     * 查询流水收入支出记录
+     *
+     * @param bankInfoSplitEntity
+     * @return 结果
+     */
+    List<BankTransactionRecord> selectBankTransactionRecord(BankInfoSplitEntity bankInfoSplitEntity);
 
 
 }
