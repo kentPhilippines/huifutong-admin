@@ -78,14 +78,34 @@ public class AlipayBankSplitEntityController extends BaseController {
     }
 
     /**
-     * 导出收款媒介列列表
+     * 导出银行截取信息列表
      */
-    @Log(title = "收款媒介列", businessType = BusinessType.EXPORT)
+    @Log(title = "银行截取信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
     public AjaxResult export(BankInfoSplitEntity bankSplitEntity) {
         List<BankInfoSplitEntity> list = bankInfoSplitResultService.selectBankInfoSplitResult(bankSplitEntity);
+        list.parallelStream().forEach(tmp ->
+                tmp.setTransactionType("income".equals(tmp.getTransactionType())
+                        ? "收入-" + tmp.getTypeDetail() : "支出-" + tmp.getTypeDetail())
+        );
+        if (!SysUser.isAdmin(ShiroUtils.getUserId())) {
+            List<BankInfoSplitEntityVo> bankInfoSplitEntityVos = JSON.parseArray(JSON.toJSONString(list), BankInfoSplitEntityVo.class);
+            ExcelUtil<BankInfoSplitEntityVo> util = new ExcelUtil<BankInfoSplitEntityVo>(BankInfoSplitEntityVo.class);
+            return util.exportExcel(bankInfoSplitEntityVos, "bankInfoSpilt");
+        }
         ExcelUtil<BankInfoSplitEntity> util = new ExcelUtil<BankInfoSplitEntity>(BankInfoSplitEntity.class);
         return util.exportExcel(list, "bankInfoSpilt");
+    }
+    /**
+     * 银行收入支出记录
+     */
+    @Log(title = "银行收入支出记录", businessType = BusinessType.EXPORT)
+    @PostMapping("/bankTransactionRecord/export")
+    @ResponseBody
+    public AjaxResult bankTransactionRecord(BankInfoSplitEntity bankSplitEntity) {
+        List<BankTransactionRecord> list = bankInfoSplitResultService.selectBankTransactionRecord(bankSplitEntity);
+        ExcelUtil<BankTransactionRecord> util = new ExcelUtil<BankTransactionRecord>(BankTransactionRecord.class);
+        return util.exportExcel(list, "bankTransactionRecord");
     }
 }

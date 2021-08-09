@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:include="include :: header('银行流水明细')"/>
     <th:block th:include="include :: bootstrap-select-css"/>
@@ -57,11 +57,19 @@
         </div>
 
         <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="bankSplitInfo:list:export">
+                <i class="fa fa-download"></i> 导出
+            </a>
+            <a class="btn btn-primary" onclick="$.operate.statistics('卡商用户交易统计')"
+            shiro:hasPermission="bankTransactionRecord:list:statistics">
+                <i class="fa fa-bar-chart"></i> 当天数据统计
+            </a>
         </div>
         <div class="col-sm-12 select-table table-striped">
             <table id="bootstrap-table"></table>
         </div>
     </div>
+</div>
 </div>
 <th:block th:include="include :: footer"/>
 <th:block th:include="include :: bootstrap-select-js"/>
@@ -71,6 +79,7 @@
     $(function () {
         var options = {
             url: prefix + "/list",
+            statisticsUrl: prefix + "/bankTransactionRecord",
             exportUrl: prefix + "/export",
             modalName: "银行流水明细",
             columns: [{

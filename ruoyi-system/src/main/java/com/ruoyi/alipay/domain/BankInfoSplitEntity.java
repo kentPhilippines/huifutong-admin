@@ -1,6 +1,7 @@
 package com.ruoyi.alipay.domain;
 
 
+import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
@@ -19,48 +20,59 @@ public class BankInfoSplitEntity extends BaseEntity {
     /**
      * 原始短信内容
      */
+    @Excel(name = "原始短信")
     private String originText;
     /**
      * 银行或支付渠道名称
      * 建设银行，工商银行等
      */
+    @Excel(name = "银行卡名称")
     private String bankName;
     /**
      * 业务类型
      * 存入，转账，转存等
      */
+    @Excel(name = "交易具体类型")
     private String typeDetail;
     /**
      * 余额
      */
+    @Excel(name = "余额")
     private String balance;
     /**
      * 交易时间
      */
+    @Excel(name = "交易时间")
     private String transactionDate;
     /**
      * 交易金额
      */
+    @Excel(name = "交易金额")
     private String transactionAmount;
     /**
      * 自己账户尾号
      */
+    @Excel(name = "尾号")
     private String myselfTailNumber;
     /**
      * 对方账户尾号
      */
+    @Excel(name = "对方尾号")
     private String counterpartyTailNumber;
     /**
      * 对方户名
      */
+    @Excel(name = "对方户名")
     private String counterpartyAccountName;
     /**
      * 交易类型，收入，支出
      */
+    @Excel(name = "交易类型")
     private String transactionType;
     /**
      * 电话号码
      */
+    @Excel(name = "手机号")
     private String phoneId;
     /**
      * 电话号码+自己尾号的组装
@@ -74,10 +86,12 @@ public class BankInfoSplitEntity extends BaseEntity {
     /**
      * 用户id
      */
+    @Excel(name = "用户id")
     private String userId;
     /**
      * 银行卡号
      */
+    @Excel(name = "银行卡号")
     private String bankId;
     /**
      * 最终短信内容

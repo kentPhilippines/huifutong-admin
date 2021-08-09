@@ -1,6 +1,7 @@
 package com.ruoyi.alipay.domain;
 
 
+import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
@@ -15,35 +16,28 @@ public class BankTransactionRecord extends BaseEntity {
     /**
      * 总收入
      */
+    @Excel(name = "总收入")
     private String totalIncome;
     /**
      * 总支出
      */
+    @Excel(name = "总支出")
     private String totalExpenditure;
     /**
      * 当前余额
      */
+    @Excel(name = "当前余额")
     private String currentBalance;
-    /**
-     * 交易类型，收入，支出
-     */
-    private String transactionType;
     /**
      * 用户id
      */
+    @Excel(name = "用户id")
     private String userId;
     /**
      * 银行卡号
      */
     private String bankId;
 
-    public String getTransactionType() {
-        return transactionType;
-    }
-
-    public void setTransactionType(String transactionType) {
-        this.transactionType = transactionType;
-    }
 
     public String getUserId() {
         return userId;
