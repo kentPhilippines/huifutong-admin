@@ -29,6 +29,14 @@ public interface IAlipayDealOrderAppService {
     List<AlipayDealOrderApp> selectAlipayDealOrderAppList(AlipayDealOrderApp alipayDealOrderApp);
 
     /**
+     * 查询商户订单登记列表
+     *
+     * @param alipayDealOrderApp 商户订单登记
+     * @return 商户订单登记
+     */
+    AlipayDealOrderApp selectAlipayDealOrderApp(AlipayDealOrderApp alipayDealOrderApp);
+
+    /**
      * 修改商户订单登记
      *
      * @param alipayDealOrderApp 商户订单登记
@@ -70,5 +78,12 @@ public interface IAlipayDealOrderAppService {
      * @return
      */
     Double sumDealorderProfit(String yesToday, String today);
+
+    /**
+     * 新增
+     * @param alipayDealOrderApp
+     * @return
+     */
+    int insertAlipayDealOrderApp(AlipayDealOrderApp alipayDealOrderApp);
 
 }

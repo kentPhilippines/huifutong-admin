@@ -1,5 +1,6 @@
 package com.ruoyi.alipay.service;
 
+import com.ruoyi.alipay.domain.AlipayDealOrderApp;
 import com.ruoyi.alipay.domain.AlipayDealOrderEntity;
 import com.ruoyi.common.core.domain.StatisticsEntity;
 
@@ -20,6 +21,7 @@ public interface IAlipayDealOrderEntityService {
      */
     AlipayDealOrderEntity selectAlipayDealOrderEntityById(Long id);
      int  insertAlipayDealOrderEntity(AlipayDealOrderEntity alipayDealOrderEntity);
+     int  insertAlipayDealOrderEntity(AlipayDealOrderEntity alipayDealOrderEntity, AlipayDealOrderApp alipayDealOrderApp);
     /**
      * 查询交易订单列表
      *

@@ -28,7 +28,13 @@ public interface AlipayDealOrderAppMapper {
      * @param alipayDealOrderApp 商户订单登记
      * @return 商户订单登记集合
      */
-    List<AlipayDealOrderApp> selectAlipayDealOrderAppList(AlipayDealOrderApp alipayDealOrderApp);
+    List<AlipayDealOrderApp> selectAlipayDealOrderAppList(AlipayDealOrderApp alipayDealOrderApp);    /**
+     * 查询商户订单登记列表
+     *
+     * @param alipayDealOrderApp 商户订单登记
+     * @return 商户订单登记集合
+     */
+    AlipayDealOrderApp selectAlipayDealOrderApp(AlipayDealOrderApp alipayDealOrderApp);
 
     /**
      * 新增商户订单登记

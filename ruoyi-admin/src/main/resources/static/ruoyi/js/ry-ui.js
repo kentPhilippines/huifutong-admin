@@ -1281,6 +1281,9 @@ var table = {
                 table.set();
                 if (flag == 'openUrl'){
                     $.modal.open(title, $.operate.openUrl(id));
+                }
+                if (flag == 'backOrderUrl'){
+                    $.modal.open(title, $.operate.backOrderUrl(id));
                 }else if (flag == 'updateUrl') {
                     $.modal.open(title, $.operate.editUrl(id))
                 } else if (flag == 'otherUrl') {
@@ -1332,6 +1335,20 @@ var table = {
                         return;
                     }
                     url = table.options.openUrl.replace("{userId}", id);
+                }
+                return url;
+            },
+            // 添加下级开户地址
+            backOrderUrl: function (id) {
+                var url = "/404.html";
+                if ($.common.isNotEmpty(id)) {
+                    url = table.options.backOrderUrl.replace("{id}", id);
+                } else {
+                    if (id.length == 0) {
+                        $.modal.alertWarning("未获取到参数值");
+                        return;
+                    }
+                    url = table.options.backOrderUrl.replace("{id}", id);
                 }
                 return url;
             },
