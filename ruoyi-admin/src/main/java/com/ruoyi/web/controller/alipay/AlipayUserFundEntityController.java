@@ -168,6 +168,12 @@ public class AlipayUserFundEntityController extends BaseController {
         AlipayUserFundEntity userFundEntity = new AlipayUserFundEntity();
         userFundEntity.setUserId(userId);
         mmap.put("userFund", userFundEntity);
+
+        AlipayUserInfo merchantInfoByUserId = alipayUserInfoService.findMerchantInfoByUserId(userId);
+        if(2 == merchantInfoByUserId.getUserType()){
+            mmap.put("isQr", "yes");
+        }
+
         return prefix + "/add";
     }
 
@@ -290,6 +296,10 @@ public class AlipayUserFundEntityController extends BaseController {
         AlipayUserFundEntity userFundEntity = new AlipayUserFundEntity();
         userFundEntity.setUserId(userId);
         mmap.put("userFund", userFundEntity);
+        AlipayUserInfo merchantInfoByUserId = alipayUserInfoService.findMerchantInfoByUserId(userId);
+        if(2 == merchantInfoByUserId.getUserType()){
+            mmap.put("isQr", "yes");
+        }
         return prefix + "/deduct";
     }
 
@@ -315,6 +325,7 @@ public class AlipayUserFundEntityController extends BaseController {
         Map<String, Object> mapParam = Collections.synchronizedMap(Maps.newHashMap());
         mapParam.put("userId", alipayAmountEntity.getUserId());
         mapParam.put("amount", alipayAmountEntity.getAmount());
+        mapParam.put("type", alipayAmountEntity.getType());
         mapParam.put("dealDescribe", alipayAmountEntity.getDealDescribe());
         if (alipayAmountEntity.getAmountType().toString().equals(RefundDeductType.DEDUCT_FREEZE_TYPE.getCode().toString())) {
             mapParam.put("amountType", RefundDeductType.DEDUCT_FREEZE_TYPE.getCode());//账户冻结

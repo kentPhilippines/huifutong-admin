@@ -1,8 +1,5 @@
 package com.ruoyi.web.controller.alipay;
 
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.poi.excel.BigExcelWriter;
-import cn.hutool.poi.excel.ExcelWriter;
 import com.ruoyi.alipay.domain.AlipayRunOrderEntity;
 import com.ruoyi.alipay.service.IAlipayRunOrderEntityService;
 import com.ruoyi.common.annotation.Log;
@@ -19,9 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -62,24 +56,13 @@ public class AlipayRunOrderEntityController extends BaseController {
 	 */
 	@Log(title = "资金流水", businessType = BusinessType.EXPORT)
 	@PostMapping("/export")
+	@RequiresPermissions("alipay:running:export")
 	@ResponseBody
 	public AjaxResult export(AlipayRunOrderEntity alipayRunOrderEntity) {
 		List<AlipayRunOrderEntity> list = alipayRunOrderEntityService
 				.selectAlipayRunOrderEntityList(alipayRunOrderEntity);
-
-
-
-
-
-
-	ExcelUtil<AlipayRunOrderEntity> util = new ExcelUtil<AlipayRunOrderEntity>(AlipayRunOrderEntity.class);
-
-
-
-
-
-		return util.exportExcel(list, "running");
+		ExcelUtil<AlipayRunOrderEntity> util = new ExcelUtil<AlipayRunOrderEntity>(AlipayRunOrderEntity.class);
+		AjaxResult runOrder = util.exportExcel(list, "runOrder");
+		return runOrder;
 	}
-
-
 }

@@ -10,6 +10,7 @@ import com.ruoyi.common.enums.DataSourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ import java.util.List;
  */
 @Service
 public class BankInfoSplitEntityServiceImpl implements IBankInfoSplitResultService {
-    @Autowired
+    @Resource
     private BankInfoSplitEntityMapper bankInfoSplitEntityMapper;
 
 

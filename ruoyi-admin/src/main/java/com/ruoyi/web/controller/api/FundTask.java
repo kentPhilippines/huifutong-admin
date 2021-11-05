@@ -25,7 +25,5 @@ public class FundTask {
         reconciliationImpl.fundTask("");
         String today = DateUtil.today();
         String format = DatePattern.NORM_DATE_FORMAT.format(DateUtil.offsetDay(DateUtil.parseDateTime(today).toJdkDate(), 1).toJdkDate());
-        HttpUtil.get("http://starpay77.com/accountAppFundApi/orderAccount?starTime=" + format + "&endTime=" + format);
-        HttpUtil.get("http://starpay77.com/accountAppFundApi/fundAccount?starTime=" + format + " 01:00:00");
     }
 }

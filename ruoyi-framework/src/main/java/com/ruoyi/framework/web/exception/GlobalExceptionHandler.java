@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
      * 系统异常
      */
     @ExceptionHandler(Exception.class)
-    public AjaxResult handleException(Exception e) {
+    public AjaxResult handleException(Throwable e) {
         log.error(e.getMessage(), e);
         return AjaxResult.error("服务器错误，请联系管理员");
     }

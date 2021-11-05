@@ -214,12 +214,25 @@ public class ReconciliationImpl implements Reconciliation {
         Double dealProfit = 0.0;
         Double sumProfit = alipayDealOrderAppService.sumDealorderProfit(yesToday, today);// 渠道手续费 - 商户手续费差值
         Double sumDealAgentFee = alipayRunOrderEntityService.sumDealOrderAgentFee(yesToday, today);//交易代理手续费
+
         dealProfit = NumberUtil.sub(sumProfit, sumDealAgentFee);//交易利润
         Double witProfit = 0.0;
+
         Double sumWitAppFee = alipayRunOrderEntityService.sumWitAppFee(yesToday, today);//商户代付利润汇总
+        if(sumProfit < 0 ){
+            sumProfit *= -1;
+        } if(sumDealAgentFee < 0 ){
+            sumDealAgentFee *= -1;
+        } if(sumWitAppFee < 0 ){
+            sumWitAppFee *= -1;
+        }
         Double witAgentFee = alipayRunOrderEntityService.witAgentFee(yesToday, today);//商户代付代理商抽成汇总
         witProfit = NumberUtil.sub(sumWitAppFee, witAgentFee);//代付利润
         Double profit = 0.0;
+
+        if(sumWitAppFee < 0 ){
+            sumWitAppFee *= -1;
+        }
         profit = dealProfit + witProfit;
         String msg = "核账日：" + yesToday + " - " + today + "，对账日商户交易毛利：" + sumProfit
                 + "，对账日商户交易代理分润：" + sumDealAgentFee + "，对账日商户代付毛利：" + sumWitAppFee + "，当日商户代付手续费代理抽成：" + witAgentFee + "；综上，当前对账日纯利为：" + profit;

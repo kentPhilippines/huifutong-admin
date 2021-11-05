@@ -1,5 +1,46 @@
 package com.ruoyi.common.utils.poi;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataValidation;
+import org.apache.poi.ss.usermodel.DataValidationConstraint;
+import org.apache.poi.ss.usermodel.DataValidationHelper;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFDataValidation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.annotation.Excel.ColumnType;
 import com.ruoyi.common.annotation.Excel.Type;
@@ -11,28 +52,13 @@ import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.reflect.ReflectUtils;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddressList;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFDataValidation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.*;
 
 /**
  * Excel相关处理
  *
  * @author ruoyi
  */
-public class
-ExcelUtil<T> {
+public class ExcelUtil<T> {
     private static final Logger log = LoggerFactory.getLogger(ExcelUtil.class);
 
     /**
@@ -84,53 +110,8 @@ ExcelUtil<T> {
         this.clazz = clazz;
     }
 
-    /**
-     * 解析导出值 0=男,1=女,2=未知
-     *
-     * @param propertyValue 参数值
-     * @param converterExp  翻译注解
-     * @return 解析后值
-     * @throws Exception
-     */
-    public static String convertByExp(String propertyValue, String converterExp) throws Exception {
-        try {
-            String[] convertSource = converterExp.split(",");
-            for (String item : convertSource) {
-                String[] itemArray = item.split("=");
-                if (itemArray[0].equals(propertyValue)) {
-                    return itemArray[1];
-                }
-            }
-        } catch (Exception e) {
-            throw e;
-        }
-        return propertyValue;
-    }
-
-    /**
-     * 反向解析值 男=0,女=1,未知=2
-     *
-     * @param propertyValue 参数值
-     * @param converterExp  翻译注解
-     * @return 解析后值
-     * @throws Exception
-     */
-    public static String reverseByExp(String propertyValue, String converterExp) throws Exception {
-        try {
-            String[] convertSource = converterExp.split(",");
-            for (String item : convertSource) {
-                String[] itemArray = item.split("=");
-                if (itemArray[1].equals(propertyValue)) {
-                    return itemArray[0];
-                }
-            }
-        } catch (Exception e) {
-            throw e;
-        }
-        return propertyValue;
-    }
-
     public void init(List<T> list, String sheetName, Type type) {
+        log.info("【初始化数据导出】");
         if (list == null) {
             list = new ArrayList<T>();
         }
@@ -272,6 +253,7 @@ ExcelUtil<T> {
      * @return 结果
      */
     public AjaxResult exportExcel(List<T> list, String sheetName) {
+        log.info("进入数据导出解析");
         this.init(list, sheetName, Type.EXPORT);
         return exportExcel();
     }
@@ -295,11 +277,12 @@ ExcelUtil<T> {
     public AjaxResult exportExcel() {
         OutputStream out = null;
         try {
+            log.info("进入数据解析，保存到本地");
             // 取出一共有多少个sheet.
             double sheetNo = Math.ceil(list.size() / sheetSize);
             for (int index = 0; index <= sheetNo; index++) {
                 createSheet(sheetNo, index);
-
+                log.info("产生一行:"+index);
                 // 产生一行
                 Row row = sheet.createRow(0);
                 int column = 0;
@@ -311,13 +294,17 @@ ExcelUtil<T> {
                 if (Type.EXPORT.equals(type)) {
                     fillExcelData(index, row);
                 }
+                //每当行数达到设置的值就刷新数据到硬盘,以清理内存
+                if(index % 100 == 0){
+                    ((SXSSFSheet)sheet).flushRows();
+                }
             }
             String filename = encodingFilename(sheetName);
             out = new FileOutputStream(getAbsoluteFile(filename));
             wb.write(out);
             return AjaxResult.success(filename);
-        } catch (Exception e) {
-            log.error("导出Excel异常{}", e.getMessage());
+        } catch (Throwable e) {
+            log.error("导出Excel异常{}", e);
             throw new BusinessException("导出Excel失败，请联系网站管理员！");
         } finally {
             if (wb != null) {
@@ -408,6 +395,7 @@ ExcelUtil<T> {
      * 创建单元格
      */
     public Cell createCell(Excel attr, Row row, int column) {
+        log.info("创建单元格："+column);
         // 创建列
         Cell cell = row.createCell(column);
         // 写入列信息
@@ -543,6 +531,52 @@ ExcelUtil<T> {
     }
 
     /**
+     * 解析导出值 0=男,1=女,2=未知
+     *
+     * @param propertyValue 参数值
+     * @param converterExp  翻译注解
+     * @return 解析后值
+     * @throws Exception
+     */
+    public static String convertByExp(String propertyValue, String converterExp) throws Exception {
+        try {
+            String[] convertSource = converterExp.split(",");
+            for (String item : convertSource) {
+                String[] itemArray = item.split("=");
+                if (itemArray[0].equals(propertyValue)) {
+                    return itemArray[1];
+                }
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+        return propertyValue;
+    }
+
+    /**
+     * 反向解析值 男=0,女=1,未知=2
+     *
+     * @param propertyValue 参数值
+     * @param converterExp  翻译注解
+     * @return 解析后值
+     * @throws Exception
+     */
+    public static String reverseByExp(String propertyValue, String converterExp) throws Exception {
+        try {
+            String[] convertSource = converterExp.split(",");
+            for (String item : convertSource) {
+                String[] itemArray = item.split("=");
+                if (itemArray[1].equals(propertyValue)) {
+                    return itemArray[0];
+                }
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+        return propertyValue;
+    }
+
+    /**
      * 编码文件名
      */
     public String encodingFilename(String filename) {
@@ -556,6 +590,7 @@ ExcelUtil<T> {
      * @param filename 文件名称
      */
     public String getAbsoluteFile(String filename) {
+
         String downloadPath = Global.getDownloadPath() + filename;
         File desc = new File(downloadPath);
         if (!desc.getParentFile().exists()) {
@@ -645,7 +680,7 @@ ExcelUtil<T> {
      * 创建一个工作簿
      */
     public void createWorkbook() {
-        this.wb = new SXSSFWorkbook(500);
+        this.wb = new SXSSFWorkbook(100);
     }
 
     /**

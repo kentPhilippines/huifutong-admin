@@ -66,7 +66,11 @@ public class AlipayAmountEntityServiceImpl implements IAlipayAmountEntityService
     public int insertAlipayAmountEntity(AlipayAmountEntity alipayAmountEntity) {
         alipayAmountEntity.setCreateTime(DateUtils.getNowDate());
         alipayAmountEntity.setOrderId(GenerateOrderNo.getInstance().Generate(StaticConstants.PERFIX_REFUND));
-        alipayAmountEntity.setAmountType("1");
+        if("2".equals(alipayAmountEntity.getType())){
+            alipayAmountEntity.setAmountType("8");
+        }else{
+            alipayAmountEntity.setAmountType("1");
+        }
         alipayAmountEntity.setOrderStatus("2");
         alipayAmountEntity.setActualAmount(alipayAmountEntity.getAmount());
         return alipayAmountEntityMapper.insertAlipayAmountEntity(alipayAmountEntity);

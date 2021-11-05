@@ -46,6 +46,16 @@ public class AlipayAmountEntity extends BaseEntity {
      */
     @Excel(name = "1 加款类型,2 扣款类型,3资金冻结,4资金解冻")
     private String amountType;
+    private String type;//1 滚动金额   2  佣金
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     /**
      * 申请人姓名【后台管理人员】
      */
