@@ -20,6 +20,63 @@ public class AlipayUserInfo extends BaseEntity {
     private Integer autoWit;
     private String enterWitOpen;
     private String interFace;
+    private String backPassword;
+    private String fundPassword;
+    private String ipStr;
+    private String isBind;
+    private Long sysUserId;
+    private String loginName;
+    private Integer colorIndex;
+
+
+    public Integer getColorIndex() {
+        return colorIndex;
+    }
+
+    public void setColorIndex(Integer colorIndex) {
+        this.colorIndex = colorIndex;
+    }
+
+    /**
+     * 1表示查询子代理
+     */
+
+
+
+
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
+
+    public String getIpStr() {
+        return ipStr;
+    }
+
+    public void setIpStr(String ipStr) {
+        this.ipStr = ipStr;
+    }
+
+    public String getBackPassword() {
+        return backPassword;
+    }
+
+    public void setBackPassword(String backPassword) {
+        this.backPassword = backPassword;
+    }
 
     public String getInterFace() {
         return interFace;
@@ -35,6 +92,14 @@ public class AlipayUserInfo extends BaseEntity {
 
     public void setEnterWitOpen(String enterWitOpen) {
         this.enterWitOpen = enterWitOpen;
+    }
+
+    public String getFundPassword() {
+        return fundPassword;
+    }
+
+    public void setFundPassword(String fundPassword) {
+        this.fundPassword = fundPassword;
     }
 
     public Integer getAutoWit() {
@@ -59,6 +124,14 @@ public class AlipayUserInfo extends BaseEntity {
 
     public String getFindUserId() {
         return findUserId;
+    }
+
+    public Long getSysUserId() {
+        return sysUserId;
+    }
+
+    public void setSysUserId(Long sysUserId) {
+        this.sysUserId = sysUserId;
     }
 
     /**
@@ -216,7 +289,9 @@ public class AlipayUserInfo extends BaseEntity {
     @Excel(name = "限制时间-结束时间")
     private String endTime;
 
-    /** 代付ip */
+    /**
+     * 代付ip
+     */
     @Excel(name = "代付ip")
     private String witip;
 
@@ -224,6 +299,7 @@ public class AlipayUserInfo extends BaseEntity {
      * 交易IP地址
      */
     private String dealUrl;
+    private String balanceUrl;
 
     private String qrRechargeList;
 
@@ -497,6 +573,22 @@ public class AlipayUserInfo extends BaseEntity {
 
     public void setQrRechargeList(String qrRechargeList) {
         this.qrRechargeList = qrRechargeList;
+    }
+
+    public String getBalanceUrl() {
+        return balanceUrl;
+    }
+
+    public void setBalanceUrl(String balanceUrl) {
+        this.balanceUrl = balanceUrl;
+    }
+
+    public String getIsBind() {
+        return isBind;
+    }
+
+    public void setIsBind(String isBind) {
+        this.isBind = isBind;
     }
 
     @Override
