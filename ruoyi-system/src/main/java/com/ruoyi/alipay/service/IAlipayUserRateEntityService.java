@@ -117,4 +117,10 @@ public interface IAlipayUserRateEntityService {
      * @return
      */
     AlipayUserRateEntity findWitRate(String userId);
+
+    AlipayUserRateEntity findUserByChannel(String orderAccount, String product, String orderQrUser);
+
+
+
+    AlipayUserRateEntity findBankcardRate(String orderQrUser, String product, int i);
 }

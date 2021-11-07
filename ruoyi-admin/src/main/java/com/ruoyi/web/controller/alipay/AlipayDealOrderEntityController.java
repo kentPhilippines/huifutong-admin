@@ -59,7 +59,12 @@ public class AlipayDealOrderEntityController extends BaseController {
     private IAlipayProductService iAlipayProductService;
     @Autowired
     private IAlipayUserRateEntityService iAlipayUserRateEntityService;
-
+    @Autowired
+    private IAlipayChanelFeeService alipayChanelFeeService;
+    @Autowired
+    private IAlipayUserRateEntityService alipayUserRateEntityService;
+    @Autowired
+    private IAlipayUserInfoService alipayUserInfoService;
     @GetMapping()
     @RequiresPermissions("orderDeal:qr:view")
     public String orderDeal(ModelMap mmap) {
@@ -313,28 +318,67 @@ public class AlipayDealOrderEntityController extends BaseController {
     public AjaxResult backOrderSave(AlipayDealOrderEntity alipayDealOrderEntity) {
         int i = 0;
         try {
-            AlipayDealOrderEntity dataOrigin = alipayDealOrderEntityService.selectAlipayDealOrderEntityById(alipayDealOrderEntity.getId());
-            if (dataOrigin == null) {
-                AjaxResult.error();
-            }
-            AlipayDealOrderApp alipayDealOrderApp = new AlipayDealOrderApp();
-            alipayDealOrderApp.setOrderId(dataOrigin.getAssociatedId());
-            AlipayDealOrderApp data = alipayDealOrderAppService.selectAlipayDealOrderApp(alipayDealOrderApp);
-            if (data == null) {
-                AjaxResult.error();
-            }
-            data.setSubmitTime(new Date());
-            data.setCreateTime(new Date());
-            data.setOrderId(data.getOrderId() + "_1");
-            data.setStatus(7);
-            dataOrigin.setExternalOrderId(dataOrigin.getOrderId());
-            data.setAppOrderId(data.getAppOrderId()+"_1");
-            dataOrigin.setOrderId(dataOrigin.getOrderId() + "_1");
-            dataOrigin.setAssociatedId(dataOrigin.getAssociatedId() + "_1");
-            dataOrigin.setStatus(7);
-            dataOrigin.setSubmitTime(new Date());
-            dataOrigin.setCreateTime(new Date());
-            i = alipayDealOrderEntityService.insertAlipayDealOrderEntity(dataOrigin, data);
+                AlipayDealOrderEntity dataOrigin = alipayDealOrderEntityService.selectAlipayDealOrderEntityById(alipayDealOrderEntity.getId());
+                if (dataOrigin == null) {
+                    AjaxResult.error();
+                }
+                logger.info("【当前操作为补单操作，操作备注为：" + alipayDealOrderEntity.getDealDescribe() + "，操作订单号为：" + dataOrigin.getOrderId() + "】");
+                AlipayDealOrderApp alipayDealOrderApp = new AlipayDealOrderApp();
+                alipayDealOrderApp.setOrderId(dataOrigin.getAssociatedId());
+                AlipayDealOrderApp data = alipayDealOrderAppService.selectAlipayDealOrderApp(alipayDealOrderApp);
+                if (data == null) {
+                    AjaxResult.error();
+                }
+                data.setSubmitTime(new Date());
+                data.setCreateTime(new Date());
+                data.setOrderId(data.getOrderId() + "_1");
+                dataOrigin.setExternalOrderId(dataOrigin.getOrderId());
+                data.setAppOrderId(data.getAppOrderId() + "_1");
+                dataOrigin.setOrderId(dataOrigin.getOrderId() + "_1");
+                dataOrigin.setAssociatedId(dataOrigin.getAssociatedId() + "_1");
+                dataOrigin.setSubmitTime(new Date());
+                dataOrigin.setCreateTime(new Date());
+                //更新金额
+                dataOrigin.setDealAmount(alipayDealOrderEntity.getDealAmount());
+                dataOrigin.setActualAmount(alipayDealOrderEntity.getDealAmount());
+                //获取费率
+                String product = dataOrigin.getRetain1();//产品类型
+                String orderQrUser = dataOrigin.getOrderQrUser();//渠道类型    这个渠道类型 要划分为  三方渠道类型和 四方渠道类型 ， 他们走的  费率关系不一样  在不通的地方核算成本
+                AlipayUserInfo userInfo = new AlipayUserInfo();
+                userInfo.setUserId(orderQrUser);
+                List<AlipayUserInfo> alipayUserInfos = alipayUserInfoService.selectAlipayUserInfoList(userInfo);
+                AlipayUserInfo first = CollUtil.getFirst(alipayUserInfos);
+                data.setAppOrderId(data.getAppOrderId() + "_1");
+                AlipayUserRateEntity userRate = alipayUserRateEntityService.findUserByChannel(dataOrigin.getOrderAccount(), product, orderQrUser);//商户费率
+                String channel = "";
+                Double fee = userRate.getFee();//当前用户交易费率
+                // 1   商户  2 卡商   3 渠道
+                if( 2   == first.getUserType()    ){
+                    AlipayUserRateEntity bankcardRate =   alipayUserRateEntityService.findBankcardRate(orderQrUser, product,2);//卡商费率
+                      channel = bankcardRate.getFee()+"";
+                }else if(3 == first.getUserType()  ){
+                    AlipayChanelFee channelFee = alipayChanelFeeService.findChannelBy(orderQrUser, product);//渠道费率
+                    channel = channelFee.getChannelRFee()+"";
+                }
+                Double channelDFee = Double.valueOf(channel);
+                //用户当前手续费为
+                double dealFee = fee * dataOrigin.getDealAmount();
+                double feec = channelDFee * dataOrigin.getDealAmount();
+                dataOrigin.setDealFee(dealFee);
+                dataOrigin.setRetain3(feec + "");
+                data.setRetain3(dealFee + "");
+                String orderQr = dataOrigin.getOrderQr();
+                if (StrUtil.isEmpty(orderQr)) {
+                    orderQr = "";
+                }
+                dataOrigin.setOrderStatus("7");
+                data.setOrderStatus("1");
+                dataOrigin.setRetain4("1");//结算标记
+                data.setOrderAmount(dataOrigin.getDealAmount());
+                dataOrigin.setActualAmount(dataOrigin.getDealAmount() - dataOrigin.getDealFee());
+                dataOrigin.setOrderQr(orderQr + "【操作备注：】" + alipayDealOrderEntity.getDealDescribe());
+                return toAjax(alipayDealOrderEntityService.insertAlipayDealOrderEntity(dataOrigin, data));
+
         } catch (Exception e) {
             e.printStackTrace();
             i = -1;

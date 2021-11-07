@@ -258,6 +258,20 @@ public class AlipayUserRateEntityServiceImpl implements IAlipayUserRateEntitySer
         return alipayUserRateEntityMapper.findWitRate(userId);
     }
 
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public AlipayUserRateEntity findUserByChannel(String userId, String product, String channelId) {
+        return alipayUserRateEntityMapper.findFee(userId, channelId, product);
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public AlipayUserRateEntity findBankcardRate(String orderQrUser, String product, int i) {
+        return alipayUserRateEntityMapper.findbankRate(orderQrUser, product, i);
+
+
+    }
+
 
     /**
      * 无限级代理递归检测费率
