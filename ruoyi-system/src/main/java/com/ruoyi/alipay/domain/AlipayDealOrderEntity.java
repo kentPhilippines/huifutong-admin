@@ -48,6 +48,16 @@ public class AlipayDealOrderEntity extends BaseEntity {
     /**
      * 数据id
      */
+    private String payer;
+
+    public String getPayer() {
+        return payer;
+    }
+
+    public void setPayer(String payer) {
+        this.payer = payer;
+    }
+
     private Long id;
     private String userName;
     private String payImg;

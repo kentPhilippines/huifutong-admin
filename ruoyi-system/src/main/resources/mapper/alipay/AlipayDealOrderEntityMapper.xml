@@ -40,12 +40,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="sunCountAmountFee" column="sunCountAmountFee"/>
         <result property="sunCountActualAmount" column="sunCountActualAmount"/>
         <result property="lockWit" column="lockWit"/>
+        <result property="payer" column="payer"/>
         <result property="lockWitTime" column="lockWitTime"/>
     </resultMap>
 
     <sql id="selectAlipayDealOrderEntityVo">
         select id, orderId,currency, associatedId, orderStatus,
-        dealAmount, dealFee, actualAmount, orderType, orderAccount, orderQrUser, orderQr, externalOrderId, generationIp, dealDescribe, notify, back, isNotify,
+        dealAmount, dealFee, actualAmount, orderType, orderAccount,payer, orderQrUser, orderQr, externalOrderId, generationIp, dealDescribe, notify, back, isNotify,
          createTime, submitTime, feeId, status, retain1, retain2,
          retain3, retain4 , txhash  ,   payImg  , payInfo ,enterPay , lockWit , lockWitTime ,enterPayTime  from alipay_deal_order
     </sql>
@@ -71,6 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null "> and status = #{status}</if>
             <if test="retain1 != null and retain1 != '' ">and retain1 = #{retain1}</if>
             <if test="currency != null and currency != '' ">and currency = #{currency}</if>
+            <if test="payer != null and payer != '' ">and payer = #{payer}</if>
             <if test="enterPayTime != null and enterPayTime != '' ">and enterPayTime = #{enterPayTime}</if>
         </where>
         order by id desc

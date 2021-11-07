@@ -29,6 +29,13 @@
                 <input class="form-control" id="flag" name="flag" readonly required
                        style="border-width: 0;background-color:white; color: red;" type="text" value="未找到任何卡商">
             </div>
+
+
+
+
+
+
+
         </div>
     </form>
 </div>
@@ -37,9 +44,49 @@
 <th:block th:include="include :: select2-js" />
 <script th:inline="javascript">
     let prefix = ctx + "alipay/orderDeal";
+    let bank = ctx + "/alipay/medium";
     $("#form-orderDeal-edit").validate({
         focusCleanup: true
     });
+    $(document).ready(function(){
+        $('#userId').change(function(){//这里查询当前卡商所有再跑银行卡
+           var bankcard =  $(this).children('option:selected').val();//选取的卡商id
+           ;
+
+            $.ajax({
+                type: "GET",
+                url:  bank+"/getBankcard?userId=" +bankcar,
+                data: "",
+                dataType: "json",
+                success: function (data) {
+       debugger;
+                    if(data.data){
+
+
+
+
+
+                    }
+                }
+            });
+
+
+
+
+
+
+
+
+
+
+
+        });
+    })
+
+
+
+
+
 
     function submitHandler() {
         if ($.validate.form()) {

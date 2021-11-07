@@ -238,5 +238,15 @@ public class AlipayMediumEntityController extends BaseController {
     }
 
 
+    @GetMapping("/getBankcard")
+    @ResponseBody
+    public AjaxResult showCodeList(  String userId ) {
+        AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
+        alipayMediumEntity.setQrcodeId(userId);
+        List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
+        return  AjaxResult.success(list);
+    }
+
+
 
 }
