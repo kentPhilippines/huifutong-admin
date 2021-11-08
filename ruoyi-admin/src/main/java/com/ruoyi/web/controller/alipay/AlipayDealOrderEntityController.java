@@ -204,35 +204,65 @@ public class AlipayDealOrderEntityController extends BaseController {
         mmap.put("orderId", orderId);
         return prefix + "/updateBankCardEdit";
     }
-
-
+    @Autowired
+    private IAlipayMediumEntityService alipayMediumEntityService;
+    private static final String MARK = ":";
     /**
      * 代付主交易订单修改卡商账户
      */
-    @PostMapping("/updateBankCard")
+    @GetMapping("/updateBankCard")
     @RequiresPermissions("orderDeal:qr:status:updateBankCard")
     @ResponseBody
-    public AjaxResult updateBankCard(String orderId, String userId) {
+    public AjaxResult updateBankCard1(
+
+            String orderId,String qrcodeId,  String mediumNumber
+
+
+
+
+    ) {
+
+
+
+
         AlipayDealOrderEntity orderEntityList = alipayDealOrderEntityService.findOrderByOrderId(orderId);
-        AlipayUserRateEntity rate = iAlipayUserRateEntityService.findWitRate(userId);
+        AlipayUserRateEntity rate = iAlipayUserRateEntityService.findWitRate(qrcodeId);
         Double fee = rate.getFee();
         Double dealAmount = orderEntityList.getDealAmount();
         fee = fee * dealAmount;
         Double profit = Double.valueOf(orderEntityList.getRetain3());
         profit = Double.valueOf(orderEntityList.getDealFee()) - fee;
-        return toAjax(alipayDealOrderEntityService.updateOrderQr(orderId, userId, "", rate.getId(), fee, profit));
+        String bankInfo = "";
+        if(StrUtil.isNotEmpty(mediumNumber)){
+            AlipayMediumEntity  alipayMediumEntity = new AlipayMediumEntity();
+            alipayMediumEntity.setMediumNumber(mediumNumber);
+            List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
+            if(CollUtil.isNotEmpty(list)){
+                AlipayMediumEntity first = CollUtil.getFirst(list);
+                String mediumHolder = first.getMediumHolder();//开户人
+                String account = first.getAccount();//开户行
+                String mediumNumber1 = first.getMediumNumber();//银行卡号
+                String mediumPhone = first.getMediumPhone();
+                bankInfo = account + MARK + mediumHolder + MARK + mediumNumber1 + MARK + "电话" + MARK + mediumPhone;
+            }
+        }
+        return toAjax(alipayDealOrderEntityService.updateOrderQr(orderId, qrcodeId, bankInfo, rate.getId(), fee, profit));
     }
 
     /**
      * 代付主交易订单修改卡商账户
      */
-    @PostMapping("/updateBankCardMore")
+    @GetMapping("/updateBankCardMore")
     @RequiresPermissions("orderDeal:qr:status:updateBankCard")
     @ResponseBody
     @Log(title = "确认拆单", businessType = BusinessType.INSERT)
-    public AjaxResult updateBankCard(String orderId, String userId, String amount) {
+    public AjaxResult updateBankCard(
+            String orderId,  String amount, String mediumNumber,String qrcodeId
+    ) {
+
+
         AlipayDealOrderEntity orderEntityList = alipayDealOrderEntityService.findOrderByOrderId(orderId);
-        AlipayUserRateEntity rate = iAlipayUserRateEntityService.findWitRate(userId);
+        AlipayUserRateEntity rate = iAlipayUserRateEntityService.findWitRate(qrcodeId);
         Double dealAmount = orderEntityList.getDealAmount();
         if (dealAmount < Double.valueOf(amount)) {
             return error("金额超限制");
@@ -244,8 +274,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         profit = Double.valueOf(orderEntityList.getDealFee()) - fee;
         int a = alipayDealOrderEntityService.updateAmountOrder(nowAmount, orderId, fee, profit);
         orderEntityList.setOrderId(findOderId(orderEntityList.getOrderId()));
-        orderEntityList.setOrderQrUser(userId);
-        orderEntityList.setOrderQr("");
+        orderEntityList.setOrderQrUser(qrcodeId);
         orderEntityList.setDealAmount(Double.valueOf(amount));
         orderEntityList.setActualAmount(Double.valueOf(amount));
         orderEntityList.setDealFee(0.0);
@@ -255,6 +284,21 @@ public class AlipayDealOrderEntityController extends BaseController {
         orderEntityList.setCreatetime(null);
         orderEntityList.setLockWit(0);
         orderEntityList.setFeeId(rate.getId().intValue());
+        String bankInfo = "";
+        if(StrUtil.isNotEmpty(mediumNumber)) {
+            AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
+            alipayMediumEntity.setMediumNumber(mediumNumber);
+            List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
+            if (CollUtil.isNotEmpty(list)) {
+                AlipayMediumEntity first = CollUtil.getFirst(list);
+                String mediumHolder = first.getMediumHolder();//开户人
+                String account = first.getAccount();//开户行
+                String mediumNumber1 = first.getMediumNumber();//银行卡号
+                String mediumPhone = first.getMediumPhone();
+                bankInfo = account + MARK + mediumHolder + MARK + mediumNumber1 + MARK + "电话" + MARK + mediumPhone;
+            }
+        }
+        orderEntityList.setOrderQr(bankInfo);
         return toAjax(alipayDealOrderEntityService.insertAlipayDealOrderEntity(orderEntityList));
     }
 

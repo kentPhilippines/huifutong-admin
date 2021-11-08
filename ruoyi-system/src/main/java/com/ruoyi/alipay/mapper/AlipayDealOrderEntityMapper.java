@@ -118,7 +118,7 @@ public interface AlipayDealOrderEntityMapper {
     List<AlipayDealOrderEntity> findOrderLimit(@Param("starTime") String starTime, @Param("endTime") String endTime, @Param("page") Integer page, @Param("size") Integer size);
 
 
-    @Update("update alipay_deal_order set orderQrUser = #{userId} ,orderQr = '' , " +
+    @Update("update alipay_deal_order set orderQrUser = #{userId} ,orderQr = #{orderQr} , " +
             "retain2 = #{fee} , feeId =#{feeId}  ,retain3 = #{profit} , lockWit  = 0  ,  enterPayTime  = null  where orderId = #{orderId} ")
     int updateOrderQr(@Param("orderId") String orderId, @Param("userId") String userId,
                       @Param("orderQr") String orderQr, @Param("feeId") Long feeId,

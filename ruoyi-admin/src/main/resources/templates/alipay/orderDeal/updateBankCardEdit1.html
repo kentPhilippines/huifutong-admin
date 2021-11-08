@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('渠道变更')"/>
+    <th:block th:include="include :: datetimepicker-css"/>
+    <th:block th:include="include :: select2-css" />
+    <th:block th:include="include :: bootstrap-select-css"/>
+
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <div class="row">
+    <form class="form-horizontal m" id="form-rate-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">平台订单：</label>
+            <div class="col-sm-8">
+                <input class="form-control" name="orderId" required th:value="${orderId}"  readonly>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label is-required">卡商出款账号：</label>
+            <div class="col-sm-8" th:if="${listFund.size()} ne 0">
+                <select onchange="getbank()" class="form-control" name="userId" id="userId" required>
+                    <option th:each="userIdList : ${listFund}"
+                            th:text="${userIdList.userId}+'：'+${userIdList.userName}+'，【当日收款】：' +${userIdList.todayDealAmount} +'，【当日出款】：' +${userIdList.todayOtherWitAmount} "
+                            th:value="${userIdList.userId}"></option>
+
+                </select>
+            </div>
+            <div class="col-sm-8" th:if="${listFund.size()} eq 0">
+                <input class="form-control" id="flag" name="flag" readonly required
+                       style="border-width: 0;background-color:white; color: red;" type="text" value="未找到任何卡商">
+            </div>
+
+
+
+        </div>
+
+    </form>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table-bank"></table>
+        </div>
+    </div>
+</div>
+
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<th:block th:include="include :: select2-js" />
+<th:block th:include="include :: bootstrap-select-js"/>
+
+<script th:inline="javascript">
+    let prefix = ctx + "alipay/orderDeal";
+    let bank = ctx + "alipay/orderDeal";
+    $("#form-orderDeal-edit").validate({
+        focusCleanup: true
+    });
+
+var bankcard = '';
+  function getbank (){
+       bankcard = $('select  option:selected').val();
+      $.table.search();
+  }
+
+
+  $(function (){
+      var options = {
+          url: bank + "/getBankcard",
+          id: 'bootstrap-table-bank',
+          queryParams: {
+              qrcodeId: bankcard
+          },
+
+          contentType: "application/x-www-form-urlencoded",
+          columns: [{
+              checkbox: true
+          },
+              {field: 'mediumNumber', title: '银行账号',},
+              {field: 'mediumHolder', title: '开户人'},
+              {field: 'qrcodeId', title: '卡商账户'},
+              {field: 'account', title: '开户行'},
+              {field: 'mountSystem', title: '交易余额'},
+              {field: 'mountNow', title: '参考余额'},
+              {
+                  field: 'status', title: '接单状态', align: 'center',
+                  formatter: function (value, row, index) {
+                      if (row.status === 1) {
+                          return '<span style="color:#00B83F;">开启</span>';
+                      } else if (row.status === 0) {
+                          return '<span style="color: #cc0000;">关闭</span>';
+                      }
+                  }
+              }
+          ]
+      };
+      $.table.init(options);
+  })
+
+
+
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/updateBankCard", $('#form-rate-add').serialize());
+        }
+    }
+</script>
+</body>
+</html>

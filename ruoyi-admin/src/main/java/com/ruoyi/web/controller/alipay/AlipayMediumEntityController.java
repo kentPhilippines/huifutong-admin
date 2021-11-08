@@ -1,18 +1,15 @@
 package com.ruoyi.web.controller.alipay;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.ruoyi.alipay.domain.AlipayFileListEntity;
-import com.ruoyi.alipay.domain.MediumQueue;
+import com.ruoyi.alipay.domain.*;
 import com.ruoyi.alipay.service.IAlipayFileListEntityService;
 import com.ruoyi.common.constant.StaticConstants;
 import com.ruoyi.framework.util.DictionaryUtils;
@@ -23,7 +20,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.alipay.domain.AlipayMediumEntity;
 import com.ruoyi.alipay.service.IAlipayMediumEntityService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -61,6 +57,17 @@ public class AlipayMediumEntityController extends BaseController {
     public TableDataInfo list(AlipayMediumEntity alipayMediumEntity) {
         startPage();
         List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
+        if(StrUtil.isNotEmpty(alipayMediumEntity.getQrcodeId())){
+        AlipayMediumEntity mediumEntity =     alipayMediumEntityService.findBankSum(alipayMediumEntity.getQrcodeId());
+        if (null != mediumEntity && CollUtil.isNotEmpty(list)) {
+            for (int mark = 0; mark < 1; mark++) {
+                list.get(mark).setBankSumAmountsys(mediumEntity.getBankSumAmountsys());
+                list.get(mark).setBankSumAmountnow(mediumEntity.getBankSumAmountnow());
+                list.get(mark).setOpenSumBankAmountsys(mediumEntity.getOpenSumBankAmountsys());
+                list.get(mark).setOpenSumBankAmountnow(mediumEntity.getOpenSumBankAmountnow());
+            }
+        }
+        }
         return getDataTable(list);
     }
 
@@ -238,12 +245,25 @@ public class AlipayMediumEntityController extends BaseController {
     }
 
 
-    @GetMapping("/getBankcard")
+    @PostMapping("/getBankcard")
     @ResponseBody
-    public AjaxResult showCodeList(  String userId ) {
-        AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
+    public AjaxResult showCodeList(AlipayUserInfo userInfo) {
+        AlipayMediumEntity  alipayMediumEntity = new AlipayMediumEntity();
+        String userId = UUID.randomUUID().toString();
+        if(StrUtil.isNotEmpty(userInfo.getUserId())){
+            userId = userInfo.getUserId();
+        }
         alipayMediumEntity.setQrcodeId(userId);
         List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
+        AlipayMediumEntity mediumEntity =     alipayMediumEntityService.findBankSum(userId);
+        if (null != mediumEntity && CollUtil.isNotEmpty(list)) {
+            for (int mark = 0; mark < 1; mark++) {
+                list.get(mark).setBankSumAmountsys(mediumEntity.getBankSumAmountsys());
+                list.get(mark).setBankSumAmountnow(mediumEntity.getBankSumAmountnow());
+                list.get(mark).setOpenSumBankAmountsys(mediumEntity.getOpenSumBankAmountsys());
+                list.get(mark).setOpenSumBankAmountnow(mediumEntity.getOpenSumBankAmountnow());
+            }
+        }
         return  AjaxResult.success(list);
     }
 

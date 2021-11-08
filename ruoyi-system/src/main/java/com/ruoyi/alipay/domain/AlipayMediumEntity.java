@@ -9,44 +9,107 @@ import java.util.Date;
 
 /**
  * 收款媒介列对象 alipay_medium
- * 
+ *
  * @author kiwi
  * @date 2020-03-17
  */
-public class AlipayMediumEntity extends BaseEntity
-{
+public class AlipayMediumEntity extends BaseEntity {
     private static final long serialVersionUID = 1L;
+    private  String bankSumAmountsys = "0";//银行卡系统余额汇总
+    private  String bankSumAmountnow = "0";//银行卡 当前余额
+    private  String openSumBankAmountsys = "0";//系统开启 业务余额汇总
+    private  String openSumBankAmountnow = "0" ;//银行卡 开启   实时余额汇总
 
-    /** 数据id */
+    public String getBankSumAmountnow() {
+        return bankSumAmountnow;
+    }
+
+    public void setBankSumAmountnow(String bankSumAmountnow) {
+        this.bankSumAmountnow = bankSumAmountnow;
+    }
+
+    public String getOpenSumBankAmountnow() {
+        return openSumBankAmountnow;
+    }
+
+    public void setOpenSumBankAmountnow(String openSumBankAmountnow) {
+        this.openSumBankAmountnow = openSumBankAmountnow;
+    }
+
+    public String getOpenSumBankAmountsys() {
+        return openSumBankAmountsys;
+    }
+
+    public void setOpenSumBankAmountsys(String openSumBankAmountsys) {
+        this.openSumBankAmountsys = openSumBankAmountsys;
+    }
+
+    public String getBankSumAmountsys() {
+        return bankSumAmountsys;
+    }
+
+    public void setBankSumAmountsys(String bankSumAmountsys) {
+        this.bankSumAmountsys = bankSumAmountsys;
+    }
+
+    private  String amounttype;
+
+    public String getAmounttype() {
+        return amounttype;
+    }
+
+    public void setAmounttype(String amounttype) {
+        this.amounttype = amounttype;
+    }
+
+    /**
+     * 数据id
+     */
     private Long id;
 
-    /** 收款媒介id(本地编号) */
+    /**
+     * 收款媒介id(本地编号)
+     */
     private String mediumId;
 
-    /** 收款媒介登录账号 */
+    /**
+     * 收款媒介登录账号
+     */
     private String mediumNumber;
 
-    /** 收款媒介持有人 */
+    /**
+     * 收款媒介持有人
+     */
     @Excel(name = "收款媒介持有人")
     private String mediumHolder;
 
-    /** 备注 */
+    /**
+     * 备注
+     */
     @Excel(name = "备注")
     private String mediumNote;
 
-    /** 收款媒介绑定手机号 */
+    /**
+     * 收款媒介绑定手机号
+     */
     @Excel(name = "收款媒介绑定手机号")
     private String mediumPhone;
 
-    /** 收款媒介所属商户 */
+    /**
+     * 收款媒介所属商户
+     */
     @Excel(name = "收款媒介所属商户")
     private String qrcodeId;
 
-    /** 收款媒介标识:alipay(支付宝),weichar(微信),card(银行卡),other(暂未开放) */
+    /**
+     * 收款媒介标识:alipay(支付宝),weichar(微信),card(银行卡),other(暂未开放)
+     */
     @Excel(name = "收款媒介标识:alipay(支付宝),weichar(微信),card(银行卡),other(暂未开放)")
     private String code;
 
-    /** 数据修改时间 */
+    /**
+     * 数据修改时间
+     */
     @Excel(name = "数据修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date submitTime;
 
@@ -140,107 +203,97 @@ public class AlipayMediumEntity extends BaseEntity
         this.mediumId = mediumId;
     }
 
-    public String getMediumId() 
-    {
+    public String getMediumId() {
         return mediumId;
     }
-    public void setMediumNumber(String mediumNumber) 
-    {
+
+    public void setMediumNumber(String mediumNumber) {
         this.mediumNumber = mediumNumber;
     }
 
-    public String getMediumNumber() 
-    {
+    public String getMediumNumber() {
         return mediumNumber;
     }
-    public void setMediumHolder(String mediumHolder) 
-    {
+
+    public void setMediumHolder(String mediumHolder) {
         this.mediumHolder = mediumHolder;
     }
 
-    public String getMediumHolder() 
-    {
+    public String getMediumHolder() {
         return mediumHolder;
     }
-    public void setMediumNote(String mediumNote) 
-    {
+
+    public void setMediumNote(String mediumNote) {
         this.mediumNote = mediumNote;
     }
 
-    public String getMediumNote() 
-    {
+    public String getMediumNote() {
         return mediumNote;
     }
-    public void setMediumPhone(String mediumPhone) 
-    {
+
+    public void setMediumPhone(String mediumPhone) {
         this.mediumPhone = mediumPhone;
     }
 
-    public String getMediumPhone() 
-    {
+    public String getMediumPhone() {
         return mediumPhone;
     }
-    public void setQrcodeId(String qrcodeId) 
-    {
+
+    public void setQrcodeId(String qrcodeId) {
         this.qrcodeId = qrcodeId;
     }
 
-    public String getQrcodeId() 
-    {
+    public String getQrcodeId() {
         return qrcodeId;
     }
-    public void setCode(String code) 
-    {
+
+    public void setCode(String code) {
         this.code = code;
     }
 
-    public String getCode() 
-    {
+    public String getCode() {
         return code;
     }
-    public void setSubmitTime(Date submitTime) 
-    {
+
+    public void setSubmitTime(Date submitTime) {
         this.submitTime = submitTime;
     }
 
-    public Date getSubmitTime() 
-    {
+    public Date getSubmitTime() {
         return submitTime;
     }
-    public void setStatus(Integer status) 
-    {
+
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public Integer getStatus() 
-    {
+    public Integer getStatus() {
         return status;
     }
-    public void setIsDeal(String isDeal) 
-    {
+
+    public void setIsDeal(String isDeal) {
         this.isDeal = isDeal;
     }
 
-    public String getIsDeal() 
-    {
+    public String getIsDeal() {
         return isDeal;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("mediumId", getMediumId())
-            .append("mediumNumber", getMediumNumber())
-            .append("mediumHolder", getMediumHolder())
-            .append("mediumNote", getMediumNote())
-            .append("mediumPhone", getMediumPhone())
-            .append("qrcodeId", getQrcodeId())
-            .append("code", getCode())
-            .append("createTime", getCreateTime())
-            .append("submitTime", getSubmitTime())
-            .append("status", getStatus())
-            .append("isDeal", getIsDeal())
-            .toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("id", getId())
+                .append("mediumId", getMediumId())
+                .append("mediumNumber", getMediumNumber())
+                .append("mediumHolder", getMediumHolder())
+                .append("mediumNote", getMediumNote())
+                .append("mediumPhone", getMediumPhone())
+                .append("qrcodeId", getQrcodeId())
+                .append("code", getCode())
+                .append("createTime", getCreateTime())
+                .append("submitTime", getSubmitTime())
+                .append("status", getStatus())
+                .append("isDeal", getIsDeal())
+                .toString();
     }
 }

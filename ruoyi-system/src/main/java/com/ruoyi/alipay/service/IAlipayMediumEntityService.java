@@ -68,4 +68,11 @@ public interface IAlipayMediumEntityService {
     public int deleteAlipayMediumEntityById(Long id);
 
     AlipayMediumEntity findUserId(String med);
+
+    /**
+     * 查询 收款媒介 汇总信息
+     * @param userId
+     * @return
+     */
+    AlipayMediumEntity findBankSum(String userId);
 }

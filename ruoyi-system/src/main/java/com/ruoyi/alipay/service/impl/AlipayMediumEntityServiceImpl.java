@@ -113,4 +113,22 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     public AlipayMediumEntity findUserId(String med) {
         return alipayMediumEntityMapper.findUserId(med);
     }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public AlipayMediumEntity findBankSum(String userId) {
+        AlipayMediumEntity medium = new AlipayMediumEntity();
+        List<AlipayMediumEntity> bankSum = alipayMediumEntityMapper.findBankSum(userId);
+        for(AlipayMediumEntity med : bankSum){
+            if("open".equals(med.getAmounttype())){
+                medium.setOpenSumBankAmountnow(med.getMountNow());
+                medium.setOpenSumBankAmountsys(med.getMountSystem());
+            }
+            if("all".equals(med.getAmounttype())){
+                medium.setBankSumAmountnow(med.getMountNow());
+                medium.setBankSumAmountsys(med.getMountSystem());
+            }
+        }
+        return medium;
+    }
 }
