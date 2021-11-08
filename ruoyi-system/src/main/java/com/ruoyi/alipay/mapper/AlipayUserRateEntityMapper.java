@@ -182,4 +182,9 @@ public interface AlipayUserRateEntityMapper {
     AlipayUserRateEntity findWitRate(@Param("userId") String userId);
     @Select(" select * from alipay_user_rate where userType = #{userType} and    payTypr = #{product} and userId = #{orderQrUser} ")
     AlipayUserRateEntity findbankRate(@Param("orderQrUser")String orderQrUser,@Param("product") String product, @Param("userType") int userType);
+
+
+
+    @Select("select * from findFeeByProduct where switchs = 1 and payTypr = #{payTypr} and userId = #{userId}")
+    List<AlipayUserRateEntity>  findFeeByProduct(String userId, String product);
 }

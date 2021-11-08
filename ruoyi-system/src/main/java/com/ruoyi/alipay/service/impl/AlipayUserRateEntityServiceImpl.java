@@ -261,7 +261,8 @@ public class AlipayUserRateEntityServiceImpl implements IAlipayUserRateEntitySer
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public AlipayUserRateEntity findUserByChannel(String userId, String product, String channelId) {
-        return alipayUserRateEntityMapper.findFee(userId, channelId, product);
+        List<AlipayUserRateEntity> feeByProduct = alipayUserRateEntityMapper.findFeeByProduct(userId, product);
+        return CollUtil.getFirst(feeByProduct);
     }
 
     @Override
