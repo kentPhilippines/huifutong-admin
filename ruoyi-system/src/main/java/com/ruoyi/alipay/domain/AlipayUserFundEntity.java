@@ -167,6 +167,15 @@ public class AlipayUserFundEntity extends BaseEntity {
      */
     @Excel(name = "累计利润金额")
     private Double sumProfit;
+    private Double deposit;
+
+    public Double getDeposit() {
+        return deposit;
+    }
+
+    public void setDeposit(Double deposit) {
+        this.deposit = deposit;
+    }
 
     /**
      * 累计代理商利润【如果当前账户为商户则该数据为0】

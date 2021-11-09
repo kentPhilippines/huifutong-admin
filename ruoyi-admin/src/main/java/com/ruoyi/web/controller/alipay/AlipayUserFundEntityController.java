@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.alipay;
 
+import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
 import com.ruoyi.alipay.domain.AlipayAmountEntity;
 import com.ruoyi.alipay.domain.AlipayUserFundEntity;
@@ -189,6 +190,15 @@ public class AlipayUserFundEntityController extends BaseController {
         mmap.put("userFund", alipayUserFundEntities.get(0));
         return prefix + "/addFreeze";
     }
+    @GetMapping("/deposit/{userId}")
+    @RequiresPermissions("fund:refund:deposit")
+    public String deposit(@PathVariable("userId") String userId, ModelMap mmap) {
+        AlipayUserFundEntity userFundEntity = new AlipayUserFundEntity();
+        userFundEntity.setUserId(userId);
+        List<AlipayUserFundEntity> alipayUserFundEntities = alipayUserFundEntityService.selectAlipayUserFundEntityList(userFundEntity);
+        mmap.put("userFund", alipayUserFundEntities.get(0));
+        return prefix + "/deposit";
+    }
 
     @GetMapping("/deleteFreezeUrl/{userId}")
     @RequiresPermissions("fund:refund:deduct")
@@ -268,6 +278,26 @@ public class AlipayUserFundEntityController extends BaseController {
             return error("当前账户冻结资金不足，请确认好后提交");
         }
         return toAjax(alipayAmountEntityService.insertAlipayAmountFreeze(alipayAmountEntity));
+    }
+    @Log(title = "修改卡商押金", businessType = BusinessType.UPDATE)
+    @PostMapping("/deposit")
+    @RequiresPermissions("fund:refund:deposit")
+    @ResponseBody
+    public AjaxResult deposit(AlipayUserFundEntity userFundEntity) {
+        // 获取当前的用户
+        SysUser currentUser = ShiroUtils.getSysUser();
+        String password = userFundEntity.getParams().get("password").toString();
+        String verify = passwordService.encryptPassword(currentUser.getLoginName(), password, currentUser.getSalt());
+        if (!currentUser.getPassword().equals(verify)) {
+            return AjaxResult.error("密码验证失败");
+        }
+        if(StrUtil.isEmpty(userFundEntity.getUserId())||   null ==  userFundEntity.getDeposit()){
+            return AjaxResult.error("参数为空");
+        }
+        AlipayUserFundEntity fund  = new AlipayUserFundEntity();
+        fund.setUserId(userFundEntity.getUserId());
+        fund.setDeposit(userFundEntity.getDeposit());
+        return toAjax(   alipayUserFundEntityService.updateAlipayUserFundEntity(fund) );
     }
     /**
      * 加款保存用户加款记录

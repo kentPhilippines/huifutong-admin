@@ -1281,6 +1281,8 @@ var table = {
                 table.set();
                 if (flag == 'openUrl'){
                     $.modal.open(title, $.operate.openUrl(id));
+                }if (flag == 'depositUrl'){
+                    $.modal.open(title, $.operate.depositUrl(id));
                 }
                 if (flag == 'backOrderUrl'){
                     $.modal.open(title, $.operate.backOrderUrl(id));
@@ -1483,6 +1485,12 @@ var table = {
                 var url = "/404.html";
                 if ($.common.isNotEmpty(id)) {
                     url = table.options.deleteQuotaUrl.replace("{userId}", id);
+                }
+                return url;
+            },depositUrl: function (id) {
+                var url = "/404.html";
+                if ($.common.isNotEmpty(id)) {
+                    url = table.options.depositUrl.replace("{userId}", id);
                 }
                 return url;
             },

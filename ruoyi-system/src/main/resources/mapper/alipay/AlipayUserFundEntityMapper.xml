@@ -33,6 +33,7 @@
         <result column="sumWitAmount" property="sumWitAmount"/>
         <result column="todayWitAmount" property="todayWitAmount"/>
         <result column="todayOtherWitAmount" property="todayOtherWitAmount"/>
+        <result column="deposit" property="deposit"/>
 
     </resultMap>
 
@@ -40,7 +41,7 @@
         select id, userId, userName, cashBalance, rechargeNumber, freezeBalance, accountBalance,
          sumDealAmount, sumRechargeAmount, sumProfit, sumAgentProfit, sumOrderCount, todayDealAmount,
          todayProfit, todayOrderCount, todayAgentProfit, userType, agent, isAgent,sumWitAmount,todayWitAmount,
-        createTime, submitTime, status, version , currency , quota   ,todayOtherWitAmount from alipay_user_fund
+        createTime, submitTime, status, version , currency , quota   ,todayOtherWitAmount ,deposit from alipay_user_fund
     </sql>
     <sql id="selectAlipayUserFundEntityVoBak">
         select id, userId, userName, cashBalance, rechargeNumber, freezeBalance, accountBalance,
@@ -64,6 +65,7 @@
             <if test="sumProfit != null ">and sumProfit = #{sumProfit}</if>
             <if test="sumAgentProfit != null ">and sumAgentProfit = #{sumAgentProfit}</if>
             <if test="sumOrderCount != null ">and sumOrderCount = #{sumOrderCount}</if>
+            <if test="deposit != null ">and deposit = #{deposit}</if>
             <if test="todayDealAmount != null ">and todayDealAmount = #{todayDealAmount}</if>
             <if test="todayProfit != null ">and todayProfit = #{todayProfit}</if>
             <if test="todayOrderCount != null ">and todayOrderCount = #{todayOrderCount}</if>
@@ -109,6 +111,7 @@
             <if test="status != null ">status,</if>
             <if test="version != null ">version,</if>
             <if test="currency != null ">currency,</if>
+            <if test="deposit != null ">deposit,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null  and userId != ''">#{userId},</if>
@@ -134,14 +137,13 @@
             <if test="status != null ">#{status},</if>
             <if test="version != null ">#{version},</if>
             <if test="currency != null ">#{currency},</if>
+            <if test="deposit != null ">#{deposit},</if>
         </trim>
     </insert>
 
     <update id="updateAlipayUserFundEntity" parameterType="AlipayUserFundEntity">
         update alipay_user_fund
         <trim prefix="SET" suffixOverrides=",">
-            <if test="userId != null  and userId != ''">userId = #{userId},</if>
-            <if test="userName != null  and userName != ''">userName = #{userName},</if>
             <if test="cashBalance != null ">cashBalance = #{cashBalance},</if>
             <if test="rechargeNumber != null ">rechargeNumber = #{rechargeNumber},</if>
             <if test="freezeBalance != null ">freezeBalance = #{freezeBalance},</if>
@@ -163,8 +165,9 @@
             <if test="status != null ">status = #{status},</if>
             <if test="version != null ">version = #{version},</if>
             <if test="currency != null ">currency = #{currency},</if>
+            <if test="deposit != null ">deposit = #{deposit},</if>
         </trim>
-        where id = #{id}
+        where ( id = #{id} or userId = {userId} )
     </update>
     <select id="findChannelAccount" parameterType="AlipayUserFundEntity" resultMap="AlipayUserFundEntityResult">
         <include refid="selectAlipayUserFundEntityVo"/>
