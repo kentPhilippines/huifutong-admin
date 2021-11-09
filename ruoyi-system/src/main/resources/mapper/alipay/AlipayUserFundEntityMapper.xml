@@ -167,7 +167,7 @@
             <if test="currency != null ">currency = #{currency},</if>
             <if test="deposit != null ">deposit = #{deposit},</if>
         </trim>
-        where ( id = #{id} or userId = {userId} )
+        where ( id = #{id} or userId = #{userId} )
     </update>
     <select id="findChannelAccount" parameterType="AlipayUserFundEntity" resultMap="AlipayUserFundEntityResult">
         <include refid="selectAlipayUserFundEntityVo"/>

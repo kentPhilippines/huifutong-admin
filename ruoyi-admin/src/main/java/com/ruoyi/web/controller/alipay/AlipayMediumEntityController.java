@@ -9,9 +9,13 @@ import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.google.common.collect.Maps;
 import com.ruoyi.alipay.domain.*;
 import com.ruoyi.alipay.service.IAlipayFileListEntityService;
 import com.ruoyi.common.constant.StaticConstants;
+import com.ruoyi.common.exception.BusinessException;
+import com.ruoyi.common.utils.MapDataUtil;
+import com.ruoyi.common.utils.http.HttpUtils;
 import com.ruoyi.framework.util.DictionaryUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -267,6 +271,24 @@ public class AlipayMediumEntityController extends BaseController {
         return  AjaxResult.success(list);
     }
 
+    /**
+     * 码商状态修改（调用api）
+     */
+    @Log(title = "修改银行卡属性", businessType = BusinessType.UPDATE)
+    @PostMapping("/updateBankcard")
+    @ResponseBody
+    public AjaxResult changeStatus(AlipayMediumEntity alipayMediumEntity) {
+        logger.info("[当前处理商户关闭或者开启的管理员账号为：" + ShiroUtils.getSysUser().getLoginName() + "]");
+        logger.info("[当前处理商户状态的参数为：" + alipayMediumEntity.getBlack().toString() + "]");
 
+        AlipayMediumEntity mediumEntity = new AlipayMediumEntity();
+        mediumEntity.setId(alipayMediumEntity.getId());
+        mediumEntity.setBlack(alipayMediumEntity.getBlack());
+        int i = alipayMediumEntityService.updateAlipayMediumEntity(mediumEntity);
+
+
+
+        return toAjax(i);
+    }
 
 }

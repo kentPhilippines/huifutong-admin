@@ -139,7 +139,13 @@
                     field: 'mountNow',
                     title: '参考余额'
                 },
-
+                {
+                    title: '黑卡',
+                    align: 'black',
+                    formatter: function (value, row, index) {
+                        return statusTools(row, 'black');
+                    }
+                },
                 {
                     field: 'code',
                     title: '媒介类型',
@@ -185,6 +191,39 @@
         };
         $.table.init(options);
     });
+    /* 商户状态显示 */
+    function statusTools(row, param) {
+        if (param === 'black') {
+            if (row.black == 1) {
+                let msg = "确认此卡【置为黑卡】吗？";
+                let val = 0;
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="enable(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            } else {
+                let msg = "确认此卡【开放】吗？";
+                let val = 1;
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="disable(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            }
+        }
+    }
+
+    /* 商户管理-启用 */
+    function enable(qrcodeId, param, msg, val) {
+        $.modal.confirm(msg, function () {
+            $.operate.post(prefix + "/updateBankcard", {
+                "id": qrcodeId,
+                "black": val
+            });
+        })
+    }
+    /* 商户管理-停用 */
+    function disable(qrcodeId, param, msg, val) {
+        $.modal.confirm(msg, function () {
+            $.operate.post(prefix + "/updateBankcard", {
+                "id": qrcodeId,
+                "black": val
+            });
+        })
+    }
 
     //初始化时间
     layui.use('laydate', function () {

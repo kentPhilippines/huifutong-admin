@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.alipay;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
 import com.ruoyi.alipay.domain.AlipayAmountEntity;
@@ -196,7 +197,12 @@ public class AlipayUserFundEntityController extends BaseController {
         AlipayUserFundEntity userFundEntity = new AlipayUserFundEntity();
         userFundEntity.setUserId(userId);
         List<AlipayUserFundEntity> alipayUserFundEntities = alipayUserFundEntityService.selectAlipayUserFundEntityList(userFundEntity);
-        mmap.put("userFund", alipayUserFundEntities.get(0));
+        AlipayUserFundEntity first = CollUtil.getFirst(alipayUserFundEntities);
+     double a =    first.getAccountBalance() - first.getSumProfit();
+        first.setAccountBalance(a);
+
+
+        mmap.put("userFund",first);
         return prefix + "/deposit";
     }
 
@@ -280,10 +286,10 @@ public class AlipayUserFundEntityController extends BaseController {
         return toAjax(alipayAmountEntityService.insertAlipayAmountFreeze(alipayAmountEntity));
     }
     @Log(title = "修改卡商押金", businessType = BusinessType.UPDATE)
-    @PostMapping("/deposit")
+    @PostMapping("/updateDeposit")
     @RequiresPermissions("fund:refund:deposit")
     @ResponseBody
-    public AjaxResult deposit(AlipayUserFundEntity userFundEntity) {
+    public AjaxResult updateDeposit(AlipayUserFundEntity userFundEntity) {
         // 获取当前的用户
         SysUser currentUser = ShiroUtils.getSysUser();
         String password = userFundEntity.getParams().get("password").toString();

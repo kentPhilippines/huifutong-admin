@@ -15,7 +15,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label is-required">滚动资金：</label>
             <div class="col-sm-9">
-                <input id="accountBalance" name="accountBalance" th:field="*{accountBalance  - sumProfit}" class="form-control" type="text" readonly>
+                <input id="accountBalance" name="accountBalance" th:field="*{accountBalance}" class="form-control" type="text" readonly>
             </div>
         </div>
         <div class="form-group">
@@ -27,13 +27,13 @@
         <div class="form-group">
             <label class="col-sm-3 control-label is-required">押金：</label>
             <div class="col-sm-9">
-                <input id="deposit1" name="deposit1" th:field="*{deposit}" class="form-control" type="text" readonly>
+                <input id="old" name="old" th:value="*{deposit}" class="form-control" type="text" readonly>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label is-required">修改押金为：</label>
             <div class="col-sm-9">
-                <input type="number" min="0" id="deposit" name="deposit" class="form-control" placeholder="清输入修改后的押金金额" required>
+                <input type="number" min="0" id  = "deposit"   name="deposit" class="form-control" placeholder="清输入修改后的押金金额" required>
             </div>
         </div>
 

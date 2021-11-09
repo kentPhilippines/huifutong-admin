@@ -94,6 +94,15 @@ public class AlipayMediumEntity extends BaseEntity {
      */
     @Excel(name = "收款媒介绑定手机号")
     private String mediumPhone;
+    private String black;
+
+    public String getBlack() {
+        return black;
+    }
+
+    public void setBlack(String black) {
+        this.black = black;
+    }
 
     /**
      * 收款媒介所属商户
