@@ -185,6 +185,6 @@ public interface AlipayUserRateEntityMapper {
 
 
 
-    @Select("select * from findFeeByProduct where switchs = 1 and payTypr = #{payTypr} and userId = #{userId}")
-    List<AlipayUserRateEntity>  findFeeByProduct(String userId, String product);
+    @Select("select * from alipay_user_rate where     payTypr = #{payTypr} and userId = #{userId}")
+    List<AlipayUserRateEntity>  findFeeByProduct(@Param("userId")String userId, @Param("payTypr")String payTypr);
 }
