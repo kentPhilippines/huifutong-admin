@@ -80,7 +80,7 @@
                     </ul>
                     <ul>
                         <li>
-                            <label class="col-sm-3 control-label">订单：</label>
+                            <label class="col-sm-3 control-label">银行卡：</label>
                             <div class="col-sm-8">
                                 <input class="form-control" name="mediumNumber" id = "mediumNumber" required   readonly>
                             </div>
@@ -153,8 +153,6 @@
                     }
                 },
                 {
-
-
                     field: 'mediumNumber', title: '银行账号',
                     footerFormatter: function (rows) {
                         var bankSumAmountsys = 0;
@@ -225,6 +223,11 @@
                 }
             }
         });
+    }
+
+    function enters(id,title,flag) {
+        $("#mediumNumber").val(id)
+        $.modal.alertWarning("已选中银行卡"+id);
     }
 
 </script>
