@@ -52,6 +52,7 @@ public interface StaticConstants {
     public static final String ALIPAY_SERVICE_API_VALUE_2 = "account-api-audit-merchant-status";//修改商户状态
     public static final String ALIPAY_SERVICE_API_VALUE_3 = "account-api-amount"; //码商资金账户加减款
     public static final String ALIPAY_SERVICE_API_VALUE_4 = "order-api-enter-order-qr"; //码商订单确认
+    public static final String ALIPAY_SERVICE_API_VALUE_9 = "enter-orderQr-back"; //码商订单确认
     public static final String ALIPAY_SERVICE_API_VALUE_5 = "account-api-amount-order"; //后台请求生成扣款订单
     public static final String ALIPAY_SERVICE_API_VALUE_6 = "merchant-withdrawal-order";//商户后台发起提现申请生成订单接口
     public static final String ALIPAY_SERVICE_API_VALUE_7= "account-api-amount-check"; //码商资金账户核对

@@ -20,6 +20,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.http.HttpUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.util.DictionaryUtils;
+import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Size;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -161,6 +163,35 @@ public class AlipayDealOrderEntityController extends BaseController {
         int i = alipayDealOrderEntityService.updateAlipayDealOrderEntity(order);
         return toAjax(i);
     }
+    @PostMapping("/updataOrderback")
+    @RequiresPermissions("orderDeal:qr:status")
+    @ResponseBody
+    @Log(title = "卡商代付订单回滚", businessType = BusinessType.UPDATE)
+    public AjaxResult updataOrderback(String id) {
+        AlipayDealOrderEntity order = alipayDealOrderEntityService.selectAlipayDealOrderEntityById(Long.valueOf(id));
+        String loginName =
+                ShiroUtils.getLoginName();
+        String status = order.getOrderStatus();
+        SysUser currentUser = ShiroUtils.getSysUser();
+        Long userId = currentUser.getUserId();
+        @Size(min = 0, max = 30, message = "用户昵称长度不能超过30个字符") String userName = currentUser.getUserName();
+        Map<String, Object> mapParam = Collections.synchronizedMap(Maps.newHashMap());
+        if (!"2".equals(status)) {
+            return AjaxResult.error("当前订单状态不允许修改");
+        }
+        mapParam.put("orderId", order.getOrderId());
+        mapParam.put("userName", userName);
+        String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);
+        String urlPath = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_SERVICE_API_KEY, StaticConstants.ALIPAY_SERVICE_API_VALUE_9);
+        AjaxResult post = post(ipPort + urlPath, mapParam);
+        return post;
+    }
+
+
+
+
+
+
 
     @Autowired
     IAlipayUserInfoService iAlipayUserInfoServiceImpl;

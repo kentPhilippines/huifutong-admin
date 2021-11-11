@@ -253,6 +253,9 @@
                 {field: 'orderQr', title: '银行卡信息',formatter: function (value, row, index) {
                         var table = '<ul>'
                         table += '<li>' + '银行卡：' + row.orderQr + '</li>'
+                        if(row.bankAmountNow){
+                            table += '<li>' + '业务余额：' + row.bankAmountNow + '</li>'
+                        }
                         if(null != row.payInfo && '' != row.payInfo){
                             table += '<li>' + '回调：' + row.payInfo + '</li>'
                         }
@@ -295,9 +298,11 @@
                         var actions = [];
                         actions.push('<a class="btn btn-primary btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.id + '\')"><i class="fa fa-search"></i>详情</a> ');
                         actions.push('<a class="btn btn-primary btn-xs ' + backOrderFlag + '" onclick="$.operate.openAccount(\'' + row.id + '\',\'补单\',\'backOrderUrl\')"><i class="fa fa-plus"></i>补单</a> ');
+
                         if (row.orderStatus === '2') {
-                            actions.push('<a class="btn btn-warning btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="renotify(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>重新通知</a> ');
+                            actions.push('<a class="btn btn-warning btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="back(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>回滚</a> ');
                         }
+
                         if (row.orderStatus === '2' && row.orderType == 4) {
                             actions.push('<a class="btn btn-danger btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="onUpdataOrder(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>转发财务</a> ');
                         }
@@ -324,6 +329,11 @@
     function onUpdataOrder(id) {
         $.modal.confirm("该笔订单确认转为人工处理", function () {
             $.operate.post(prefix + "/updataOrder", {"id": id});
+        });
+    }
+    function back(id) {
+        $.modal.confirm("该笔订单确认要回滚", function () {
+            $.operate.post(prefix + "/updataOrderback", {"id": id});
         });
     }
 

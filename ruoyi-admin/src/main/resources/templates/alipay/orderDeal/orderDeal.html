@@ -256,6 +256,9 @@
                 {field: 'orderQr', title: '银行卡信息',formatter: function (value, row, index) {
                         var table = '<ul>'
                         table += '<li>' + '银行卡：' + row.orderQr + '</li>'
+                        if(row.bankAmountNow){
+                            table += '<li>' + '业务余额：' + row.bankAmountNow + '</li>'
+                        }
                         if(null != row.payInfo && '' != row.payInfo){
                             table += '<li>' + '回调：' + row.payInfo + '</li>'
                         }
@@ -338,10 +341,7 @@
     }
 
     function updateBankCard(orderId) {
-
-
         title = "修改出款卡商"
-
         table.set();
         var _url =  $.operate.openUrl(orderId);
         var _width = 800;

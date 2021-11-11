@@ -61,6 +61,16 @@ public class AlipayDealOrderEntity extends BaseEntity {
     private Long id;
     private String userName;
     private String payImg;
+    private String bankAmountNow;
+
+    public String getBankAmountNow() {
+        return bankAmountNow;
+    }
+
+    public void setBankAmountNow(String bankAmountNow) {
+        this.bankAmountNow = bankAmountNow;
+    }
+
     private String payInfo;
     private Integer lockWit;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

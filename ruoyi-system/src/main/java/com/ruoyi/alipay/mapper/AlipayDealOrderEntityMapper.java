@@ -50,7 +50,7 @@ public interface AlipayDealOrderEntityMapper {
             "count(*) totalCount," +
             "count(case orderStatus when 2 then id else null end) successCount " +
             "from alipay_deal_order where createTime between #{statisticsEntity.params.dayStart}" +
-            " and #{statisticsEntity.params.dayEnd} and orderType = 1 " +
+            " and #{statisticsEntity.params.dayEnd} and ( orderType = 1  or orderType = 4 )" +
             "and currency = 'USDT' " +
             " union all " +
             "select '所有' userId, 'CNY' productName, " +
@@ -61,7 +61,7 @@ public interface AlipayDealOrderEntityMapper {
             "count(*) totalCount," +
             "count(case orderStatus when 2 then id else null end) successCount " +
             "from alipay_deal_order where createTime between #{statisticsEntity.params.dayStart}" +
-            " and #{statisticsEntity.params.dayEnd} and orderType = 1 " +
+            " and #{statisticsEntity.params.dayEnd} and ( orderType = 1  or orderType = 4 ) " +
             "and currency = 'CNY' " +
             " union all " +
             "select o.orderQrUser userId, p.productName ," +
@@ -72,7 +72,7 @@ public interface AlipayDealOrderEntityMapper {
             "count(*) totalCount," +
             "count(case orderStatus when 2 then o.id else null end) successCount " +
             "from alipay_deal_order o left join alipay_product p on o.retain1 = p.productId " +
-            "where o.createTime between #{statisticsEntity.params.dayStart} and #{statisticsEntity.params.dayEnd} and orderType = 1 " +
+            "where o.createTime between #{statisticsEntity.params.dayStart} and #{statisticsEntity.params.dayEnd} and (orderType = 1 or orderType = 4 ) " +
             "<if test = \"statisticsEntity.userId != null and statisticsEntity.userId != ''\">" +
             "and o.orderQrUser = #{statisticsEntity.userId} " +
             "</if>" +
