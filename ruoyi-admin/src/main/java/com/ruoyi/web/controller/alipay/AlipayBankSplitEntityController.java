@@ -16,6 +16,7 @@ import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -59,10 +60,6 @@ public class AlipayBankSplitEntityController extends BaseController {
                 tmp.setTransactionType("income".equals(tmp.getTransactionType())
                         ? "收入-" + tmp.getTypeDetail() : "支出-" + tmp.getTypeDetail())
         );
-        if (!SysUser.isAdmin(ShiroUtils.getUserId())) {
-            List<BankInfoSplitEntityVo> bankInfoSplitEntityVos = JSON.parseArray(JSON.toJSONString(list), BankInfoSplitEntityVo.class);
-            return getDataTable(bankInfoSplitEntityVos);
-        }
         return getDataTable(list);
     }
 

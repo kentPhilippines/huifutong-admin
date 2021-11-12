@@ -58,7 +58,7 @@
                COALESCE(sum(transaction_amount), '0') as totalIncome,
                (select COALESCE(sum(transaction_amount), '0')
                 from (select distinct origin_text, bank_id, user_id, transaction_type, transaction_amount
-                      from bankinfo_split_entity
+                      from bankInfo_split_entity
                       where createTime between #{params.beginTransactionDate} and #{params.endTransactionDate}
                     ) as tmp1
                 where bank_id = bankId
@@ -66,14 +66,14 @@
                   and transaction_type = 'expenditure'
                )                                      as totalExpenditure,
                (select balance
-                from bankinfo_split_entity
+                from bankInfo_split_entity
                 where bank_id = bankId
                   and user_id = userId
                   and createTime between #{params.beginTransactionDate} and #{params.endTransactionDate}
                 order by transaction_date desc
                                                          limit 1)                              as currentBalance
         from (select distinct origin_text, bank_id, user_id, transaction_type, transaction_amount
-            from bankinfo_split_entity
+            from bankInfo_split_entity
             where createTime between #{params.beginTransactionDate} and #{params.endTransactionDate}
             ) as tmp
         where transaction_type = 'income'

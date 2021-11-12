@@ -28,13 +28,25 @@
                                         th:value="${dict.dictValue}"></option>
                             </select>
                         </li>
-                        <li class="select-time">
-                            <span>创建时间：</span>
-                            <input type="text" class="time-input" id="startTime" placeholder="开始时间"
-                                   name="params[beginTime]"/>
-                            <span>-</span>
-                            <input type="text" class="time-input" id="endTime" placeholder="结束时间"
-                                   name="params[endTime]"/>
+                        <li class="select-selectpicker">
+                            <label>交易状态： </label>
+                            <select id="receiveOrderState" name="receiveOrderState"
+                                    class="selectpicker" data-none-selected-text="请选择" >
+                                <option value="">所有</option>
+                                <option value= "1" >开启</option>
+                                <option value= "2">关闭</option>
+
+                            </select>
+                        </li>
+                        <li class="select-selectpicker">
+                            <label>代付状态： </label>
+                            <select id="remitOrderState" name="remitOrderState"
+                                    class="selectpicker" data-none-selected-text="请选择" >
+                                <option value="">所有</option>
+                                <option value= "1" >开启</option>
+                                <option value= "2">关闭</option>
+
+                            </select>
                         </li>
                         <li>
                             <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
@@ -66,7 +78,7 @@
     const resetWithdrawalFlag = [[${@permission.hasPermi('alipay:userInfo:reset:withdrawal')}]];
     const editFlag = [[${@permission.hasPermi('alipay:userInfo:edit')}]];
     const prefix = ctx + "alipay/userInfo";
-
+    const prefixBank = ctx + "alipay/medium";
     $(function () {
         var options = {
             url: prefix + "/list",
@@ -75,6 +87,12 @@
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
             modalName: "码商详情",
+            pagination: true,//显示分页
+            detailView: true,
+            //注册加载子表的事件。注意下这里的三个参数！
+            onExpandRow: function (index, row, $detail) {
+                initChildTable(index, row, $detail );
+            },
             columns: [{
                 checkbox: true
             },
@@ -88,27 +106,32 @@
                 },
                 {
                     field: 'userId',
-                    title: '码商账号'
+                    title: '卡商账号',formatter: function (value, row, index) {
+                            var table = '<ul>'
+                            table += '<li>' + '卡商账号：' + row.userId + '</li>'
+                                table += '<li>' + '卡商昵称：' + row.userName + '</li>'
+                        if(row.agent){
+                            table += '<li>' + '上级代理：' + row.agent + '</li>'
+                        }
+                            table += '</ul>'
+                            return table;
+                             }
                 },
                 {
-                    field: 'userName',
-                    title: '码商昵称'
-                },
-                // {
-                //     field: 'userType',
-                //     title: '用户类型',
-                //     formatter: function (value, item, index) {
-                //         if (item.userType == '1') {
-                //             return '<span>商户</span>';
-                //         } else if (item.userType == '2') {
-                //             return '<span>码商</span>';
-                //         }
-                //     }
-                // },
-                {
-                    field: 'agent',
-                    title: '上级代理ID',
-                    align: 'center'
+                    field: 'deposit',
+                    title: '数据',
+                    formatter: function (value, row, index) {
+                        var table = '<ul>'
+                            table += '<li>' + '押金：' + row.deposit + '</li>'
+                            table += '<li>' + '滚动资金：' + row.accountBalance + '</li>'
+                            table += '<li>' + '冻结：' + row.freezeBalance + '</li>'
+                            table += '<li>' + '当日出款：' + row.todayWitAmount + '</li>'
+                            table += '<li>' + '当日入款：' + row.todayDealAmount + '</li>'
+                            table += '<li>' + '当日利润：' + row.todayProfit + '</li>'
+                            table += '<li>' + '累计利润：' + row.sumProfit + '</li>'
+                        table += '</ul>'
+                        return table;
+                    }
                 },
                 {
                     field: 'isAgent',
@@ -121,27 +144,6 @@
                             return '<span>否</span> ' + '<a class="btn btn-info btn-xs ' + resetWithdrawalFlag + '" href="javascript:void(0)" onclick="upUserAgents(\'' + item.id + '\')"><i class="fa fa-key"></i>点击升级代理商</a> ';
                         }
                     }
-                },
-                {
-                    field: 'credit',
-                    title: '信用分'
-                },
-                {
-                    field: 'email',
-                    title: '邮箱',
-                    align: 'center'
-                },
-                {
-                    field: 'qq',
-                    title: 'QQ号码'
-                },
-                {
-                    field: 'telegram',
-                    title: 'telegram'
-                },
-                {
-                    field: 'skype',
-                    title: 'skype'
                 },
                 {
                     visible: editFlag == 'hidden' ? false : true,
@@ -186,9 +188,79 @@
         };
         $.table.init(options);
     });
+    initChildTable = function (index, row, $detail) {
+        var bankId = row.userId;
+        const codeFlag = [[${@permission.hasPermi('alipay:medium:showCode')}]];
+        const editAmountById = [[${@permission.hasPermi('alipay:medium:editAmountById')}]];
+        const editAmountByCode = [[${@permission.hasPermi('alipay:medium:editAmountByCode')}]];
+        var childTable = $detail.html('<table style="table-layout:fixed"></table>').find('table');
+        $(childTable).bootstrapTable({
+            url: prefix + "/childrenBankList",
+            method: 'post',
+            sidePagination: "server",
+            contentType: "application/x-www-form-urlencoded",
+            queryParams: {
+                qrcodeId: bankId,
+            },
+            columns: [
+                {  field: 'mediumNumber', title: '银行账号', },
+                { field: 'mediumHolder', title: '开户人' , footerFormatter: function (rows) {
+                        var bankSumAmountsys = 0;
+                        var bankSumAmountnow = 0;//
+                        var openSumBankAmountsys = 0;//
+                        var openSumBankAmountnow = 0;//
+                        for (var i in rows) {
+                            bankSumAmountsys += parseFloat(rows[i].bankSumAmountsys);
+                            bankSumAmountnow += parseFloat(rows[i].bankSumAmountnow);
+                            openSumBankAmountsys += parseFloat(rows[i].openSumBankAmountsys);
+                            openSumBankAmountnow += parseFloat(rows[i].openSumBankAmountnow);
+                        }
+                        var table = '<ul>'
+                        table += '<li><span style="color: green"><strong>' + '开启业务余额：' + openSumBankAmountsys + '</strong></span><span style="color: red">&nbsp;&nbsp;&nbsp;&nbsp;<strong>开启监控余额 ： ' + openSumBankAmountnow + '</strong></span></li>'
+                        table += '<li><span style="color: green"><strong>' + '所有业务余额：' + bankSumAmountsys + '</strong></span><span style="color: red">&nbsp;&nbsp;&nbsp;&nbsp;<strong>所有监控余额 ： ' + bankSumAmountnow + '</strong></span></li>'
+                        table += '</ul>'
+                        return table;
+                    } },
+                { field: 'mediumPhone', title: '手机号'  },
+                { field: 'account', title: '开户行'  },
+                { field: 'qrcodeId', title: '卡商账户'  },
+                { field: 'mountLimit', title: '收款限制金额'   },
+                { field: 'mountSystem', title: '交易余额' },
+                { field: 'mountNow',  title: '参考余额' },
+                {
+                    title: '黑卡',
+                    align: 'black',
+                    formatter: function (value, row, index) {
+                        return statusTools(row, 'black');
+                    }
+                },
+                {
+                    field: 'status',
+                    title: '接单状态',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return statusTools(row, 'status');
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-info btn-xs ' + codeFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-play-circle-o"></i>修改业务金额</a> ');
+                        actions.push('<a class="btn btn-primary btn-xs ' + editAmountById + '" href="/alipay/medium/editAmount/' + row.id + '")"><i class="fa fa-play-circle-o"></i>修改收款限制金额</a> ');
+                        actions.push('<a class="btn btn-primary btn-xs ' + editAmountByCode + '" href="/alipay/medium/editAmountByCode/' + row.code + '")"><i class="fa fa-play-circle-o"></i>修改同种媒介收款限制金额</a> ');
+                        return actions.join('');
+                    }
+                }]
+
+        });
+    };
 
     /* 用户状态显示 */
     function statusTools(row, param) {
+
+
         if (param === 'switchs') {
             if (row.switchs === 0) {
                 let msg = "确认要【启用】此商户的【用户状态】吗？";
@@ -219,9 +291,63 @@
                 let val = 2;
                 return '<i class=\"fa fa-toggle-on text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="disable(\'' + row.userId + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
             }
+        } else if (param === 'status') {
+            if (row.status == 1) {
+                let msg = "确认关闭这张卡吗？";
+                let val = 0;
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="enable1(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            } else {
+                let msg = "确认开启这张卡吗？";
+                let val = 1;
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="disable1(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            }
+        }else if(param === 'black'){
+            if (row.black == 1) {
+                let msg = "确认此卡【置为黑卡】吗？";
+                let val = 0;
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="enable1(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            } else {
+                let msg = "确认此卡【开放】吗？";
+                let val = 1;
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="disable1(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            }
+        } else  {
+            if (row.status === 2) {
+                let msg = "确认要【开启】此商户的【代付状态】吗？";
+                let val = 1;
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="enable(\'' + row.userId + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            } else {
+                let msg = "确认要【关闭】此商户的【代付状态】吗？";
+                let val = 2;
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="disable(\'' + row.userId + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            }
         }
     }
+    /*  银行卡-开启 */
+    function enable1(qrcodeId, param, msg, val) {
+        $.modal.confirm(msg, function () {
+            $.operate.post(prefixBank + "/updateBankcard", {
+                "id": qrcodeId,
+                "black": val
+            },  function callback(){
+                    $.table.search();
+                }
+            )
+        })
+    }
+    /*  银行卡-停用 */
+    function disable1(qrcodeId, param, msg, val) {
+        $.modal.confirm(msg, function () {
+            $.operate.post(prefixBank + "/updateBankcard", {
+                "id": qrcodeId,
+                "black": val
+            },  function callback(){
+                    $.table.search();
+                }
 
+            );
+        })
+    }
     /* 重置用户的登陆密码 */
     function resetPwdLogin(id) {
         $.modal.confirm("确认要重置此用户的【登陆】密码？", function () {
@@ -238,7 +364,7 @@
 
     function upUserAgents(id) {
         $.modal.confirm("确定要将该卡商升级为代理商？", function () {
-            $.operate.fixPost(prefix + "/upUserAgents", {"id": id});
+            $.operate.fixPost(prefix + "/upUserAgents", {"id": id});x
         })
     }
 

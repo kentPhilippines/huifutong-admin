@@ -16,7 +16,6 @@ import java.util.Date;
 public class AlipayUserInfo extends BaseEntity {
     private static final long serialVersionUID = 1L;
     private String findUserId;
-    private String todayDealAmount;
     private Integer autoWit;
     private String enterWitOpen;
     private String interFace;
@@ -28,6 +27,62 @@ public class AlipayUserInfo extends BaseEntity {
     private String loginName;
     private Integer colorIndex;
 
+    private Double deposit; //押金
+    private Double accountBalance; //滚动
+    private Double freezeBalance;//冻结
+    private Double todayWitAmount; //当日出款
+    private String todayDealAmount;//当日入款
+    private Double sumProfit;
+    private Double todayProfit;//当日利润
+
+
+    public Double getTodayProfit() {
+        return todayProfit;
+    }
+
+    public void setTodayProfit(Double todayProfit) {
+        this.todayProfit = todayProfit;
+    }
+
+    public Double getSumProfit() {
+        return sumProfit;
+    }
+
+    public void setSumProfit(Double sumProfit) {
+        this.sumProfit = sumProfit;
+    }
+
+    public Double getTodayWitAmount() {
+        return todayWitAmount;
+    }
+
+    public void setTodayWitAmount(Double todayWitAmount) {
+        this.todayWitAmount = todayWitAmount;
+    }
+
+    public Double getFreezeBalance() {
+        return freezeBalance;
+    }
+
+    public void setFreezeBalance(Double freezeBalance) {
+        this.freezeBalance = freezeBalance;
+    }
+
+    public Double getAccountBalance() {
+        return accountBalance;
+    }
+
+    public void setAccountBalance(Double accountBalance) {
+        this.accountBalance = accountBalance;
+    }
+
+    public Double getDeposit() {
+        return deposit;
+    }
+
+    public void setDeposit(Double deposit) {
+        this.deposit = deposit;
+    }
 
     public Integer getColorIndex() {
         return colorIndex;

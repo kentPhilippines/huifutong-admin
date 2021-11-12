@@ -35,8 +35,14 @@ public interface AlipayUserInfoMapper {
             "<if test=\"agent != null and agent != ''\">" +
             " and agent = #{agent}" +
             "</if>" +
-            "<if test=\"switchs == 0 and switchs ==1\">" +
+            "<if test=\"switchs == 0 or switchs ==1\">" +
             " and switchs = #{switchs}" +
+            "</if>" +
+            "<if test=\"receiveOrderState == 1 or receiveOrderState ==2\">" +
+            " and receiveOrderState = #{receiveOrderState}" +
+            "</if>" +
+            "<if test=\"remitOrderState == 2 or remitOrderState ==1\">" +
+            " and remitOrderState = #{remitOrderState}" +
             "</if>" +
             "<if test=\"params.beginTime != null and params.beginTime != ''\">" +
             " and date_format(u.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')" +

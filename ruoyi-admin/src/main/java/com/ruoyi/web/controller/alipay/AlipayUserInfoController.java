@@ -1,9 +1,15 @@
 package com.ruoyi.web.controller.alipay;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import com.ruoyi.alipay.domain.AlipayMediumEntity;
+import com.ruoyi.alipay.domain.AlipayUserFundEntity;
 import com.ruoyi.alipay.domain.AlipayUserInfo;
+import com.ruoyi.alipay.service.IAlipayMediumEntityService;
+import com.ruoyi.alipay.service.IAlipayUserFundEntityService;
 import com.ruoyi.alipay.service.IAlipayUserInfoService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.StaticConstants;
@@ -26,6 +32,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 用户详情Controller
@@ -42,7 +51,8 @@ public class AlipayUserInfoController extends BaseController {
 
     @Autowired
     private IAlipayUserInfoService alipayUserInfoService;
-
+    @Autowired
+    private IAlipayUserFundEntityService alipayUserFundEntityService;
     @GetMapping()
     @RequiresPermissions("alipay:merchant:view")
     public String userInfo() {
@@ -58,6 +68,24 @@ public class AlipayUserInfoController extends BaseController {
         startPage();
         //通过数据库源获取数据列表
         List<AlipayUserInfo> list = alipayUserInfoService.selectAlipayUserInfoList(alipayUserInfo);
+        AlipayUserFundEntity alipayUserFundEntity = new AlipayUserFundEntity();
+        alipayUserFundEntity.setUserId(alipayUserInfo.getUserId());
+        alipayUserFundEntity.setUserType( "2");
+        List<AlipayUserFundEntity> listFund = alipayUserFundEntityService.selectAlipayUserFundEntityList(alipayUserFundEntity);
+        ConcurrentHashMap<String, AlipayUserFundEntity> fundMap = listFund.stream().collect(Collectors.toConcurrentMap(AlipayUserFundEntity::getUserId, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
+        for (AlipayUserInfo userInfo : list){
+            String userId = userInfo.getUserId();
+            AlipayUserFundEntity fundEntity = fundMap.get(userId);
+            if(null != fundEntity){
+                userInfo.setAccountBalance(fundEntity.getAccountBalance()-fundEntity.getSumProfit());
+                userInfo.setFreezeBalance(fundEntity.getFreezeBalance());
+                userInfo.setTodayDealAmount(fundEntity.getTodayDealAmount().toString());
+                userInfo.setTodayWitAmount(fundEntity.getTodayWitAmount());
+                userInfo.setDeposit(fundEntity.getDeposit());
+                userInfo.setSumProfit(fundEntity.getSumProfit());
+                userInfo.setTodayProfit(fundEntity.getTodayProfit());
+            }
+        }
         return getDataTable(list);
     }
 
@@ -236,7 +264,6 @@ public class AlipayUserInfoController extends BaseController {
             return error("操作失败");
         }
         return success("重置成功，新的登陆密码：" + resetPwd);
-
     }
 
     /**
@@ -262,6 +289,44 @@ public class AlipayUserInfoController extends BaseController {
     public AjaxResult upUserAgents(Long id) {
         return toAjax(alipayUserInfoService.upUserAgents(id));
     }
+
+
+
+    @Autowired
+    private IAlipayMediumEntityService alipayMediumEntityService;
+
+    @PostMapping("/childrenBankList")
+    @ResponseBody
+    public TableDataInfo childrenBankList(AlipayMediumEntity alipayMediumEntity) {
+        startPage();
+        List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
+        if(StrUtil.isNotEmpty(alipayMediumEntity.getQrcodeId())){
+            AlipayMediumEntity mediumEntity =     alipayMediumEntityService.findBankSum(alipayMediumEntity.getQrcodeId());
+            if (null != mediumEntity && CollUtil.isNotEmpty(list)) {
+                for (int mark = 0; mark < 1; mark++) {
+                    list.get(mark).setBankSumAmountsys(mediumEntity.getBankSumAmountsys());
+                    list.get(mark).setBankSumAmountnow(mediumEntity.getBankSumAmountnow());
+                    list.get(mark).setOpenSumBankAmountsys(mediumEntity.getOpenSumBankAmountsys());
+                    list.get(mark).setOpenSumBankAmountnow(mediumEntity.getOpenSumBankAmountnow());
+                }
+            }
+        }
+        return getDataTable(list);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

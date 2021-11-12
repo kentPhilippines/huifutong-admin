@@ -366,7 +366,28 @@
     }
 
     function updateBankCardMore(orderId) {
-        $.modal.open("拆单出款", $.operate.openUrl(orderId+"====amount"));
+            title = "拆弹出款"
+            table.set();
+            var _url =  $.operate.openUrl(orderId+"====amount");
+            var _width = 800;
+            var _height =  $(window).height() - 50 ;
+            //如果是移动端，就使用自适应大小弹窗
+            if (navigator.userAgent.match(/(iPhone|iPod|Android|ios|ipad)/i)) {
+                _width = 'auto';
+                _height = 'auto';
+            }
+            var options = {
+                title: title,
+                width: _width,
+                height: _height,
+                url: _url,
+                skin: 'layui-layer-gray',
+                btn: ['关闭'],
+                yes: function (index, layero) {
+                    layer.close(index);
+                }
+            };
+            $.modal.openOptions(options);
     }
      function enterPay(id) {
          $.modal.confirm("确认审核通过", function () {

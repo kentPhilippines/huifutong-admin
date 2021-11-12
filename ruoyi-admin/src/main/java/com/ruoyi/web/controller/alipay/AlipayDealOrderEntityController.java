@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 import com.ruoyi.alipay.domain.*;
 import com.ruoyi.alipay.service.*;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.constant.StaticConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -166,6 +167,7 @@ public class AlipayDealOrderEntityController extends BaseController {
     @PostMapping("/updataOrderback")
     @RequiresPermissions("orderDeal:qr:status")
     @ResponseBody
+    @RepeatSubmit
     @Log(title = "卡商代付订单回滚", businessType = BusinessType.UPDATE)
     public AjaxResult updataOrderback(String id) {
         AlipayDealOrderEntity order = alipayDealOrderEntityService.selectAlipayDealOrderEntityById(Long.valueOf(id));
@@ -203,6 +205,7 @@ public class AlipayDealOrderEntityController extends BaseController {
      * @return
      */
     @GetMapping("/updateBankCardShow/{userId}")
+    @RepeatSubmit
     @RequiresPermissions("orderDeal:qr:status:updateBankCardShow")
     @Log(title = "修改出款卡商或拆单", businessType = BusinessType.INSERT)
     public String updateBankCardShow(ModelMap mmap, @PathVariable("userId") String orderId) {
@@ -261,18 +264,10 @@ public class AlipayDealOrderEntityController extends BaseController {
     @GetMapping("/updateBankCard")
     @RequiresPermissions("orderDeal:qr:status:updateBankCard")
     @ResponseBody
+    @RepeatSubmit
     public AjaxResult updateBankCard1(
-
             String orderId,String qrcodeId,  String mediumNumber
-
-
-
-
     ) {
-
-
-
-
         AlipayDealOrderEntity orderEntityList = alipayDealOrderEntityService.findOrderByOrderId(orderId);
         AlipayUserRateEntity rate = iAlipayUserRateEntityService.findWitRate(qrcodeId);
         Double fee = rate.getFee();
@@ -303,12 +298,11 @@ public class AlipayDealOrderEntityController extends BaseController {
     @GetMapping("/updateBankCardMore")
     @RequiresPermissions("orderDeal:qr:status:updateBankCard")
     @ResponseBody
+    @RepeatSubmit
     @Log(title = "确认拆单", businessType = BusinessType.INSERT)
     public AjaxResult updateBankCard(
             String orderId,  String amount, String mediumNumber,String qrcodeId
     ) {
-
-
         AlipayDealOrderEntity orderEntityList = alipayDealOrderEntityService.findOrderByOrderId(orderId);
         AlipayUserRateEntity rate = iAlipayUserRateEntityService.findWitRate(qrcodeId);
         Double dealAmount = orderEntityList.getDealAmount();
