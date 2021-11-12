@@ -106,7 +106,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         if (StrUtil.isNotEmpty(alipayDealOrderEntity.getOrderQrUser1())) {
             alipayDealOrderEntity.setOrderQrUser(alipayDealOrderEntity.getOrderQrUser1());
         }
-        startPage();
+        startPage1();
         List<AlipayDealOrderEntity> list = alipayDealOrderEntityService
                 .selectAlipayDealOrderEntityList(alipayDealOrderEntity);
         SysUser user = new SysUser();

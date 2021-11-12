@@ -272,7 +272,7 @@
                 /*
                 {   field: 'isNotify',      title: '发送通知'   },*/
                 {
-                    field: 'createTime', title: '时间', formatter: function (value, row, index) {
+                    field: 'createTime',     sortable: true, title: '时间', formatter: function (value, row, index) {
                         var table = '<ul>'
                         table += '<li>' + '创建时间：' + row.createTime + '</li>'
                         table += '<li>' + '修改时间：' + row.submitTime + '</li>'
