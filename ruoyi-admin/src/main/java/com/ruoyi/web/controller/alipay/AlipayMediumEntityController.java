@@ -279,10 +279,10 @@ public class AlipayMediumEntityController extends BaseController {
     @ResponseBody
     public AjaxResult changeStatus(AlipayMediumEntity alipayMediumEntity) {
         logger.info("[当前处理商户关闭或者开启的管理员账号为：" + ShiroUtils.getSysUser().getLoginName() + "]");
-        logger.info("[当前处理商户状态的参数为：" + alipayMediumEntity.getBlack().toString() + "]");
         AlipayMediumEntity mediumEntity = new AlipayMediumEntity();
         mediumEntity.setId(alipayMediumEntity.getId());
         mediumEntity.setBlack(alipayMediumEntity.getBlack());
+        mediumEntity.setStatus(alipayMediumEntity.getStatus());
         int i = alipayMediumEntityService.updateAlipayMediumEntity(mediumEntity);
         return toAjax(i);
     }

@@ -31,10 +31,17 @@ public class AlipayUserInfo extends BaseEntity {
     private Double accountBalance; //滚动
     private Double freezeBalance;//冻结
     private Double todayWitAmount; //当日出款
-    private String todayDealAmount;//当日入款
+    private String todayOtherWitAmount;//当日入款
     private Double sumProfit;
     private Double todayProfit;//当日利润
 
+    public String getTodayOtherWitAmount() {
+        return todayOtherWitAmount;
+    }
+
+    public void setTodayOtherWitAmount(String todayOtherWitAmount) {
+        this.todayOtherWitAmount = todayOtherWitAmount;
+    }
 
     public Double getTodayProfit() {
         return todayProfit;
@@ -163,14 +170,6 @@ public class AlipayUserInfo extends BaseEntity {
 
     public void setAutoWit(Integer autoWit) {
         this.autoWit = autoWit;
-    }
-
-    public String getTodayDealAmount() {
-        return todayDealAmount;
-    }
-
-    public void setTodayDealAmount(String todayDealAmount) {
-        this.todayDealAmount = todayDealAmount;
     }
 
     public void setFindUserId(String findUserId) {

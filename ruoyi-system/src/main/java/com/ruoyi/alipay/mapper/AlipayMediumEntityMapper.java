@@ -78,14 +78,14 @@ public interface AlipayMediumEntityMapper {
             "SELECT  sum(mountNow) as mountNow ,   " +
             "sum(mountSystem) as mountSystem , " +
             " 'all' as amounttype " +
-            "from  zongbang_alipay.alipay_medium   " +
+            "from   alipay_medium   " +
             "WHERE  qrcodeId  =  #{userId}  and isDeal  = '2'      " +
             "union all  " +
             "SELECT  " +
             "sum(mountNow) as mountNow ,  " +
             "sum(mountSystem) as mountSystem, " +
             " 'open' as amounttype  " +
-            "from  zongbang_alipay.alipay_medium  " +
+            "from  alipay_medium  " +
             "WHERE  qrcodeId  = #{userId} and isDeal  = '2' and status = 1  ")
     List<AlipayMediumEntity> findBankSum(@Param("userId") String userId);
 
