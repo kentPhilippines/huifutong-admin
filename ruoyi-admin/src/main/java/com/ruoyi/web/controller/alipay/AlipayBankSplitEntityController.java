@@ -43,6 +43,18 @@ public class AlipayBankSplitEntityController extends BaseController {
         return prefix + "/BankSplitInfo";
     }
 
+
+    @GetMapping("/bank/{orderQr}")
+    public String info(@PathVariable("orderQr") String orderQr, ModelMap modelMap) {
+        String str = "";
+        if (orderQr != null) {
+            String[] split = orderQr.trim().split(":");
+            str = split[2];
+        }
+        modelMap.put("bankId", str);
+        return prefix + "/BankSplitInfo";
+    }
+
     @GetMapping("/bankTransactionRecord")
     public String record() {
         return prefix + "/BankTransactionRecord";
@@ -94,6 +106,7 @@ public class AlipayBankSplitEntityController extends BaseController {
         ExcelUtil<BankInfoSplitEntity> util = new ExcelUtil<BankInfoSplitEntity>(BankInfoSplitEntity.class);
         return util.exportExcel(list, "bankInfoSpilt");
     }
+
     /**
      * 银行收入支出记录
      */

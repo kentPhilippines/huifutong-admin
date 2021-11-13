@@ -6,6 +6,7 @@
 </head>
 <body class="gray-bg">
 <div class="container-div">
+<!--    <span id="bankIds" name="bankIds" th:text="${bankId}" type="hidden"></span>-->
     <div class="row">
         <div class="col-sm-12 search-collapse">
             <form id="formId">
@@ -21,7 +22,7 @@
                         </li>
                         <li>
                             <span>银行卡号：</span>
-                            <input type="text" name="bankId"/>
+                            <input type="text" name="bankId" th:value="${bankId}"/>
                         </li>
                         <li>
                             <span>用户id：</span>
@@ -74,7 +75,10 @@
 <th:block th:include="include :: footer"/>
 <th:block th:include="include :: bootstrap-select-js"/>
 <script th:inline="javascript">
-    const mediumType = [[${@dict.getType('medium_type')}]];
+    const mediumType = [[${@dict.getType('medium_type')}]]
+    // $(document).ready(function(){
+    //     $.table.search()
+    // });
     var prefix = ctx + "alipay/BankSplitInfo";
     $(function () {
         var options = {

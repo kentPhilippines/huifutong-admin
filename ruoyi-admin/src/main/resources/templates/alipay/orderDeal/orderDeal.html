@@ -143,6 +143,7 @@
     const orderstatusDatas = [[${@dict.getType('orderStatus')}]];
     //请求路径
     const prefix = ctx + "alipay/orderDeal";
+    const prefix1 = ctx + "alipay/BankSplitInfo";
 
     $(function () {
         var options = {
@@ -152,7 +153,7 @@
             exportUrl: prefix + "/export",
             openUrl: prefix + "/updateBankCardShow/{userId}",
             backOrderUrl: prefix + "/backOrder/{id}",
-            viewBankDataUrl: prefix + "/bankData/{orderQr}",
+            viewBankDataUrl: prefix1+"/bank/{orderQr}",
             modalName: "主交易订单",
             showFooter: true,
             columns: [{
@@ -256,7 +257,7 @@
                 },
                 {field: 'orderQr', title: '银行卡信息',formatter: function (value, row, index) {
                         var table = '<ul>'
-                        table += '<li class="btn btn-primary btn-xs" onclick="$.operate.detailForBank(\'' + row.orderQr + '\')">' + '银行卡：' + row.orderQr + '</li>'
+                        table += '<li class="btn btn-primary btn-xs" onclick="$.operate.openAccount(\'' + row.orderQr + '\',\'流水\',\'viewBankDataUrl\')">' + '银行卡：' + row.orderQr + '</li>'
                         if(row.bankAmountNow){
                             table += '<li class="btn btn-danger btn-xs ">' + '业务余额：' + row.bankAmountNow + '</li>'
                         }
