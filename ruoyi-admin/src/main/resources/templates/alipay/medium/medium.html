@@ -93,6 +93,7 @@
             updateUrl: prefix + "/edit/{id}",
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
+            editAmountUrl: prefix + "/editAmount/{id}",
             openUrl: prefix + "/show/{userId}",
             modalName: "收款媒介",
             columns: [{
@@ -158,11 +159,12 @@
                     title: '接单状态',
                     align: 'center',
                     formatter: function (value, row, index) {
-                        if (row.status === 1) {
-                            return '<span style="color:#00B83F;">开启</span>';
-                        } else if (row.status === 0) {
-                            return '<span style="color: #cc0000;">关闭</span>';
-                        }
+                        // if (row.status === 1) {
+                        //     return '<span style="color:#00B83F;">开启</span>';
+                        // } else if (row.status === 0) {
+                        //     return '<span style="color: #cc0000;">关闭</span>';
+                        // }
+                        return statusTools(row, 'acceptOrder');
                     }
                 },
                 {
@@ -182,8 +184,7 @@
 
                    //     actions.push('<a class="btn btn-info btn-xs ' + codeFlag + '" href="javascript:void(0)" onclick="$.operate.codeList(\'' + row.mediumId + '\')"><i class="fa fa-search-plus"></i>二维码</a> ');
                         actions.push('<a class="btn btn-info btn-xs ' + codeFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-play-circle-o"></i>修改业务金额</a> ');
-
-                        actions.push('<a class="btn btn-primary btn-xs ' + editAmountById + '" href="/alipay/medium/editAmount/' + row.id + '")"><i class="fa fa-play-circle-o"></i>修改收款限制金额</a> ');
+                        actions.push('<a class="btn btn-primary btn-xs ' + editAmountById + '" onclick="$.operate.openAccount(\'' + row.id + '\',\'资金账户加款\',\'editAmountUrl\')"><i class="fa fa-plus"></i>修改收款限制金额</a> ');
                         actions.push('<a class="btn btn-primary btn-xs ' + editAmountByCode + '" href="/alipay/medium/editAmountByCode/' + row.code + '")"><i class="fa fa-play-circle-o"></i>修改同种媒介收款限制金额</a> ');
                         return actions.join('');
                     }
@@ -204,6 +205,19 @@
                 return '<i class=\"fa fa-toggle-on text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="disable(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
             }
         }
+
+        if (param === 'acceptOrder') {
+            if (row.status == 1) {
+                let msg = "确认【关闭接单状态】吗？";
+                let val = 0;
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="enableStatus(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            } else {
+                let msg = "确认【开启接单状态吗】吗？";
+                let val = 1;
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="disableStatus(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            }
+        }
+
     }
 
     /* 商户管理-启用 */
@@ -215,12 +229,32 @@
             });
         })
     }
+    /* 商户管理-启用 */
+    function enableStatus(qrcodeId, param, msg, val) {
+        $.modal.confirm(msg, function () {
+            $.operate.post(prefix + "/edit", {
+                "id": qrcodeId,
+                "status": val
+            });
+        })
+    }
+
     /* 商户管理-停用 */
     function disable(qrcodeId, param, msg, val) {
         $.modal.confirm(msg, function () {
             $.operate.post(prefix + "/updateBankcard", {
                 "id": qrcodeId,
                 "black": val
+            });
+        })
+    }
+
+    /* 商户管理-停用 */
+    function disableStatus(qrcodeId, param, msg, val) {
+        $.modal.confirm(msg, function () {
+            $.operate.post(prefix + "/edit", {
+                "id": qrcodeId,
+                "status": val
             });
         })
     }

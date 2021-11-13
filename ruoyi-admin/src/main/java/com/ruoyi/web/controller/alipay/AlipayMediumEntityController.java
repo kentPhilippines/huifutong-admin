@@ -1,34 +1,32 @@
 package com.ruoyi.web.controller.alipay;
 
-import java.util.*;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.google.common.collect.Maps;
-import com.ruoyi.alipay.domain.*;
+import com.ruoyi.alipay.domain.AlipayFileListEntity;
+import com.ruoyi.alipay.domain.AlipayMediumEntity;
+import com.ruoyi.alipay.domain.AlipayUserInfo;
+import com.ruoyi.alipay.domain.MediumQueue;
 import com.ruoyi.alipay.service.IAlipayFileListEntityService;
+import com.ruoyi.alipay.service.IAlipayMediumEntityService;
+import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.StaticConstants;
-import com.ruoyi.common.exception.BusinessException;
-import com.ruoyi.common.utils.MapDataUtil;
-import com.ruoyi.common.utils.http.HttpUtils;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.util.DictionaryUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.alipay.service.IAlipayMediumEntityService;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
+
+import java.util.*;
 
 /**
  * 收款媒介列Controller
@@ -62,15 +60,15 @@ public class AlipayMediumEntityController extends BaseController {
         startPage();
         List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
         if(StrUtil.isNotEmpty(alipayMediumEntity.getQrcodeId())){
-        AlipayMediumEntity mediumEntity =     alipayMediumEntityService.findBankSum(alipayMediumEntity.getQrcodeId());
-        if (null != mediumEntity && CollUtil.isNotEmpty(list)) {
-            for (int mark = 0; mark < 1; mark++) {
-                list.get(mark).setBankSumAmountsys(mediumEntity.getBankSumAmountsys());
-                list.get(mark).setBankSumAmountnow(mediumEntity.getBankSumAmountnow());
-                list.get(mark).setOpenSumBankAmountsys(mediumEntity.getOpenSumBankAmountsys());
-                list.get(mark).setOpenSumBankAmountnow(mediumEntity.getOpenSumBankAmountnow());
+            AlipayMediumEntity mediumEntity =     alipayMediumEntityService.findBankSum(alipayMediumEntity.getQrcodeId());
+            if (null != mediumEntity && CollUtil.isNotEmpty(list)) {
+                for (int mark = 0; mark < 1; mark++) {
+                    list.get(mark).setBankSumAmountsys(mediumEntity.getBankSumAmountsys());
+                    list.get(mark).setBankSumAmountnow(mediumEntity.getBankSumAmountnow());
+                    list.get(mark).setOpenSumBankAmountsys(mediumEntity.getOpenSumBankAmountsys());
+                    list.get(mark).setOpenSumBankAmountnow(mediumEntity.getOpenSumBankAmountnow());
+                }
             }
-        }
         }
         return getDataTable(list);
     }
@@ -95,12 +93,14 @@ public class AlipayMediumEntityController extends BaseController {
         return prefix + "/add" ;
     }
 
+
     /**
      * 单个媒介修改金额页面
      */
     @GetMapping("/editAmount/{id}")
     public String editAmount(@PathVariable("id") Long id, ModelMap mmap) {
-        mmap.put("id", id);
+        AlipayMediumEntity alipayMediumEntity = alipayMediumEntityService.selectAlipayMediumEntityById(Long.valueOf(id));
+        mmap.put("alipayMediumEntity",alipayMediumEntity);
         return prefix + "/editAmount" ;
     }
 
