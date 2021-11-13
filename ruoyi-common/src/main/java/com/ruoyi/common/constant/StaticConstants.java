@@ -57,6 +57,7 @@ public interface StaticConstants {
     public static final String ALIPAY_SERVICE_API_VALUE_6 = "merchant-withdrawal-order";//商户后台发起提现申请生成订单接口
     public static final String ALIPAY_SERVICE_API_VALUE_7= "account-api-amount-check"; //码商资金账户核对
     public static final String ALIPAY_SERVICE_API_VALUE_8 = "renotify-to-merchant";//后台调用接口重新通知商户
+    public static final String ALIPAY_SERVICE_API_VALUE_10 = "bank-amount-enter";//更新代付余额接口
 
     //dealpay查询
     public static final String DealPAY_IP_URL_KEY = "dealpay_ip_port";//查询dealpay的服务器地址（公共）

@@ -3,7 +3,6 @@ package com.ruoyi.web.controller.alipay;
 import cn.hutool.core.thread.ThreadUtil;
 import com.ruoyi.alipay.domain.AlipayUserFundEntity;
 import com.ruoyi.alipay.domain.AlipayUserInfo;
-import com.ruoyi.alipay.service.IAlipayAmountEntityService;
 import com.ruoyi.alipay.service.IAlipayUserFundEntityService;
 import com.ruoyi.alipay.service.IAlipayUserInfoService;
 import com.ruoyi.common.annotation.Log;
@@ -13,8 +12,6 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.HashKit;
-import com.ruoyi.framework.shiro.service.SysPasswordService;
-import com.ruoyi.framework.util.DictionaryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -39,9 +36,6 @@ public class AipayChannelContorller extends BaseController {
     }
 
     @Autowired private IAlipayUserFundEntityService alipayUserFundEntityService;
-    @Autowired private DictionaryUtils dictionaryUtils;
-    @Autowired private IAlipayAmountEntityService alipayAmountEntityService;
-    @Autowired private SysPasswordService passwordService;
     /**
      * 查询用户资金账户列表
      */
