@@ -1030,7 +1030,7 @@ var table = {
         operate: {
             // 提交数据
             submit: function (url, type, dataType, data, callback) {
-           debugger;
+                debugger;
                 var config = {
                     url: url,
                     type: type,
@@ -1329,6 +1329,8 @@ var table = {
                     $.modal.open(title, $.operate.deleteQuotaUrlM(id))
                 } else if (flag == 'addQuotaFlag') {
                     $.modal.open(title, $.operate.addQuotaUrlM(id))
+                }else if (flag == 'editAmountUrl') {
+                    $.modal.open(title, $.operate.editAmountUrl(id))
                 }
             },
             // 二维码详细列表
@@ -1502,6 +1504,13 @@ var table = {
                 var url = "/404.html";
                 if ($.common.isNotEmpty(id)) {
                     url = table.options.addQuotaUrl.replace("{userId}", id);
+                }
+                return url;
+            },
+            editAmountUrl: function (id) {
+                var url = "/404.html";
+                if ($.common.isNotEmpty(id)) {
+                    url = table.options.editAmountUrl.replace("{id}", id);
                 }
                 return url;
             },
