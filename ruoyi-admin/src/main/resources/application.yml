@@ -9,7 +9,7 @@ otc:
   # 实例演示开关
   demoEnabled: false
   # 文件路径 示例（ Windows配置D:/otc/admin/uploadPath，Linux配置 /home/otc/admin/uploadPath）
-  profile:  /img/
+  profile: /img/
   #profile: /home/otc/admin/uploadPath
   # 获取ip地址开关
   addressEnabled: true
@@ -65,9 +65,9 @@ spring:
   servlet:
     multipart:
       # 单个文件大小
-      max-file-size:  1000MB
+      max-file-size: 1000MB
       # 设置总上传的文件大小
-      max-request-size:  1000MB
+      max-request-size: 1000MB
   # 服务模块
   devtools:
     restart:
