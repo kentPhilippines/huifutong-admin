@@ -152,7 +152,7 @@
             exportUrl: prefix + "/export",
             openUrl: prefix + "/updateBankCardShow/{userId}",
             backOrderUrl: prefix + "/backOrder/{id}",
-            viewBankDataUrl: prefix + "/bankData/{}",
+            viewBankDataUrl: prefix + "/bankData/{orderQr}",
             modalName: "主交易订单",
             showFooter: true,
             columns: [{
@@ -256,7 +256,7 @@
                 },
                 {field: 'orderQr', title: '银行卡信息',formatter: function (value, row, index) {
                         var table = '<ul>'
-                        table += '<li class="btn btn-primary btn-xs" onclick="$.operate.openAccount(\'' + row.orderQr + '\',\'银行卡信息\',\'viewBankDataUrl\')">' + '银行卡：' + row.orderQr + '</li>'
+                        table += '<li class="btn btn-primary btn-xs" onclick="$.operate.detailForBank(\'' + row.orderQr + '\')">' + '银行卡：' + row.orderQr + '</li>'
                         if(row.bankAmountNow){
                             table += '<li class="btn btn-danger btn-xs ">' + '业务余额：' + row.bankAmountNow + '</li>'
                         }
