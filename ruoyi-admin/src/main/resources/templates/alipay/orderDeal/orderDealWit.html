@@ -255,9 +255,9 @@
                 },
                 {field: 'orderQr', title: '银行卡信息',formatter: function (value, row, index) {
                         var table = '<ul>'
-                        table += '<li class="btn btn-primary btn-xs" onclick="$.operate.openAccount(\'' + row.orderQr + '\',\'流水\',\'viewBankDataUrl\')">' + '银行卡：' + row.orderQr + '</li>'
+                        table += '<li  >' + '银行卡：' + '<a onclick="$.operate.openAccount(\'' + row.orderQr + '\',\'流水\',\'viewBankDataUrl\')">'+row.orderQr +'</a>'+ '</li>'
                         if(row.bankAmountNow){
-                            table += '<li class="btn btn-danger btn-xs">' + '业务余额：' + row.bankAmountNow + '</li>'
+                            table += '<li>' + '业务余额：'+ '<span style="color: red">'+ row.bankAmountNow + '</span>'+'</li>'
                         }
                         if(null != row.payInfo && '' != row.payInfo){
                             table += '<li>' + '回调：' + row.payInfo + '</li>'
