@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling //轻量级定时任务
 public class RuoYiApplication {
 	public static void main(String[] args) {
-//         System.setProperty("spring.devtools.restart.enabled", "false");
 		SpringApplication.run(RuoYiApplication.class, args);
 		System.out.println("(♥◠‿◠)ﾉﾞ  系统启动成功   ლ(´ڡ`ლ)ﾞ  \n" + " .-------.       ____     __        \n"
 				+ " |  _ _   \\      \\   \\   /  /    \n" + " | ( ' )  |       \\  _. /  '       \n"
