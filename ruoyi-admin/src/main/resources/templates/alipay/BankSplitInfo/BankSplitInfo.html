@@ -76,9 +76,9 @@
 <th:block th:include="include :: bootstrap-select-js"/>
 <script th:inline="javascript">
     const mediumType = [[${@dict.getType('medium_type')}]]
-    // $(document).ready(function(){
-    //     $.table.search()
-    // });
+     $(document).ready(function(){
+         $.table.search()
+    });
     var prefix = ctx + "alipay/BankSplitInfo";
     $(function () {
         var options = {

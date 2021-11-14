@@ -49,6 +49,7 @@
             <if test="phoneId != null  and phoneId != ''">and phone_id = #{phoneId}</if>
             <if test="bankId != null  and bankId != ''">and bank_id = #{bankId}</if>
         </where>
+        order by id desc
     </select>
 
     <select id="selectBankTransactionRecord" parameterType="BankInfoSplitEntity"
@@ -81,4 +82,5 @@
         <if test="userId != null and userId != ''">and user_id = #{userId}</if>
         group by bank_id, user_id
     </select>
+
 </mapper>

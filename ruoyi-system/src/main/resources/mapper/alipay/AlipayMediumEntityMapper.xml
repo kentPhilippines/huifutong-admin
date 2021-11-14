@@ -25,13 +25,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="mountNow" property="mountNow" jdbcType="DECIMAL"/>
         <result column="mountSystem" property="mountSystem" jdbcType="DECIMAL"/>
         <result column="mountLimit" property="mountLimit" jdbcType="DECIMAL"/>
+        <result column="witAmount" property="witAmount" jdbcType="DECIMAL"/>
 
     </resultMap>
 
     <sql id="selectAlipayMediumEntityVo">
         select id, mediumId, mediumNumber, mediumHolder, mediumNote, mediumPhone, qrcodeId,
          code, createTime, submitTime, status, isDeal,black,
-         attr,bankcode,account,mountNow,mountSystem,mountLimit,notfiyMask
+         attr,bankcode,account,mountNow,mountSystem,mountLimit,notfiyMask,witAmount
          from alipay_medium
     </sql>
 
@@ -51,7 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null "> and status = #{status}</if>
             <if test="black != null "> and black = #{black}</if>
         </where>
-        order by   createTime desc
+        order by   createTime , status = 1 desc
     </select>
     
     <select id="selectAlipayMediumEntityById" parameterType="Long" resultMap="AlipayMediumEntityResult">
@@ -103,6 +104,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="code != null  and code != ''">code = #{code},</if>
             <if test="createTime != null ">createTime = #{createTime},</if>
             <if test="submitTime != null ">submitTime = #{submitTime},</if>
+            <if test="witAmount != null ">witAmount = #{witAmount},</if>
             <if test="status != null ">status = #{status},</if>
             <if test="isDeal != null  and isDeal != ''">isDeal = #{isDeal},</if>
             <if test="attr != null  and attr != ''">attr = #{attr},</if>
@@ -126,6 +128,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="code != null  and code != ''">code = #{code},</if>
             <if test="createTime != null ">createTime = #{createTime},</if>
             <if test="submitTime != null ">submitTime = #{submitTime},</if>
+            <if test="witAmount != null ">witAmount = #{witAmount},</if>
             <if test="status != null ">status = #{status},</if>
             <if test="isDeal != null  and isDeal != ''">isDeal = #{isDeal},</if>
             <if test="attr != null  and attr != ''">attr = #{attr},</if>

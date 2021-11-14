@@ -627,7 +627,6 @@ public class AlipayDealOrderEntityController extends BaseController {
             Map<String, Object> mapParam = Collections.synchronizedMap(Maps.newHashMap());
             String[] split = bankInfo.split(":");
             String bankId   = split[2];
-
             mapParam.put("orderId",orderId);
             mapParam.put("apply",apply);
             mapParam.put("bankId",orderId);

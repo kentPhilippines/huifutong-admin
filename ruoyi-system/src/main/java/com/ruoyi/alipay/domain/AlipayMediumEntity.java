@@ -76,6 +76,15 @@ public class AlipayMediumEntity extends BaseEntity {
      * 收款媒介登录账号
      */
     private String mediumNumber;
+    private String witAmount;
+
+    public String getWitAmount() {
+        return witAmount;
+    }
+
+    public void setWitAmount(String witAmount) {
+        this.witAmount = witAmount;
+    }
 
     /**
      * 收款媒介持有人
