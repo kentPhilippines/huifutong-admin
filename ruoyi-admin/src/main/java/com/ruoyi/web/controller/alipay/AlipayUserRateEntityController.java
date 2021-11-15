@@ -353,7 +353,7 @@ public class AlipayUserRateEntityController extends BaseController {
         String key = alipayUserInfos.get(0).getPayPasword();//交易密钥
         String publicKey = alipayUserInfos.get(0).getPublicKey();
         String dealurl = alipayUserInfos.get(0).getDealUrl();
-        String amount = "1000.00";
+        String amount = rateEntity.getRetain2();
         parMap.put("amount", amount);
         parMap.put("appId", userId);
         parMap.put("applyDate", d.format(new Date()));
@@ -362,6 +362,7 @@ public class AlipayUserRateEntityController extends BaseController {
         parMap.put("orderId", IdUtil.simpleUUID());
         parMap.put("passCode", rateEntity.getPayTypr());
         parMap.put("subject", amount);
+        parMap.put("usdrId", "张翠花");
         String createParam = createParam(parMap);
         logger.info("签名前请求串：" + createParam);
         String md5 = getKeyedDigestUTF8(createParam + key);

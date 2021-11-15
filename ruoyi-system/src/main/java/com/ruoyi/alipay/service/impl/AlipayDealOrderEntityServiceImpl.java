@@ -54,7 +54,7 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
             throw new RuntimeException("商户数据插入失败");
         }
         int i1 = alipayDealOrderEntityMapper.insertAlipayDealOrderEntity(alipayDealOrderEntity);
-        if (i < 1) {
+        if (i1 < 1) {
             throw new RuntimeException("主订单数据插入失败");
         }
         return i1;

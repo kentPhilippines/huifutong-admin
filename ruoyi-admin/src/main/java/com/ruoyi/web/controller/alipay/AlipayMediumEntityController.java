@@ -216,6 +216,7 @@ public class AlipayMediumEntityController extends BaseController {
         List<MediumQueue> list = new ArrayList<MediumQueue>();
         String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);//主服务器ip+port
         String url = ipPort + "/out" + "/findQueue?cardInfo="+alipayMediumEntity.getQrcodeId();
+        logger.info(url);
         String s = HttpUtil.get(url);
         logger.info("【收到队列数据为："+s+"】");
         List<AlipayMediumEntity> listQueue = new ArrayList<>();

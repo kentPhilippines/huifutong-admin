@@ -1101,33 +1101,10 @@ var table = {
                 $.operate.notBackSubmit(url, "get", "json", "", callback);
             },
             // 详细信息
+            // 详细信息
             detail: function (id, width, height) {
                 table.set();
-                var _url = $.operate.viewBankDataUrl(id);
-                var _width = $.common.isEmpty(width) ? "800" : width;
-                var _height = $.common.isEmpty(height) ? ($(window).height() - 50) : height;
-                //如果是移动端，就使用自适应大小弹窗
-                if (navigator.userAgent.match(/(iPhone|iPod|Android|ios|ipad)/i)) {
-                    _width = 'auto';
-                    _height = 'auto';
-                }
-                var options = {
-                    title: table.options.modalName + "详细",
-                    width: _width,
-                    height: _height,
-                    url: _url,
-                    skin: 'layui-layer-gray',
-                    btn: ['关闭'],
-                    yes: function (index, layero) {
-                        layer.close(index);
-                    }
-                };
-                $.modal.openOptions(options);
-            },
-
-            detailForBank: function (id, width, height) {
-                table.set();
-                var _url = $.operate.viewBankDataUrl(id);
+                var _url = $.operate.detailUrl(id);
                 var _width = $.common.isEmpty(width) ? "800" : width;
                 var _height = $.common.isEmpty(height) ? ($(window).height() - 50) : height;
                 //如果是移动端，就使用自适应大小弹窗
@@ -1403,12 +1380,6 @@ var table = {
             backOrderUrl: function (id) {
                 var url = "/404.html";
                 if ($.common.isNotEmpty(id)) {
-                    url = table.options.backOrderUrl.replace("{id}", id);
-                } else {
-                    if (id.length == 0) {
-                        $.modal.alertWarning("未获取到参数值");
-                        return;
-                    }
                     url = table.options.backOrderUrl.replace("{id}", id);
                 }
                 return url;

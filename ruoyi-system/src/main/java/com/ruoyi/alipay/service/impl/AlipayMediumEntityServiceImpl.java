@@ -12,6 +12,8 @@ import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.enums.DataSourceType;
 
+import javax.annotation.Resource;
+
 /**
  * 收款媒介列Service业务层处理
  *
@@ -20,7 +22,7 @@ import com.ruoyi.common.enums.DataSourceType;
  */
 @Service
 public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService {
-    @Autowired
+    @Resource
     private AlipayMediumEntityMapper alipayMediumEntityMapper;
 
     /**
@@ -68,7 +70,8 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
      */
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     @Override
-    public int updateAlipayMediumEntity(AlipayMediumEntity alipayMediumEntity) {
+    public int
+    updateAlipayMediumEntity(AlipayMediumEntity alipayMediumEntity) {
         return alipayMediumEntityMapper.updateAlipayMediumEntity(alipayMediumEntity);
     }
 
