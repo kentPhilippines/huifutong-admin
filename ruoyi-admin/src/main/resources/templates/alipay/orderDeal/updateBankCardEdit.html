@@ -69,6 +69,7 @@
 <script th:inline="javascript">
     const prefix = ctx + "alipay/medium";
     const prefix1 = ctx + "alipay/orderDeal";
+    const prefix2 = ctx + "alipay/medium";
     $(function () {
         var options = {
             url: prefix + "/list",
@@ -117,21 +118,61 @@
                 },
                 {field: 'mountNow', title: '参考余额'},
                 {
-                    field: 'status', title: '接单状态',
+                    field: 'status',
+                    title: '接单状态',
                     align: 'center',
                     formatter: function (value, row, index) {
-                        if (row.status === 1) {
-                            return '<span style="color:#00B83F;">开启</span>';
-                        } else if (row.status === 0) {
-                            return '<span style="color: #cc0000;">关闭</span>';
-                        }
+                        // if (row.status === 1) {
+                        //     return '<span style="color:#00B83F;">开启</span>';
+                        // } else if (row.status === 0) {
+                        //     return '<span style="color: #cc0000;">关闭</span>';
+                        // }
+                        return statusTools(row, 'acceptOrder');
                     }
-                }
+                },
 
             ]
         };
         $.table.init(options);
     });
+
+
+    /* 商户状态显示 */
+    function statusTools(row, param) {
+
+        if (param === 'acceptOrder') {
+            if (row.status == 1) {
+                let msg = "确认【关闭接单状态】吗？";
+                let val = 0;
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="enableStatus(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            } else {
+                let msg = "确认【开启接单状态吗】吗？";
+                let val = 1;
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="disableStatus(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            }
+        }
+
+    }
+
+    /* 商户管理-启用 */
+    function enableStatus(qrcodeId, param, msg, val) {
+        $.modal.confirm(msg, function () {
+            $.operate.post(prefix2 + "/edit", {
+                "id": qrcodeId,
+                "status": val
+            });
+        })
+    }
+
+    /* 商户管理-停用 */
+    function disableStatus(qrcodeId, param, msg, val) {
+        $.modal.confirm(msg, function () {
+            $.operate.post(prefix2 + "/edit", {
+                "id": qrcodeId,
+                "status": val
+            });
+        })
+    }
 
 
     function getbank() {

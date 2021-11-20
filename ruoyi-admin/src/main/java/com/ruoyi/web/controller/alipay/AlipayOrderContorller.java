@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.alipay;
 
 
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
 import com.ruoyi.alipay.domain.AlipayDealOrderEntity;
@@ -83,6 +84,13 @@ public class AlipayOrderContorller extends BaseController {
         if (StrUtil.isBlank(orderStatus)) {
             return AjaxResult.error("订单状态出错");
         }
+        ThreadUtil.execute(()->{
+            order.setRecordType("1");
+            order.setOperater(ShiroUtils.getLoginName());
+            alipayDealOrderEntityService.updateAlipayDealOrderEntityByOrder(order);
+        });
+
+
         String status = order.getOrderStatus();
         SysUser currentUser = ShiroUtils.getSysUser();
         Long userId = currentUser.getUserId();

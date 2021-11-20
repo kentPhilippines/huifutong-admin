@@ -15,22 +15,22 @@
                             <span>平台订单：</span>
                             <input type="text" name="orderId"/>
                         </li>
-                        <li>
+                       <!-- <li>
                             <span>关联订单：</span>
                             <input type="text" name="associatedId"/>
                         </li>
                         <li>
                             <span>外部订单：</span>
                             <input type="text" name="externalOrderId"/>
-                        </li>
+                        </li>-->
                         <li>
-                            <span>商户账号：</span>
+                            <span>账号：</span>
                             <input type="text" name="orderAccount"/>
                         </li>
-                        <li>
+                      <!--  <li>
                             <span>卡商账号：</span>
                             <input type="text" name="orderQrUser1"/>
-                        </li>
+                        </li>-->
                         <li>
                             <span>银行卡信息：</span>
                             <input type="text" name="orderQr"/>
@@ -45,10 +45,18 @@
                                         th:value="${dict.dictValue}"></option>
                             </select>
                         </li>
-                        <!--<li>
-                            <span>渠道账户：</span>
-                            <input type="text" name="orderQrUser"/>
-                        </li>-->
+                        <li>
+                            <span>订单金额：</span>
+                            <input type="text"   id="minAmount" placeholder="最小金额"
+                                   name="params[minAmount]"/>
+                            <span>-</span>
+                            <input type="text"   id="maxAmount" placeholder="最大金额"
+                                   name="params[maxAmount]"/>
+
+
+
+
+                        </li>
                         <li class="select-selectpicker">
                             <label>产品类型：</label>
                             <select class="selectpicker" data-none-selected-text="请选择" id="retain1" name="retain1">
@@ -82,6 +90,17 @@
                                         th:value="${channel.userId}"></option>
                             </select>
                         </li>
+                        <li class="select-selectpicker">
+                            <label>记录类型：</label>
+                            <select class="selectpicker"
+                                    data-none-selected-text="请选择" id="recordType"
+                                    name="recordType">
+                                <option value="">所有</option>
+                                <option value= "1" >补单</option>
+                                <option value= "2" >切换卡商</option>
+                                <option value= "3">拆分出款</option>
+                            </select>
+                        </li>
                         <!-- <li>
                              <span>二维码ID：</span>
                              <input type="text" name="orderQr"/>
@@ -96,13 +115,14 @@
                             </select>
                         </li>
                         <li class="select-time">
-                            <span>创建时间：</span>
+                            <span>提交时间：</span>
                             <input type="text" class="time-input" id="startTime" placeholder="开始时间"
                                    name="params[dayStart]"/>
                             <span>-</span>
                             <input type="text" class="time-input" id="endTime" placeholder="结束时间"
                                    name="params[dayEnd]"/>
                         </li>
+
                         <li>
                             <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
                                     class="fa fa-search"></i>&nbsp;搜索</a>
@@ -142,6 +162,7 @@
     const prefix = ctx + "alipay/orderDeal";
 
     const prefix1 = ctx + "alipay/BankSplitInfo";
+    let prefix2 = ctx + "alipay/orderDeal/showCode/";
 
     $(function () {
         var options = {
@@ -197,6 +218,9 @@
                         } else if (value == 4) {
                             var table = '<ul>'
                             table += '<li>' + '<span class="badge badge-danger">商户代付->渠道出款主交易订单</span>' + '</li>'
+                            if('zhongbang-bank' == row.orderQrUser){
+                                table += '<li>' + '<span class="badge badge-danger">等待切款</span>' + '</li>'
+                            }
                             if(1 == row.enterPay || '1' == row.enterPay){
                                 table += '<li>' + '<span class="badge badge-info">卡商代付已审核</span>' + '</li>'
                             }
@@ -256,6 +280,7 @@
                 {field: 'orderQr', title: '银行卡信息',formatter: function (value, row, index) {
                         var table = '<ul>'
                         table += '<li  >' + '银行卡：' + '<a onclick="$.operate.openAccount(\'' + row.orderQr + '\',\'流水\',\'viewBankDataUrl\')">'+row.orderQr +'</a>'+ '</li>'
+                        table += '<li  >' + row.bankAccount  + '</li>'
                         if(row.bankAmountNow){
                             table += '<li>' + '业务余额：'+ '<span style="color: red">'+ row.bankAmountNow + '</span>'+'</li>'
                         }
@@ -272,11 +297,24 @@
                 /*
                 {   field: 'isNotify',      title: '发送通知'   },*/
                 {
+                    field: 'payImg', title: '出款凭证',
+                    formatter: function (value, row, index) {
+                        if (row.orderType==4 && 2 == row.orderStatus  ){
+                            return ' <img class="image" src= '+ row.payImg + ' style="width: 200px; height: 200px;"' + '>'
+                        }
+                    }
+                },
+                {
                     field: 'createTime',
                     sortable: true, title: '时间', formatter: function (value, row, index) {
                         var table = '<ul>'
                         table += '<li>' + '创建时间：' + row.createTime + '</li>'
                         table += '<li>' + '修改时间：' + row.submitTime + '</li>'
+
+
+
+
+
                         if(1 == row.enterPay || '1' == row.enterPay){
                             table += '<li>' + '代付审核时间：' + row.enterPayTime + '</li>'
                         }
@@ -290,6 +328,10 @@
                                 total =  parseInt(total)
                                 $('#'+row.orderId+'').html('<s></s>' + total + '秒');
                             }, 1000);
+                        }
+
+                        if(null != row.operater && '' != row.operater){
+                            table += '<li>' + '操作人：' + row.operater + '</li>'
                         }
                         table += '</ul>'
                         return table;
@@ -348,6 +390,10 @@
         });
     }
 
+    function showCode(id) {
+        $.modal.openCode(null, prefix2 + id, '800px', '800px', null);
+    }
+
     function updateBankCard(orderId) {
         title = "修改出款卡商"
         table.set();
@@ -392,7 +438,7 @@
             skin: 'layui-layer-gray',
             btn: ['关闭'],
             yes: function (index, layero) {
-                layer.close(index);
+                layer.closeAll();
             }
         };
         $.modal.openOptions(options);

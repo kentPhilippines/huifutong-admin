@@ -73,6 +73,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
+    <select id="selectAlipayWithdrawEntityByIds" parameterType="String" resultMap="AlipayWithdrawEntityResult">
+        <include refid="selectAlipayWithdrawEntityVo"/>
+        where orderId in
+        <foreach collection="list" item="orderId" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </select>
+
 
     <select id="selectAlipayWithdrawEntityListSum" parameterType="AlipayWithdrawEntity"
             resultMap="AlipayWithdrawEntityResult">

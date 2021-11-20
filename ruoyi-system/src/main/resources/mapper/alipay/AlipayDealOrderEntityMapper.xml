@@ -43,6 +43,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="payer" column="payer"/>
         <result property="lockWitTime" column="lockWitTime"/>
         <result property="bankAmountNow" column="bankAmountNow"/>
+        <result property="recordType" column="recordType"/>
+        <result property="operater" column="operater"/>
     </resultMap>
 
     <sql id="selectAlipayDealOrderEntityVo">
@@ -55,17 +57,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectAlipayDealOrderEntityVo"/>
         <where>
             createTime between #{params.dayStart} and #{params.dayEnd}
-            <if test="orderId != null  and orderId != ''"> and orderId = #{orderId} or externalOrderId =  #{orderId}</if>
-            <if test="associatedId != null  and associatedId != ''"> and associatedId = #{associatedId}</if>
+            <if test="orderId != null  and orderId != ''">  and  orderId = #{orderId} or externalOrderId =  #{orderId} or associatedId = #{orderId}    </if>
             <if test="orderStatus != null  and orderStatus != ''"> and orderStatus = #{orderStatus}</if>
-            <if test="dealAmount != null "> and dealAmount = #{dealAmount}</if>
+            and  (dealAmount > #{params.minAmount}   and  #{params.maxAmount} >  dealAmount  )
             <if test="dealFee != null "> and dealFee = #{dealFee}</if>
             <if test="actualAmount != null "> and actualAmount = #{actualAmount}</if>
             <if test="orderType != null  and orderType != ''"> and orderType = #{orderType}</if>
-            <if test="orderAccount != null  and orderAccount != ''"> and orderAccount = #{orderAccount}</if>
-            <if test="orderQrUser != null  and orderQrUser != ''"> and orderQrUser = #{orderQrUser}</if>
+            <if test="orderAccount != null  and orderAccount != ''"> and (orderQrUser = #{orderAccount}  or orderAccount = #{orderAccount} )   </if>
             <if test="orderQr != null  and orderQr != ''"> and orderQr  like concat('%', #{orderQr} , '%')</if>
-            <if test="externalOrderId != null  and externalOrderId != ''"> and externalOrderId = #{externalOrderId}</if>
             <if test="generationIp != null  and generationIp != ''"> and generationIp = #{generationIp}</if>
             <if test="dealDescribe != null  and dealDescribe != ''"> and dealDescribe   like concat('%', dealDescribe , '%') </if>
             <if test="isNotify != null  and isNotify != ''"> and isNotify = #{isNotify}</if>
@@ -75,12 +74,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="currency != null and currency != '' ">and currency = #{currency}</if>
             <if test="payer != null and payer != '' ">and payer = #{payer}</if>
             <if test="enterPayTime != null and enterPayTime != '' ">and enterPayTime = #{enterPayTime}</if>
+            <if test="recordType != null and recordType != '' ">and recordType = #{recordType}</if>
         </where>
-
-        order by id desc
-
-
-
+        order by submitTime  desc
     </select>
 
 
@@ -142,6 +138,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="retain3 != null  and retain3 != ''">retain3,</if>
             <if test="retain4 != null  and retain4 != ''">retain4,</if>
             <if test="lockWit != null  and lockWit != ''">lockWit,</if>
+            <if test="recordType != null  and recordType != ''">recordType,</if>
+            <if test="operater != null  and operater != ''">operater,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null  and orderId != ''">#{orderId},</if>
@@ -169,6 +167,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="retain3 != null  and retain3 != ''">#{retain3},</if>
             <if test="retain4 != null  and retain4 != ''">#{retain4},</if>
             <if test="lockWit != null  and lockWit != ''">#{lockWit},</if>
+            <if test="recordType != null  and recordType != ''">#{recordType},</if>
+            <if test="operater != null  and operater != ''">#{operater},</if>
          </trim>
     </insert>
 
@@ -206,6 +206,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="enterPayTime != null  ">enterPayTime =  #{enterPayTime},</if>
         </trim>
         where id = #{id}
+    </update>
+
+    <update id="updateAlipayDealOrderEntityByOrder" parameterType="AlipayDealOrderEntity">
+        update alipay_deal_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="recordType != null ">recordType = #{recordType},</if>
+            <if test="operater != null ">operater = #{operater},</if>
+        </trim>
+        where orderId = #{orderId}
     </update>
 
     <delete id="deleteAlipayDealOrderEntityById" parameterType="Long">

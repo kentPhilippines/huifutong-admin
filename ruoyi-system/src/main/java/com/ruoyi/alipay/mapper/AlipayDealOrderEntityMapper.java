@@ -39,6 +39,7 @@ public interface AlipayDealOrderEntityMapper {
      * @return 结果
      */
     int updateAlipayDealOrderEntity(AlipayDealOrderEntity alipayDealOrderEntity);
+    int updateAlipayDealOrderEntityByOrder(AlipayDealOrderEntity alipayDealOrderEntity);
     int insertAlipayDealOrderEntity(AlipayDealOrderEntity alipayDealOrderEntity);
 
     @Select("<script>" +

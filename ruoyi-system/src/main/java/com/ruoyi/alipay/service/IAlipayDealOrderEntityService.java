@@ -45,6 +45,7 @@ public interface IAlipayDealOrderEntityService {
      * @return 结果
      */
     int updateAlipayDealOrderEntity(AlipayDealOrderEntity alipayDealOrderEntity);
+    int updateAlipayDealOrderEntityByOrder(AlipayDealOrderEntity alipayDealOrderEntity);
 
     /**
      * 根据时间查询统计数据

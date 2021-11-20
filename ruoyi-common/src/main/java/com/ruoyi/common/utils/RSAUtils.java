@@ -203,7 +203,7 @@ public class RSAUtils {
             Signature signature = Signature.getInstance(RSA_ALGORITHM_SIGN);
             signature.initSign(getPrivateKey(privateKey));
             signature.update(content.getBytes(CHARSET));
-            return org.apache.commons.codec.binary.Base64.encodeBase64URLSafeString(signature.sign());
+            return Base64.encodeBase64URLSafeString(signature.sign());
         } catch (Exception e) {
             throw new RuntimeException("签名字符串[" + content + "]时遇到异常", e);
         }

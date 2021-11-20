@@ -92,6 +92,12 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
 
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public int updateAlipayDealOrderEntityByOrder(AlipayDealOrderEntity alipayDealOrderEntity) {
+        return alipayDealOrderEntityMapper.updateAlipayDealOrderEntityByOrder(alipayDealOrderEntity);
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public List<StatisticsEntity> selectStatisticsDataByDate(StatisticsEntity statisticsEntity, String dayStart, String dayEnd) {
         return alipayDealOrderEntityMapper.selectStatDateByDay(statisticsEntity, dayStart, dayEnd);
     }

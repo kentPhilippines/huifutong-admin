@@ -2,7 +2,6 @@ package com.ruoyi.web.controller.alipay;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateField;
-import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -28,7 +27,6 @@ import com.ruoyi.system.service.ISysUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +35,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 交易订单Controller
@@ -84,6 +81,10 @@ public class AlipayDealOrderEntityController extends BaseController {
         mmap.put("productList", list);
         List<AlipayUserFundEntity> rateList = alipayUserFundEntityService.findUserFundRate();
         mmap.put("rateList", rateList);
+        //获取二维码服务器地址
+        String qrServerAddr = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_KEY, StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_VALUE);
+        String qrServerPath = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_KEY, StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_PATH);
+        mmap.put("imgUrl", qrServerAddr + qrServerPath );
         return prefix + "/orderDeal";
     }
 
@@ -96,7 +97,6 @@ public class AlipayDealOrderEntityController extends BaseController {
         List<AlipayProductEntity> list = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
         mmap.put("productList", list);
         List<AlipayUserFundEntity> rateList = alipayUserFundEntityService.findUserFundRate();
-        mmap.put("rateList", rateList);
         return prefix + "/orderDealWit";
     }
 
@@ -113,6 +113,8 @@ public class AlipayDealOrderEntityController extends BaseController {
         if (StrUtil.isNotEmpty(alipayDealOrderEntity.getOrderQrUser1())) {
             alipayDealOrderEntity.setOrderQrUser(alipayDealOrderEntity.getOrderQrUser1());
         }
+
+   //     mmap.put("imgUrl", qrServerAddr + qrServerPath + imgId);
         startPage1();
         List<AlipayDealOrderEntity> list = alipayDealOrderEntityService
                 .selectAlipayDealOrderEntityList(alipayDealOrderEntity);
@@ -130,12 +132,34 @@ public class AlipayDealOrderEntityController extends BaseController {
                 userCollect.put(user1.getMerchantId(), user1);
             }
         }
+
+        Map<String, AlipayWithdrawEntity> dataMap = new HashMap<>();
+        List<String> orderIds = list.stream().map(AlipayDealOrderEntity::getAssociatedId).collect(Collectors.toList());
+        if (CollUtil.isNotEmpty(orderIds)&&"4".equals(alipayDealOrderEntity.getOrderType())) {
+            List<AlipayWithdrawEntity> alipayWithdrawEntities = iAlipayWithdrawEntityService.selectAlipayWithdrawEntityByIds(orderIds);
+            if (CollUtil.isNotEmpty(alipayWithdrawEntities)) {
+                dataMap = alipayWithdrawEntities.stream().collect(Collectors.toMap(AlipayWithdrawEntity::getOrderId, alipayWithdrawEntity -> alipayWithdrawEntity));
+            }
+        }
+        String qrServerAddr = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_KEY, StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_VALUE);
+        String qrServerPath = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_KEY, StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_PATH);
         for (AlipayDealOrderEntity order : list) {
-            if(StrUtil.isEmpty(order.getOrderQrUser())){
+            if (StrUtil.isEmpty(order.getOrderQrUser())) {
                 continue;
             }
             if (ObjectUtil.isNotNull(userCollect.get(order.getOrderAccount()))) {
                 order.setChannelName(userCollect1.get(order.getOrderQrUser()).getUserName());
+            }
+            if (CollUtil.isNotEmpty(orderIds)&&"4".equals(alipayDealOrderEntity.getOrderType())) {
+
+                String payImg = order.getPayImg();
+
+                order.setPayImg( qrServerAddr + qrServerPath + payImg);
+
+
+                AlipayWithdrawEntity alipayWithdrawEntity = dataMap.get(order.getAssociatedId());
+                order.setBankAccount("入款信息："+alipayWithdrawEntity.getBankName() + ":"+alipayWithdrawEntity.getAccname()+":"+alipayWithdrawEntity.getBankNo() +" 金额 ："+alipayWithdrawEntity.getAmount());
+                order.setOrderNo(alipayWithdrawEntity.getOrderId());
             }
             AlipayProductEntity product = prCollect.get(order.getRetain1());
             if (ObjectUtil.isNotNull(product)) {
@@ -146,7 +170,7 @@ public class AlipayDealOrderEntityController extends BaseController {
             }
         }
         userCollect = null;
-        AlipayDealOrderEntity  deal= alipayDealOrderEntityService.selectAlipayDealOrderEntityListSum(alipayDealOrderEntity);
+        AlipayDealOrderEntity deal = alipayDealOrderEntityService.selectAlipayDealOrderEntityListSum(alipayDealOrderEntity);
         if (null != deal && CollUtil.isNotEmpty(list)) {
             for (int mark = 0; mark < 1; mark++) {
                 list.get(mark).setSunCountAmountFee(deal.getSunCountAmountFee());
@@ -155,7 +179,6 @@ public class AlipayDealOrderEntityController extends BaseController {
 
             }
         }
-
         return getDataTable(list);
     }
 
@@ -197,11 +220,6 @@ public class AlipayDealOrderEntityController extends BaseController {
         AjaxResult post = post(ipPort + urlPath, mapParam);
         return post;
     }
-
-
-
-
-
 
 
     @Autowired
@@ -262,6 +280,11 @@ public class AlipayDealOrderEntityController extends BaseController {
         }
         mmap.put("listFund", list);
         mmap.put("orderId", orderId);
+/*        AlipayDealOrderEntity alipayDealOrderEntity = new AlipayDealOrderEntity();
+        alipayDealOrderEntity.setOperater(ShiroUtils.getLoginName());
+        alipayDealOrderEntity.setRecordType("2");
+        alipayDealOrderEntity.setOrderId(orderId);
+        alipayDealOrderEntityService.updateAlipayDealOrderEntityByOrder(alipayDealOrderEntity);*/
         return prefix + "/updateBankCardEdit";
     }
 
@@ -277,10 +300,10 @@ public class AlipayDealOrderEntityController extends BaseController {
     @ResponseBody
     @RepeatSubmit
     public AjaxResult updateBankCard1(
-            String orderId,String qrcodeId,  String mediumNumber
+            String orderId, String qrcodeId, String mediumNumber
     ) {
-        if(StrUtil.isEmpty(mediumNumber)){
-            return  error("请选择银行卡");
+        if (StrUtil.isEmpty(mediumNumber)) {
+            return error("请选择银行卡");
         }
         String orderBankOld = "";
         String orderBankNew = "";
@@ -317,6 +340,11 @@ public class AlipayDealOrderEntityController extends BaseController {
             i = 0;
         }
         if (i == 1) {
+            AlipayDealOrderEntity alipayDealOrderEntity = new AlipayDealOrderEntity();
+            alipayDealOrderEntity.setOperater(ShiroUtils.getLoginName());
+            alipayDealOrderEntity.setRecordType("2");
+            alipayDealOrderEntity.setOrderId(orderId);
+            alipayDealOrderEntityService.updateAlipayDealOrderEntityByOrder(alipayDealOrderEntity);
             updateBankAmount(orderIdOld, orderBankOld, "sub", ShiroUtils.getLoginName(), orderEntityList.getDealAmount().toString());
             updateBankAmount(orderIdOld, orderBankNew, "add", ShiroUtils.getLoginName(), orderEntityList.getDealAmount().toString());
         }
@@ -382,6 +410,8 @@ public class AlipayDealOrderEntityController extends BaseController {
                 }
             }
             orderEntityList.setOrderQr(bankInfo);
+            orderEntityList.setOperater(ShiroUtils.getLoginName());
+            orderEntityList.setRecordType("3");
             i = alipayDealOrderEntityService.insertAlipayDealOrderEntity(orderEntityList);
         } catch (Throwable t) {
             i = 0;
@@ -427,6 +457,7 @@ public class AlipayDealOrderEntityController extends BaseController {
             AlipayWithdrawEntity witOrder = iAlipayWithdrawEntityService.findWitOrder(alipayDealOrderEntity.getAssociatedId());
             mmap.put("wit", witOrder);
         }
+
         mmap.put("alipayDealOrderEntity", alipayDealOrderEntity);
         return prefix + "/edit";
     }
@@ -538,6 +569,8 @@ public class AlipayDealOrderEntityController extends BaseController {
             data.setOrderAmount(dataOrigin.getDealAmount());
             dataOrigin.setActualAmount(dataOrigin.getDealAmount() - dataOrigin.getDealFee());
             dataOrigin.setOrderQr(orderQr + "【操作备注：】" + alipayDealOrderEntity.getDealDescribe());
+            dataOrigin.setRecordType("1");
+            dataOrigin.setOperater(ShiroUtils.getLoginName());
             int i1 = alipayDealOrderEntityService.insertAlipayDealOrderEntity(dataOrigin, data);
             logger.info("插入数据:{}",i1);
             return toAjax(i1);
@@ -644,17 +677,6 @@ public class AlipayDealOrderEntityController extends BaseController {
             HttpUtils.adminGet2Gateway(mapParam, ipPort + urlPath);
         });
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

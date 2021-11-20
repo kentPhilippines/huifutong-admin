@@ -33,6 +33,12 @@ public class AlipayWithdrawEntityServiceImpl implements IAlipayWithdrawEntitySer
         return alipayWithdrawEntityMapper.selectAlipayWithdrawEntityById(id);
     }
 
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayWithdrawEntity> selectAlipayWithdrawEntityByIds(List<String> orderIds) {
+        return alipayWithdrawEntityMapper.selectAlipayWithdrawEntityByIds(orderIds);
+    }
+
     /**
      * 查询会员提现记录列表
      *

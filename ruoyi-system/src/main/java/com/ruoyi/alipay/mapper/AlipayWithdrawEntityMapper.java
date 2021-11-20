@@ -24,6 +24,14 @@ public interface AlipayWithdrawEntityMapper {
     AlipayWithdrawEntity selectAlipayWithdrawEntityById(Long id);
 
     /**
+     * 查询会员提现记录
+     *
+     * @param orderIds 会员提现记录ID
+     * @return 会员提现记录
+     */
+    List<AlipayWithdrawEntity> selectAlipayWithdrawEntityByIds(List<String> orderIds);
+
+    /**
      * 查询会员提现记录列表
      *
      * @param alipayWithdrawEntity 会员提现记录

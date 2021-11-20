@@ -30,7 +30,7 @@ public class AlipayUserInfo extends BaseEntity {
     private Double deposit; //押金
     private Double accountBalance; //滚动
     private Double freezeBalance;//冻结
-    private Double todayWitAmount; //当日出款
+    private Double todayDealAmount; //当日出款
     private String todayOtherWitAmount;//当日入款
     private Double sumProfit;
     private Double todayProfit;//当日利润
@@ -59,12 +59,12 @@ public class AlipayUserInfo extends BaseEntity {
         this.sumProfit = sumProfit;
     }
 
-    public Double getTodayWitAmount() {
-        return todayWitAmount;
+    public Double getTodayDealAmount() {
+        return todayDealAmount;
     }
 
-    public void setTodayWitAmount(Double todayWitAmount) {
-        this.todayWitAmount = todayWitAmount;
+    public void setTodayDealAmount(Double todayDealAmount) {
+        this.todayDealAmount = todayDealAmount;
     }
 
     public Double getFreezeBalance() {

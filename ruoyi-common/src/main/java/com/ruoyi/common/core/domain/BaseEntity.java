@@ -140,6 +140,11 @@ public class BaseEntity implements Serializable {
             if(params.containsKey("dayStart")){
                 params.put("dayStart", Optional.ofNullable(params.get("dayStart") == "" ? null : params.get("dayStart")).orElse(DateUtils.dayStart()));
             }
+            if(params.containsKey("minAmunt")){
+                params.put("minAmunt", Optional.ofNullable(params.get("minAmunt") == "" ? null : params.get("minAmunt")).orElse(1));
+            } if(params.containsKey("maxAmount")){
+                params.put("maxAmount", Optional.ofNullable(params.get("maxAmount") == "" ? null : params.get("maxAmount")).orElse(999999999));
+            }
             if(params.containsKey("dayEnd")){
                 params.put("dayEnd", Optional.ofNullable(params.get("dayEnd") == "" ? null : params.get("dayEnd")).orElse(DateUtils.dayEnd()));
             }

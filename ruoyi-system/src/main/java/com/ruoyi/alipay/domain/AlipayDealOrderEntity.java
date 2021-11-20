@@ -20,6 +20,46 @@ public class AlipayDealOrderEntity extends BaseEntity {
     private String sunCountAmount = "0";
     private String sunCountAmountFee = "0";
     private String sunCountActualAmount = "0";
+    private String bankAccount;
+    private String orderNo;
+    private String recordType;
+    private String operater;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getOperater() {
+        return operater;
+    }
+
+    public void setOperater(String operater) {
+        this.operater = operater;
+    }
+
+    public String getRecordType() {
+        return recordType;
+    }
+
+    public void setRecordType(String recordType) {
+        this.recordType = recordType;
+    }
+
+    public String getBankAccount() {
+        return bankAccount;
+    }
+
+    public void setBankAccount(String bankAccount) {
+        this.bankAccount = bankAccount;
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
 
     public String getSunCountActualAmount() {
         return sunCountActualAmount;

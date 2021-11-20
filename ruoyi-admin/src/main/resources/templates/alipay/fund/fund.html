@@ -144,7 +144,14 @@
                             }else{
                                 table += '<li>' + '滚动资金：' +  ( row.accountBalance  - row.sumProfit  ) + '</li>'
                             }
-                            table += '<li>' + '登记押金：' + row.deposit + '</li>'
+
+
+
+                            if( row.deposit -  (row.accountBalance  - row.sumProfit) < 0  ){
+                                table += '<li  style="background-color: red" >' + '登记押金：' +row.deposit  + '</li>'
+                            }else{
+                                table += '<li>' + '登记押金：' +  (   row.deposit  ) + '</li>'
+                            }
                             table += '<li>' + '累计盈利：' + row.sumProfit + '</li>'
                             table += '<li>' + '当日盈利：' + row.todayProfit + '</li>'
                             table += '</ul>'

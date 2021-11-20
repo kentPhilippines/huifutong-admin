@@ -80,7 +80,7 @@ public class AlipayUserInfoController extends BaseController {
                 userInfo.setAccountBalance(fundEntity.getAccountBalance()-fundEntity.getSumProfit());
                 userInfo.setFreezeBalance(fundEntity.getFreezeBalance());
                 userInfo.setTodayOtherWitAmount(fundEntity.getTodayOtherWitAmount().toString());
-                userInfo.setTodayWitAmount(fundEntity.getTodayWitAmount());
+                userInfo.setTodayDealAmount(fundEntity.getTodayDealAmount());
                 userInfo.setDeposit(fundEntity.getDeposit());
                 userInfo.setSumProfit(fundEntity.getSumProfit());
                 userInfo.setTodayProfit(fundEntity.getTodayProfit());
