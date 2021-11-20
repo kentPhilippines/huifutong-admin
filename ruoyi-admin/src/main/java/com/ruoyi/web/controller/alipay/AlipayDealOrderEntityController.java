@@ -251,7 +251,7 @@ public class AlipayDealOrderEntityController extends BaseController {
             @Override
             public int compare(AlipayUserFundEntity o1, AlipayUserFundEntity o2) {
                 int i = 1;
-                if ((o1.getTodayDealAmount() - o1.getTodayOtherWitAmount()) > (o2.getTodayDealAmount() - o2.getTodayOtherWitAmount())) {
+                if ((o1.getTodayDealAmount() - o1.getTodayOtherWitAmount()) >= (o2.getTodayDealAmount() - o2.getTodayOtherWitAmount())) {
                     i = -1;
                 } else {
                     i = 1;
