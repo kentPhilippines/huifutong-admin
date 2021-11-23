@@ -174,11 +174,15 @@
             backOrderUrl: prefix + "/backOrder/{id}",
             viewBankDataUrl: prefix1+"/bank/{orderQr}",
             modalName: "主交易订单",
-            showFooter: true,
+            detailView:true,
+            detailFormatter:function(index,row){
+                    return ' <img class="image" src= '+ row.payImg + ' style=" width: auto; height: auto;"' + '>'
+            },
+            showFooter: true,   //注册加载子表的事件。注意下这里的三个参数！
             columns: [{
                 checkbox: true
             },
-                {field: 'id', title: '数据ID', visible: false},
+                {field: 'id', title: '数据ID', visible: false },
                 {
                     field: 'orderId', title: '平台订单', formatter: function (value, row, index) {
                         var table = '<ul>'
@@ -371,7 +375,6 @@
         };
         $.table.init(options);
     });
-
     function onUpdataOrder(id) {
         $.modal.confirm("该笔订单确认转为人工处理", function () {
             $.operate.post(prefix + "/updataOrder", {"id": id});

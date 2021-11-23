@@ -52,7 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null "> and status = #{status}</if>
             <if test="black != null "> and black = #{black}</if>
         </where>
-        order by   createTime , status = 1 desc
+        order by mountNow  desc
     </select>
     
     <select id="selectAlipayMediumEntityById" parameterType="Long" resultMap="AlipayMediumEntityResult">
