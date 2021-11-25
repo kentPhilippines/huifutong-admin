@@ -22,6 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="notfiyMask" property="notfiyMask" jdbcType="VARCHAR"/>
         <result column="bankcode" property="bankcode" jdbcType="CHAR"/>
         <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="error" property="error" jdbcType="VARCHAR"/>
         <result column="mountNow" property="mountNow" jdbcType="DECIMAL"/>
         <result column="mountSystem" property="mountSystem" jdbcType="DECIMAL"/>
         <result column="mountLimit" property="mountLimit" jdbcType="DECIMAL"/>
@@ -30,7 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectAlipayMediumEntityVo">
-        select id, mediumId, mediumNumber, mediumHolder, mediumNote, mediumPhone, qrcodeId,
+        select id, error,mediumId, mediumNumber, mediumHolder, mediumNote, mediumPhone, qrcodeId,
          code, createTime, submitTime, status, isDeal,black,
          attr,bankcode,account,mountNow,mountSystem,mountLimit,notfiyMask,witAmount
          from alipay_medium
