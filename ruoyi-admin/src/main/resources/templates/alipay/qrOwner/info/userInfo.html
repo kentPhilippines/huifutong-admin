@@ -84,6 +84,7 @@
             url: prefix + "/list",
             createUrl: prefix + "/add",
             updateUrl: prefix + "/edit/{id}",
+            editeCreditUrl: prefix + "/editeCredit/{id}",
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
             modalName: "码商详情",
@@ -143,6 +144,14 @@
                         } else if (item.isAgent == '2') {
                             return '<span>否</span> ' + '<a class="btn btn-info btn-xs ' + resetWithdrawalFlag + '" href="javascript:void(0)" onclick="upUserAgents(\'' + item.id + '\')"><i class="fa fa-key"></i>点击升级代理商</a> ';
                         }
+                    }
+                },
+                {
+                    field: 'credit',
+                    title: '信用分',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return '<a class="btn btn-primary btn-xs" onclick="$.operate.openAccount(\'' + row.id + '\',\'编辑信用分\',\'editeCreditUrl\')">'+row.credit+'</a> ';
                     }
                 },
                 {
@@ -332,6 +341,12 @@
             )
         })
     }
+
+    /*  银行卡-开启 */
+    function editeCredit(row) {
+        $.operate.openAccount()
+    }
+
     function enable2(qrcodeId, param, msg, val) {
         $.modal.confirm(msg, function () {
             $.operate.post(prefixBank + "/updateBankcard", {

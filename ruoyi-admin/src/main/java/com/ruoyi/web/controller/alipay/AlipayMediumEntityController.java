@@ -1,17 +1,17 @@
 package com.ruoyi.web.controller.alipay;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.ruoyi.alipay.domain.AlipayFileListEntity;
-import com.ruoyi.alipay.domain.AlipayMediumEntity;
-import com.ruoyi.alipay.domain.AlipayUserInfo;
-import com.ruoyi.alipay.domain.MediumQueue;
+import com.ruoyi.alipay.domain.*;
 import com.ruoyi.alipay.service.IAlipayFileListEntityService;
 import com.ruoyi.alipay.service.IAlipayMediumEntityService;
+import com.ruoyi.alipay.service.IAlipayUserFundEntityService;
+import com.ruoyi.alipay.service.IAlipayUserInfoService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.StaticConstants;
 import com.ruoyi.common.core.controller.BaseController;
@@ -27,6 +27,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 收款媒介列Controller
@@ -37,18 +40,20 @@ import java.util.*;
 @Controller
 @RequestMapping("/alipay/medium")
 public class AlipayMediumEntityController extends BaseController {
-    private String prefix = "alipay/medium" ;
-    private String code_prefix = "alipay/file" ;
+    private String prefix = "alipay/medium";
+    private String code_prefix = "alipay/file";
 
     @Autowired
     private IAlipayMediumEntityService alipayMediumEntityService;
+    @Autowired
+    private IAlipayUserInfoService alipayUserInfoService;
 
     @Autowired
     private IAlipayFileListEntityService alipayFileListEntityService;
 
     @GetMapping()
     public String medium() {
-        return prefix + "/medium" ;
+        return prefix + "/medium";
     }
 
     /**
@@ -59,8 +64,8 @@ public class AlipayMediumEntityController extends BaseController {
     public TableDataInfo list(AlipayMediumEntity alipayMediumEntity) {
         startPage();
         List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
-        if(StrUtil.isNotEmpty(alipayMediumEntity.getQrcodeId())){
-            AlipayMediumEntity mediumEntity =     alipayMediumEntityService.findBankSum(alipayMediumEntity.getQrcodeId());
+        if (StrUtil.isNotEmpty(alipayMediumEntity.getQrcodeId())) {
+            AlipayMediumEntity mediumEntity = alipayMediumEntityService.findBankSum(alipayMediumEntity.getQrcodeId());
             if (null != mediumEntity && CollUtil.isNotEmpty(list)) {
                 for (int mark = 0; mark < 1; mark++) {
                     list.get(mark).setBankSumAmountsys(mediumEntity.getBankSumAmountsys());
@@ -90,7 +95,7 @@ public class AlipayMediumEntityController extends BaseController {
      */
     @GetMapping("/add")
     public String add() {
-        return prefix + "/add" ;
+        return prefix + "/add";
     }
 
 
@@ -100,8 +105,8 @@ public class AlipayMediumEntityController extends BaseController {
     @GetMapping("/editAmount/{id}")
     public String editAmount(@PathVariable("id") Long id, ModelMap mmap) {
         AlipayMediumEntity alipayMediumEntity = alipayMediumEntityService.selectAlipayMediumEntityById(Long.valueOf(id));
-        mmap.put("alipayMediumEntity",alipayMediumEntity);
-        return prefix + "/editAmount" ;
+        mmap.put("alipayMediumEntity", alipayMediumEntity);
+        return prefix + "/editAmount";
     }
 
     /**
@@ -110,7 +115,7 @@ public class AlipayMediumEntityController extends BaseController {
     @GetMapping("/editAmountByCode/{code}")
     public String editAmountByCode(@PathVariable("code") String code, ModelMap mmap) {
         mmap.put("code", code);
-        return prefix + "/editAmountByCode" ;
+        return prefix + "/editAmountByCode";
     }
 
 
@@ -131,7 +136,7 @@ public class AlipayMediumEntityController extends BaseController {
     public String edit(@PathVariable("id") Long id, ModelMap mmap) {
         AlipayMediumEntity alipayMediumEntity = alipayMediumEntityService.selectAlipayMediumEntityById(id);
         mmap.put("alipayMediumEntity", alipayMediumEntity);
-        return prefix + "/edit" ;
+        return prefix + "/edit";
     }
 
 
@@ -164,25 +169,27 @@ public class AlipayMediumEntityController extends BaseController {
     public AjaxResult remove(String ids) {
         return toAjax(alipayMediumEntityService.deleteAlipayMediumEntityByIds(ids));
     }
+
     @Log(title = "剔除银行卡", businessType = BusinessType.UPDATE)
     @PostMapping("/removeQueue/{id}")
     @ResponseBody
-    public AjaxResult removeQueue(@PathVariable("id")String id) {
+    public AjaxResult removeQueue(@PathVariable("id") String id) {
         String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);//主服务器ip+port
         String url = ipPort + "/medium" + "/off-medium-qr";
-        Map<String,Object> map = new HashMap();
-        map.put("mediumNumber",id);
-        String s = HttpUtil.post(url,  map );
+        Map<String, Object> map = new HashMap();
+        map.put("mediumNumber", id);
+        String s = HttpUtil.post(url, map);
         return toAjax(1);
     }
+
     @Log(title = "优先银行卡", businessType = BusinessType.UPDATE)
     @PostMapping("/first")
     @ResponseBody
-    public AjaxResult first(AlipayMediumEntity alipayMediumEntity  ) {
+    public AjaxResult first(AlipayMediumEntity alipayMediumEntity) {
 
-        logger.info("银行卡："+alipayMediumEntity.getMediumNumber()+"分组号："+alipayMediumEntity.getMediumId()+",操作人："+ ShiroUtils.getLoginName());
+        logger.info("银行卡：" + alipayMediumEntity.getMediumNumber() + "分组号：" + alipayMediumEntity.getMediumId() + ",操作人：" + ShiroUtils.getLoginName());
         String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);//主服务器ip+port
-        String url = ipPort + "/out/pushCard?cardInfo="+alipayMediumEntity.getMediumNumber()+"&userId="+alipayMediumEntity.getMediumId();
+        String url = ipPort + "/out/pushCard?cardInfo=" + alipayMediumEntity.getMediumNumber() + "&userId=" + alipayMediumEntity.getMediumId();
         String s = HttpUtil.get(url);
         return toAjax(1);
     }
@@ -198,13 +205,15 @@ public class AlipayMediumEntityController extends BaseController {
         alipayFileListEntity.setIsDeal("2");
         List<AlipayFileListEntity> list = alipayFileListEntityService.selectAlipayFileListEntityList(alipayFileListEntity);
         mmap.put("codeList", list);
-        return code_prefix + "/group_code_list" ;
+        return code_prefix + "/group_code_list";
     }
+
     @Autowired
     private DictionaryUtils dictionaryUtils;
+
     @GetMapping("/mediumQueue")
     public String mediumQueue() {
-        return prefix + "/mediumQueue" ;
+        return prefix + "/mediumQueue";
     }
 
     /**
@@ -215,10 +224,10 @@ public class AlipayMediumEntityController extends BaseController {
     public TableDataInfo listQueue(AlipayMediumEntity alipayMediumEntity) {
         List<MediumQueue> list = new ArrayList<MediumQueue>();
         String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);//主服务器ip+port
-        String url = ipPort + "/out" + "/findQueue?cardInfo="+alipayMediumEntity.getQrcodeId();
+        String url = ipPort + "/out" + "/findQueue?cardInfo=" + alipayMediumEntity.getQrcodeId();
         logger.info(url);
         String s = HttpUtil.get(url);
-        logger.info("【收到队列数据为："+s+"】");
+        logger.info("【收到队列数据为：" + s + "】");
 
         /**
          * {
@@ -399,15 +408,16 @@ public class AlipayMediumEntityController extends BaseController {
          */
 
 
-
-
-
         List<AlipayMediumEntity> listQueue = new ArrayList<>();
         try {
             JSONObject jsonObject = JSONUtil.parseObj(s);
             Object result = jsonObject.get("result");
             JSONArray objects = JSONUtil.parseArray(result);
-            logger.info("当前获取队列数据总条数："+objects.size());
+            logger.info("当前获取队列数据总条数：" + objects.size());
+            List<AlipayUserInfo> userUserAllToBankNot = alipayUserInfoService.findUserUserAllToBankNot();
+            ConcurrentHashMap<String, AlipayUserInfo> userCollect = userUserAllToBankNot.stream().
+                    collect(Collectors.toConcurrentMap(AlipayUserInfo::getUserId, Function.identity(), (o1, o2)
+                            -> o1, ConcurrentHashMap::new));
             for (int i = 0; i < objects.size(); i++) {
                 AlipayMediumEntity med = new AlipayMediumEntity();
                 JSONObject queue = objects.getJSONObject(i);
@@ -429,29 +439,51 @@ public class AlipayMediumEntityController extends BaseController {
                 med.setMediumId(gourp);
                 med.setMountLimit(score);
                 med.setQrcodeId(userId);
-                med.setMediumNote(bankName+":"+bankAccount+":参考余额:"+amount);
+                med.setMediumNote(bankName + ":" + bankAccount + ":参考余额:" + amount);
                 med.setMediumNumber(bankId);
+                if (CollectionUtil.isEmpty(userCollect)) {
+                    AlipayUserInfo alipayUserInfo = userCollect.get(userId);
+                    if (null != alipayUserInfo) {
+                        Integer switchs = alipayUserInfo.getSwitchs();//1  开启
+                        Integer receiveOrderState = alipayUserInfo.getReceiveOrderState();// 2 暂停接单
+                        Integer remitOrderState = alipayUserInfo.getRemitOrderState();//2 暂停接单
+                        String payInfo = "";
+                        if (1 != switchs) {
+                            payInfo += "主关闭:";
+                        }
+                        if (1 == receiveOrderState) {
+                            payInfo += "接单开启:";
+                        } else {
+                            payInfo += "接单关闭:";
+                        }
+                        if (1 == remitOrderState) {
+                            payInfo += "代付开启";
+                        } else {
+                            payInfo += "代付关闭";
+                        }
+                        med.setPayInfo(payInfo);
+                    }
+                }
                 listQueue.add(med);
             }
-
-        }catch (Exception x){
-
+        } catch (Exception x) {
         }
         return getDataTable(listQueue);
+
     }
 
 
     @PostMapping("/getBankcard")
     @ResponseBody
     public AjaxResult showCodeList(AlipayUserInfo userInfo) {
-        AlipayMediumEntity  alipayMediumEntity = new AlipayMediumEntity();
+        AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
         String userId = UUID.randomUUID().toString();
-        if(StrUtil.isNotEmpty(userInfo.getUserId())){
+        if (StrUtil.isNotEmpty(userInfo.getUserId())) {
             userId = userInfo.getUserId();
         }
         alipayMediumEntity.setQrcodeId(userId);
         List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
-        AlipayMediumEntity mediumEntity =     alipayMediumEntityService.findBankSum(userId);
+        AlipayMediumEntity mediumEntity = alipayMediumEntityService.findBankSum(userId);
         if (null != mediumEntity && CollUtil.isNotEmpty(list)) {
             for (int mark = 0; mark < 1; mark++) {
                 list.get(mark).setBankSumAmountsys(mediumEntity.getBankSumAmountsys());
@@ -460,7 +492,7 @@ public class AlipayMediumEntityController extends BaseController {
                 list.get(mark).setOpenSumBankAmountnow(mediumEntity.getOpenSumBankAmountnow());
             }
         }
-        return  AjaxResult.success(list);
+        return AjaxResult.success(list);
     }
 
     /**

@@ -51,13 +51,23 @@ public class AlipayUserInfoController extends BaseController {
 
     @Autowired
     private IAlipayUserInfoService alipayUserInfoService;
+
     @Autowired
     private IAlipayUserFundEntityService alipayUserFundEntityService;
+
     @GetMapping()
     @RequiresPermissions("alipay:merchant:view")
     public String userInfo() {
         return prefix + "/userInfo";
     }
+
+    @GetMapping("/editeCredit/{id}")
+    public String editeCredit(@PathVariable("id") Long id, ModelMap mmap) {
+        AlipayUserInfo alipayUserInfo = alipayUserInfoService.selectAlipayUserInfoById(id);
+        mmap.put("info", alipayUserInfo);
+        return prefix + "/editeCredit";
+    }
+
     /**
      * 查询用户详情列表
      */
@@ -70,14 +80,14 @@ public class AlipayUserInfoController extends BaseController {
         List<AlipayUserInfo> list = alipayUserInfoService.selectAlipayUserInfoList(alipayUserInfo);
         AlipayUserFundEntity alipayUserFundEntity = new AlipayUserFundEntity();
         alipayUserFundEntity.setUserId(alipayUserInfo.getUserId());
-        alipayUserFundEntity.setUserType( "2");
+        alipayUserFundEntity.setUserType("2");
         List<AlipayUserFundEntity> listFund = alipayUserFundEntityService.selectAlipayUserFundEntityList(alipayUserFundEntity);
         ConcurrentHashMap<String, AlipayUserFundEntity> fundMap = listFund.stream().collect(Collectors.toConcurrentMap(AlipayUserFundEntity::getUserId, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
-        for (AlipayUserInfo userInfo : list){
+        for (AlipayUserInfo userInfo : list) {
             String userId = userInfo.getUserId();
             AlipayUserFundEntity fundEntity = fundMap.get(userId);
-            if(null != fundEntity){
-                userInfo.setAccountBalance(fundEntity.getAccountBalance()-fundEntity.getSumProfit());
+            if (null != fundEntity) {
+                userInfo.setAccountBalance(fundEntity.getAccountBalance() - fundEntity.getSumProfit());
                 userInfo.setFreezeBalance(fundEntity.getFreezeBalance());
                 userInfo.setTodayOtherWitAmount(fundEntity.getTodayOtherWitAmount().toString());
                 userInfo.setTodayDealAmount(fundEntity.getTodayDealAmount());
@@ -121,11 +131,11 @@ public class AlipayUserInfoController extends BaseController {
         mapParam.put("QQ", alipayUserInfo.getQQ());
         mapParam.put("telegram", alipayUserInfo.getTelegram());
         mapParam.put("skype", alipayUserInfo.getSkype());
-        String flag = HttpUtil.post(ipPort + urlPath,mapParam);
+        String flag = HttpUtil.post(ipPort + urlPath, mapParam);
         if ("ConnectException".equals(flag)) {
             throw new BusinessException("操作失败，请求alipay接口地址超时,URL=" + ipPort + urlPath);
         }
-        if(StringUtils.isEmpty(flag)){
+        if (StringUtils.isEmpty(flag)) {
             throw new BusinessException("新增失败，接口返回参数为空");
         }
         JSONObject json = JSONObject.parseObject(flag);
@@ -291,7 +301,6 @@ public class AlipayUserInfoController extends BaseController {
     }
 
 
-
     @Autowired
     private IAlipayMediumEntityService alipayMediumEntityService;
 
@@ -300,8 +309,8 @@ public class AlipayUserInfoController extends BaseController {
     public TableDataInfo childrenBankList(AlipayMediumEntity alipayMediumEntity) {
         startPage();
         List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
-        if(StrUtil.isNotEmpty(alipayMediumEntity.getQrcodeId())){
-            AlipayMediumEntity mediumEntity =     alipayMediumEntityService.findBankSum(alipayMediumEntity.getQrcodeId());
+        if (StrUtil.isNotEmpty(alipayMediumEntity.getQrcodeId())) {
+            AlipayMediumEntity mediumEntity = alipayMediumEntityService.findBankSum(alipayMediumEntity.getQrcodeId());
             if (null != mediumEntity && CollUtil.isNotEmpty(list)) {
                 for (int mark = 0; mark < 1; mark++) {
                     list.get(mark).setBankSumAmountsys(mediumEntity.getBankSumAmountsys());
@@ -313,20 +322,6 @@ public class AlipayUserInfoController extends BaseController {
         }
         return getDataTable(list);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

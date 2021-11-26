@@ -68,12 +68,28 @@
                     field: 'qrcodeId',
                     title: '卡商账户'
                     , formatter: function (value, row, index) {
+                        var n = Number(row.startFund);
+                        // alert(n)
+                        // alert(row.fund > row.deposit );
+                        // alert(row.fund < 0 );
+                        if (parseFloat(row.fund) > parseFloat(row.deposit) || row.fund <0 ||(!isNaN(n)&&parseFloat(row.startFund)>parseFloat(row.fund))) {
+                            var table = '<ul >'
+                            table += '<li style="color: green">' + '卡商账户：' + row.qrcodeId + '</li>'
+                            table += '<li style="color: green">' + '接单起始金额：' + row.startFund + '</li>'
+                            table += '<li style="color: green">' + '滚动：' + row.fund + '</li>'
+                            table += '<li style="color: green">' + '接单冻结：' + row.freezeBalance + '</li>'
+                            table += '<li style="color: green">' + '卡押金：' + row.deposit + '</li>'
+                            table += '<li style="color: green">' + '状态：' + row.payInfo + '</li>'
+                            table += '</ul>'
+                            return table;
+                        }
                         var table = '<ul>'
                         table += '<li>' + '卡商账户：' + row.qrcodeId + '</li>'
                         table += '<li>' + '接单起始金额：' + row.startFund + '</li>'
                         table += '<li>' + '滚动：' + row.fund + '</li>'
                         table += '<li>' + '接单冻结：' + row.freezeBalance + '</li>'
                         table += '<li>' + '卡押金：' + row.deposit + '</li>'
+                        table += '<li>' + '状态：' + row.payInfo + '</li>'
                         table += '</ul>'
                         return table;
                     }
@@ -99,7 +115,7 @@
                     align: 'center',
                     formatter: function (value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-info btn-xs ' + codeFlag + '" href="javascript:void(0)" onclick="renotify(\'' + row.mediumNumber + '\',\'' + row.mediumId +  '\')"><i class="fa fa-search-plus"></i>优先</a> ');
+                        actions.push('<a class="btn btn-info btn-xs ' + codeFlag + '" href="javascript:void(0)" onclick="renotify(\'' + row.mediumNumber + '\',\'' + row.mediumId + '\')"><i class="fa fa-search-plus"></i>优先</a> ');
                         actions.push('<a class="btn btn-warning btn-xs ' + codeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.mediumNumber + '\')"><i class="fa fa-search-plus"></i>剔除</a> ');
                         return actions.join('');
                     }
@@ -107,10 +123,11 @@
         };
         $.table.init(options);
     });
-    function renotify(mediumNumber,mediumId) {
+
+    function renotify(mediumNumber, mediumId) {
 
 
-            $.operate.post(prefix + "/first", {'mediumId':mediumId,"mediumNumber":mediumNumber});
+        $.operate.post(prefix + "/first", {'mediumId': mediumId, "mediumNumber": mediumNumber});
     }
 
 </script>

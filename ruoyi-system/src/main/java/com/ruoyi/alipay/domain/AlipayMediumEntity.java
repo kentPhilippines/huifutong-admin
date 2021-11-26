@@ -23,6 +23,15 @@ public class AlipayMediumEntity extends BaseEntity {
     private  String deposit ;
     private  String fund ;
     private  String freezeBalance ;
+    private  String payInfo ;
+
+    public String getPayInfo() {
+        return payInfo;
+    }
+
+    public void setPayInfo(String payInfo) {
+        this.payInfo = payInfo;
+    }
 
     public String getFreezeBalance() {
         return freezeBalance;

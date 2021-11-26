@@ -1334,6 +1334,8 @@ var table = {
                     $.modal.open(title, $.operate.editAmountUrl(id))
                 }else if (flag == 'viewBankDataUrl') {
                     $.modal.open(title, $.operate.viewBankDataUrl(id))
+                }else if (flag == 'editeCreditUrl') {
+                    $.modal.open(title, $.operate.editeCreditUrl(id))
                 }
             },
             // 二维码详细列表
@@ -1515,6 +1517,13 @@ var table = {
                 var url = "/404.html";
                 if ($.common.isNotEmpty(id)) {
                     url = table.options.viewBankDataUrl.replace("{orderQr}", id);
+                }
+                return url;
+            },
+            editeCreditUrl: function (id) {
+                var url = "/404.html";
+                if ($.common.isNotEmpty(id)) {
+                    url = table.options.editeCreditUrl.replace("{id}", id);
                 }
                 return url;
             },
