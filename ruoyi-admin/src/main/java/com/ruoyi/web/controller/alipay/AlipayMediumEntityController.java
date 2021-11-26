@@ -219,6 +219,189 @@ public class AlipayMediumEntityController extends BaseController {
         logger.info(url);
         String s = HttpUtil.get(url);
         logger.info("【收到队列数据为："+s+"】");
+
+        /**
+         * {
+         *     "success": true,
+         *     "message": "请求成功",
+         *     "result": [
+         *         {
+         *             "bankId": "6217858000121031584",
+         *             "gourp": "QUEUE:REDIS:huifutong-bank",
+         *             "userId": "wang168",
+         *             "startFund": "通道配额",
+         *             "fund": "5594.0000",
+         *             "deposit": "10000.000000",
+         *             "status": null,
+         *             "freezeBalance": "502.00",
+         *             "score": 20410.0,
+         *             "bankName": "中国银行",
+         *             "bankAccount": "杨帅武",
+         *             "amount": "4386.770000"
+         *         },
+         *         {
+         *             "bankId": "6217994730038848226",
+         *             "gourp": "QUEUE:REDIS:huifutong-bank",
+         *             "userId": "atai999",
+         *             "startFund": "2000",
+         *             "fund": "835.0000",
+         *             "deposit": "30000.100000",
+         *             "status": null,
+         *             "freezeBalance": "0",
+         *             "score": 20850.0,
+         *             "bankName": "邮储银行",
+         *             "bankAccount": "胡守勇",
+         *             "amount": "0.230000"
+         *         },
+         *         {
+         *             "bankId": "6217856100025745339",
+         *             "gourp": "QUEUE:REDIS:huifutong-bank",
+         *             "userId": "vip2022",
+         *             "startFund": "通道配额",
+         *             "fund": "9775.0000",
+         *             "deposit": "18579.000000",
+         *             "status": null,
+         *             "freezeBalance": "9502.00",
+         *             "score": 20910.0,
+         *             "bankName": "中国银行",
+         *             "bankAccount": "杨祖耀",
+         *             "amount": "5558.840000"
+         *         },
+         *         {
+         *             "bankId": "6230580000189787943",
+         *             "gourp": "QUEUE:REDIS:huifutong-bank",
+         *             "userId": "lhfa123",
+         *             "startFund": "3000",
+         *             "fund": "16346.0000",
+         *             "deposit": "27617.100000",
+         *             "status": null,
+         *             "freezeBalance": "6000.00",
+         *             "score": 20920.0,
+         *             "bankName": "平安银行",
+         *             "bankAccount": "莫小蝶",
+         *             "amount": "5109.030000"
+         *         },
+         *         {
+         *             "bankId": "6230521990022027675",
+         *             "gourp": "QUEUE:REDIS:huifutong-bank",
+         *             "userId": "vip2022",
+         *             "startFund": "通道配额",
+         *             "fund": "9775.0000",
+         *             "deposit": "18579.000000",
+         *             "status": null,
+         *             "freezeBalance": "9502.00",
+         *             "score": 20960.0,
+         *             "bankName": "农业银行",
+         *             "bankAccount": "杨祖耀",
+         *             "amount": "0.000000"
+         *         },
+         *         {
+         *             "bankId": "6235737000011723497",
+         *             "gourp": "QUEUE:REDIS:huifutong-bank",
+         *             "userId": "s75328",
+         *             "startFund": "通道配额",
+         *             "fund": "53.9200",
+         *             "deposit": "7959.920000",
+         *             "status": null,
+         *             "freezeBalance": "502.00",
+         *             "score": 20970.0,
+         *             "bankName": "中国银行",
+         *             "bankAccount": "谭绍平",
+         *             "amount": "3030.000000"
+         *         },
+         *         {
+         *             "bankId": "623059113303479836",
+         *             "gourp": "QUEUE:REDIS:huifutong-bank",
+         *             "userId": "wudi56789",
+         *             "startFund": "4000",
+         *             "fund": "32045.4300",
+         *             "deposit": "50000.000000",
+         *             "status": null,
+         *             "freezeBalance": "7280.00",
+         *             "score": 20990.0,
+         *             "bankName": "河南农信",
+         *             "bankAccount": "王占江",
+         *             "amount": "8821.000000"
+         *         },
+         *         {
+         *             "bankId": "6230486600000039377",
+         *             "gourp": "QUEUE:REDIS:huifutong-bank",
+         *             "userId": "dawin8888",
+         *             "startFund": "4000",
+         *             "fund": "30376.0700",
+         *             "deposit": "60000.000000",
+         *             "status": null,
+         *             "freezeBalance": "15000.00",
+         *             "score": 21000.0,
+         *             "bankName": "四川银行",
+         *             "bankAccount": "蒲水英",
+         *             "amount": "10157.000000"
+         *         },
+         *         {
+         *             "bankId": "6222620810017442068",
+         *             "gourp": "QUEUE:REDIS:huifutong-bank",
+         *             "userId": "ww2022",
+         *             "startFund": "通道配额",
+         *             "fund": "5420.0000",
+         *             "deposit": "7496.000000",
+         *             "status": null,
+         *             "freezeBalance": "3350.00",
+         *             "score": 21020.0,
+         *             "bankName": "交通银行",
+         *             "bankAccount": "徐卫武",
+         *             "amount": "4070.310000"
+         *         },
+         *         {
+         *             "bankId": "621452002000208795",
+         *             "gourp": "QUEUE:REDIS:huifutong-bank",
+         *             "userId": "l1391101",
+         *             "startFund": "1500",
+         *             "fund": "63540.0000",
+         *             "deposit": "77748.000000",
+         *             "status": null,
+         *             "freezeBalance": "12488.00",
+         *             "score": 21030.0,
+         *             "bankName": "天津银行",
+         *             "bankAccount": "李英楠",
+         *             "amount": "8.000000"
+         *         },
+         *         {
+         *             "bankId": "6215821770000006224",
+         *             "gourp": "QUEUE:REDIS:huifutong-bank",
+         *             "userId": "mn89562322",
+         *             "startFund": "通道配额",
+         *             "fund": "9248.2100",
+         *             "deposit": "10225.000000",
+         *             "status": null,
+         *             "freezeBalance": "5800.00",
+         *             "score": 21040.0,
+         *             "bankName": "邮储银行",
+         *             "bankAccount": "贾青青",
+         *             "amount": "531.800000"
+         *         },
+         *         {
+         *             "bankId": "6217995010013524251",
+         *             "gourp": "QUEUE:REDIS:huifutong-bank",
+         *             "userId": "hyh050607",
+         *             "startFund": "通道配额",
+         *             "fund": "5549.5600",
+         *             "deposit": "10000.000000",
+         *             "status": null,
+         *             "freezeBalance": "3000.00",
+         *             "score": 21050.0,
+         *             "bankName": "邮储银行",
+         *             "bankAccount": "和轶豪",
+         *             "amount": "8361.830000"
+         *         }
+         *     ],
+         *     "code": 1
+         * }
+         */
+
+
+
+
+
         List<AlipayMediumEntity> listQueue = new ArrayList<>();
         try {
             JSONObject jsonObject = JSONUtil.parseObj(s);
@@ -235,6 +418,14 @@ public class AlipayMediumEntityController extends BaseController {
                 String userId = queue.getStr("userId");// 银行名字
                 String bankAccount = queue.getStr("bankAccount");// 开户人姓名
                 String amount = queue.getStr("amount");// 开户人姓名
+                String startFund = queue.getStr("startFund");// 开户人姓名
+                String deposit = queue.getStr("deposit");// 开户人姓名
+                String fund = queue.getStr("fund");// 开户人姓名
+                String freezeBalance = queue.getStr("freezeBalance");// 开户人姓名
+                med.setDeposit(deposit);
+                med.setStartFund(startFund);
+                med.setFund(fund);
+                med.setFreezeBalance(freezeBalance);
                 med.setMediumId(gourp);
                 med.setMountLimit(score);
                 med.setQrcodeId(userId);

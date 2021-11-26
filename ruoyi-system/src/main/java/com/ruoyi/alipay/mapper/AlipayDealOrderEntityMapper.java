@@ -120,7 +120,7 @@ public interface AlipayDealOrderEntityMapper {
 
 
     @Update("update alipay_deal_order set orderQrUser = #{userId} ,orderQr = #{orderQr} , " +
-            "retain2 = #{fee} , feeId =#{feeId}  ,retain3 = #{profit} , lockWit  = 0  ,  enterPayTime  = null  where orderId = #{orderId} ")
+            "retain2 = #{fee} , feeId =#{feeId}  ,retain3 = #{profit} , lockWit  = 0  , payImg = null,  enterPayTime  = null , grabOrder = 0   where orderId = #{orderId} ")
     int updateOrderQr(@Param("orderId") String orderId, @Param("userId") String userId,
                       @Param("orderQr") String orderQr, @Param("feeId") Long feeId,
                       @Param("fee") Double fee, @Param("profit") Double profit);

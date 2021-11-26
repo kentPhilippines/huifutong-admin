@@ -113,11 +113,18 @@ public class AlipayDealOrderEntity extends BaseEntity {
 
     private String payInfo;
     private Integer lockWit;
+    private Integer grabOrder;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lockWitTime;
    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date enterPayTime;
+    public Integer getGrabOrder() {
+        return grabOrder;
+    }
 
+    public void setGrabOrder(Integer grabOrder) {
+        this.grabOrder = grabOrder;
+    }
 
     public Date getEnterPayTime() {
         return enterPayTime;

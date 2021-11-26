@@ -67,11 +67,33 @@
                 {
                     field: 'qrcodeId',
                     title: '卡商账户'
+                    , formatter: function (value, row, index) {
+                        var table = '<ul>'
+                        table += '<li>' + '卡商账户：' + row.qrcodeId + '</li>'
+                        table += '<li>' + '接单起始金额：' + row.startFund + '</li>'
+                        table += '<li>' + '滚动：' + row.fund + '</li>'
+                        table += '<li>' + '接单冻结：' + row.freezeBalance + '</li>'
+                        table += '<li>' + '卡押金：' + row.deposit + '</li>'
+                        table += '</ul>'
+                        return table;
+                    }
                 },
                 {
                     field: 'mountLimit',
                     title: '优先级'
                 },
+
+
+                /**
+                 *
+                 *
+                 *
+                 *
+                 *     private  String startFund ;
+                 private  String deposit ;
+                 private  String fund ;
+                 private  String freezeBalance ;
+                 */
                 {
                     title: '操作',
                     align: 'center',

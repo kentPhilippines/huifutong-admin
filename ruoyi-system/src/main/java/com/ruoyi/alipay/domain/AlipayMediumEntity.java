@@ -19,6 +19,42 @@ public class AlipayMediumEntity extends BaseEntity {
     private  String bankSumAmountnow = "0";//银行卡 当前余额
     private  String openSumBankAmountsys = "0";//系统开启 业务余额汇总
     private  String openSumBankAmountnow = "0" ;//银行卡 开启   实时余额汇总
+    private  String startFund ;
+    private  String deposit ;
+    private  String fund ;
+    private  String freezeBalance ;
+
+    public String getFreezeBalance() {
+        return freezeBalance;
+    }
+
+    public void setFreezeBalance(String freezeBalance) {
+        this.freezeBalance = freezeBalance;
+    }
+
+    public String getFund() {
+        return fund;
+    }
+
+    public void setFund(String fund) {
+        this.fund = fund;
+    }
+
+    public String getDeposit() {
+        return deposit;
+    }
+
+    public void setDeposit(String deposit) {
+        this.deposit = deposit;
+    }
+
+    public String getStartFund() {
+        return startFund;
+    }
+
+    public void setStartFund(String startFund) {
+        this.startFund = startFund;
+    }
 
     public String getBankSumAmountnow() {
         return bankSumAmountnow;

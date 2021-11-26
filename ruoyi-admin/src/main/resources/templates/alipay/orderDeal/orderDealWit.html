@@ -231,6 +231,12 @@
                             if(1 == row.lockWit || '1' == row.lockWit){
                                 table += '<li>' + '<span class="badge badge-warning">出款已锁定</span>' + '</li>'
                             }
+                            if(1 == row.grabOrder || '1' == row.grabOrder){
+                                table += '<li>' + '<span class="badge badge-info">卡商抢单出款</span>' + '</li>'
+                            }
+                            if(2 == row.grabOrder || '2' == row.grabOrder ){//卡商放弃出款
+                                table += '<li>' + '<span class="badge badge-warning">卡商放弃出款</span>' + '</li>'
+                            }
                            table += '</ul>'
                             return table;
                         } else if (value == 3) {
@@ -359,7 +365,8 @@
                         if (row.orderStatus != 7 && row.orderStatus != '2') {
                             actions.push('<a class="btn btn-danger btn-xs ' + updataOrder + '" href="javascript:void(0)" onclick="onUpdataOrder(\'' + row.id + '\')"><i class="fa fa-google-wallet"></i>转发财务</a> ');
                         }
-                        if (row.orderStatus === '1' && row.orderType == 4) {
+
+                        if (row.orderStatus === '1' && row.orderType == 4 &&  1 != row.grabOrder) {
                             actions.push('<a class="btn btn-warning btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="updateBankCard(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>修改出款卡商</a> ');
                             actions.push('<a class="btn btn-warning btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="updateBankCardMore(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>拆单出款</a> ');
                         }
@@ -493,7 +500,6 @@
             isInitValue: true
         });
     });
-
 </script>
 </body>
 </html>
