@@ -441,20 +441,36 @@ public class AlipayMediumEntityController extends BaseController {
                 med.setQrcodeId(userId);
                 med.setMediumNote(bankName + ":" + bankAccount + ":参考余额:" + amount);
                 med.setMediumNumber(bankId);
-                if (CollectionUtil.isEmpty(userCollect)) {
+               try {
+                   if(startFund.equals("配额")){
+                       startFund = "500";
+                   }
+                   if((Double.valueOf(fund) > Double.valueOf(deposit) )|| (Double.valueOf(fund) - Double.valueOf(freezeBalance) )  < Double.valueOf(startFund) ){
+                       med.setIsRed(1);
+                   }
+                   if(Double.valueOf(fund) < Double.valueOf(freezeBalance)){
+                       med.setIsRed(1);
+                   }
+               }catch (Exception c ){
+
+               }
+                if (CollectionUtil.isNotEmpty(userCollect)) {
                     AlipayUserInfo alipayUserInfo = userCollect.get(userId);
                     if (null != alipayUserInfo) {
                         Integer switchs = alipayUserInfo.getSwitchs();//1  开启
                         Integer receiveOrderState = alipayUserInfo.getReceiveOrderState();// 2 暂停接单
                         Integer remitOrderState = alipayUserInfo.getRemitOrderState();//2 暂停接单
                         String payInfo = "";
+                        med.setCre(alipayUserInfo.getCredit().toString());
                         if (1 != switchs) {
                             payInfo += "主关闭:";
+                            med.setIsRed(1);
                         }
                         if (1 == receiveOrderState) {
                             payInfo += "接单开启:";
                         } else {
                             payInfo += "接单关闭:";
+                            med.setIsRed(1);
                         }
                         if (1 == remitOrderState) {
                             payInfo += "代付开启";

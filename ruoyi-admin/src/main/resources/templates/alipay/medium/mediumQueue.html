@@ -72,13 +72,14 @@
                         // alert(n)
                         // alert(row.fund > row.deposit );
                         // alert(row.fund < 0 );
-                        if (parseFloat(row.fund) > parseFloat(row.deposit) || row.fund <0 ||(!isNaN(n)&&parseFloat(row.startFund)>parseFloat(row.fund))) {
+                        if (row.isRed == 1 ) {
                             var table = '<ul >'
                             table += '<li style="color: green">' + '卡商账户：' + row.qrcodeId + '</li>'
                             table += '<li style="color: green">' + '接单起始金额：' + row.startFund + '</li>'
                             table += '<li style="color: green">' + '滚动：' + row.fund + '</li>'
                             table += '<li style="color: green">' + '接单冻结：' + row.freezeBalance + '</li>'
                             table += '<li style="color: green">' + '卡押金：' + row.deposit + '</li>'
+                            table += '<li style="color: green">' + '信用分' + row.cre + '</li>'
                             table += '<li style="color: green">' + '状态：' + row.payInfo + '</li>'
                             table += '</ul>'
                             return table;
@@ -89,6 +90,7 @@
                         table += '<li>' + '滚动：' + row.fund + '</li>'
                         table += '<li>' + '接单冻结：' + row.freezeBalance + '</li>'
                         table += '<li>' + '卡押金：' + row.deposit + '</li>'
+                        table += '<li>' + '信用分' + row.cre + '</li>'
                         table += '<li>' + '状态：' + row.payInfo + '</li>'
                         table += '</ul>'
                         return table;
