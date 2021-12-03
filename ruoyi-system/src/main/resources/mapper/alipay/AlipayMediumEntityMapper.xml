@@ -27,12 +27,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="mountSystem" property="mountSystem" jdbcType="DECIMAL"/>
         <result column="mountLimit" property="mountLimit" jdbcType="DECIMAL"/>
         <result column="witAmount" property="witAmount" jdbcType="DECIMAL"/>
-
+        <result column="toDayDeal" property="toDayDeal" jdbcType="DECIMAL"/>
+        <result column="sumDayDeal" property="sumDayDeal" jdbcType="DECIMAL"/>
+        <result column="toDayWit" property="toDayWit" jdbcType="DECIMAL"/>
+        <result column="sumDayWit" property="sumDayWit" jdbcType="DECIMAL"/>
+        <result column="startAmount" property="startAmount" jdbcType="DECIMAL"/>
+        <result column="yseToday" property="yseToday" jdbcType="DECIMAL"/>
+        <result column="startTime" property="startTime"  />
+        <result column="endTime" property="endTime"  />
+        <result column="isClickPay" property="isClickPay"  />
+        <result column="sc" property="sc"  />
+        <result column="sumAmounlimit" property="sumAmounlimit"  />
     </resultMap>
 
     <sql id="selectAlipayMediumEntityVo">
-        select id, error,mediumId, mediumNumber, mediumHolder, mediumNote, mediumPhone, qrcodeId,
-         code, createTime, submitTime, status, isDeal,black,
+        select id, error,mediumId, mediumNumber, mediumHolder, mediumNote, mediumPhone, qrcodeId,yseToday,
+         code, createTime, submitTime, status, isDeal,black,toDayDeal,sumDayDeal,toDayWit,sumDayWit,startAmount,sumDayWit,startTime,endTime,isClickPay,sc,sumAmounlimit,
          attr,bankcode,account,mountNow,mountSystem,mountLimit,notfiyMask,witAmount
          from alipay_medium
     </sql>
@@ -108,11 +118,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="witAmount != null ">witAmount = #{witAmount},</if>
             <if test="status != null ">status = #{status},</if>
             <if test="isDeal != null  and isDeal != ''">isDeal = #{isDeal},</if>
-            <if test="attr != null  and attr != ''">attr = #{attr},</if>
-            <if test="mountNow != null  and mountNow != ''">mountNow = #{mountNow},</if>
-            <if test="mountSystem != null  and mountSystem != ''">mountSystem = #{mountSystem},</if>
-            <if test="mountLimit != null  and mountLimit != ''">mountLimit = #{mountLimit},</if>
-            <if test="black != null  and black != ''">black = #{black},</if>
+            <if test="attr != null  and attr != ''"> attr = #{attr},</if>
+            <if test="mountNow != null  and mountNow != ''"> mountNow = #{mountNow},</if>
+            <if test="mountSystem != null  and mountSystem != ''"> mountSystem = #{mountSystem},</if>
+            <if test="mountLimit != null  and mountLimit != ''"> mountLimit = #{mountLimit},</if>
+            <if test="black != null  and black != ''"> black = #{black},</if>
+            <if test="startAmount != null  and startAmount != ''">startAmount = #{startAmount},</if>
+            <if test="error != null  and error != ''"> error = #{error},</if>
+            <if test="startTime != null  and startTime != ''">startTime = #{startTime},</if>
+            <if test="endTime != null  and endTime != ''">endTime = #{endTime},</if>
+            <if test="isClickPay != null ">isClickPay = #{isClickPay},</if>
+            <if test="sc != null  and sc != ''">sc = #{sc},</if>
+            <if test="sumAmounlimit != null  and sumAmounlimit != ''">sumAmounlimit = #{sumAmounlimit},</if>
         </trim>
         where id = #{id}
     </update>

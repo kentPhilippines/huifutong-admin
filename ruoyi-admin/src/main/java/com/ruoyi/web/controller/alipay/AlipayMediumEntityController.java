@@ -143,7 +143,7 @@ public class AlipayMediumEntityController extends BaseController {
     /**
      * 修改保存收款媒介列
      */
-    @Log(title = "收款媒介列", businessType = BusinessType.UPDATE)
+    @Log(title = "修改控制", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(AlipayMediumEntity alipayMediumEntity) {
@@ -526,5 +526,33 @@ public class AlipayMediumEntityController extends BaseController {
         int i = alipayMediumEntityService.updateAlipayMediumEntity(mediumEntity);
         return toAjax(i);
     }
+
+
+
+    @Log(title = "释放银行卡", businessType = BusinessType.UPDATE)
+    @PostMapping("/openbank")
+    @ResponseBody
+    public AjaxResult openbank(AlipayMediumEntity alipayMediumEntity) {
+        logger.info("[释放银行卡：" + ShiroUtils.getSysUser().getLoginName() + "]");
+        AlipayMediumEntity mediumEntity = new AlipayMediumEntity();
+        mediumEntity.setId(alipayMediumEntity.getId());
+        mediumEntity.setError("0");
+        int i = alipayMediumEntityService.updateAlipayMediumEntity(mediumEntity);
+        return toAjax(i);
+    }
+    @Log(title = "处理异常卡", businessType = BusinessType.UPDATE)
+    @PostMapping("/offbank")
+    @ResponseBody
+    public AjaxResult offbank(AlipayMediumEntity alipayMediumEntity) {
+        logger.info("[处理异常卡：" + ShiroUtils.getSysUser().getLoginName() + "]");
+        AlipayMediumEntity mediumEntity = new AlipayMediumEntity();
+        mediumEntity.setId(alipayMediumEntity.getId());
+        mediumEntity.setError("1");
+        int i = alipayMediumEntityService.updateAlipayMediumEntity(mediumEntity);
+        return toAjax(i);
+    }
+
+
+
 
 }

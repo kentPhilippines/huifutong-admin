@@ -100,76 +100,82 @@
                 checkbox: true
             },
                 {
-                    field: 'id',
-                    title: 'ID',
-                    visible: false
-                },
-                {
-                    field: 'mediumId',
-                    title: '媒介ID',
-                },
-                {
                     field: 'mediumNumber',
-                    title: '银行账号',
+                    title: '银行信息',
                     formatter: function (value, row, index) {
+                        var table = '<ul>'
                         if (row.error == '1') {
-                            return '<span style="color: red">'+row.mediumNumber+'</span>';
-                        } else {
-                            return '<span>'+row.mediumNumber+'</span>';
+                            table += '<li>' + '媒介ID：' + row.mediumId + '</li>'
+                            table += '<li>' + '银行账号：' + '<span style="color: red">' + row.mediumNumber + '</span>'+'</li>'
+                            table += '<li>' + '开户行：' + '<span style="color: red">' + row.account + '</span>'+ '</li>'
+                            table += '<li>' + '手机号：' +'<span style="color: red">' + row.mediumPhone + '</span>'+'</li>'
+                            table += '<li>' + '卡商账户：' +'<span style="color: red">' + row.qrcodeId + '</span>'+'</li>'
+                            table += '</ul>'
+                        }else{
+                            table += '<li>' + '媒介ID：' + row.mediumId + '</li>'
+                            table += '<li>' + '银行账号：' + '<span  >' + row.mediumNumber + '</span>'+'</li>'
+                            table += '<li>' + '开户行：' + row.account + '</li>'
+                            table += '<li>' + '手机号：' + row.mediumPhone + '</li>'
+                            table += '<li>' + '卡商账户：' + row.qrcodeId + '</li>'
+                            table += '</ul>'
                         }
+                        return table;
                     }
                 },
                 {
-                    field: 'mediumHolder',
-                    title: '开户人'
-                },
-                {
-                    field: 'mediumPhone',
-                    title: '手机号'
-                },
-                {
-                    field: 'qrcodeId',
-                    title: '卡商账户'
-                },
-                {
-                    field: 'account',
-                    title: '开户行'
-                },
-                {
                     field: 'mountLimit',
-                    title: '收款限制金额'
+                    title: '实时数据',
+                    formatter: function (value, row, index) {
+                        var amount = row.toDayDeal - row.toDayWit  + row.yseToday ;
+                        var table = '<ul>'
+                        table += '<li>' + '交易余额：' +  amount + '</li>'
+                        table += '<li>' + '参考余额：' + row.mountNow + '</li>'
+                        table += '<li>' + '昨日交易余额：' + row.yseToday + '</li>'
+                        table += '</ul>'
+                        return table;
+                    }
                 },
                 {
-                    field: 'mountSystem',
-                    title: '交易余额'
-                },
-                {
-                    field: 'mountNow',
-                    title: '参考余额'
-                },
-                {
-                    title: '不让接单',
+                    title: '状态',
                     align: 'black',
                     formatter: function (value, row, index) {
-                        return statusTools(row, 'black');
+                        var table = '<ul>'
+                        table += '<li>' + '不让接单：' + statusTools(row, 'black') + '</li>'
+                        table += '<li>' + '接单状态：' + statusTools(row, 'acceptOrder') + '</li>'
+                        return table;
+                    }
+                },
+
+                {
+                    title: '接单控制',
+                    align: 'isClickPay',
+                    formatter: function (value, row, index) {
+                        var table = '<ul>'
+                        table += '<li>' + '接单限制余额：' + row.mountLimit + '</li>'
+                        table += '<li>' + '起始收款金额：' + row.startAmount + '</li>'
+                        table += '<li>' + '接单开始时间：' + row.startTime + '</li>'
+                        table += '<li>' + '接单结束时间：' + row.endTime + '</li>'
+                        if(1== row.isClickPay ){
+                            table += '<li>' + '收款户名验证是否验证户名：是'   + '</li>'
+                        }else{
+                            table += '<li>' + '收款户名验证是否验证户名：否'   + '</li>'
+                        }
+                        table += '<li>' + '接单间隔秒数：' + row.sc + '</li>'
+                        table += '</ul>'
+                        return table;
                     }
                 },
                 {
                     field: 'witAmount',
-                    title: '出款金额'
-
-                },
-                {
-                    field: 'status',
-                    title: '接单状态',
-                    align: 'center',
+                    title: '数据情况',
                     formatter: function (value, row, index) {
-                        // if (row.status === 1) {
-                        //     return '<span style="color:#00B83F;">开启</span>';
-                        // } else if (row.status === 0) {
-                        //     return '<span style="color: #cc0000;">关闭</span>';
-                        // }
-                        return statusTools(row, 'acceptOrder');
+                        var table = '<ul>'
+                        table += '<li>' + '当如入款：' + row.toDayDeal + '</li>'
+                        table += '<li>' + '累计入款：' + row.sumDayDeal + '</li>'
+                        table += '<li>' + '当日出款：' + row.toDayWit + '</li>'
+                        table += '<li>' + '累计出款：' + row.sumDayWit + '</li>'
+                        table += '</ul>'
+                        return table;
                     }
                 },
                 {
@@ -186,10 +192,10 @@
                     align: 'center',
                     formatter: function (value, row, index) {
                         var actions = [];
-
-                        //     actions.push('<a class="btn btn-info btn-xs ' + codeFlag + '" href="javascript:void(0)" onclick="$.operate.codeList(\'' + row.mediumId + '\')"><i class="fa fa-search-plus"></i>二维码</a> ');
-                        actions.push('<a class="btn btn-info btn-xs ' + codeFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-play-circle-o"></i>修改业务金额</a> ');
-                        actions.push('<a class="btn btn-primary btn-xs ' + editAmountById + '" onclick="$.operate.openAccount(\'' + row.id + '\',\'资金账户加款\',\'editAmountUrl\')"><i class="fa fa-plus"></i>修改收款限制金额</a> ');
+                       actions.push('<a class="btn btn-info btn-xs ' +  "" + '" href="javascript:void(0)" onclick="openbank(\'' + row.id + '\')"><i class="fa fa-google-wallet"></i>解除限制</a> ');
+                       actions.push('<a class="btn btn-info btn-xs ' +  "" + '" href="javascript:void(0)" onclick="offbank(\'' + row.id + '\')"><i class="fa fa-google-wallet"></i>处理异常</a> ');
+                        actions.push('<a class="btn btn-info btn-xs ' + ""  + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-play-circle-o"></i>修改业务金额</a> ');
+                        actions.push('<a class="btn btn-primary btn-xs ' +  "" + '" onclick="$.operate.openAccount(\'' + row.id + '\',\'修改风控规则\',\'editAmountUrl\')"><i class="fa fa-plus"></i>修改风控规则</a> ');
                         actions.push('<a class="btn btn-primary btn-xs ' + editAmountByCode + '" href="/alipay/medium/editAmountByCode/' + row.code + '")"><i class="fa fa-play-circle-o"></i>修改同种媒介收款限制金额</a> ');
                         return actions.join('');
                     }
@@ -202,11 +208,11 @@
     function statusTools(row, param) {
         if (param === 'black') {
             if (row.black == 1) {
-                let msg = "确认此卡【置为黑卡】吗？";
+                let msg = "确认此卡【不让接单】吗？";
                 let val = 0;
                 return '<i class=\"fa fa-toggle-off text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="enable(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
             } else {
-                let msg = "确认此卡【开放】吗？";
+                let msg = "确认此卡【开启接单】吗？";
                 let val = 1;
                 return '<i class=\"fa fa-toggle-on text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="disable(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
             }
@@ -227,6 +233,22 @@
     }
 
     /* 商户管理-启用 */
+    function openbank(id) {
+        $.modal.confirm("确定释放银行卡吗", function () {
+            $.operate.post(prefix + "/openbank", {
+                "id": id,
+            });
+        })
+    }
+    function offbank(id) {
+        $.modal.confirm("确定处理为异常银行卡吗", function () {
+            $.operate.post(prefix + "/offbank", {
+                "id": id,
+            });
+        })
+    }
+
+    /* 商户管理-启用 */
     function enable(qrcodeId, param, msg, val) {
         $.modal.confirm(msg, function () {
             $.operate.post(prefix + "/updateBankcard", {
@@ -235,6 +257,7 @@
             });
         })
     }
+
 
     /* 商户管理-启用 */
     function enableStatus(qrcodeId, param, msg, val) {
@@ -245,6 +268,10 @@
             });
         })
     }
+
+
+
+
 
     /* 商户管理-停用 */
     function disable(qrcodeId, param, msg, val) {

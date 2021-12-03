@@ -59,7 +59,7 @@ spring:
     #发布到运营时候修改该配置 online
   profiles:
     active: google-online
-   # active: druid
+   #active: druid
   #  active: google-test
   # 文件上传
   servlet:

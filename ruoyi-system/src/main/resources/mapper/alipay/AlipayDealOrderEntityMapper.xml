@@ -51,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="selectAlipayDealOrderEntityVo">
         select id, orderId,currency, associatedId, orderStatus,
         dealAmount, dealFee, actualAmount, orderType, orderAccount,payer, orderQrUser, orderQr, externalOrderId, generationIp, dealDescribe, notify, back, isNotify,
-         createTime, submitTime, feeId, status, retain1, retain2,grabOrder,
+         createTime, submitTime, feeId, status, retain1, retain2,grabOrder,systemAmount,
          retain3, retain4 , txhash  ,   payImg  , payInfo ,enterPay , lockWit , lockWitTime ,enterPayTime , bankAmountNow from alipay_deal_order
     </sql>
     <select id="selectAlipayDealOrderEntityList" parameterType="AlipayDealOrderEntity" resultMap="AlipayDealOrderEntityResult">
@@ -77,7 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="enterPayTime != null and enterPayTime != '' ">and enterPayTime = #{enterPayTime}</if>
             <if test="recordType != null and recordType != '' ">and recordType = #{recordType}</if>
         </where>
-        order by submitTime  desc
+        order by id  desc
     </select>
 
 

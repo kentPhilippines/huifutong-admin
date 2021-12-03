@@ -151,8 +151,8 @@ public class AlipayDealOrderEntityController extends BaseController {
             if (StrUtil.isEmpty(order.getOrderQrUser())) {
                 continue;
             }
-            if (ObjectUtil.isNotNull(userCollect.get(order.getOrderAccount()))) {
-                order.setChannelName(userCollect1.get(order.getOrderQrUser()).getUserName());
+            if (ObjectUtil.isNotNull(userCollect.get(order.getOrderQrUser()))) {
+                order.setChannelName(userCollect.get(order.getOrderQrUser()).getUserName());
             }
             if (CollUtil.isNotEmpty(orderIds)&&"4".equals(alipayDealOrderEntity.getOrderType())) {
 

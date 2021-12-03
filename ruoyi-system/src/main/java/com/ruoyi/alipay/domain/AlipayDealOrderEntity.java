@@ -102,6 +102,14 @@ public class AlipayDealOrderEntity extends BaseEntity {
     private String userName;
     private String payImg;
     private String bankAmountNow;
+    private String systemAmount;
+    public String getSystemAmount() {
+        return systemAmount;
+    }
+
+    public void setSystemAmount(String systemAmount) {
+        this.systemAmount = systemAmount;
+    }
 
     public String getBankAmountNow() {
         return bankAmountNow;

@@ -5,6 +5,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -25,6 +26,110 @@ public class AlipayMediumEntity extends BaseEntity {
     private  String freezeBalance ;
     private  String payInfo ;
     private  String cre ;
+    private BigDecimal toDayDeal;//当如入款
+    private BigDecimal sumDayDeal;//累计入款
+    private BigDecimal toDayWit;//当日出款
+    private BigDecimal sumAmounlimit;//日总结单限制
+    private BigDecimal sumDayWit;//累计出款
+    private BigDecimal startAmount;//起始收款金额
+    private BigDecimal yseToday;//起始收款金额
+    private String startTime;//接单开始时间  格式    hh:mm:ss
+    private String endTime;//接单结束 时间
+    private Integer isClickPay;// 收款户名验证是否验证户名   1 验证    0 不验证
+    private Long sc;//接单间隔秒数
+
+    public BigDecimal getSumAmounlimit() {
+        return sumAmounlimit;
+    }
+
+    public void setSumAmounlimit(BigDecimal sumAmounlimit) {
+        this.sumAmounlimit = sumAmounlimit;
+    }
+
+    public BigDecimal getYseToday() {
+        return yseToday;
+    }
+
+    public void setYseToday(BigDecimal yseToday) {
+        this.yseToday = yseToday;
+    }
+
+    public Long getSc() {
+        return sc;
+    }
+
+    public void setSc(Long sc) {
+        this.sc = sc;
+    }
+
+    public Integer getIsClickPay() {
+        return isClickPay;
+    }
+
+    public void setIsClickPay(Integer isClickPay) {
+        this.isClickPay = isClickPay;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public BigDecimal getStartAmount() {
+        return startAmount;
+    }
+
+    public void setStartAmount(BigDecimal startAmount) {
+        this.startAmount = startAmount;
+    }
+
+    public BigDecimal getSumDayWit() {
+        return sumDayWit;
+    }
+
+    public void setSumDayWit(BigDecimal sumDayWit) {
+        this.sumDayWit = sumDayWit;
+    }
+
+    public BigDecimal getToDayWit() {
+        return toDayWit;
+    }
+
+    public void setToDayWit(BigDecimal toDayWit) {
+        this.toDayWit = toDayWit;
+    }
+
+    public BigDecimal getSumDayDeal() {
+        return sumDayDeal;
+    }
+
+    public void setSumDayDeal(BigDecimal sumDayDeal) {
+        this.sumDayDeal = sumDayDeal;
+    }
+
+    public BigDecimal getToDayDeal() {
+        return toDayDeal;
+    }
+
+    public void setToDayDeal(BigDecimal toDayDeal) {
+        this.toDayDeal = toDayDeal;
+    }
+
+
+
+
+
 
     public String getCre() {
         return cre;

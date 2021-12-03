@@ -292,7 +292,8 @@
                         table += '<li  >' + '银行卡：' + '<a onclick="$.operate.openAccount(\'' + row.orderQr + '\',\'流水\',\'viewBankDataUrl\')">'+row.orderQr +'</a>'+ '</li>'
                         table += '<li  >' + row.bankAccount  + '</li>'
                         if(row.bankAmountNow){
-                            table += '<li>' + '业务余额：'+ '<span style="color: red">'+ row.bankAmountNow + '</span>'+'</li>'
+                            table += '<li>' +'真实余额：'+ '<span style="color: red">'+ row.bankAmountNow + '</span>'+'</li>'
+                            table += '<li>' +'业务余额：'+ '<span style="color: red">'+ row.systemAmount + '</span>'+'</li>'
                         }
                         if(null != row.payInfo && '' != row.payInfo){
                             table += '<li>' + '回调：' + row.payInfo + '</li>'
