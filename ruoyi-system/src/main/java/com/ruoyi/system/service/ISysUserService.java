@@ -120,6 +120,14 @@ public interface ISysUserService {
     int resetUserPwd(SysUser user);
 
     /**
+     * 修改用户资金密码信息
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    int resetUserMoneyPwd(SysUser user);
+
+    /**
      * 校验用户名称是否唯一
      *
      * @param loginName 登录名称

@@ -255,6 +255,17 @@ public class SysUserServiceImpl implements ISysUserService {
     }
 
     /**
+     * 修改用户资金密码
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    @Override
+    public int resetUserMoneyPwd(SysUser user) {
+        return updateUserInfo(user);
+    }
+
+    /**
      * 新增用户角色信息
      *
      * @param user 用户对象
