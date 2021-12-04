@@ -7,6 +7,12 @@
 <body class="gray-bg">
 <div class="container-div">
     <div class="row">
+
+        <ul class="nav nav-pills">
+            <li th:classappend=" ${#httpServletRequest.getParameter('orderStatus') =='2'}  ? 'active':'' "><a  class="nav-link " aria-current="page" href="/alipay/orderDeal/Wit?orderStatus=2">成功的</a></li>
+            <li th:classappend=" ${#httpServletRequest.getParameter('orderStatus') =='1'}  ? 'active':'' "><a class="nav-link" href="/alipay/orderDeal/Wit?orderStatus=1">处理中</a></li>
+        </ul>
+
         <div class="col-sm-12 search-collapse">
             <form id="formId">
                 <div class="select-list">
@@ -112,9 +118,9 @@
                             <label>订单状态： </label>
                             <select id="orderStatus" name="orderStatus" th:with="type=${@dict.getType('orderStatus')}"
                                     class="selectpicker" data-none-selected-text="请选择">
-                                <option value="">所有</option>
+                                <option value="">所有 </option>
                                 <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
-                                        th:value="${dict.dictValue}" th:selected="${dict.dictValue} eq '2'"></option><!--默认成功-->
+                                        th:value="${dict.dictValue}" th:selected="${ dict.dictValue} == ${#httpServletRequest.getParameter('orderStatus')} "></option><!--默认成功-->
                             </select>
                         </li>
                         <li class="select-time">
