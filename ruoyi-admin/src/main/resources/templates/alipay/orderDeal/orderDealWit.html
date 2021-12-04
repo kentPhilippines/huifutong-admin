@@ -114,7 +114,7 @@
                                     class="selectpicker" data-none-selected-text="请选择">
                                 <option value="">所有</option>
                                 <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
-                                        th:value="${dict.dictValue}"></option>
+                                        th:value="${dict.dictValue}" th:selected="${dict.dictValue} eq '2'"></option><!--默认成功-->
                             </select>
                         </li>
                         <li class="select-time">
