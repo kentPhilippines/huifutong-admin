@@ -61,7 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="orderId != null  and orderId != ''">  and  orderId = #{orderId} or externalOrderId =  #{orderId} or associatedId = #{orderId}    </if>
             <if test="orderStatus != null  and orderStatus != ''"> and orderStatus = #{orderStatus}</if>
             and  (dealAmount > #{params.minAmount}   and  #{params.maxAmount} >  dealAmount  )
-            <if test="params.exactlyAmount != null "> and dealAmount = #{params.exactlyAmount}</if>
+            <if test="params.exactlyAmount != null and params.exactlyAmount != ''"> and dealAmount = #{params.exactlyAmount}</if>
             <if test="dealFee != null "> and dealFee = #{dealFee}</if>
             <if test="actualAmount != null "> and actualAmount = #{actualAmount}</if>
             <if test="orderType != null  and orderType != ''"> and orderType = #{orderType}</if>
