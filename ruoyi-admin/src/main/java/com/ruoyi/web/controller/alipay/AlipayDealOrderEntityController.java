@@ -151,8 +151,8 @@ public class AlipayDealOrderEntityController extends BaseController {
             if (StrUtil.isEmpty(order.getOrderQrUser())) {
                 continue;
             }
-            if (ObjectUtil.isNotNull(userCollect.get(order.getOrderQrUser()))) {
-                order.setChannelName(userCollect.get(order.getOrderQrUser()).getUserName());
+            if (ObjectUtil.isNotNull(userCollect1.get(order.getOrderQrUser()))) {
+                order.setChannelName(userCollect1.get(order.getOrderQrUser()).getUserName());
             }
             if (CollUtil.isNotEmpty(orderIds)&&"4".equals(alipayDealOrderEntity.getOrderType())) {
 
@@ -303,6 +303,7 @@ public class AlipayDealOrderEntityController extends BaseController {
     @RequiresPermissions("orderDeal:qr:status:updateBankCard")
     @ResponseBody
     @RepeatSubmit
+    @Log(title = "确认拆单", businessType = BusinessType.INSERT)
     public AjaxResult updateBankCard1(
             String orderId, String qrcodeId, String mediumNumber
     ) {
@@ -317,8 +318,16 @@ public class AlipayDealOrderEntityController extends BaseController {
         try {
             orderEntityList = alipayDealOrderEntityService.findOrderByOrderId(orderId);//原交易订单， 修改银行卡后 原银行卡资金退回
             Integer grabOrder = orderEntityList.getGrabOrder();
+            Integer lockWit = orderEntityList.getLockWit();
             if(grabOrder == 1 ){
                 return error("当前订单状态错误，请让卡商放弃出款");
+            }
+
+            if(grabOrder == 1 ){
+                return error("当前订单状态错误，请让卡商放弃出款");
+            }
+            if(lockWit == 1 ){
+                return error("当前订单正在处理中，请核实");
             }
             orderIdOld = orderId;
             orderBankOld = orderEntityList.getOrderQr();
@@ -379,8 +388,13 @@ public class AlipayDealOrderEntityController extends BaseController {
         try {
             orderEntityList = alipayDealOrderEntityService.findOrderByOrderId(orderId);
             Integer grabOrder = orderEntityList.getGrabOrder();
+            Integer lockWit = orderEntityList.getLockWit();
+
             if(grabOrder == 1 ){
                 return error("当前订单状态错误，请让卡商放弃出款");
+            }
+            if(lockWit == 1 ){
+                return error("当前订单正在处理中，请核实");
             }
             orderIdOld = orderId;
             orderBankOld = orderEntityList.getOrderQr();
@@ -421,6 +435,8 @@ public class AlipayDealOrderEntityController extends BaseController {
                     orderBankNew = bankInfo;
                 }
             }
+            orderEntityList.setRetain2( rate.getFee() * orderEntityList.getDealAmount() +"");//卡商利润
+            orderEntityList.setRetain2(orderEntityList.getDealFee() - (rate.getFee() * orderEntityList.getDealAmount()) +"");
             orderEntityList.setOrderQr(bankInfo);
             orderEntityList.setOperater(ShiroUtils.getLoginName());
             orderEntityList.setRecordType("3");
