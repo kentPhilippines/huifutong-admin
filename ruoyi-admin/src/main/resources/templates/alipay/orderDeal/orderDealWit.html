@@ -8,10 +8,10 @@
 <div class="container-div">
     <div class="row">
 
-    <!--    <ul class="nav nav-pills">
-            <li th:classappend=" ${#httpServletRequest.getParameter('orderStatus') =='2'}  ? 'active':'' "><a  class="nav-link " aria-current="page" href="/alipay/orderDeal/Wit?orderStatus=2">成功的</a></li>
-            <li th:classappend=" ${#httpServletRequest.getParameter('orderStatus') =='1'}  ? 'active':'' "><a class="nav-link" href="/alipay/orderDeal/Wit?orderStatus=1">处理中</a></li>
-        </ul>-->
+        <!--        <ul class="nav nav-pills">-->
+        <!--            <li th:classappend=" ${#httpServletRequest.getParameter('orderStatus') =='2'}  ? 'active':'' "><a  class="nav-link " aria-current="page" href="/alipay/orderDeal/Wit?orderStatus=2">成功的</a></li>-->
+        <!--            <li th:classappend=" ${#httpServletRequest.getParameter('orderStatus') =='1'}  ? 'active':'' "><a class="nav-link" href="/alipay/orderDeal/Wit?orderStatus=1">处理中</a></li>-->
+        <!--        </ul>-->
 
         <div class="col-sm-12 search-collapse">
             <form id="formId">
@@ -362,6 +362,7 @@
                     align: 'left',
                     formatter: function (value, row, index) {
                         var actions = [];
+                        actions.push('<a class=" btn btn-primary btn-xs settop' + row.id + '" href="javascript:void(0)" onclick="setTop(this,\'' + row.id + '\');" ><i class="fa fa-search"></i>置顶</a> ');
                         actions.push('<a class="btn btn-primary btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.id + '\')"><i class="fa fa-search"></i>详情</a> ');
                         // actions.push('<a class="btn btn-primary btn-xs ' + backOrderFlag + '" onclick="$.operate.openAccount(\'' + row.id + '\',\'补单\',\'backOrderUrl\')"><i class="fa fa-plus"></i>补单</a> ');
 
@@ -391,12 +392,25 @@
                 }]
         };
         $.table.init(options);
+
+
+
+
     });
+
+    function setTop(obj,id) {
+        $.cookie('orderDealWit_setTop', id);
+        //var $tr = $(this).parent('td').parent('tr');
+        $('#bootstrap-table tbody').find("tr").first().before($(obj).parent('td').parent('tr'));
+
+    }
+
     function onUpdataOrder(id) {
         $.modal.confirm("该笔订单确认转为人工处理", function () {
             $.operate.post(prefix + "/updataOrder", {"id": id});
         });
     }
+
     function back(id) {
         $.modal.confirm("该笔订单确认要回滚", function () {
             $.operate.post(prefix + "/updataOrderback", {"id": id});
@@ -465,32 +479,17 @@
     }
 
 
+    function enterPay(id) {
+        $.modal.confirm("确认审核通过", function () {
+            $.operate.post(prefix + "/enterPay", {"id": id});
+        });
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-     function enterPay(id) {
-         $.modal.confirm("确认审核通过", function () {
-             $.operate.post(prefix + "/enterPay", {"id": id});
-         });
-        }
-     function unLockPay(id) {
-         $.modal.confirm("确认解锁出款订单", function () {
-             $.operate.post(prefix + "/unLockPay", {"id": id});
-         });
-        }
+    function unLockPay(id) {
+        $.modal.confirm("确认解锁出款订单", function () {
+            $.operate.post(prefix + "/unLockPay", {"id": id});
+        });
+    }
 
     //初始化时间
     layui.use('laydate', function () {
