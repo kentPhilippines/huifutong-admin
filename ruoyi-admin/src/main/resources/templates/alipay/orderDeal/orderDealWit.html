@@ -3,6 +3,7 @@
 <head>
     <th:block th:include="include :: header('交易订单列表')"/>
     <th:block th:include="include :: bootstrap-select-css"/>
+
 </head>
 <body class="gray-bg">
 <div class="container-div">
@@ -361,7 +362,7 @@
                     align: 'left',
                     formatter: function (value, row, index) {
                         var actions = [];
-                        actions.push('<a class="top btn btn-primary btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="setTop(this);" ><i class="fa fa-search"></i>置顶</a> ');
+                        actions.push('<a class=" btn btn-primary btn-xs settop' + row.id + '" href="javascript:void(0)" onclick="setTop(this,\'' + row.id + '\');" ><i class="fa fa-search"></i>置顶</a> ');
                         actions.push('<a class="btn btn-primary btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.id + '\')"><i class="fa fa-search"></i>详情</a> ');
                         // actions.push('<a class="btn btn-primary btn-xs ' + backOrderFlag + '" onclick="$.operate.openAccount(\'' + row.id + '\',\'补单\',\'backOrderUrl\')"><i class="fa fa-plus"></i>补单</a> ');
 
@@ -388,12 +389,22 @@
                         }
                         return actions.join('');
                     }
-                }]
+                }],
+            onLoadSuccess: function(data){
+                //初始化处理cookie置顶
+                var topId = $.cookie('orderDealWit_setTop');
+                $(".settop"+topId).click();
+            }
         };
         $.table.init(options);
+
+
+
+
     });
 
-    function setTop(obj) {
+    function setTop(obj,id) {
+        $.cookie('orderDealWit_setTop', id);
         //var $tr = $(this).parent('td').parent('tr');
         $('#bootstrap-table tbody').find("tr").first().before($(obj).parent('td').parent('tr'));
 
