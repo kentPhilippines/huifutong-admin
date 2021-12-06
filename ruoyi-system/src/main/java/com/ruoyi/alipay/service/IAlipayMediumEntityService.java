@@ -75,4 +75,8 @@ public interface IAlipayMediumEntityService {
      * @return
      */
     AlipayMediumEntity findBankSum(String userId);
+
+    List<AlipayMediumEntity> findOpenMed();
+
+
 }

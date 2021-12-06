@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.alipay;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -407,6 +409,16 @@ public class AlipayMediumEntityController extends BaseController {
          * }
          */
 
+        List<AlipayMediumEntity> medList = alipayMediumEntityService.findOpenMed();
+
+
+        ConcurrentHashMap<String, AlipayMediumEntity> collect = medList.stream().
+                collect(Collectors.toConcurrentMap(AlipayMediumEntity::getMediumNumber, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
+
+
+
+
+
 
         List<AlipayMediumEntity> listQueue = new ArrayList<>();
         try {
@@ -431,7 +443,7 @@ public class AlipayMediumEntityController extends BaseController {
                 String startFund = queue.getStr("startFund");// 开户人姓名
                 String deposit = queue.getStr("deposit");// 开户人姓名
                 String fund = queue.getStr("fund");// 开户人姓名
-                String freezeBalance = queue.getStr("freezeBalance");// 开户人姓名
+                String freezeBalance = queue.getStr("freezeBalance");// 滚动
                 med.setDeposit(deposit);
                 med.setStartFund(startFund);
                 med.setFund(fund);
@@ -441,7 +453,9 @@ public class AlipayMediumEntityController extends BaseController {
                 med.setQrcodeId(userId);
                 med.setMediumNote(bankName + ":" + bankAccount + ":参考余额:" + amount);
                 med.setMediumNumber(bankId);
-               try {
+
+                AlipayMediumEntity mediumEntity = collect.get(bankId);
+                try {
                    if(startFund.equals("配额")){
                        startFund = "500";
                    }
@@ -451,6 +465,48 @@ public class AlipayMediumEntityController extends BaseController {
                    if(Double.valueOf(fund) < Double.valueOf(freezeBalance)){
                        med.setIsRed(1);
                    }
+                    med.setCode("");
+                   if(ObjectUtil.isNotNull(mediumEntity)){
+                       String error = mediumEntity.getError();
+                       if("1".equals(error)){
+                           med.setIsRed(1);
+                           med.setError("异常卡");
+                       }
+                       if(new BigDecimal(freezeBalance).compareTo(new BigDecimal(500)) < 0 ){
+                           med.setIsRed(1);
+                           med.setCode("需要出款 - ");
+                       }
+                       BigDecimal toDayDeal = mediumEntity.getToDayDeal();
+                       BigDecimal sumAmounlimit = mediumEntity.getSumAmounlimit();
+                       if(sumAmounlimit.compareTo(toDayDeal) < 0 ){
+                           String mediumNote = med.getCode();
+                           if(StrUtil.isEmpty(mediumNote)){
+                               mediumNote = "";
+                           }
+                           mediumNote += "  当前卡限制入款 - ";
+                           med.setCode(mediumNote);
+                           med.setIsRed(1);
+                       }
+                       String black = mediumEntity.getBlack();
+                       if("0".equals(black)){
+                           String mediumNote = med.getCode();
+                           if(StrUtil.isEmpty(mediumNote)){
+                               mediumNote = "";
+                           }
+                           mediumNote += " 不让接单 - ";
+                           med.setCode(mediumNote);
+                           med.setIsRed(1);
+                       }
+
+
+                   }
+
+
+
+
+
+
+
                }catch (Exception c ){
 
                }

@@ -134,4 +134,9 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
         }
         return medium;
     }
+
+    @Override
+    public List<AlipayMediumEntity> findOpenMed() {
+        return alipayMediumEntityMapper.findOpenMed();
+    }
 }
