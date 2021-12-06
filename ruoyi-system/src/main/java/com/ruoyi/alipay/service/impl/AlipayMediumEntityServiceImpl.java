@@ -136,6 +136,7 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     }
 
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public List<AlipayMediumEntity> findOpenMed() {
         return alipayMediumEntityMapper.findOpenMed();
     }
