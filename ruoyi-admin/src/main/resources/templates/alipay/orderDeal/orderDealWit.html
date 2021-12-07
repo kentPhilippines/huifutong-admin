@@ -3,7 +3,6 @@
 <head>
     <th:block th:include="include :: header('交易订单列表')"/>
     <th:block th:include="include :: bootstrap-select-css"/>
-
 </head>
 <body class="gray-bg">
 <div class="container-div">
@@ -22,22 +21,22 @@
                             <span>平台订单：</span>
                             <input type="text" name="orderId"/>
                         </li>
-                        <!-- <li>
-                             <span>关联订单：</span>
-                             <input type="text" name="associatedId"/>
-                         </li>
-                         <li>
-                             <span>外部订单：</span>
-                             <input type="text" name="externalOrderId"/>
-                         </li>-->
+                       <!-- <li>
+                            <span>关联订单：</span>
+                            <input type="text" name="associatedId"/>
+                        </li>
+                        <li>
+                            <span>外部订单：</span>
+                            <input type="text" name="externalOrderId"/>
+                        </li>-->
                         <li>
                             <span>账号：</span>
                             <input type="text" name="orderAccount"/>
                         </li>
-                        <!--  <li>
-                              <span>卡商账号：</span>
-                              <input type="text" name="orderQrUser1"/>
-                          </li>-->
+                      <!--  <li>
+                            <span>卡商账号：</span>
+                            <input type="text" name="orderQrUser1"/>
+                        </li>-->
                         <li>
                             <span>银行卡信息：</span>
                             <input type="text" name="orderQr"/>
@@ -54,14 +53,16 @@
                         </li>
                         <li>
                             <span>订单金额：</span>
-                            <input type="text" id="exactlyAmount" placeholder="准确金额"
+                            <input type="text"   id="exactlyAmount" placeholder="准确金额"
                                    name="params[exactlyAmount]"/>
 
-                            <input type="text" id="minAmount" placeholder="最小金额"
+                            <input type="text"   id="minAmount" placeholder="最小金额"
                                    name="params[minAmount]"/>
                             <span>-</span>
-                            <input type="text" id="maxAmount" placeholder="最大金额"
+                            <input type="text"   id="maxAmount" placeholder="最大金额"
                                    name="params[maxAmount]"/>
+
+
 
 
                         </li>
@@ -76,7 +77,7 @@
                         <li class="select-selectpicker">
                             <label>订单类型：</label>
                             <select class="selectpicker" data-none-selected-text="请选择" id="orderType" name="orderType">
-                                <option value="4">商户代付渠道主交易订单</option>
+                                <option value="4" >商户代付渠道主交易订单</option>
 
                             </select>
                         </li>
@@ -84,8 +85,8 @@
                             <label>卡商代付订单审核：</label>
                             <select class="selectpicker" data-none-selected-text="请选择" id="enterPay" name="enterPay">
                                 <option value="">所有</option>
-                                <option value="1">已审核</option>
-                                <option value="0">未审核</option>
+                                <option value= "1" >已审核</option>
+                                <option value= "0">未审核</option>
                             </select>
                         </li>
                         <li class="select-selectpicker">
@@ -104,9 +105,9 @@
                                     data-none-selected-text="请选择" id="recordType"
                                     name="recordType">
                                 <option value="">所有</option>
-                                <option value="1">补单</option>
-                                <option value="2">切换卡商</option>
-                                <option value="3">拆分出款</option>
+                                <option value= "1" >补单</option>
+                                <option value= "2" >切换卡商</option>
+                                <option value= "3">拆分出款</option>
                             </select>
                         </li>
                         <!-- <li>
@@ -117,11 +118,9 @@
                             <label>订单状态： </label>
                             <select id="orderStatus" name="orderStatus" th:with="type=${@dict.getType('orderStatus')}"
                                     class="selectpicker" data-none-selected-text="请选择">
-                                <option value="">所有</option>
+                                <option value="">所有 </option>
                                 <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
-                                        th:value="${dict.dictValue}"
-                                        th:selected="${ dict.dictValue} == ${#httpServletRequest.getParameter('orderStatus')} "></option>
-                                <!--默认成功-->
+                                        th:value="${dict.dictValue}" th:selected="${ dict.dictValue} == ${#httpServletRequest.getParameter('orderStatus')} "></option><!--默认成功-->
                             </select>
                         </li>
                         <li class="select-time">
@@ -182,17 +181,17 @@
             exportUrl: prefix + "/export",
             openUrl: prefix + "/updateBankCardShow/{userId}",
             backOrderUrl: prefix + "/backOrder/{id}",
-            viewBankDataUrl: prefix1 + "/bank/{orderQr}",
+            viewBankDataUrl: prefix1+"/bank/{orderQr}",
             modalName: "主交易订单",
-            detailView: true,
-            detailFormatter: function (index, row) {
-                return ' <img class="image" src= ' + row.payImg + ' style=" width: auto; height: auto;"' + '>'
+            detailView:true,
+            detailFormatter:function(index,row){
+                    return ' <img class="image" src= '+ row.payImg + ' style=" width: auto; height: auto;"' + '>'
             },
             showFooter: true,   //注册加载子表的事件。注意下这里的三个参数！
             columns: [{
                 checkbox: true
             },
-                {field: 'id', title: '数据ID', visible: false},
+                {field: 'id', title: '数据ID', visible: false },
                 {
                     field: 'orderId', title: '平台订单', formatter: function (value, row, index) {
                         var table = '<ul>'
@@ -232,22 +231,22 @@
                         } else if (value == 4) {
                             var table = '<ul>'
                             table += '<li>' + '<span class="badge badge-danger">商户代付->渠道出款主交易订单</span>' + '</li>'
-                            if ('zhongbang-bank' == row.orderQrUser) {
+                            if('zhongbang-bank' == row.orderQrUser){
                                 table += '<li>' + '<span class="badge badge-danger">等待切款</span>' + '</li>'
                             }
-                            if (1 == row.enterPay || '1' == row.enterPay) {
+                            if(1 == row.enterPay || '1' == row.enterPay){
                                 table += '<li>' + '<span class="badge badge-info">卡商代付已审核</span>' + '</li>'
                             }
-                            if (1 == row.lockWit || '1' == row.lockWit) {
+                            if(1 == row.lockWit || '1' == row.lockWit){
                                 table += '<li>' + '<span class="badge badge-warning">出款已锁定</span>' + '</li>'
                             }
-                            if (1 == row.grabOrder || '1' == row.grabOrder) {
+                            if(1 == row.grabOrder || '1' == row.grabOrder){
                                 table += '<li>' + '<span class="badge badge-info">卡商抢单出款</span>' + '</li>'
                             }
-                            if (2 == row.grabOrder || '2' == row.grabOrder) {//卡商放弃出款
+                            if(2 == row.grabOrder || '2' == row.grabOrder ){//卡商放弃出款
                                 table += '<li>' + '<span class="badge badge-warning">卡商放弃出款</span>' + '</li>'
                             }
-                            table += '</ul>'
+                           table += '</ul>'
                             return table;
                         } else if (value == 3) {
                             return '<span class="badge badge-info">卡商充值->渠道主交易订单</span>'
@@ -257,7 +256,7 @@
                 {
                     field: 'orderStatus', title: '订单状态',
                     formatter: function (value, row, index) {
-                        return $.table.selectDictLabel(orderstatusDatas, value);
+                        return  $.table.selectDictLabel(orderstatusDatas, value);
                     }
                 },
                 // {field: 'externalOrderId',   title: '外部订单号'},
@@ -284,12 +283,12 @@
                         table += '<li><span style="color: green"><strong>' + '当页充值实际到账：' + sumActualAmount + '</strong></span><span style="color: red">&nbsp;&nbsp;&nbsp;&nbsp;<strong>当日总充值实际到账 ： ' + sunCountActualAmount + '</strong></span></li>'
                         table += '</ul>'
                         return table;
-                    }, formatter: function (value, row, index) {
+                    },formatter: function (value, row, index) {
                         var table = '<ul>'
                         table += '<li>' + '交易金额：' + row.dealAmount + '</li>'
                         table += '<li>' + '交易货币：' + row.currency + '</li>'
 
-                        if (1 == row.orderType) {
+                        if(1 == row.orderType  ){
                             table += '<li>' + '交易付款人：' + row.payer + '</li>'
                         }
                         table += '</ul>'
@@ -297,33 +296,31 @@
                     }
 
                 },
-                {
-                    field: 'orderQr', title: '银行卡信息', formatter: function (value, row, index) {
+                {field: 'orderQr', title: '银行卡信息',formatter: function (value, row, index) {
                         var table = '<ul>'
-                        table += '<li  >' + '银行卡：' + '<a onclick="$.operate.openAccount(\'' + row.orderQr + '\',\'流水\',\'viewBankDataUrl\')">' + row.orderQr + '</a>' + '</li>'
-                        table += '<li  >' + row.bankAccount + '</li>'
-                        if (row.bankAmountNow) {
-                            table += '<li>' + '真实余额：' + '<span style="color: red">' + row.bankAmountNow + '</span>' + '</li>'
-                            table += '<li>' + '业务余额：' + '<span style="color: red">' + row.systemAmount + '</span>' + '</li>'
+                        table += '<li  >' + '银行卡：' + '<a onclick="$.operate.openAccount(\'' + row.orderQr + '\',\'流水\',\'viewBankDataUrl\')">'+row.orderQr +'</a>'+ '</li>'
+                        table += '<li  >' + row.bankAccount  + '</li>'
+                        if(row.bankAmountNow){
+                            table += '<li>' +'真实余额：'+ '<span style="color: red">'+ row.bankAmountNow + '</span>'+'</li>'
+                            table += '<li>' +'业务余额：'+ '<span style="color: red">'+ row.systemAmount + '</span>'+'</li>'
                         }
-                        if (null != row.payInfo && '' != row.payInfo) {
+                        if(null != row.payInfo && '' != row.payInfo){
                             table += '<li>' + '回调：' + row.payInfo + '</li>'
                         }
-                        if (1 == row.orderType && 'YES' == row.isNotify) {
-                            table += '<li>' + '商户回调已发送' + '</li>'
+                        if(1 == row.orderType  &&  'YES' == row.isNotify){
+                            table += '<li>' + '商户回调已发送'  + '</li>'
                         }
                         table += '</ul>'
                         return table;
-                    }
-                },
+                    }},
                 /*                {   field: 'orderQr',       title: '关联二维码'  },*/
                 /*
                 {   field: 'isNotify',      title: '发送通知'   },*/
                 {
                     field: 'payImg', title: '出款凭证',
                     formatter: function (value, row, index) {
-                        if (row.orderType == 4 && 2 == row.orderStatus) {
-                            return ' <img class="image" src= ' + row.payImg + ' style="width: 200px; height: 200px;"' + '>'
+                        if (row.orderType==4 && 2 == row.orderStatus  ){
+                            return ' <img class="image" src= '+ row.payImg + ' style="width: 200px; height: 200px;"' + '>'
                         }
                     }
                 },
@@ -335,22 +332,25 @@
                         table += '<li>' + '修改时间：' + row.submitTime + '</li>'
 
 
-                        if (1 == row.enterPay || '1' == row.enterPay) {
+
+
+
+                        if(1 == row.enterPay || '1' == row.enterPay){
                             table += '<li>' + '代付审核时间：' + row.enterPayTime + '</li>'
                         }
-                        if (4 == row.orderType && 1 == row.orderStatus) {
-                            table += '<strong><li color="#FF0000"   > 处理时间 ' + '<span id = ' + row.orderId + ' ></span>' + '</li></strong>'
+                        if(4 == row.orderType && 1 ==  row.orderStatus ){
+                            table += '<strong><li color="#FF0000"   > 处理时间 ' +'<span id = '+row.orderId +' ></span>' + '</li></strong>'
                             window.setInterval(function () {
                                 var date1 = new Date()
                                 var date2 = new Date(row.submitTime)
                                 var s1 = date1.getTime(), s2 = date2.getTime();
-                                var total = (s1 - s2) / 1000;//当前时间差
-                                total = parseInt(total)
-                                $('#' + row.orderId + '').html('<s></s>' + total + '秒');
+                                var total = (s1 - s2 ) / 1000;//当前时间差
+                                total =  parseInt(total)
+                                $('#'+row.orderId+'').html('<s></s>' + total + '秒');
                             }, 1000);
                         }
 
-                        if (null != row.operater && '' != row.operater) {
+                        if(null != row.operater && '' != row.operater){
                             table += '<li>' + '操作人：' + row.operater + '</li>'
                         }
                         table += '</ul>'
@@ -377,24 +377,19 @@
                             actions.push('<a class="btn btn-danger btn-xs ' + updataOrder + '" href="javascript:void(0)" onclick="onUpdataOrder(\'' + row.id + '\')"><i class="fa fa-google-wallet"></i>转发财务</a> ');
                         }
 
-                        if (row.orderStatus === '1' && row.orderType == 4 && 1 != row.grabOrder) {
+                        if (row.orderStatus === '1' && row.orderType == 4 &&  1 != row.grabOrder) {
                             actions.push('<a class="btn btn-warning btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="updateBankCard(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>修改出款卡商</a> ');
                             actions.push('<a class="btn btn-warning btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="updateBankCardMore(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>拆单出款</a> ');
                         }
-                        if (row.orderType == 4 && row.orderStatus == 2 && row.enterPay == 0) {
+                        if (  row.orderType == 4 &&  row.orderStatus == 2 && row.enterPay == 0 ) {
                             actions.push('<a class="btn btn-warning btn-xs ' + updataOrder + '" href="javascript:void(0)" onclick="enterPay(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>审核出款</a> ');
                         }
-                        if (row.lockWit == 1 && row.orderStatus == 1) {
+                        if ( row.lockWit == 1 &&  row.orderStatus == 1 ) {
                             actions.push('<a class="btn btn-danger btn-xs' + updataOrder + '" href="javascript:void(0)" onclick="unLockPay(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>出款解锁</a> ');
                         }
                         return actions.join('');
                     }
-                }],
-            onLoadSuccess: function(data){
-                //初始化处理cookie置顶
-                var topId = $.cookie('orderDealWit_setTop');
-                $(".settop"+topId).click();
-            }
+                }]
         };
         $.table.init(options);
 
@@ -436,9 +431,9 @@
     function updateBankCard(orderId) {
         title = "修改出款卡商"
         table.set();
-        var _url = $.operate.openUrl(orderId);
+        var _url =  $.operate.openUrl(orderId);
         var _width = 800;
-        var _height = $(window).height() - 50;
+        var _height =  $(window).height() - 50 ;
         //如果是移动端，就使用自适应大小弹窗
         if (navigator.userAgent.match(/(iPhone|iPod|Android|ios|ipad)/i)) {
             _width = 'auto';
@@ -461,9 +456,9 @@
     function updateBankCardMore(orderId) {
         title = "拆弹出款"
         table.set();
-        var _url = $.operate.openUrl(orderId + "====amount");
+        var _url =  $.operate.openUrl(orderId+"====amount");
         var _width = 800;
-        var _height = $(window).height() - 50;
+        var _height =  $(window).height() - 50 ;
         //如果是移动端，就使用自适应大小弹窗
         if (navigator.userAgent.match(/(iPhone|iPod|Android|ios|ipad)/i)) {
             _width = 'auto';

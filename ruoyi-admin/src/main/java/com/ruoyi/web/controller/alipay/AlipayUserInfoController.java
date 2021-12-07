@@ -195,6 +195,18 @@ public class AlipayUserInfoController extends BaseController {
         return null;
     }
 
+    @Log(title = "用户详情", businessType = BusinessType.UPDATE)
+    @PostMapping("/editC")
+    @RequiresPermissions("alipay:merchant:edit")
+    @ResponseBody
+    public AjaxResult editCSave(AlipayUserInfo alipayUserInfo) {
+        Double credit = alipayUserInfo.getCredit();
+        if(credit < 0.0  || credit > 100.0 ){
+            return AjaxResult.error("信用分不合法");
+        }
+        return toAjax(alipayUserInfoService.updateAlipayUserInfo(alipayUserInfo));
+    }
+
     /**
      * 删除用户详情(调用api)
      */

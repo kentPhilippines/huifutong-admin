@@ -89,4 +89,9 @@ public interface AlipayMediumEntityMapper {
             "WHERE  qrcodeId  = #{userId} and isDeal  = '2' and status = 1  ")
     List<AlipayMediumEntity> findBankSum(@Param("userId") String userId);
 
+
+
+
+    @Select("select * from alipay_medium where   isDeal  = '2' and status = 1")
+    List<AlipayMediumEntity> findOpenMed();
 }
