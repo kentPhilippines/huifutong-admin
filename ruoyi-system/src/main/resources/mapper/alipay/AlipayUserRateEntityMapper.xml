@@ -41,7 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 </foreach>
             </if>
         </where>
-        order by createTime desc
+        order by switchs desc,createTime desc
     </select>
 
     <select id="selectAlipayUserRateEntityById" parameterType="Long" resultMap="AlipayUserRateEntityResult">
