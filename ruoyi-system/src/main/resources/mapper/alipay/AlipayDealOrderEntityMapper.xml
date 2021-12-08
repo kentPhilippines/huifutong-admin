@@ -46,13 +46,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="bankAmountNow" column="bankAmountNow"/>
         <result property="recordType" column="recordType"/>
         <result property="operater" column="operater"/>
+        <result property="auditLog" column="auditLog"/>
     </resultMap>
 
     <sql id="selectAlipayDealOrderEntityVo">
         select id, orderId,currency, associatedId, orderStatus,
         dealAmount, dealFee, actualAmount, orderType, orderAccount,payer, orderQrUser, orderQr, externalOrderId, generationIp, dealDescribe, notify, back, isNotify,
          createTime, submitTime, feeId, status, retain1, retain2,grabOrder,systemAmount,
-         retain3, retain4 , txhash  ,   payImg  , payInfo ,enterPay , lockWit , lockWitTime ,enterPayTime , bankAmountNow from alipay_deal_order
+         retain3, retain4 , txhash  ,   payImg  , payInfo ,enterPay , lockWit , lockWitTime ,enterPayTime , bankAmountNow,auditLog from alipay_deal_order
     </sql>
     <select id="selectAlipayDealOrderEntityList" parameterType="AlipayDealOrderEntity" resultMap="AlipayDealOrderEntityResult">
         <include refid="selectAlipayDealOrderEntityVo"/>
@@ -206,6 +207,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="retain4 != null  and retain4 != ''">retain4 = #{retain4},</if>
             <if test="lockWit != null  and lockWit != ''">lockWit = #{lockWit},</if>
             <if test="enterPayTime != null  ">enterPayTime =  #{enterPayTime},</if>
+            <if test="auditLog != null  and auditLog != ''">auditLog =  CONCAT(ifnull(auditLog,''),#{auditLog}),</if>
         </trim>
         where id = #{id}
     </update>
@@ -215,6 +217,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="recordType != null ">recordType = #{recordType},</if>
             <if test="operater != null ">operater = #{operater},</if>
+            <if test="auditLog != null  and auditLog != ''">auditLog =  CONCAT(ifnull(auditLog,''),#{auditLog}),</if>
         </trim>
         where orderId = #{orderId}
     </update>

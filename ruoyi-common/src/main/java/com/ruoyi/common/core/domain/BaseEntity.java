@@ -76,6 +76,18 @@ public class BaseEntity implements Serializable {
 
     private String[] paramStr2;
 
+    private String auditLog ;
+
+    public String getAuditLog() {
+        return auditLog;
+    }
+
+    public void setAuditLog(String auditLog) {
+        this.auditLog = auditLog;
+    }
+
+
+
 
     public String[] getParamStr2() {
         return paramStr2;

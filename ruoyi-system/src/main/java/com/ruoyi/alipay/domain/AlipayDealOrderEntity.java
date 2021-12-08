@@ -25,6 +25,9 @@ public class AlipayDealOrderEntity extends BaseEntity {
     private String recordType;
     private String operater;
 
+
+
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }

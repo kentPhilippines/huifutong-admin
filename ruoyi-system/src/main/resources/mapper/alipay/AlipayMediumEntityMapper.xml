@@ -38,12 +38,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="isClickPay" property="isClickPay"  />
         <result column="sc" property="sc"  />
         <result column="sumAmounlimit" property="sumAmounlimit"  />
+        <result column="auditLog" property="auditLog"  />
     </resultMap>
 
     <sql id="selectAlipayMediumEntityVo">
         select id, error,mediumId, mediumNumber, mediumHolder, mediumNote, mediumPhone, qrcodeId,yseToday,
          code, createTime, submitTime, status, isDeal,black,toDayDeal,sumDayDeal,toDayWit,sumDayWit,startAmount,sumDayWit,startTime,endTime,isClickPay,sc,sumAmounlimit,
-         attr,bankcode,account,mountNow,mountSystem,mountLimit,notfiyMask,witAmount
+         attr,bankcode,account,mountNow,mountSystem,mountLimit,notfiyMask,witAmount,auditLog
          from alipay_medium
     </sql>
 
@@ -130,6 +131,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isClickPay != null ">isClickPay = #{isClickPay},</if>
             <if test="sc != null  and sc != ''">sc = #{sc},</if>
             <if test="sumAmounlimit != null  and sumAmounlimit != ''">sumAmounlimit = #{sumAmounlimit},</if>
+            <if test="auditLog != null  and auditLog != ''">auditLog =  CONCAT(ifnull(auditLog,''),#{auditLog}),</if>
         </trim>
         where id = #{id}
     </update>
@@ -161,6 +163,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isClickPay != null ">isClickPay = #{isClickPay},</if>
             <if test="sc != null  and sc != ''">sc = #{sc},</if>
             <if test="sumAmounlimit != null  and sumAmounlimit != ''">sumAmounlimit = #{sumAmounlimit},</if>
+            <if test="auditLog != null  and auditLog != ''">auditLog =  CONCAT(ifnull(auditLog,''),#{auditLog}),</if>
         </trim>
         where account = #{params.bankName}
     </update>
@@ -184,6 +187,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="mountNow != null  and mountNow != ''">mountNow = #{mountNow},</if>
             <if test="mountSystem != null  and mountSystem != ''">mountSystem = #{mountSystem},</if>
             <if test="mountLimit != null  and mountLimit != ''">mountLimit = #{mountLimit},</if>
+            <if test="auditLog != null  and auditLog != ''">auditLog =  CONCAT(ifnull(auditLog,''),#{auditLog}),</if>
         </trim>
         where code = #{code}
     </update>
