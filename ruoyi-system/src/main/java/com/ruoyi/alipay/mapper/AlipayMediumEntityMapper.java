@@ -45,6 +45,17 @@ public interface AlipayMediumEntityMapper {
      */
     public int updateAlipayMediumEntity(AlipayMediumEntity alipayMediumEntity);
 
+
+    /**
+     * 修改收款媒介列
+     *
+     * @param alipayMediumEntity 收款媒介列
+     * @return 结果
+     */
+    public int updateAlipayMediumEntityByBankName(AlipayMediumEntity alipayMediumEntity);
+
+
+
     /**
      * 根据code修改上限金额
      *
@@ -94,4 +105,8 @@ public interface AlipayMediumEntityMapper {
 
     @Select("select * from alipay_medium where   isDeal  = '2' and status = 1")
     List<AlipayMediumEntity> findOpenMed();
+
+
+    @Select("select account from alipay_medium group by account")
+    List<String> findAllBankNames();
 }

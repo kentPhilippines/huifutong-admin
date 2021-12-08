@@ -134,6 +134,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
+    <update id="updateAlipayMediumEntityByBankName" parameterType="AlipayMediumEntity">
+        update alipay_medium
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mediumId != null  and mediumId != ''">mediumId = #{mediumId},</if>
+            <if test="mediumNumber != null  and mediumNumber != ''">mediumNumber = #{mediumNumber},</if>
+            <if test="mediumHolder != null  and mediumHolder != ''">mediumHolder = #{mediumHolder},</if>
+            <if test="mediumNote != null  and mediumNote != ''">mediumNote = #{mediumNote},</if>
+            <if test="mediumPhone != null  and mediumPhone != ''">mediumPhone = #{mediumPhone},</if>
+            <if test="qrcodeId != null  and qrcodeId != ''">qrcodeId = #{qrcodeId},</if>
+            <if test="code != null  and code != ''">code = #{code},</if>
+            <if test="createTime != null ">createTime = #{createTime},</if>
+            <if test="submitTime != null ">submitTime = #{submitTime},</if>
+            <if test="witAmount != null ">witAmount = #{witAmount},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="isDeal != null  and isDeal != ''">isDeal = #{isDeal},</if>
+            <if test="attr != null  and attr != ''"> attr = #{attr},</if>
+            <if test="mountNow != null  and mountNow != ''"> mountNow = #{mountNow},</if>
+            <if test="mountSystem != null  and mountSystem != ''"> mountSystem = #{mountSystem},</if>
+            <if test="mountLimit != null  and mountLimit != ''"> mountLimit = #{mountLimit},</if>
+            <if test="black != null  and black != ''"> black = #{black},</if>
+            <if test="startAmount != null  and startAmount != ''">startAmount = #{startAmount},</if>
+            <if test="error != null  and error != ''"> error = #{error},</if>
+            <if test="startTime != null  and startTime != ''">startTime = #{startTime},</if>
+            <if test="endTime != null  and endTime != ''">endTime = #{endTime},</if>
+            <if test="isClickPay != null ">isClickPay = #{isClickPay},</if>
+            <if test="sc != null  and sc != ''">sc = #{sc},</if>
+            <if test="sumAmounlimit != null  and sumAmounlimit != ''">sumAmounlimit = #{sumAmounlimit},</if>
+        </trim>
+        where account = #{params.bankName}
+    </update>
+
     <update id="updateAlipayMediumEntityByCode" parameterType="AlipayMediumEntity">
         update alipay_medium
         <trim prefix="SET" suffixOverrides=",">

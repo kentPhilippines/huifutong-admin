@@ -44,6 +44,14 @@ public interface IAlipayMediumEntityService {
     public int updateAlipayMediumEntity(AlipayMediumEntity alipayMediumEntity);
 
     /**
+     * 修改收款媒介列 by bankName
+     *
+     * @param alipayMediumEntity 收款媒介列
+     * @return 结果
+     */
+    public int updateAlipayMediumEntityByBankName(AlipayMediumEntity alipayMediumEntity);
+
+    /**
      * 根据code修改上限金额
      *
      * @param alipayMediumEntity 收款媒介列
@@ -78,5 +86,10 @@ public interface IAlipayMediumEntityService {
 
     List<AlipayMediumEntity> findOpenMed();
 
+    /**
+     * 查询所有的银行名称
+     * @return
+     */
+    public List<String> findAllBankNames();
 
 }

@@ -1332,6 +1332,8 @@ var table = {
                     $.modal.open(title, $.operate.addQuotaUrlM(id))
                 }else if (flag == 'editAmountUrl') {
                     $.modal.open(title, $.operate.editAmountUrl(id))
+                }else if (flag == 'editAmountByBank') {
+                    $.modal.open(title, $.operate.editAmountByBank(id))
                 }else if (flag == 'viewBankDataUrl') {
                     $.modal.open(title, $.operate.viewBankDataUrl(id))
                 }else if (flag == 'editeCreditUrl') {
@@ -1388,6 +1390,21 @@ var table = {
             },
             // 修改信息
             edit: function (id) {
+                table.set();
+                if ($.common.isEmpty(id) && table.options.type == table_type.bootstrapTreeTable) {
+                    var row = $("#" + table.options.id).bootstrapTreeTable('getSelections')[0];
+                    if ($.common.isEmpty(row)) {
+                        $.modal.alertWarning("请至少选择一条记录");
+                        return;
+                    }
+                    var url = table.options.updateUrl.replace("{id}", row[table.options.uniqueId]);
+                    $.modal.open("修改" + table.options.modalName, url);
+                } else {
+                    $.modal.open("修改" + table.options.modalName, $.operate.editUrl(id));
+                }
+            },
+            // 修改一种银行信息
+            editKind: function (id) {
                 table.set();
                 if ($.common.isEmpty(id) && table.options.type == table_type.bootstrapTreeTable) {
                     var row = $("#" + table.options.id).bootstrapTreeTable('getSelections')[0];
@@ -1513,6 +1530,14 @@ var table = {
                 }
                 return url;
             },
+            editAmountByBank: function (id) {
+                var url = "/404.html";
+                if ($.common.isNotEmpty(id)) {
+                    url = table.options.editAmountUrlByBankName.replace("{id}", id);
+                }
+                console.log(url);
+                return url;
+            },
             viewBankDataUrl: function (id) {
                 var url = "/404.html";
                 if ($.common.isNotEmpty(id)) {
@@ -1528,7 +1553,13 @@ var table = {
                 return url;
             },
 
-
+            editAmountByCode: function (id) {
+                var url = "/404.html";
+                if ($.common.isNotEmpty(id)) {
+                    url = table.options.editAmountByCode.replace("{id}", id);
+                }
+                return url;
+            },
             editAmountUrl: function (id) {
                 var url = "/404.html";
                 if ($.common.isNotEmpty(id)) {

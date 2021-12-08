@@ -76,6 +76,19 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     }
 
     /**
+     * 修改收款媒介列
+     *
+     * @param alipayMediumEntity 收款媒介列by bankan
+     * @return 结果
+     */
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    @Override
+    public int
+    updateAlipayMediumEntityByBankName(AlipayMediumEntity alipayMediumEntity) {
+        return alipayMediumEntityMapper.updateAlipayMediumEntityByBankName(alipayMediumEntity);
+    }
+
+    /**
      * 根据code修改上限金额
      *
      * @param alipayMediumEntity 收款媒介列
@@ -122,12 +135,12 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     public AlipayMediumEntity findBankSum(String userId) {
         AlipayMediumEntity medium = new AlipayMediumEntity();
         List<AlipayMediumEntity> bankSum = alipayMediumEntityMapper.findBankSum(userId);
-        for(AlipayMediumEntity med : bankSum){
-            if("open".equals(med.getAmounttype())){
+        for (AlipayMediumEntity med : bankSum) {
+            if ("open".equals(med.getAmounttype())) {
                 medium.setOpenSumBankAmountnow(med.getMountNow());
                 medium.setOpenSumBankAmountsys(med.getMountSystem());
             }
-            if("all".equals(med.getAmounttype())){
+            if ("all".equals(med.getAmounttype())) {
                 medium.setBankSumAmountnow(med.getMountNow());
                 medium.setBankSumAmountsys(med.getMountSystem());
             }
@@ -139,5 +152,12 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public List<AlipayMediumEntity> findOpenMed() {
         return alipayMediumEntityMapper.findOpenMed();
+    }
+
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<String> findAllBankNames() {
+        return alipayMediumEntityMapper.findAllBankNames();
     }
 }

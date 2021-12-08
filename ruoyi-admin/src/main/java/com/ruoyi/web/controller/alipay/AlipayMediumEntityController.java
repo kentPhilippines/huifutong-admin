@@ -112,6 +112,17 @@ public class AlipayMediumEntityController extends BaseController {
     }
 
     /**
+     * 单个媒介修改金额页面
+     */
+    @GetMapping("/editAmountByBank")
+    public String editAmountByBank( ModelMap mmap) {
+        //AlipayMediumEntity alipayMediumEntity = alipayMediumEntityService.selectAlipayMediumEntityById(Long.valueOf(id));
+        mmap.put("alipayMediumEntity", new AlipayMediumEntity());
+        mmap.put("banks",alipayMediumEntityService.findAllBankNames());
+        return prefix + "/editAmountByBank";
+    }
+
+    /**
      * 同种媒介修改金额页面
      */
     @GetMapping("/editAmountByCode/{code}")
@@ -150,6 +161,16 @@ public class AlipayMediumEntityController extends BaseController {
     @ResponseBody
     public AjaxResult editSave(AlipayMediumEntity alipayMediumEntity) {
         return toAjax(alipayMediumEntityService.updateAlipayMediumEntity(alipayMediumEntity));
+    }
+
+    /**
+     * 修改保存收款媒介列
+     */
+    @Log(title = "修改控制", businessType = BusinessType.UPDATE)
+    @PostMapping("/editByBankName")
+    @ResponseBody
+    public AjaxResult editSaveByBankName(AlipayMediumEntity alipayMediumEntity) {
+        return toAjax(alipayMediumEntityService.updateAlipayMediumEntityByBankName(alipayMediumEntity));
     }
 
     /**
