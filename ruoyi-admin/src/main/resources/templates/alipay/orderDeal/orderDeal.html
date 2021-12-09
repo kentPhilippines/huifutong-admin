@@ -140,6 +140,7 @@
     //请求路径
     const prefix = ctx + "alipay/orderDeal";
     const prefix1 = ctx + "alipay/BankSplitInfo";
+    let prefix6 = ctx + "alipay/BankSplitInfo/bank?bankId=";
     let prefix2 = ctx + "alipay/orderDeal/showCode/";
 
 
@@ -264,7 +265,7 @@
                 },
                 {field: 'orderQr', title: '银行卡信息',formatter: function (value, row, index) {
                         var table = '<ul>'
-                        table += '<li  >' + '银行卡：' + '<a onclick="$.operate.openAccount(\'' + row.orderQr + '\',\'流水\',\'viewBankDataUrl\')">'+row.orderQr +'</a>'+ '</li>'
+                        table += '<li  >' + '银行卡：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>'+ '</li>'
                         if(row.bankAmountNow){
                             table += '<li>' +'真实余额：'+ '<span style="color: red">'+ row.bankAmountNow + '</span>'+'</li>'
                             table += '<li>' +'业务余额：'+ '<span style="color: red">'+ row.systemAmount + '</span>'+'</li>'
@@ -345,6 +346,13 @@
         $.modal.confirm("该笔订单确认转为人工处理", function () {
             $.operate.post(prefix + "/updataOrder", {"id": id});
         });
+    }
+
+    function openTab(id) {
+        var strings = id.split(':');
+        var string = strings[2];
+        var url = prefix6 + string
+        $.modal.openTab("银行流水数据",url)
     }
 
     //重新通知
