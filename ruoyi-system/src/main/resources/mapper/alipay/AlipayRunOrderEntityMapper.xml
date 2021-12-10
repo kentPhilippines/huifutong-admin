@@ -26,27 +26,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectAlipayRunOrderEntityVo">
+        select id, orderId, associatedId, orderAccount, runOrderType, amount, generationIp, dealDescribe, acountR, accountW, createTime, submitTime, status, runType, amountType, amountNow, retain4, retain5 from alipay_run_order
         select id, orderId, associatedId, orderAccount, runOrderType, amount, generationIp, dealDescribe, acountR, accountW, createTime, submitTime, status, runType, amountType,
-        amountNow, retain4, retain5 from alipay_run_order
+               amountNow, retain4, retain5 from alipay_run_order
+    </sql>
+    <sql id="selectAlipayRunOrderEntityVoWithUserType">
+        select a.id, a.orderId, a.associatedId, a.orderAccount, a.runOrderType, a.amount, a.generationIp, a.dealDescribe, a.acountR, a.accountW, a.createTime, a.submitTime, a.status, a.runType, a.amountType,
+               a.amountNow, a.retain4, a.retain5,b.userType from alipay_run_order a left join alipay_user_info b on a.orderAccount = b.userId
     </sql>
 
     <select id="selectAlipayRunOrderEntityList" parameterType="AlipayRunOrderEntity" resultMap="AlipayRunOrderEntityResult">
-        <include refid="selectAlipayRunOrderEntityVo"/>
+        <include refid="selectAlipayRunOrderEntityVoWithUserType"/>
         <where>
-            createTime between #{params.dayStart} and #{params.dayEnd}
-            <if test="orderId != null  and orderId != ''"> and orderId = #{orderId}</if>
-            <if test="associatedId != null  and associatedId != ''"> and associatedId = #{associatedId}</if>
-            <if test="orderAccount != null  and orderAccount != ''"> and orderAccount = #{orderAccount}</if>
-            <if test="runOrderType != null "> and runOrderType = #{runOrderType}</if>
-            <if test="amount != null "> and amount = #{amount}</if>
-            <if test="generationIp != null  and generationIp != ''"> and generationIp = #{generationIp}</if>
-            <if test="dealDescribe != null  and dealDescribe != ''"> and dealDescribe = #{dealDescribe}</if>
-            <if test="acountR != null  and acountR != ''"> and acountR = #{acountR}</if>
-            <if test="accountW != null  and accountW != ''"> and accountW = #{accountW}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="runType != null  and runType != ''"> and runType = #{runType}</if>
-            <if test="amountType != null  and amountType != ''"> and amountType = #{amountType}</if>
-            <if test="amountNow != null "> and amountNow = #{amountNow}</if>
+            a.createTime between #{params.dayStart} and #{params.dayEnd}
+            <if test="orderId != null  and orderId != ''"> and a.orderId = #{orderId}</if>
+            <if test="associatedId != null  and associatedId != ''"> and a.associatedId = #{associatedId}</if>
+            <if test="orderAccount != null  and orderAccount != ''"> and a.orderAccount = #{orderAccount}</if>
+            <if test="runOrderType != null "> and a.runOrderType = #{runOrderType}</if>
+            <if test="amount != null "> and a.amount = #{amount}</if>
+            <if test="generationIp != null  and generationIp != ''"> and a.generationIp = #{generationIp}</if>
+            <if test="dealDescribe != null  and dealDescribe != ''"> and a.dealDescribe = #{dealDescribe}</if>
+            <if test="acountR != null  and acountR != ''"> and a.acountR = #{acountR}</if>
+            <if test="accountW != null  and accountW != ''"> and a.accountW = #{accountW}</if>
+            <if test="status != null "> and a.status = #{status}</if>
+            <if test="runType != null  and runType != ''"> and a.runType = #{runType}</if>
+            <if test="amountType != null  and amountType != ''"> and a.amountType = #{amountType}</if>
+            <if test="amountNow != null "> and a.amountNow = #{amountNow}</if>
+            <if test="userType != null  and userType != ''"> and b.userType = #{userType}</if>
         </where>
         order by id desc
     </select>

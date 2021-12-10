@@ -42,6 +42,15 @@
                                         th:value="${dict.dictValue}"></option>
                             </select>
                         </li>
+                        <li class="select-selectpicker">
+                            <label>账户类型： </label>
+                            <select id="userType" name="userType" th:with="type=${@dict.getType('userType')}"
+                                    class="selectpicker" data-none-selected-text="请选择">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+                                        th:value="${dict.dictValue}" th:selected="${ dict.dictValue} == ${#httpServletRequest.getParameter('userType')} "></option>
+                            </select>
+                        </li>
                         <li class="select-time">
                             <span>创建时间：</span>
                             <input type="text" class="time-input" id="startTime" placeholder="开始时间"

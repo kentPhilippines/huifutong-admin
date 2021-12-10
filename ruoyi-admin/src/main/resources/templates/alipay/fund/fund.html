@@ -29,7 +29,7 @@
                                     class="selectpicker" data-none-selected-text="请选择">
                                 <option value="">所有</option>
                                 <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
-                                        th:value="${dict.dictValue}"></option>
+                                        th:value="${dict.dictValue}" th:selected="${ dict.dictValue} == ${#httpServletRequest.getParameter('userType')} "></option>
                             </select>
                         </li>
                         <li class="select-selectpicker">

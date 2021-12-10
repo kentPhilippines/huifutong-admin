@@ -73,6 +73,9 @@ public class AlipayUserFundEntityController extends BaseController {
     @Autowired
     private IAlipayUserInfoService alipayUserInfoService;
     /**
+     * 商户	1
+     * 卡商	2
+     * 渠道	3
      * 查询用户资金账户列表
      */
     @PostMapping("/list")

@@ -156,6 +156,18 @@ public class AlipayRunOrderEntity extends BaseEntity {
     @Excel(name = "代理商分润账户来源")
     private String retain4;
 
+    private String userType;
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+
+
     /**
      * 备用字段添加业务使用
      */
