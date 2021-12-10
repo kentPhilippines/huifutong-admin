@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,14 +45,10 @@ public class AlipayBankSplitEntityController extends BaseController {
     }
 
 
-    @GetMapping("/bank/{orderQr}")
-    public String info(@PathVariable("orderQr") String orderQr, ModelMap modelMap) {
-        String str = "";
-        if (orderQr != null) {
-            String[] split = orderQr.trim().split(":");
-            str = split[2];
-        }
-        modelMap.put("bankId", str);
+    @GetMapping("/bank")
+    public String info(ModelMap modelMap, HttpServletRequest request) {
+        String bankId=request.getParameter("bankId");
+        modelMap.put("bankId", bankId);
         return prefix + "/BankSplitInfo";
     }
 
