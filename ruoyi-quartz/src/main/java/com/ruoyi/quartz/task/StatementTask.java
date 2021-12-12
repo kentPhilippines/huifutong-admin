@@ -40,7 +40,7 @@ public class StatementTask {
             statements.stream().forEach(alipayStatement -> {
 
                 List<AlipayUserMedium> userMediums = alipayMediumEntities.stream().filter(alipayMediumEntity -> alipayMediumEntity.getQrcodeId().equals(alipayStatement.getUserId())).map(medium -> BeanUtil.toBean(medium, AlipayUserMedium.class)).collect(Collectors.toList());
-
+                BeanUtil.copyProperties(alipayStatement,userMediums);
                 alipayStatement.setCardBalanceDetail(JSON.toJSONString(userMediums));
 
                 alipayStatementService.insertAlipayStatement(alipayStatement);
