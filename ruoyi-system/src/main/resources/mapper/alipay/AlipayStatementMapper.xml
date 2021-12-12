@@ -55,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 group by
                     qrcodeId
             ) as am on
-                auf.userId = am.qrcodeId where auf.userType ='2'
+                auf.userId = am.qrcodeId where auf.userType ='2' and (auf.todayWitAmount >0 or auf.todayDealAmount >0)
     </select>
     <select id="selectAlipayStatementList" parameterType="AlipayStatement" resultMap="AlipayStatementResult">
         <include refid="selectAlipayStatementVo"/>
