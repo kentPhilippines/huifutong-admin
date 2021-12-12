@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.alipay.mapper.AlipayStatementMapper">
+    
+    <resultMap type="AlipayStatement" id="AlipayStatementResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userType"    column="user_type"    />
+        <result property="rollingFunds"    column="rolling_funds"    />
+        <result property="deductibleCommission"    column="deductible_commission"    />
+        <result property="deposit"    column="deposit"    />
+        <result property="freeze"    column="freeze"    />
+        <result property="businessBalance"    column="business_balance"    />
+        <result property="referBalance"    column="refer_balance"    />
+        <result property="cardBalanceDetail"    column="card_balance_detail"    />
+        <result property="businessBalanceDiff"    column="business_balance_diff"    />
+        <result property="referBalanceDiff"    column="refer_balance_diff"    />
+        <result property="remark"    column="remark"    />
+        <result property="dateTime"    column="date_time"    />
+    </resultMap>
+
+    <sql id="selectAlipayStatementVo">
+        select id, user_id, user_type, rolling_funds, deductible_commission, deposit, freeze, business_balance, refer_balance, card_balance_detail, business_balance_diff, refer_balance_diff, remark, date_time from alipay_statement
+    </sql>
+
+    <select id="selectAlipayStatementList" parameterType="AlipayStatement" resultMap="AlipayStatementResult">
+        <include refid="selectAlipayStatementVo"/>
+        <where>  
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="userType != null  and userType != ''"> and user_type = #{userType}</if>
+            <if test="rollingFunds != null "> and rolling_funds = #{rollingFunds}</if>
+            <if test="deductibleCommission != null "> and deductible_commission = #{deductibleCommission}</if>
+            <if test="deposit != null "> and deposit = #{deposit}</if>
+            <if test="freeze != null "> and freeze = #{freeze}</if>
+            <if test="businessBalance != null "> and business_balance = #{businessBalance}</if>
+            <if test="referBalance != null "> and refer_balance = #{referBalance}</if>
+            <if test="cardBalanceDetail != null  and cardBalanceDetail != ''"> and card_balance_detail = #{cardBalanceDetail}</if>
+            <if test="businessBalanceDiff != null "> and business_balance_diff = #{businessBalanceDiff}</if>
+            <if test="referBalanceDiff != null "> and refer_balance_diff = #{referBalanceDiff}</if>
+            <if test="dateTime != null "> and date_time = #{dateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectAlipayStatementById" parameterType="Long" resultMap="AlipayStatementResult">
+        <include refid="selectAlipayStatementVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAlipayStatement" parameterType="AlipayStatement" useGeneratedKeys="true" keyProperty="id">
+        insert into alipay_statement
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">user_id,</if>
+            <if test="userType != null  and userType != ''">user_type,</if>
+            <if test="rollingFunds != null ">rolling_funds,</if>
+            <if test="deductibleCommission != null ">deductible_commission,</if>
+            <if test="deposit != null ">deposit,</if>
+            <if test="freeze != null ">freeze,</if>
+            <if test="businessBalance != null ">business_balance,</if>
+            <if test="referBalance != null ">refer_balance,</if>
+            <if test="cardBalanceDetail != null  and cardBalanceDetail != ''">card_balance_detail,</if>
+            <if test="businessBalanceDiff != null ">business_balance_diff,</if>
+            <if test="referBalanceDiff != null ">refer_balance_diff,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="dateTime != null ">date_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">#{userId},</if>
+            <if test="userType != null  and userType != ''">#{userType},</if>
+            <if test="rollingFunds != null ">#{rollingFunds},</if>
+            <if test="deductibleCommission != null ">#{deductibleCommission},</if>
+            <if test="deposit != null ">#{deposit},</if>
+            <if test="freeze != null ">#{freeze},</if>
+            <if test="businessBalance != null ">#{businessBalance},</if>
+            <if test="referBalance != null ">#{referBalance},</if>
+            <if test="cardBalanceDetail != null  and cardBalanceDetail != ''">#{cardBalanceDetail},</if>
+            <if test="businessBalanceDiff != null ">#{businessBalanceDiff},</if>
+            <if test="referBalanceDiff != null ">#{referBalanceDiff},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="dateTime != null ">#{dateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAlipayStatement" parameterType="AlipayStatement">
+        update alipay_statement
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">user_id = #{userId},</if>
+            <if test="userType != null  and userType != ''">user_type = #{userType},</if>
+            <if test="rollingFunds != null ">rolling_funds = #{rollingFunds},</if>
+            <if test="deductibleCommission != null ">deductible_commission = #{deductibleCommission},</if>
+            <if test="deposit != null ">deposit = #{deposit},</if>
+            <if test="freeze != null ">freeze = #{freeze},</if>
+            <if test="businessBalance != null ">business_balance = #{businessBalance},</if>
+            <if test="referBalance != null ">refer_balance = #{referBalance},</if>
+            <if test="cardBalanceDetail != null  and cardBalanceDetail != ''">card_balance_detail = #{cardBalanceDetail},</if>
+            <if test="businessBalanceDiff != null ">business_balance_diff = #{businessBalanceDiff},</if>
+            <if test="referBalanceDiff != null ">refer_balance_diff = #{referBalanceDiff},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="dateTime != null ">date_time = #{dateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAlipayStatementById" parameterType="Long">
+        delete from alipay_statement where id = #{id}
+    </delete>
+
+    <delete id="deleteAlipayStatementByIds" parameterType="String">
+        delete from alipay_statement where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
