@@ -93,4 +93,9 @@ public interface IAlipayMediumEntityService {
      */
     public List<String> findAllBankNames();
 
+
+
+
+
+    List<AlipayMediumEntity> findMedSum();
 }

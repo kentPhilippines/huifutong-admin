@@ -166,4 +166,10 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     public List<String> findAllBankNames() {
         return alipayMediumEntityMapper.findAllBankNames();
     }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayMediumEntity> findMedSum() {
+        return alipayMediumEntityMapper.findMedSum();
+    }
 }

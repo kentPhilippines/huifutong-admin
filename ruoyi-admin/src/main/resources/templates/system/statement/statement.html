@@ -11,55 +11,12 @@
                 <div class="select-list">
                     <ul>
                         <li>
-                            <p>参考余额差额：</p>
+                            <p>用户账号：</p>
                             <input type="text" name="userId"/>
                         </li>
-                        <li>
-                            <p>参考余额差额：</p>
-                            <select name="userType" th:with="type=${@dict.getType('')}">
-                                <option value="">所有</option>
-                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
-                                        th:value="${dict.dictValue}"></option>
-                            </select>
-                        </li>
-                        <li>
-                            <p>滚动资金：</p>
-                            <input type="text" name="rollingFunds"/>
-                        </li>
-                        <li>
-                            <p>可取佣金：</p>
-                            <input type="text" name="deductibleCommission"/>
-                        </li>
-                        <li>
-                            <p>可取佣金：</p>
-                            <input type="text" name="deposit"/>
-                        </li>
-                        <li>
-                            <p>可取佣金：</p>
-                            <input type="text" name="freeze"/>
-                        </li>
-                        <li>
-                            <p>可取佣金：</p>
-                            <input type="text" name="businessBalance"/>
-                        </li>
-                        <li>
-                            <p>参考余额：</p>
-                            <input type="text" name="referBalance"/>
-                        </li>
-                        <li>
-                            <p>银行卡余额详细：</p>
-                            <input type="text" name="cardBalanceDetail"/>
-                        </li>
-                        <li>
-                            <p>业务余额差额：</p>
-                            <input type="text" name="businessBalanceDiff"/>
-                        </li>
-                        <li>
-                            <p>参考余额差额：</p>
-                            <input type="text" name="referBalanceDiff"/>
-                        </li>
+
                         <li class="select-time">
-                            <p>参考余额差额：</p>
+                            <p>时间：</p>
                             <input type="text" class="time-input" id="startTime" placeholder="开始时间"
                                    name="params[beginDateTime]"/>
                             <span>-</span>
@@ -78,17 +35,6 @@
         </div>
 
         <div class="btn-group-sm" id="toolbar" role="group">
-            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:statement:add">
-                <i class="fa fa-plus"></i> 添加
-            </a>
-            <a class="btn btn-primary single disabled" onclick="$.operate.edit()"
-               shiro:hasPermission="system:statement:edit">
-                <i class="fa fa-edit"></i> 修改
-            </a>
-            <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
-               shiro:hasPermission="system:statement:remove">
-                <i class="fa fa-remove"></i> 删除
-            </a>
             <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:statement:export">
                 <i class="fa fa-download"></i> 导出
             </a>
@@ -166,13 +112,13 @@
                 },
                 {
                     field: 'remark',
-                    title: '参考余额差额'
+                    title: '备注'
                 },
                 {
                     field: 'dateTime',
-                    title: '参考余额差额'
+                    title: '时间'
                 },
-                {
+              /*  {
                     title: '操作',
                     align: 'center',
                     formatter: function (value, row, index) {
@@ -181,7 +127,10 @@
                         actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
-                }]
+                }*/
+
+
+                ]
         };
         $.table.init(options);
     });

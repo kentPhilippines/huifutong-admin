@@ -217,6 +217,9 @@
                 {
                     field: 'orderQrUser', title: '渠道账户', formatter: function (value, row, index) {
                         var table = '<ul>'
+                        if(row.orderQrUser == 'zhongbang-bank'){
+                            row.orderQrUser = '切款账户';
+                        }
                         table += '<li>' + '渠道账号：' + row.orderQrUser + '</li>'
                         table += '<li>' + '渠道昵称：' + row.channelName + '</li>'
                         table += '<li>' + '产品类型：' + row.retain1 + '</li>'
@@ -362,7 +365,6 @@
                     field: 'auditLog',
                     title: '操作记录'
                 },
-                {
                 {
                     title: '操作',
                     align: 'left',

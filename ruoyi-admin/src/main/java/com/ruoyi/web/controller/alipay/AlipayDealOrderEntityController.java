@@ -275,6 +275,11 @@ public class AlipayDealOrderEntityController extends BaseController {
             }
         }
         AlipayDealOrderEntity order = alipayDealOrderEntityService.findOrderByOrderId(orderId);
+        String operater = order.getOperater();
+        if(StrUtil.isNotEmpty(operater) && !ShiroUtils.getLoginName().equals(operater)){
+            mmap.put("errorMessage", "请与第一切款人联系完成切款，当前账号暂无权限");
+            return prefix + "/business";
+        }
         if (1 == order.getLockWit()) {
             Date lockWitTime = order.getLockWitTime();
             if (DateUtil.isExpired(lockWitTime, DateField.SECOND, Integer.valueOf(600), new Date())) {
@@ -310,6 +315,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         if (StrUtil.isEmpty(mediumNumber)) {
             return error("请选择银行卡");
         }
+
         String orderBankOld = "";
         String orderBankNew = "";
         String orderIdOld = "";
@@ -322,7 +328,10 @@ public class AlipayDealOrderEntityController extends BaseController {
             if(grabOrder == 1 ){
                 return error("当前订单状态错误，请让卡商放弃出款");
             }
-
+            String operater = orderEntityList.getOperater();
+            if(StrUtil.isNotEmpty(operater) && !ShiroUtils.getLoginName().equals(operater)){
+                return error("请与第一切款人联系完成切款，当前账号暂无权限");
+            }
             if(grabOrder == 1 ){
                 return error("当前订单状态错误，请让卡商放弃出款");
             }
@@ -389,7 +398,10 @@ public class AlipayDealOrderEntityController extends BaseController {
             orderEntityList = alipayDealOrderEntityService.findOrderByOrderId(orderId);
             Integer grabOrder = orderEntityList.getGrabOrder();
             Integer lockWit = orderEntityList.getLockWit();
-
+            String operater = orderEntityList.getOperater();
+            if(StrUtil.isNotEmpty(operater) && !ShiroUtils.getLoginName().equals(operater)){
+                return error("请与第一切款人联系完成切款，当前账号暂无权限");
+            }
             if(grabOrder == 1 ){
                 return error("当前订单状态错误，请让卡商放弃出款");
             }

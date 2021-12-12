@@ -110,4 +110,10 @@ public interface AlipayMediumEntityMapper {
 
     @Select("select account from alipay_medium group by account")
     List<String> findAllBankNames();
+
+
+
+
+    @Select(" select sum(mountNow) as mountNow ,  sum( toDayDeal - toDayWit  + yseToday ) as toDayDeal  , qrcodeId  from huifutong_alipay.alipay_medium group by qrcodeId ")
+    List<AlipayMediumEntity> findMedSum();
 }

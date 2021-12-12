@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.alipay;
 
 import java.util.List;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,14 +22,13 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 对账Controller
- * 
+ *
  * @author ruoyi
  * @date 2021-12-11
  */
 @Controller
 @RequestMapping("/system/statement")
-public class AlipayStatementController extends BaseController
-{
+public class AlipayStatementController extends BaseController {
     private String prefix = "system/statement";
 
     @Autowired
@@ -36,8 +36,7 @@ public class AlipayStatementController extends BaseController
 
     @RequiresPermissions("system:statement:view")
     @GetMapping()
-    public String statement()
-    {
+    public String statement() {
         return prefix + "/statement";
     }
 
@@ -47,8 +46,7 @@ public class AlipayStatementController extends BaseController
     @RequiresPermissions("system:statement:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(AlipayStatement alipayStatement)
-    {
+    public TableDataInfo list(AlipayStatement alipayStatement) {
         startPage();
         List<AlipayStatement> list = alipayStatementService.selectAlipayStatementList(alipayStatement);
         return getDataTable(list);
@@ -61,8 +59,7 @@ public class AlipayStatementController extends BaseController
     @Log(title = "对账", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(AlipayStatement alipayStatement)
-    {
+    public AjaxResult export(AlipayStatement alipayStatement) {
         List<AlipayStatement> list = alipayStatementService.selectAlipayStatementList(alipayStatement);
         ExcelUtil<AlipayStatement> util = new ExcelUtil<AlipayStatement>(AlipayStatement.class);
         return util.exportExcel(list, "statement");
@@ -72,8 +69,7 @@ public class AlipayStatementController extends BaseController
      * 新增对账
      */
     @GetMapping("/add")
-    public String add()
-    {
+    public String add() {
         return prefix + "/add";
     }
 
@@ -84,8 +80,7 @@ public class AlipayStatementController extends BaseController
     @Log(title = "对账", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(AlipayStatement alipayStatement)
-    {
+    public AjaxResult addSave(AlipayStatement alipayStatement) {
         return toAjax(alipayStatementService.insertAlipayStatement(alipayStatement));
     }
 
@@ -93,8 +88,7 @@ public class AlipayStatementController extends BaseController
      * 修改对账
      */
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Long id, ModelMap mmap)
-    {
+    public String edit(@PathVariable("id") Long id, ModelMap mmap) {
         AlipayStatement alipayStatement = alipayStatementService.selectAlipayStatementById(id);
         mmap.put("alipayStatement", alipayStatement);
         return prefix + "/edit";
@@ -107,8 +101,7 @@ public class AlipayStatementController extends BaseController
     @Log(title = "对账", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(AlipayStatement alipayStatement)
-    {
+    public AjaxResult editSave(AlipayStatement alipayStatement) {
         return toAjax(alipayStatementService.updateAlipayStatement(alipayStatement));
     }
 
@@ -117,10 +110,9 @@ public class AlipayStatementController extends BaseController
      */
     @RequiresPermissions("system:statement:remove")
     @Log(title = "对账", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
+    @PostMapping("/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
-    {
+    public AjaxResult remove(String ids) {
         return toAjax(alipayStatementService.deleteAlipayStatementByIds(ids));
     }
 }

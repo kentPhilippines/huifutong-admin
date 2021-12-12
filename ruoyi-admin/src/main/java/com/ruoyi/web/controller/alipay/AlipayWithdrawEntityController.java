@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import com.ruoyi.alipay.domain.*;
 import com.ruoyi.alipay.service.*;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.constant.StaticConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -167,6 +168,7 @@ public class AlipayWithdrawEntityController extends BaseController {
     @Log(title = "代付订单确认", businessType = BusinessType.UPDATE)
     @PostMapping("/merchant/approval")
     @ResponseBody
+    @RepeatSubmit
     public AjaxResult apporval(AlipayWithdrawEntity alipayWithdrawEntity) {
         // 获取当前的用户
         SysUser currentUser = ShiroUtils.getSysUser();
