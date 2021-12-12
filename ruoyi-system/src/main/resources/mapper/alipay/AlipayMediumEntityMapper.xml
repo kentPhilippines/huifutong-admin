@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.alipay.mapper.AlipayMediumEntityMapper">
     <resultMap type="AlipayMediumEntity" id="AlipayMediumEntityResult">
-        <result property="id"    column="id"    />
-        <result property="mediumId"    column="mediumId"    />
+        <result property="id" column="id"/>
+        <result property="mediumId" column="mediumId"/>
         <result property="mediumNumber" column="mediumNumber"/>
         <result property="mediumHolder" column="mediumHolder"/>
         <result property="mediumNote" column="mediumNote"/>
@@ -33,45 +33,89 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="sumDayWit" property="sumDayWit" jdbcType="DECIMAL"/>
         <result column="startAmount" property="startAmount" jdbcType="DECIMAL"/>
         <result column="yseToday" property="yseToday" jdbcType="DECIMAL"/>
-        <result column="startTime" property="startTime"  />
-        <result column="endTime" property="endTime"  />
-        <result column="isClickPay" property="isClickPay"  />
-        <result column="sc" property="sc"  />
-        <result column="sumAmounlimit" property="sumAmounlimit"  />
-        <result column="auditLog" property="auditLog"  />
+        <result column="startTime" property="startTime"/>
+        <result column="endTime" property="endTime"/>
+        <result column="isClickPay" property="isClickPay"/>
+        <result column="sc" property="sc"/>
+        <result column="sumAmounlimit" property="sumAmounlimit"/>
+        <result column="auditLog" property="auditLog"/>
     </resultMap>
 
     <sql id="selectAlipayMediumEntityVo">
-        select id, error,mediumId, mediumNumber, mediumHolder, mediumNote, mediumPhone, qrcodeId,yseToday,
-         code, createTime, submitTime, status, isDeal,black,toDayDeal,sumDayDeal,toDayWit,sumDayWit,startAmount,sumDayWit,startTime,endTime,isClickPay,sc,sumAmounlimit,
-         attr,bankcode,account,mountNow,mountSystem,mountLimit,notfiyMask,witAmount,auditLog
-         from alipay_medium
+        select id,
+               error,
+               mediumId,
+               mediumNumber,
+               mediumHolder,
+               mediumNote,
+               mediumPhone,
+               qrcodeId,
+               yseToday,
+               code,
+               createTime,
+               submitTime,
+               status,
+               isDeal,
+               black,
+               toDayDeal,
+               sumDayDeal,
+               toDayWit,
+               sumDayWit,
+               startAmount,
+               sumDayWit,
+               startTime,
+               endTime,
+               isClickPay,
+               sc,
+               sumAmounlimit,
+               attr,
+               bankcode,
+               account,
+               mountNow,
+               mountSystem,
+               mountLimit,
+               notfiyMask,
+               witAmount,
+               auditLog
+        from alipay_medium
     </sql>
 
     <select id="selectAlipayMediumEntityList" parameterType="AlipayMediumEntity" resultMap="AlipayMediumEntityResult">
         <include refid="selectAlipayMediumEntityVo"/>
         <where>
             isDeal = 2
-            <if test="mediumHolder != null  and mediumHolder != ''"> and mediumHolder like concat('%', #{mediumHolder}, '%')</if>
-            <if test="mediumNote != null  and mediumNote != ''"> and mediumNote = #{mediumNote}</if>
-            <if test="mediumPhone != null  and mediumPhone != ''"> and mediumPhone = #{mediumPhone}</if>
-            <if test="qrcodeId != null  and qrcodeId != ''"> and qrcodeId = #{qrcodeId}</if>
-            <if test="account != null  and account != ''"> and account like concat('%', #{account}, '%')</if>
-            <if test="mediumNumber != null  and mediumNumber != ''"> and mediumNumber like concat('%', #{mediumNumber}, '%')</if>
-            <if test="code != null  and code != ''"> and code = #{code}</if>
-            <if test="createTime != null "> and createTime = #{createTime}</if>
-            <if test="submitTime != null "> and submitTime = #{submitTime}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="black != null "> and black = #{black}</if>
+            <if test="mediumHolder != null  and mediumHolder != ''">and mediumHolder like concat('%', #{mediumHolder},
+                '%')
+            </if>
+            <if test="mediumNote != null  and mediumNote != ''">and mediumNote = #{mediumNote}</if>
+            <if test="mediumPhone != null  and mediumPhone != ''">and mediumPhone = #{mediumPhone}</if>
+            <if test="qrcodeId != null  and qrcodeId != ''">and qrcodeId = #{qrcodeId}</if>
+            <if test="account != null  and account != ''">and account like concat('%', #{account}, '%')</if>
+            <if test="mediumNumber != null  and mediumNumber != ''">and mediumNumber like concat('%', #{mediumNumber},
+                '%')
+            </if>
+            <if test="code != null  and code != ''">and code = #{code}</if>
+            <if test="createTime != null ">and createTime = #{createTime}</if>
+            <if test="submitTime != null ">and submitTime = #{submitTime}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="black != null ">and black = #{black}</if>
         </where>
-        order by mountNow  desc
+        order by mountNow desc
     </select>
-    
+
     <select id="selectAlipayMediumEntityById" parameterType="Long" resultMap="AlipayMediumEntityResult">
         <include refid="selectAlipayMediumEntityVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectAlipayMediumEntityByIds" parameterType="java.util.List" resultMap="AlipayMediumEntityResult">
+        <include refid="selectAlipayMediumEntityVo"/>
+        where qrcodeId in
+
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
     <insert id="insertAlipayMediumEntity" parameterType="AlipayMediumEntity" useGeneratedKeys="true" keyProperty="id">
         insert into alipay_medium
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -87,7 +131,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null ">status,</if>
             <if test="isDeal != null  and isDeal != ''">isDeal,</if>
             <if test="black != null  and black != ''">black,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="mediumId != null  and mediumId != ''">#{mediumId},</if>
             <if test="mediumNumber != null  and mediumNumber != ''">#{mediumNumber},</if>
@@ -101,7 +145,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null ">#{status},</if>
             <if test="isDeal != null  and isDeal != ''">#{isDeal},</if>
             <if test="black != null  and black != ''">#{black},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateAlipayMediumEntity" parameterType="AlipayMediumEntity">
@@ -119,19 +163,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="witAmount != null ">witAmount = #{witAmount},</if>
             <if test="status != null ">status = #{status},</if>
             <if test="isDeal != null  and isDeal != ''">isDeal = #{isDeal},</if>
-            <if test="attr != null  and attr != ''"> attr = #{attr},</if>
-            <if test="mountNow != null  and mountNow != ''"> mountNow = #{mountNow},</if>
-            <if test="mountSystem != null  and mountSystem != ''"> mountSystem = #{mountSystem},</if>
-            <if test="mountLimit != null  and mountLimit != ''"> mountLimit = #{mountLimit},</if>
-            <if test="black != null  and black != ''"> black = #{black},</if>
+            <if test="attr != null  and attr != ''">attr = #{attr},</if>
+            <if test="mountNow != null  and mountNow != ''">mountNow = #{mountNow},</if>
+            <if test="mountSystem != null  and mountSystem != ''">mountSystem = #{mountSystem},</if>
+            <if test="mountLimit != null  and mountLimit != ''">mountLimit = #{mountLimit},</if>
+            <if test="black != null  and black != ''">black = #{black},</if>
             <if test="startAmount != null  and startAmount != ''">startAmount = #{startAmount},</if>
-            <if test="error != null  and error != ''"> error = #{error},</if>
+            <if test="error != null  and error != ''">error = #{error},</if>
             <if test="startTime != null  and startTime != ''">startTime = #{startTime},</if>
             <if test="endTime != null  and endTime != ''">endTime = #{endTime},</if>
             <if test="isClickPay != null ">isClickPay = #{isClickPay},</if>
             <if test="sc != null  and sc != ''">sc = #{sc},</if>
             <if test="sumAmounlimit != null  and sumAmounlimit != ''">sumAmounlimit = #{sumAmounlimit},</if>
-            <if test="auditLog != null  and auditLog != ''">auditLog =  CONCAT(ifnull(auditLog,''),#{auditLog}),</if>
+            <if test="auditLog != null  and auditLog != ''">auditLog = CONCAT(ifnull(auditLog,''),#{auditLog}),</if>
         </trim>
         where id = #{id}
     </update>
@@ -151,19 +195,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="witAmount != null ">witAmount = #{witAmount},</if>
             <if test="status != null ">status = #{status},</if>
             <if test="isDeal != null  and isDeal != ''">isDeal = #{isDeal},</if>
-            <if test="attr != null  and attr != ''"> attr = #{attr},</if>
-            <if test="mountNow != null  and mountNow != ''"> mountNow = #{mountNow},</if>
-            <if test="mountSystem != null  and mountSystem != ''"> mountSystem = #{mountSystem},</if>
-            <if test="mountLimit != null  and mountLimit != ''"> mountLimit = #{mountLimit},</if>
-            <if test="black != null  and black != ''"> black = #{black},</if>
+            <if test="attr != null  and attr != ''">attr = #{attr},</if>
+            <if test="mountNow != null  and mountNow != ''">mountNow = #{mountNow},</if>
+            <if test="mountSystem != null  and mountSystem != ''">mountSystem = #{mountSystem},</if>
+            <if test="mountLimit != null  and mountLimit != ''">mountLimit = #{mountLimit},</if>
+            <if test="black != null  and black != ''">black = #{black},</if>
             <if test="startAmount != null  and startAmount != ''">startAmount = #{startAmount},</if>
-            <if test="error != null  and error != ''"> error = #{error},</if>
+            <if test="error != null  and error != ''">error = #{error},</if>
             <if test="startTime != null  and startTime != ''">startTime = #{startTime},</if>
             <if test="endTime != null  and endTime != ''">endTime = #{endTime},</if>
             <if test="isClickPay != null ">isClickPay = #{isClickPay},</if>
             <if test="sc != null  and sc != ''">sc = #{sc},</if>
             <if test="sumAmounlimit != null  and sumAmounlimit != ''">sumAmounlimit = #{sumAmounlimit},</if>
-            <if test="auditLog != null  and auditLog != ''">auditLog =  CONCAT(ifnull(auditLog,''),#{auditLog}),</if>
+            <if test="auditLog != null  and auditLog != ''">auditLog = CONCAT(ifnull(auditLog,''),#{auditLog}),</if>
         </trim>
         where account = #{params.bankName}
     </update>
@@ -187,17 +231,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="mountNow != null  and mountNow != ''">mountNow = #{mountNow},</if>
             <if test="mountSystem != null  and mountSystem != ''">mountSystem = #{mountSystem},</if>
             <if test="mountLimit != null  and mountLimit != ''">mountLimit = #{mountLimit},</if>
-            <if test="auditLog != null  and auditLog != ''">auditLog =  CONCAT(ifnull(auditLog,''),#{auditLog}),</if>
+            <if test="auditLog != null  and auditLog != ''">auditLog = CONCAT(ifnull(auditLog,''),#{auditLog}),</if>
         </trim>
         where code = #{code}
     </update>
 
     <delete id="deleteAlipayMediumEntityById" parameterType="Long">
-        delete from alipay_medium where id = #{id}
+        delete
+        from alipay_medium
+        where id = #{id}
     </delete>
 
     <delete id="deleteAlipayMediumEntityByIds" parameterType="String">
-        delete from alipay_medium where id in 
+        delete from alipay_medium where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -205,7 +251,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="findUserId" parameterType="String" resultMap="AlipayMediumEntityResult">
         <include refid="selectAlipayMediumEntityVo"/>
-          where  mediumNumber = #{mediumNumber}
+        where mediumNumber = #{mediumNumber}
     </select>
 
 

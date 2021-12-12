@@ -11,6 +11,7 @@ import java.util.List;
  * @date 2020-03-17
  */
 public interface IAlipayMediumEntityService {
+    public List<AlipayMediumEntity> selectByIds(List<String> ids);
     /**
      * 查询收款媒介列
      *

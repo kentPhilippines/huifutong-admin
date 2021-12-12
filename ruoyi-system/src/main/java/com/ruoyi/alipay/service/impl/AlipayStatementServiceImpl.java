@@ -23,6 +23,12 @@ public class AlipayStatementServiceImpl implements IAlipayStatementService
     @Autowired
     private AlipayStatementMapper alipayStatementMapper;
 
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayStatement> selectTotalData() {
+        return alipayStatementMapper.selectTotalData();
+    }
+
     /**
      * 查询对账
      * 

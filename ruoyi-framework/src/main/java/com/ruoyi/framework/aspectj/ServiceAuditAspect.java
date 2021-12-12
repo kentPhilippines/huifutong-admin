@@ -26,11 +26,18 @@ public class ServiceAuditAspect {
     //方法执行前调用
     @Before("pointcut()")
     public void before(JoinPoint jp) {
+
+        String methodName = jp.getSignature().getName();
+        Object[] args = jp.getArgs();
+        if(!methodName.contains("update") || args.length==0)
+        {
+            return;
+        }
+
         SysUser currentUser = ShiroUtils.getSysUser();
         String currentTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         String controllerName = jp.getTarget().getClass().getName();
-        String methodName = jp.getSignature().getName();
-        Object[] args = jp.getArgs();
+
 
         for(int i =0;i<args.length;i++)
         {

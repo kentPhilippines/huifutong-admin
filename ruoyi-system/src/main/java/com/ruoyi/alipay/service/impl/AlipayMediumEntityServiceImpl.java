@@ -25,6 +25,12 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     @Resource
     private AlipayMediumEntityMapper alipayMediumEntityMapper;
 
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayMediumEntity> selectByIds(List<String> ids) {
+        return alipayMediumEntityMapper.selectAlipayMediumEntityByIds(ids);
+    }
+
     /**
      * 查询收款媒介列
      *

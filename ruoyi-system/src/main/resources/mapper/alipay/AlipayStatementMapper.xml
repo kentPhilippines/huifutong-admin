@@ -25,6 +25,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, user_id, user_type, rolling_funds, deductible_commission, deposit, freeze, business_balance, refer_balance, card_balance_detail, business_balance_diff, refer_balance_diff, remark, date_time from alipay_statement
     </sql>
 
+    <select id="selectTotalData" parameterType="AlipayStatement" resultMap="AlipayStatementResult">
+        select
+            auf.userId as user_id ,
+            auf.userType as user_type ,
+            IFNULL(auf.accountBalance, 0) as rolling_funds,
+            IFNULL(auf.sumProfit, 0) as deductible_commission,
+            IFNULL(auf.deposit, 0) ,
+            IFNULL(auf.freezeBalance, 0) as freeze,
+            IFNULL(am.toDayDeal, 0)  as  business_balance,
+            IFNULL(am.mountNow, 0)  as refer_balance,
+            '' as card_balance_detail,
+            IFNULL(auf.accountBalance, 0) + IFNULL(am.toDayDeal, 0) - IFNULL(auf.deposit, 0)    as business_balance_diff,
+            IFNULL(auf.accountBalance, 0) + IFNULL(am.mountNow, 0)  - IFNULL(auf.deposit, 0) as business_balance_diff,
+            NOW() as date_time
+
+        from
+            alipay_user_fund auf
+                left join
+            (
+                select
+                    SUM(mountNow) as mountNow ,
+                    sum( toDayDeal - toDayWit  + yseToday ) as toDayDeal  ,
+                    qrcodeId
+                from
+                    alipay_medium
+                where
+                    isDeal = '2'
+                group by
+                    qrcodeId
+            ) as am on
+                auf.userId = am.qrcodeId where auf.userType ='2'
+    </select>
     <select id="selectAlipayStatementList" parameterType="AlipayStatement" resultMap="AlipayStatementResult">
         <include refid="selectAlipayStatementVo"/>
         <where>  
