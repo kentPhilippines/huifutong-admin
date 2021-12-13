@@ -37,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             IFNULL(am.mountNow, 0)  as refer_balance,
             '' as card_balance_detail,
             IFNULL(auf.accountBalance, 0) + IFNULL(am.toDayDeal, 0) - IFNULL(auf.deposit, 0)    as business_balance_diff,
-            IFNULL(auf.accountBalance, 0) + IFNULL(am.mountNow, 0)  - IFNULL(auf.deposit, 0) as business_balance_diff,
+            IFNULL(auf.accountBalance, 0) + IFNULL(am.mountNow, 0)  - IFNULL(auf.deposit, 0) as refer_balance_diff,
             NOW() as date_time
 
         from
