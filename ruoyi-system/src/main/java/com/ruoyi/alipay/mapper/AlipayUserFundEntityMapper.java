@@ -81,6 +81,15 @@ public interface AlipayUserFundEntityMapper {
             " AND createTime < #{baseEntity.params.dayEnd}  order by createTime ")
     List<AlipayUserFundEntity> findUserAppAll(@Param("baseEntity") BaseEntity baseEntity);
 
+    @Select("select '所有' as userId , '商户总余额' as userName ," +
+            " sum(freezeBalance) as freezeBalance , " +
+            "sum(accountBalance) as accountBalance ," +
+            "sum(quota) as quota , " +
+            "sum(todayDealAmount) , " +
+            "sum(todayAgentProfit) " +
+            " from " +
+            "alipay_user_fund where userType = 1 ")
+    AlipayUserFundEntity findSumFund();
 
     @Select("select '所有' as userId , '下游商户总余额' as userName ," +
             " sum(freezeBalance) as freezeBalance , " +
@@ -101,6 +110,20 @@ public interface AlipayUserFundEntityMapper {
             " from " +
             "alipay_user_fund where userType = 2 ")
     AlipayUserFundEntity findSumFundC();
+
+
+    @Select("select '所有' as userId , '卡商总余额' as userName ," +
+            " sum(freezeBalance) as freezeBalance , " +
+            "sum(accountBalance) as  accountBalance ," +
+            "sum(quota) as quota , " +
+            "sum(sumProfit) as sumProfit , " +
+            "sum(todayDealAmount) as todayDealAmount , " +
+            "sum(todayWitAmount) as todayWitAmount , " +
+            "CONCAT('历史总取：',CONVERT(sum(sumWitAmount),char),',历史总存：',CONVERT(sum(sumDealAmount),char),',滚动资金：',CONVERT(sum(accountBalance)-sum(sumProfit),char)) as currency , " +
+            "sum(todayAgentProfit) as todayAgentProfit " +
+            " from " +
+            "alipay_user_fund where userType = 2 ")
+    AlipayUserFundEntity findSumFundForCardDealer();
 
 
     @Select("select * from alipay_user_info where agent = #{agentUserId}")

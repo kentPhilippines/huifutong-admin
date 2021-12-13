@@ -2,7 +2,9 @@ package com.ruoyi.alipay.service;
 
 import com.ruoyi.alipay.domain.AlipayUserFundEntity;
 import com.ruoyi.alipay.domain.AlipayUserInfo;
+import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.enums.DataSourceType;
 
 import java.util.List;
 
@@ -90,6 +92,13 @@ public interface IAlipayUserFundEntityService {
      */
     List<AlipayUserFundEntity> findaAcountList(AlipayUserFundEntity alipayUserFundEntity);
 
+    /**
+     * 商户总余额
+     * @return
+     */
+    public AlipayUserFundEntity findSumFundForMerchant();
+
+    AlipayUserFundEntity findSumFundForCardDealer();
 
     /**
      * 统计当前商户冻结账户和余额账户
