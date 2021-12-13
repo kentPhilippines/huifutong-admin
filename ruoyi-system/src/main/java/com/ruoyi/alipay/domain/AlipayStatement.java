@@ -1,9 +1,14 @@
 package com.ruoyi.alipay.domain;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.beans.Transient;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -12,6 +17,7 @@ import java.util.Date;
  * @author ruoyi
  * @date 2021-12-11
  */
+@Data
 public class AlipayStatement extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -29,27 +35,27 @@ public class AlipayStatement extends BaseEntity
 
     /** 滚动资金 */
     @Excel(name = "滚动资金")
-    private Long rollingFunds;
+    private BigDecimal rollingFunds;
 
     /** 可取佣金 */
     @Excel(name = "可取佣金")
-    private Long deductibleCommission;
+    private BigDecimal deductibleCommission;
 
     /** null */
     @Excel(name = "null")
-    private Long deposit;
+    private BigDecimal deposit;
 
     /** null */
     @Excel(name = "null")
-    private Long freeze;
+    private BigDecimal freeze;
 
     /** null */
     @Excel(name = "null")
-    private Long businessBalance;
+    private BigDecimal businessBalance;
 
     /** 参考余额 */
     @Excel(name = "参考余额")
-    private Long referBalance;
+    private BigDecimal referBalance;
 
     /** 银行卡余额详细 */
     @Excel(name = "银行卡余额详细")
@@ -57,133 +63,22 @@ public class AlipayStatement extends BaseEntity
 
     /** 业务余额差额 */
     @Excel(name = "业务余额差额")
-    private Long businessBalanceDiff;
+    private BigDecimal businessBalanceDiff;
 
     /** 参考余额差额 */
     @Excel(name = "参考余额差额")
-    private Long referBalanceDiff;
+    private BigDecimal referBalanceDiff;
 
     /** null */
     @Excel(name = "null", width = 30, dateFormat = "yyyy-MM-dd")
     private Date dateTime;
 
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
+    private BigDecimal toDayDeal;
+    private BigDecimal sumDayDeal;
+    private BigDecimal toDayWit;
+    private BigDecimal sumDayWit;
 
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setUserId(String userId) 
-    {
-        this.userId = userId;
-    }
 
-    public String getUserId() 
-    {
-        return userId;
-    }
-    public void setUserType(String userType) 
-    {
-        this.userType = userType;
-    }
-
-    public String getUserType() 
-    {
-        return userType;
-    }
-    public void setRollingFunds(Long rollingFunds) 
-    {
-        this.rollingFunds = rollingFunds;
-    }
-
-    public Long getRollingFunds() 
-    {
-        return rollingFunds;
-    }
-    public void setDeductibleCommission(Long deductibleCommission) 
-    {
-        this.deductibleCommission = deductibleCommission;
-    }
-
-    public Long getDeductibleCommission() 
-    {
-        return deductibleCommission;
-    }
-    public void setDeposit(Long deposit) 
-    {
-        this.deposit = deposit;
-    }
-
-    public Long getDeposit() 
-    {
-        return deposit;
-    }
-    public void setFreeze(Long freeze) 
-    {
-        this.freeze = freeze;
-    }
-
-    public Long getFreeze() 
-    {
-        return freeze;
-    }
-    public void setBusinessBalance(Long businessBalance) 
-    {
-        this.businessBalance = businessBalance;
-    }
-
-    public Long getBusinessBalance() 
-    {
-        return businessBalance;
-    }
-    public void setReferBalance(Long referBalance) 
-    {
-        this.referBalance = referBalance;
-    }
-
-    public Long getReferBalance() 
-    {
-        return referBalance;
-    }
-    public void setCardBalanceDetail(String cardBalanceDetail) 
-    {
-        this.cardBalanceDetail = cardBalanceDetail;
-    }
-
-    public String getCardBalanceDetail() 
-    {
-        return cardBalanceDetail;
-    }
-    public void setBusinessBalanceDiff(Long businessBalanceDiff) 
-    {
-        this.businessBalanceDiff = businessBalanceDiff;
-    }
-
-    public Long getBusinessBalanceDiff() 
-    {
-        return businessBalanceDiff;
-    }
-    public void setReferBalanceDiff(Long referBalanceDiff) 
-    {
-        this.referBalanceDiff = referBalanceDiff;
-    }
-
-    public Long getReferBalanceDiff() 
-    {
-        return referBalanceDiff;
-    }
-    public void setDateTime(Date dateTime) 
-    {
-        this.dateTime = dateTime;
-    }
-
-    public Date getDateTime() 
-    {
-        return dateTime;
-    }
 
     @Override
     public String toString() {

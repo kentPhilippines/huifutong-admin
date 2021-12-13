@@ -73,6 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="referBalanceDiff != null "> and refer_balance_diff = #{referBalanceDiff}</if>
             <if test="dateTime != null "> and date_time = #{dateTime}</if>
         </where>
+        order by date_time desc
     </select>
     
     <select id="selectAlipayStatementById" parameterType="Long" resultMap="AlipayStatementResult">

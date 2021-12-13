@@ -1,112 +1,79 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
-    <th:block th:include="include :: header('修改对账')" />
+    <th:block th:include="include :: header('银行卡明细')" />
     <th:block th:include="include :: datetimepicker-css" />
 </head>
 <body class="white-bg">
-    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
-        <form class="form-horizontal m" id="form-statement-edit" th:object="${alipayStatement}">
-            <input name="id" th:field="*{id}" type="hidden">
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">参考余额差额：</label>
-                <div class="col-sm-8">
-                    <input name="userId" th:field="*{userId}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">参考余额差额：</label>
-                <div class="col-sm-8">
-                    <select name="userType" class="form-control m-b">
-                        <option value="">所有</option>
-                    </select>
-                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">滚动资金：</label>
-                <div class="col-sm-8">
-                    <input name="rollingFunds" th:field="*{rollingFunds}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">可取佣金：</label>
-                <div class="col-sm-8">
-                    <input name="deductibleCommission" th:field="*{deductibleCommission}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">可取佣金：</label>
-                <div class="col-sm-8">
-                    <input name="deposit" th:field="*{deposit}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">可取佣金：</label>
-                <div class="col-sm-8">
-                    <input name="freeze" th:field="*{freeze}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">可取佣金：</label>
-                <div class="col-sm-8">
-                    <input name="businessBalance" th:field="*{businessBalance}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">参考余额：</label>
-                <div class="col-sm-8">
-                    <input name="referBalance" th:field="*{referBalance}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">银行卡余额详细：</label>
-                <div class="col-sm-8">
-                    <input name="cardBalanceDetail" th:field="*{cardBalanceDetail}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">业务余额差额：</label>
-                <div class="col-sm-8">
-                    <input name="businessBalanceDiff" th:field="*{businessBalanceDiff}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">参考余额差额：</label>
-                <div class="col-sm-8">
-                    <input name="referBalanceDiff" th:field="*{referBalanceDiff}" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">参考余额差额：</label>
-                <div class="col-sm-8">
-                    <div class="input-group date">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input name="dateTime" th:value="${#dates.format(alipayStatement.dateTime, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
-                    </div>
-                </div>
-            </div>
-        </form>
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table">
+
+
+            </table>
+        </div>
     </div>
+</div>
     <th:block th:include="include :: footer" />
     <th:block th:include="include :: datetimepicker-js" />
-    <script type="text/javascript">
-        var prefix = ctx + "system/statement";
-        $("#form-statement-edit").validate({
-            focusCleanup: true
-        });
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('system:statement:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('system:statement:remove')}]];
+    var prefix = ctx + "system/statement";
+    var $table = $('#bootstrap-table');
+    $(function () {
+        //var d = JSON.stringify([[${alipayStatement.cardBalanceDetail}]]).toString().replace(new RegExp("\\\\\"","gm"),"\"");
+        var d = [[${alipayStatement.cardBalanceDetail}]];
+        d=JSON.parse(d);
+        console.log(d);
 
-        function submitHandler() {
-            if ($.validate.form()) {
-                $.operate.save(prefix + "/edit", $('#form-statement-edit').serialize());
-            }
-        }
+        var options = {
+            modalName: "对账",
+            data: d,
+            columns: [
+                {
+                    field: '卡号',
+                    title: '卡号'
+                },
+                {
+                    field: '持卡人',
+                    title: '持卡人'
+                },
+                {
+                    field: '开户行',
+                    title: '开户行'
+                },
+                {
+                    field: '业务余额',
+                    title: '业务余额'
+                },
+                {
+                    field: '参考余额',
+                    title: '参考余额'
+                },
+                {
+                    field: '当日入款',
+                    title: '当日入款'
+                },
+                {
+                    field: '累计入款',
+                    title: '累计入款'
+                },
+                {
+                    field: '当日出款',
+                    title: '当日出款'
+                },
+                {
+                    field: '累计出款',
+                    title: '累计出款'
+                }
 
-        $("input[name='dateTime']").datetimepicker({
-            format: "yyyy-mm-dd",
-            minView: "month",
-            autoclose: true
-        });
+            ]
+        };
+        $table.bootstrapTable(options)
+        //$.table.init(options);
+    });
     </script>
 </body>
 </html>
