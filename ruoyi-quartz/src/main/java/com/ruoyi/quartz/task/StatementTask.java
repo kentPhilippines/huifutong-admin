@@ -9,6 +9,7 @@ import com.ruoyi.alipay.domain.AlipayStatement;
 import com.ruoyi.alipay.service.IAlipayMediumEntityService;
 import com.ruoyi.alipay.service.IAlipayStatementService;
 import com.ruoyi.alipay.vo.AlipayUserMedium;
+import com.ruoyi.common.utils.bean.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,16 +40,19 @@ public class StatementTask {
 
             statements.stream().forEach(alipayStatement -> {
 
-                List<AlipayUserMedium> userMediums = alipayMediumEntities.stream().filter(alipayMediumEntity -> alipayMediumEntity.getQrcodeId().equals(alipayStatement.getUserId())).map(medium -> BeanUtil.toBean(medium, AlipayUserMedium.class)).collect(Collectors.toList());
-                BeanUtil.copyProperties(alipayStatement,userMediums);
+                List<AlipayUserMedium> userMediums = alipayMediumEntities.stream().filter(alipayMediumEntity -> alipayMediumEntity.getQrcodeId().equals(alipayStatement.getUserId())).map(medium -> {
+                    AlipayUserMedium userMedium = BeanUtil.toBean(medium, AlipayUserMedium.class);
+                    BeanUtil.copyProperties(alipayStatement, userMedium);
+                    return userMedium;
+                }).collect(Collectors.toList());
+                //BeanUtil.copyProperties(alipayStatement,userMediums);
                 alipayStatement.setCardBalanceDetail(JSON.toJSONString(userMediums));
 
                 alipayStatementService.insertAlipayStatement(alipayStatement);
                 //log.info(JSON.toJSONString(userMediums));
             });
-        }catch (Exception e)
-        {
-            log.info("excute fail:{}",e);
+        } catch (Exception e) {
+            log.info("excute fail:{}", e);
             e.printStackTrace();
         }
         log.info("excute success");
