@@ -119,7 +119,7 @@ public interface AlipayUserFundEntityMapper {
             "sum(sumProfit) as sumProfit , " +
             "sum(todayDealAmount) as todayDealAmount , " +
             "sum(todayWitAmount) as todayWitAmount , " +
-            "CONCAT('历史总取：',CONVERT(sum(sumWitAmount),char),',历史总存：',CONVERT(sum(sumDealAmount),char),',滚动资金：',CONVERT(sum(accountBalance),char)) as currency , " +
+            "CONCAT('历史总取：',CONVERT(sum(sumWitAmount),char),',历史总存：',CONVERT(sum(sumDealAmount),char),',滚动资金：',CONVERT(sum(accountBalance)-sum(sumProfit),char)) as currency , " +
             "sum(todayAgentProfit) as todayAgentProfit " +
             " from " +
             "alipay_user_fund where userType = 2 ")
