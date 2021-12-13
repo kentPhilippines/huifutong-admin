@@ -131,6 +131,18 @@ public class AlipayUserFundEntityServiceImpl implements IAlipayUserFundEntitySer
 
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public AlipayUserFundEntity findSumFundForMerchant() {
+        return alipayUserFundEntityMapper.findSumFund();
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public AlipayUserFundEntity findSumFundForCardDealer() {
+        return alipayUserFundEntityMapper.findSumFundForCardDealer();
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public AlipayUserFundEntity findSumFundM() {
         return alipayUserFundEntityMapper.findSumFundM();
     }
