@@ -88,6 +88,7 @@
             detailUrl: prefix + "/edit/{id}",
             statisticsUrl: prefix + "/statistics/merchant/table",
             exportUrl: prefix + "/export",
+            groupUrl: prefix + "/group",
             modalName: "商户交易订单",
             columns: [{
                 checkbox: true
@@ -114,6 +115,7 @@
                     formatter: function (value, row, index) {
                         var actions = [];
                         actions.push('<a class="btn btn-primary btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.id + '\')"><i class="fa fa-search"></i>详情</a> ');
+                        actions.push('<a class="btn btn-primary btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="$.operate.openAccount(\'' + row.userId + '\',\'分组查询\',\'orderAppGroupQuery\')"><i class="fa fa-search"></i>分组汇总</a> ');
                 /*        actions.push('<a class="btn btn-danger btn-xs ' + updateOrder + '" href="javascript:void(0)" onclick="onUpdateOrder(\'' + row.id + '\')"><i class="fa fa-google-wallet"></i>扔给财务</a> ');*/
                         return actions.join('');
                     }

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商户订单登记Mapper接口
@@ -28,7 +29,14 @@ public interface AlipayDealOrderAppMapper {
      * @param alipayDealOrderApp 商户订单登记
      * @return 商户订单登记集合
      */
-    List<AlipayDealOrderApp> selectAlipayDealOrderAppList(AlipayDealOrderApp alipayDealOrderApp);    /**
+    List<AlipayDealOrderApp> selectAlipayDealOrderAppList(AlipayDealOrderApp alipayDealOrderApp);
+
+
+//    @Select("select dealDescribe,orderAccount,count(1) from alipay_deal_order_app adoa where orderAccount=#{orderAccount} group by dealDescribe,orderAccount")
+    List<Map<String,Object>> selectAlipayDealOrderAppListGroupByOrderAccount(AlipayDealOrderApp alipayDealOrderApp);
+
+
+    /**
      * 查询商户订单登记列表
      *
      * @param alipayDealOrderApp 商户订单登记

@@ -77,9 +77,22 @@
         order by id desc
     </select>
 
+
+    <select id="selectAlipayDealOrderAppListGroupByOrderAccount" parameterType="AlipayDealOrderApp"
+            resultType="java.util.HashMap">
+        select dealDescribe,orderAccount,orderStatus,count(1) as totalCount,sum(orderAmount) as totalAmount  from alipay_deal_order_app adoa
+        <where>
+            <if test="params.dayStart != null and params.dayEnd != ''  ">
+            createTime between #{params.dayStart} and #{params.dayEnd}
+            </if>
+            <if test="orderAccount != null and orderAccount != ''  ">and orderAccount = #{orderAccount}</if>
+        </where>
+        group by dealDescribe,orderAccount,orderStatus
+    </select>
+
     <select id="selectAlipayDealOrderApp" parameterType="AlipayDealOrderApp" resultMap="AlipayDealOrderAppResult">
         <include refid="selectAlipayDealOrderAppVo"/>
-        <if test="orderId != null and orderId != ''"> where orderId = #{orderId}</if>
+        <if test="orderId != null and orderId != ''">where orderId = #{orderId}</if>
     </select>
 
     <select id="selectAlipayDealOrderAppById" parameterType="Long" resultMap="AlipayDealOrderAppResult">

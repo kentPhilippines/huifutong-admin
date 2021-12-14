@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商户订单登记Service业务层处理
@@ -49,6 +50,21 @@ public class AlipayDealOrderAppServiceImpl implements IAlipayDealOrderAppService
     public List<AlipayDealOrderApp> selectAlipayDealOrderAppList(AlipayDealOrderApp alipayDealOrderApp) {
         return alipayDealOrderAppMapper.selectAlipayDealOrderAppList(alipayDealOrderApp);
     }
+
+    /**
+     * 分组查询
+     *
+     * @param alipayDealOrderApp 商户订单登记
+     * @return 商户订单登记
+     */
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<Map<String,Object>> selectAlipayDealOrderAppListGroupByOrderAccount(AlipayDealOrderApp alipayDealOrderApp) {
+        return alipayDealOrderAppMapper.selectAlipayDealOrderAppListGroupByOrderAccount(alipayDealOrderApp);
+    }
+
+
+
     /**
      * 查询商户订单登记
      *
