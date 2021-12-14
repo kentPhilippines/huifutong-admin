@@ -30,4 +30,5 @@ public class AlipayUserMedium {
     @JSONField(name="累计出款")
     private BigDecimal sumDayWit;
 
+
 }

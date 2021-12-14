@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,10 @@ public class StatementTask {
 
                 List<AlipayUserMedium> userMediums = alipayMediumEntities.stream().filter(alipayMediumEntity -> alipayMediumEntity.getQrcodeId().equals(alipayStatement.getUserId())).map(medium -> {
                     AlipayUserMedium userMedium = BeanUtil.toBean(medium, AlipayUserMedium.class);
-                    BeanUtil.copyProperties(alipayStatement, userMedium);
+                    BigDecimal businessBalance = medium.getToDayDeal().subtract(medium.getToDayWit()).add(medium.getYseToday());//今天的入款-今天出款+昨天的结余=业务余额
+                    userMedium.setBusinessBalance(businessBalance);
+                    userMedium.setReferBalance(new BigDecimal(medium.getMountNow()));
+                    //BeanUtil.copyProperties(alipayStatement, userMedium);
                     return userMedium;
                 }).collect(Collectors.toList());
                 //BeanUtil.copyProperties(alipayStatement,userMediums);

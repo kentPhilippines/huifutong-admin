@@ -29,15 +29,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select
             auf.userId as user_id ,
             auf.userType as user_type ,
-            IFNULL(auf.accountBalance, 0) as rolling_funds,
+            IFNULL(auf.accountBalance-auf.deposit, 0) as rolling_funds,/*滚动资金 = 可取余额 -  累计佣金*/
             IFNULL(auf.sumProfit, 0) as deductible_commission,
             IFNULL(auf.deposit, 0) as deposit,
             IFNULL(auf.freezeBalance, 0) as freeze,
             IFNULL(am.toDayDeal, 0)  as  business_balance,
             IFNULL(am.mountNow, 0)  as refer_balance,
             '' as card_balance_detail,
-            IFNULL(auf.accountBalance, 0) + IFNULL(am.toDayDeal, 0) - IFNULL(auf.deposit, 0)    as business_balance_diff,
-            IFNULL(auf.accountBalance, 0) + IFNULL(am.mountNow, 0)  - IFNULL(auf.deposit, 0) as refer_balance_diff,
+            IFNULL(auf.accountBalance, 0) + IFNULL(am.toDayDeal, 0) - IFNULL(auf.deposit, 0)    as business_balance_diff,/*业务差额 = 滚动资金+银行卡业务余额 -  押金*/
+            IFNULL(auf.accountBalance, 0) + IFNULL(am.mountNow, 0)  - IFNULL(auf.deposit, 0) as refer_balance_diff,/*参考差额 = 滚动资金+银行卡参考余额 -  押金*/
             NOW() as date_time
 
         from
@@ -46,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             (
                 select
                     SUM(mountNow) as mountNow ,
-                    sum( toDayDeal - toDayWit  + yseToday ) as toDayDeal  ,
+                    sum( toDayDeal - toDayWit  + yseToday ) as toDayDeal  ,/*业务余额 今天的入款-今天出款+昨天的结余 */
                     qrcodeId
                 from
                     alipay_medium
