@@ -1201,7 +1201,20 @@ var table = {
             },
 
 
-
+            groupByData: function (id) {
+                var url = "/404.html";
+                if ($.common.isNotEmpty(id)) {
+                    url = table.options.detailUrl.replace("{id}", id);
+                } else {
+                    var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+                    if (id.length == 0) {
+                        $.modal.alertWarning("请至少选择一条记录");
+                        return;
+                    }
+                    url = table.options.detailUrl.replace("{id}", id);
+                }
+                return url;
+            },
 
 
             // 详细访问地址
@@ -1339,6 +1352,11 @@ var table = {
                 }else if (flag == 'editeCreditUrl') {
                     $.modal.open(title, $.operate.editeCreditUrl(id))
                 }
+                else if (flag == 'orderAppGroupQuery') {
+                    $.modal.open(title, $.operate.groupUrl(id))
+                }
+
+
             },
             // 二维码详细列表
             codeList: function (id) {
@@ -1545,6 +1563,14 @@ var table = {
                 }
                 return url;
             },
+            groupUrl: function (id) {
+                var url = "/404.html";
+                if ($.common.isNotEmpty(id)) {
+                    url = table.options.groupUrl.replace("{id}", id);
+                }
+                return url;
+            },
+
             editeCreditUrl: function (id) {
                 var url = "/404.html";
                 if ($.common.isNotEmpty(id)) {

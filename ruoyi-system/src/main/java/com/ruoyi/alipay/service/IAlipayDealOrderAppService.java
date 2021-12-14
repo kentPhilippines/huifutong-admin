@@ -1,9 +1,12 @@
 package com.ruoyi.alipay.service;
 
 import com.ruoyi.alipay.domain.AlipayDealOrderApp;
+import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.core.domain.StatisticsEntity;
+import com.ruoyi.common.enums.DataSourceType;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商户订单登记Service接口
@@ -27,6 +30,9 @@ public interface IAlipayDealOrderAppService {
      * @return 商户订单登记集合
      */
     List<AlipayDealOrderApp> selectAlipayDealOrderAppList(AlipayDealOrderApp alipayDealOrderApp);
+
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    List<Map<String,Object>> selectAlipayDealOrderAppListGroupByOrderAccount(AlipayDealOrderApp alipayDealOrderApp);
 
     /**
      * 查询商户订单登记列表

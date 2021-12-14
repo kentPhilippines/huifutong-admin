@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -44,6 +45,21 @@ public class AlipayDealOrderAppController extends BaseController {
         return prefix + "/orderApp";
     }
 
+    @GetMapping("/group")
+    public String orderAppGroup() {
+        return prefix + "/group";
+    }
+
+    /**
+     * 查询分组
+     */
+    @PostMapping("/group")
+    @ResponseBody
+    public TableDataInfo group(AlipayDealOrderApp alipayDealOrderApp) {
+        startPage();
+        List<Map<String,Object>> list = alipayDealOrderAppService.selectAlipayDealOrderAppListGroupByOrderAccount(alipayDealOrderApp);
+        return getDataTable(list);
+    }
     /**
      * 查询商户订单登记列表
      */
