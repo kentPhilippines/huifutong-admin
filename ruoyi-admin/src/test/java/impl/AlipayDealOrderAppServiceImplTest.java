@@ -24,7 +24,7 @@ public class AlipayDealOrderAppServiceImplTest {
     @Test
     public void selectAlipayDealOrderAppListGroupByOrderAccount() {
         AlipayDealOrderApp alipayDealOrderApp = new AlipayDealOrderApp();
-        alipayDealOrderApp.setOrderAccount("tanqiuba");
+        alipayDealOrderApp.setOrderAccount("jinxing");
 
         List list =alipayDealOrderAppService.selectAlipayDealOrderAppListGroupByOrderAccount(alipayDealOrderApp);
         log.info(JSON.toJSONString(list));

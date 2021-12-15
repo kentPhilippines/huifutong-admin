@@ -61,19 +61,22 @@
 					title: '商户账号'
 				},
                 {
-                    field: 'totalCount',
-                    title: '交易订单总数'
+                    field: 'sucessCn',
+                    title: '成功订单总数'
                 },
                 {
-                    field: 'orderStatus', title: '订单状态',
-                    formatter: function (value, row, index) {
-                        return $.table.selectDictLabel(orderstatusDatas, value);
-                    }
+                    field: 'failCn',
+                    title: '失败订单总数'
                 },
-				{
-					field: 'totalAmount',
-					title: '订单总金额'
-                }]
+                {
+                    field: 'sucessAmount',
+                    title: '成功订单总金额'
+                },
+                {
+                    field: 'failAmount',
+                    title: '失败订单总金额'
+                }
+                ]
         };
         $.table.init(options);
     });
