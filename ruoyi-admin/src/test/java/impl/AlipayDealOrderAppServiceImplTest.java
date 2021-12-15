@@ -14,19 +14,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-@Slf4j
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = RuoYiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AlipayDealOrderAppServiceImplTest {
     @Autowired
     private AlipayDealOrderAppServiceImpl alipayDealOrderAppService;
 
-    @Test
+
     public void selectAlipayDealOrderAppListGroupByOrderAccount() {
         AlipayDealOrderApp alipayDealOrderApp = new AlipayDealOrderApp();
         alipayDealOrderApp.setOrderAccount("jinxing");
 
-        List list =alipayDealOrderAppService.selectAlipayDealOrderAppListGroupByOrderAccount(alipayDealOrderApp);
-        log.info(JSON.toJSONString(list));
+
     }
 }

@@ -3,6 +3,7 @@ package com.ruoyi.alipay.service;
 
 import com.ruoyi.alipay.domain.BankInfoSplitEntity;
 import com.ruoyi.alipay.domain.BankTransactionRecord;
+import com.ruoyi.alipay.domain.util.BankRunInfo;
 
 import java.util.List;
 
@@ -29,5 +30,7 @@ public interface IBankInfoSplitResultService {
      */
     List<BankTransactionRecord> selectBankTransactionRecord(BankInfoSplitEntity bankInfoSplitEntity);
 
+
+    List<BankRunInfo> findBankRunInfo(BankRunInfo bankSplitEntity);
 
 }

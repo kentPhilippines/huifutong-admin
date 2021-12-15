@@ -20,9 +20,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = RuoYiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AlipayStatementMapperTest {
 
     @Autowired
@@ -31,9 +28,7 @@ public class AlipayStatementMapperTest {
     @Autowired
     private IAlipayMediumEntityService alipayMediumEntityService;
 
-    @Test
     public void selectTotalDataTest() {
-        log.info(JSON.toJSONString(alipayStatementService.selectTotalData()));
 
         List ids = alipayStatementService.selectTotalData().stream().map(alipayStatement -> alipayStatement.getUserId()).collect(Collectors.toList());
         List<AlipayMediumEntity> alipayMediumEntities = alipayMediumEntityService.selectByIds(ids);
@@ -43,8 +38,7 @@ public class AlipayStatementMapperTest {
             List<AlipayUserMedium> userMediums = alipayMediumEntities.stream().filter(alipayMediumEntity -> alipayMediumEntity.getQrcodeId().equals(alipayStatement.getUserId())).map(medium -> BeanUtil.toBean(medium,AlipayUserMedium.class)).collect(Collectors.toList());
 
             alipayStatement.setCardBalanceDetail(JSON.toJSONString(userMediums));
-            log.info(JSON.toJSONString(userMediums));
-        });
+         });
     }
 
 

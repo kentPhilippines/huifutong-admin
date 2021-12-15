@@ -432,17 +432,8 @@ public class AlipayMediumEntityController extends BaseController {
 
         List<AlipayMediumEntity> medList = alipayMediumEntityService.findOpenMed();
 
-        List<AlipayMediumEntity> medListSum =  alipayMediumEntityService.findMedSum();
         ConcurrentHashMap<String, AlipayMediumEntity> collect = medList.stream().
                 collect(Collectors.toConcurrentMap(AlipayMediumEntity::getMediumNumber, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
-
-        ConcurrentHashMap<String, AlipayMediumEntity> collectSum = medListSum.stream().
-                collect(Collectors.toConcurrentMap(AlipayMediumEntity::getMediumNumber, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
-
-
-
-
-
 
         List<AlipayMediumEntity> listQueue = new ArrayList<>();
         try {
@@ -558,9 +549,6 @@ public class AlipayMediumEntityController extends BaseController {
                     }
                 }
 
-                if(CollUtil.isNotEmpty(collectSum)){
-
-                }
 
 
 

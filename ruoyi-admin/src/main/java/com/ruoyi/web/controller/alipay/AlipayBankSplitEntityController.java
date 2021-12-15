@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.ruoyi.alipay.domain.BankInfoSplitEntity;
 import com.ruoyi.alipay.domain.BankInfoSplitEntityVo;
 import com.ruoyi.alipay.domain.BankTransactionRecord;
+import com.ruoyi.alipay.domain.util.BankRunInfo;
 import com.ruoyi.alipay.service.IAlipayFileListEntityService;
 import com.ruoyi.alipay.service.IBankInfoSplitResultService;
 import com.ruoyi.common.annotation.Log;
@@ -42,6 +43,12 @@ public class AlipayBankSplitEntityController extends BaseController {
     @GetMapping()
     public String info() {
         return prefix + "/BankSplitInfo";
+    }
+
+
+    @GetMapping("/bankRunInfoList")
+    public String bankRunInfoList() {
+        return prefix + "/bankRunInfoList";
     }
 
 
@@ -114,5 +121,24 @@ public class AlipayBankSplitEntityController extends BaseController {
         List<BankTransactionRecord> list = bankInfoSplitResultService.selectBankTransactionRecord(bankSplitEntity);
         ExcelUtil<BankTransactionRecord> util = new ExcelUtil<BankTransactionRecord>(BankTransactionRecord.class);
         return util.exportExcel(list, "bankTransactionRecord");
+    }
+
+    @PostMapping("/bankTransactionRecord/bankRunInfo")
+    @ResponseBody
+    public TableDataInfo bankRunInfo(BankRunInfo bankSplitEntity) {
+        startPage();
+      List<BankRunInfo> bankInfoList =   bankInfoSplitResultService.findBankRunInfo(bankSplitEntity);
+        return getDataTable(bankInfoList);
+    }
+    /**
+     * 导出银行截取信息列表
+     */
+    @Log(title = "卡商账目核对数据导出", businessType = BusinessType.EXPORT)
+    @PostMapping("/bankRunInfoExport")
+    @ResponseBody
+    public AjaxResult bankRunInfoExport(BankRunInfo bankSplitEntity) {
+        List<BankRunInfo> list =   bankInfoSplitResultService.findBankRunInfo(bankSplitEntity);
+        ExcelUtil<BankRunInfo> util = new ExcelUtil<BankRunInfo>(BankRunInfo.class);
+        return util.exportExcel(list, "BankRunInfo");
     }
 }

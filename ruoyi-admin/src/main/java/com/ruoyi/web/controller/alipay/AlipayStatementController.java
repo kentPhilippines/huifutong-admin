@@ -115,4 +115,12 @@ public class AlipayStatementController extends BaseController {
     public AjaxResult remove(String ids) {
         return toAjax(alipayStatementService.deleteAlipayStatementByIds(ids));
     }
+
+
+
+
+
+
+
+
 }
