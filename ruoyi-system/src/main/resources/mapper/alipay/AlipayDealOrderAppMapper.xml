@@ -80,14 +80,20 @@
 
     <select id="selectAlipayDealOrderAppListGroupByOrderAccount" parameterType="AlipayDealOrderApp"
             resultType="java.util.HashMap">
-        select dealDescribe,orderAccount,orderStatus,count(1) as totalCount,sum(orderAmount) as totalAmount  from alipay_deal_order_app adoa
+
+        select dealDescribe,orderAccount,SUM( CASE WHEN orderStatus = '2' THEN
+        1 ELSE 0 END) as sucessCn,SUM( CASE WHEN orderStatus = '3' THEN
+        1 ELSE 0 END)  as failCn,SUM( CASE WHEN orderStatus = '2' THEN
+        orderAmount ELSE 0 END) as sucessAmount,SUM( CASE WHEN orderStatus = '3' THEN
+        orderAmount ELSE 0 END) as failAmount   from alipay_deal_order_app adoa
         <where>
+            orderStatus in("2","3")
             <if test="params.dayStart != null and params.dayEnd != ''  ">
-            createTime between #{params.dayStart} and #{params.dayEnd}
+                and createTime between #{params.dayStart} and #{params.dayEnd}
             </if>
             <if test="orderAccount != null and orderAccount != ''  ">and orderAccount = #{orderAccount}</if>
         </where>
-        group by dealDescribe,orderAccount,orderStatus
+        group by dealDescribe,orderAccount
     </select>
 
     <select id="selectAlipayDealOrderApp" parameterType="AlipayDealOrderApp" resultMap="AlipayDealOrderAppResult">
