@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select
             auf.userId as user_id ,
             auf.userType as user_type ,
-            IFNULL(auf.accountBalance-auf.deposit, 0) as rolling_funds,/*滚动资金 = 可取余额 -  累计佣金*/
+            IFNULL(auf.accountBalance-auf.sumProfit, 0) as rolling_funds,/*滚动资金 = 可取余额 -  累计佣金*/
             IFNULL(auf.sumProfit, 0) as deductible_commission,
             IFNULL(auf.deposit, 0) as deposit,
             IFNULL(auf.freezeBalance, 0) as freeze,
