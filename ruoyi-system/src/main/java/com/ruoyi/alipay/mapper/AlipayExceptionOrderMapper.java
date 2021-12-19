@@ -49,4 +49,10 @@ public interface AlipayExceptionOrderMapper {
 	 * @return 结果
 	 */
 	public int deleteAlipayExceptionOrderByIds(String[] ids);
+
+
+
+
+
+    List<AlipayExceptionOrder> selectAlipayExceptionOrderListBank(AlipayExceptionOrder alipayExceptionOrder);
 }

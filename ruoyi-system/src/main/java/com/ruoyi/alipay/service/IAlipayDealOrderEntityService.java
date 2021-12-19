@@ -26,9 +26,10 @@ public interface IAlipayDealOrderEntityService {
      * 查询交易订单列表
      *
      * @param alipayDealOrderEntity 交易订单
+     * @param isCharen
      * @return 交易订单集合
      */
-    List<AlipayDealOrderEntity> selectAlipayDealOrderEntityList(AlipayDealOrderEntity alipayDealOrderEntity);
+    List<AlipayDealOrderEntity> selectAlipayDealOrderEntityList(AlipayDealOrderEntity alipayDealOrderEntity, Boolean isCharen);
 
     /**
      * 根据财务角色查看财务角色特定的  交易订单

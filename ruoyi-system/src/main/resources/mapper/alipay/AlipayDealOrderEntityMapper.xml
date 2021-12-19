@@ -56,7 +56,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          retain3, retain4 , txhash  ,   payImg  , payInfo ,enterPay , lockWit , lockWitTime ,enterPayTime , bankAmountNow,auditLog from alipay_deal_order
     </sql>
     <select id="selectAlipayDealOrderEntityList" parameterType="AlipayDealOrderEntity" resultMap="AlipayDealOrderEntityResult">
-        <include refid="selectAlipayDealOrderEntityVo"/>
+        select id, orderId,currency,   associatedId, orderStatus,
+        dealAmount, dealFee, actualAmount, orderType, orderAccount,payer, orderQrUser, orderQr, externalOrderId, generationIp, dealDescribe, notify, back, isNotify,
+        createTime, submitTime, feeId, status, retain1, retain2,grabOrder,systemAmount,
+        retain3, retain4 , txhash  ,   payImg  , payInfo ,enterPay , lockWit , lockWitTime ,enterPayTime , bankAmountNow,auditLog from alipay_deal_order
         <where>
             createTime between #{params.dayStart} and #{params.dayEnd}
             <if test="orderId != null  and orderId != ''">  and  orderId = #{orderId} or externalOrderId =  #{orderId} or associatedId = #{orderId}    </if>
@@ -79,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="enterPayTime != null and enterPayTime != '' ">and enterPayTime = #{enterPayTime}</if>
             <if test="recordType != null and recordType != '' ">and recordType = #{recordType}</if>
         </where>
-        order by id  desc
+          order by id  desc
     </select>
 
 
@@ -265,6 +268,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
         ) as s
     </select>
+
+    <select id="selectAlipayDealOrderEntityListIsCharen" parameterType="AlipayDealOrderEntity" resultMap="AlipayDealOrderEntityResult">
+        <include refid="selectAlipayDealOrderEntityVo"/>
+        <where>
+            <if test="associatedId != null  and associatedId != ''">  and associatedId = #{associatedId}    </if>
+        </where>
+        order by id  desc
+    </select>
+
+
+
+
+
 
 
 </mapper>

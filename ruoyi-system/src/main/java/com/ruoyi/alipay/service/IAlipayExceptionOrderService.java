@@ -57,4 +57,8 @@ public interface IAlipayExceptionOrderService {
 	 * @return 结果
 	 */
 	public int deleteAlipayExceptionOrderById(Long id);
+
+	List<AlipayExceptionOrder> selectAlipayExceptionOrderListBank(AlipayExceptionOrder alipayExceptionOrder);
+
+
 }

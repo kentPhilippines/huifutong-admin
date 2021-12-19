@@ -49,6 +49,7 @@ public class AlipayExceptionOrderServiceImpl implements IAlipayExceptionOrderSer
 	 * @return 结果
 	 */
 	@Override
+	@DataSource(value = DataSourceType.ALIPAY_SLAVE)
 	public int insertAlipayExceptionOrder(AlipayExceptionOrder alipayExceptionOrder) {
 		return alipayExceptionOrderMapper.insertAlipayExceptionOrder(alipayExceptionOrder);
 	}
@@ -80,5 +81,11 @@ public class AlipayExceptionOrderServiceImpl implements IAlipayExceptionOrderSer
 	@Override
 	public int deleteAlipayExceptionOrderById(Long id) {
 		return alipayExceptionOrderMapper.deleteAlipayExceptionOrderById(id);
+	}
+
+	@Override
+	@DataSource(value = DataSourceType.ALIPAY_SLAVE)
+	public List<AlipayExceptionOrder> selectAlipayExceptionOrderListBank(AlipayExceptionOrder alipayExceptionOrder) {
+		return alipayExceptionOrderMapper.selectAlipayExceptionOrderListBank(alipayExceptionOrder);
 	}
 }
