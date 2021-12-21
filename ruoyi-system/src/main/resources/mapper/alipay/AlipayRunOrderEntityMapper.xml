@@ -203,24 +203,24 @@
         select
         DATE_FORMAT(a.createTime,"%Y-%m-%d") dateTime,
         SUM( CASE WHEN a.runOrderType = 20 and b.userType = 1 THEN
-        amount ELSE 0 END) as merchantTradeTotal, /*商户交易总量 = 商户交易加款*/
+        ABS(amount) ELSE 0 END) as merchantTradeTotal, /*商户交易总量 = 商户交易加款*/
         SUM( CASE WHEN a.runOrderType = 12 THEN
-        amount ELSE 0 END) as selfChannelTradeTotal, /*自营渠道交易量 = 交易点数扣除*/
+        ABS(amount) ELSE 0 END) as selfChannelTradeTotal, /*自营渠道交易量 = 交易点数扣除*/
         SUM( CASE when a.runOrderType = 12 and b.userType = 3 THEN
-        amount ELSE 0 END) as externalChannelTradeTotal, /*外接渠道交易量 = 交易点数扣除*/
+        ABS(amount) ELSE 0 END) as externalChannelTradeTotal, /*外接渠道交易量 = 交易点数扣除*/
         0 as fouthPartRevenue, /*四方营收 = （代收服务费+代付服务费）-四方代理佣金-外接渠道交易成本-外接渠道代付成本*/
         SUM( CASE WHEN a.runOrderType = 21 THEN
-        amount ELSE 0 END) as collectServiceFee, /*代收服务费 = 商户交易手续费扣款*/
+        ABS(amount) ELSE 0 END) as collectServiceFee, /*代收服务费 = 商户交易手续费扣款*/
         SUM( CASE WHEN a.runOrderType = 9 THEN
-        amount ELSE 0 END) as payServiceFee, /*代付服务费 = 代付手续费*/
+        ABS(amount) ELSE 0 END) as payServiceFee, /*代付服务费 = 代付手续费*/
         SUM( CASE WHEN a.runOrderType in (13,26) THEN
-        amount ELSE 0 END) as fourthPartiesCommission, /*四方代理佣金 = 代理商分润+代付代理商分润27*/
+        ABS(amount) ELSE 0 END) as fourthPartiesCommission, /*四方代理佣金 = 代理商分润+代付代理商分润27*/
         SUM( CASE WHEN a.runOrderType = 14 and b.userType = 3 THEN
-        amount ELSE 0 END) as externalChannelTransactionCost, /*外接渠道交易成本 = 交易分润*/
+        ABS(amount) ELSE 0 END) as externalChannelTransactionCost, /*外接渠道交易成本 = 交易分润*/
         0 as '外接渠道代付成本',
         SUM( CASE WHEN a.runOrderType in (14,35,36,37) and b.userType = 2 THEN
-        amount ELSE 0 END) as cardSupplierRebate, /*返点码商 = 交易分润+代付加款分润+卡商入款代理分润+卡商出款代理分润*/
-        SUM( CASE WHEN a.runOrderType = 12 THEN amount ELSE 0 END)*0.0015 as itRebate, /*返点技术 = 自营渠道交易量*0.0015*/
+        ABS(amount) ELSE 0 END) as cardSupplierRebate, /*返点码商 = 交易分润+代付加款分润+卡商入款代理分润+卡商出款代理分润*/
+        SUM( CASE WHEN a.runOrderType = 12 THEN ABS(amount) ELSE 0 END)*0.0015 as itRebate, /*返点技术 = 自营渠道交易量*0.0015*/
         0 as profit /*营业利润 = 四方营收-返点码商-返点技术*/
 
         from
