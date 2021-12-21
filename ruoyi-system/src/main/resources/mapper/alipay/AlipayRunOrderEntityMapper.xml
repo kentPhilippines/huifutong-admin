@@ -1,58 +1,113 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.alipay.mapper.AlipayRunOrderEntityMapper">
 
     <resultMap type="AlipayRunOrderEntity" id="AlipayRunOrderEntityResult">
-        <result property="id"    column="id"    />
-        <result property="orderId"    column="orderId"    />
-        <result property="associatedId"    column="associatedId"    />
-        <result property="orderAccount"    column="orderAccount"    />
-        <result property="runOrderType"    column="runOrderType"    />
-        <result property="amount"    column="amount"    />
-        <result property="generationIp"    column="generationIp"    />
-        <result property="dealDescribe"    column="dealDescribe"    />
-        <result property="acountR"    column="acountR"    />
-        <result property="accountW"    column="accountW"    />
-        <result property="createTime"    column="createTime"    />
-        <result property="submitTime"    column="submitTime"    />
-        <result property="status"    column="status"    />
-        <result property="runType"    column="runType"    />
-        <result property="amountType"    column="amountType"    />
-        <result property="amountNow"    column="amountNow"    />
-        <result property="retain4"    column="retain4"    />
-        <result property="retain5"    column="retain5"    />
+        <result property="id" column="id"/>
+        <result property="orderId" column="orderId"/>
+        <result property="associatedId" column="associatedId"/>
+        <result property="orderAccount" column="orderAccount"/>
+        <result property="runOrderType" column="runOrderType"/>
+        <result property="amount" column="amount"/>
+        <result property="generationIp" column="generationIp"/>
+        <result property="dealDescribe" column="dealDescribe"/>
+        <result property="acountR" column="acountR"/>
+        <result property="accountW" column="accountW"/>
+        <result property="createTime" column="createTime"/>
+        <result property="submitTime" column="submitTime"/>
+        <result property="status" column="status"/>
+        <result property="runType" column="runType"/>
+        <result property="amountType" column="amountType"/>
+        <result property="amountNow" column="amountNow"/>
+        <result property="retain4" column="retain4"/>
+        <result property="retain5" column="retain5"/>
     </resultMap>
 
     <sql id="selectAlipayRunOrderEntityVo">
-        select id, orderId, associatedId, orderAccount, runOrderType, amount, generationIp, dealDescribe, acountR, accountW, createTime, submitTime, status, runType, amountType, amountNow, retain4, retain5 from alipay_run_order
-        select id, orderId, associatedId, orderAccount, runOrderType, amount, generationIp, dealDescribe, acountR, accountW, createTime, submitTime, status, runType, amountType,
-               amountNow, retain4, retain5 from alipay_run_order
+        select id,
+               orderId,
+               associatedId,
+               orderAccount,
+               runOrderType,
+               amount,
+               generationIp,
+               dealDescribe,
+               acountR,
+               accountW,
+               createTime,
+               submitTime,
+               status,
+               runType,
+               amountType,
+               amountNow,
+               retain4,
+               retain5
+        from alipay_run_order
+        select id,
+               orderId,
+               associatedId,
+               orderAccount,
+               runOrderType,
+               amount,
+               generationIp,
+               dealDescribe,
+               acountR,
+               accountW,
+               createTime,
+               submitTime,
+               status,
+               runType,
+               amountType,
+               amountNow,
+               retain4,
+               retain5
+        from alipay_run_order
     </sql>
     <sql id="selectAlipayRunOrderEntityVoWithUserType">
-        select a.id, a.orderId, a.associatedId, a.orderAccount, a.runOrderType, a.amount, a.generationIp, a.dealDescribe, a.acountR, a.accountW, a.createTime, a.submitTime, a.status, a.runType, a.amountType,
-               a.amountNow, a.retain4, a.retain5,b.userType from alipay_run_order a left join alipay_user_info b on a.orderAccount = b.userId
+        select a.id,
+               a.orderId,
+               a.associatedId,
+               a.orderAccount,
+               a.runOrderType,
+               a.amount,
+               a.generationIp,
+               a.dealDescribe,
+               a.acountR,
+               a.accountW,
+               a.createTime,
+               a.submitTime,
+               a.status,
+               a.runType,
+               a.amountType,
+               a.amountNow,
+               a.retain4,
+               a.retain5,
+               b.userType
+        from alipay_run_order a
+                 left join alipay_user_info b on a.orderAccount = b.userId
     </sql>
 
-    <select id="selectAlipayRunOrderEntityList" parameterType="AlipayRunOrderEntity" resultMap="AlipayRunOrderEntityResult">
+    <select id="selectAlipayRunOrderEntityList" parameterType="AlipayRunOrderEntity"
+            resultMap="AlipayRunOrderEntityResult">
         <include refid="selectAlipayRunOrderEntityVoWithUserType"/>
         <where>
             a.createTime between #{params.dayStart} and #{params.dayEnd}
-            <if test="orderId != null  and orderId != ''"> and a.orderId = #{orderId}</if>
-            <if test="associatedId != null  and associatedId != ''"> and a.associatedId = #{associatedId}</if>
-            <if test="orderAccount != null  and orderAccount != ''"> and a.orderAccount = #{orderAccount}</if>
-            <if test="runOrderType != null "> and a.runOrderType = #{runOrderType}</if>
-            <if test="amount != null "> and a.amount = #{amount}</if>
-            <if test="generationIp != null  and generationIp != ''"> and a.generationIp = #{generationIp}</if>
-            <if test="dealDescribe != null  and dealDescribe != ''"> and a.dealDescribe = #{dealDescribe}</if>
-            <if test="acountR != null  and acountR != ''"> and a.acountR = #{acountR}</if>
-            <if test="accountW != null  and accountW != ''"> and a.accountW = #{accountW}</if>
-            <if test="status != null "> and a.status = #{status}</if>
-            <if test="runType != null  and runType != ''"> and a.runType = #{runType}</if>
-            <if test="amountType != null  and amountType != ''"> and a.amountType = #{amountType}</if>
-            <if test="amountNow != null "> and a.amountNow = #{amountNow}</if>
-            <if test="userType != null  and userType != ''"> and b.userType = #{userType}</if>
+            <if test="orderId != null  and orderId != ''">and a.orderId = #{orderId}</if>
+            <if test="associatedId != null  and associatedId != ''">and a.associatedId = #{associatedId}</if>
+            <if test="orderAccount != null  and orderAccount != ''">and a.orderAccount = #{orderAccount}</if>
+            <if test="runOrderType != null ">and a.runOrderType = #{runOrderType}</if>
+            <if test="amount != null ">and a.amount = #{amount}</if>
+            <if test="generationIp != null  and generationIp != ''">and a.generationIp = #{generationIp}</if>
+            <if test="dealDescribe != null  and dealDescribe != ''">and a.dealDescribe = #{dealDescribe}</if>
+            <if test="acountR != null  and acountR != ''">and a.acountR = #{acountR}</if>
+            <if test="accountW != null  and accountW != ''">and a.accountW = #{accountW}</if>
+            <if test="status != null ">and a.status = #{status}</if>
+            <if test="runType != null  and runType != ''">and a.runType = #{runType}</if>
+            <if test="amountType != null  and amountType != ''">and a.amountType = #{amountType}</if>
+            <if test="amountNow != null ">and a.amountNow = #{amountNow}</if>
+            <if test="userType != null  and userType != ''">and b.userType = #{userType}</if>
         </where>
         order by id desc
     </select>
@@ -62,7 +117,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
-    <insert id="insertAlipayRunOrderEntity" parameterType="AlipayRunOrderEntity" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertAlipayRunOrderEntity" parameterType="AlipayRunOrderEntity" useGeneratedKeys="true"
+            keyProperty="id">
         insert into alipay_run_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="orderId != null  and orderId != ''">orderId,</if>
@@ -82,7 +138,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="amountNow != null ">amountNow,</if>
             <if test="retain4 != null  and retain4 != ''">retain4,</if>
             <if test="retain5 != null  and retain5 != ''">retain5,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null  and orderId != ''">#{orderId},</if>
             <if test="associatedId != null  and associatedId != ''">#{associatedId},</if>
@@ -101,7 +157,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="amountNow != null ">#{amountNow},</if>
             <if test="retain4 != null  and retain4 != ''">#{retain4},</if>
             <if test="retain5 != null  and retain5 != ''">#{retain5},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateAlipayRunOrderEntity" parameterType="AlipayRunOrderEntity">
@@ -129,7 +185,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteAlipayRunOrderEntityById" parameterType="Long">
-        delete from alipay_run_order where id = #{id}
+        delete
+        from alipay_run_order
+        where id = #{id}
     </delete>
 
     <delete id="deleteAlipayRunOrderEntityByIds" parameterType="String">
@@ -139,4 +197,47 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+
+    <select id="selectProfitGroupByDate" parameterType="AlipayRunOrderEntity"
+            resultType="com.ruoyi.alipay.domain.AlipayProfitReport">
+        select
+        DATE_FORMAT(a.createTime,"%Y-%m-%d") dateTime,
+        SUM( CASE WHEN a.runOrderType = 20 and b.userType = 1 THEN
+        amount ELSE 0 END) as merchantTradeTotal, /*商户交易总量 = 商户交易加款*/
+        SUM( CASE WHEN a.runOrderType = 12 THEN
+        amount ELSE 0 END) as selfChannelTradeTotal, /*自营渠道交易量 = 交易点数扣除*/
+        SUM( CASE when a.runOrderType = 12 and b.userType = 3 THEN
+        amount ELSE 0 END) as externalChannelTradeTotal, /*外接渠道交易量 = 交易点数扣除*/
+        0 as fouthPartRevenue, /*四方营收 = （代收服务费+代付服务费）-四方代理佣金-外接渠道交易成本-外接渠道代付成本*/
+        SUM( CASE WHEN a.runOrderType = 21 THEN
+        amount ELSE 0 END) as collectServiceFee, /*代收服务费 = 商户交易手续费扣款*/
+        SUM( CASE WHEN a.runOrderType = 9 THEN
+        amount ELSE 0 END) as payServiceFee, /*代付服务费 = 代付手续费*/
+        SUM( CASE WHEN a.runOrderType in (13,26) THEN
+        amount ELSE 0 END) as fourthPartiesCommission, /*四方代理佣金 = 代理商分润+代付代理商分润27*/
+        SUM( CASE WHEN a.runOrderType = 14 and b.userType = 3 THEN
+        amount ELSE 0 END) as externalChannelTransactionCost, /*外接渠道交易成本 = 交易分润*/
+        0 as '外接渠道代付成本',
+        SUM( CASE WHEN a.runOrderType in (14,35,36,37) and b.userType = 2 THEN
+        amount ELSE 0 END) as cardSupplierRebate, /*返点码商 = 交易分润+代付加款分润+卡商入款代理分润+卡商出款代理分润*/
+        SUM( CASE WHEN a.runOrderType = 12 THEN amount ELSE 0 END)*0.0015 as itRebate, /*返点技术 = 自营渠道交易量*0.0015*/
+        0 as profit /*营业利润 = 四方营收-返点码商-返点技术*/
+
+        from
+        alipay_run_order a
+        left join alipay_user_info b on b.userId = a.orderAccount
+
+        <where>
+            1=1
+            <if test="params.dayStart != null and params.dayEnd != ''  ">
+                and a.createTime between #{params.dayStart} and #{params.dayEnd}
+            </if>
+        </where>
+
+        group by
+
+        DATE_FORMAT(a.createTime,"%Y-%m-%d")
+
+
+    </select>
 </mapper>

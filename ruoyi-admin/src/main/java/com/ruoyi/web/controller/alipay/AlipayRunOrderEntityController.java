@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.alipay;
 
+import com.ruoyi.alipay.domain.AlipayProfitReport;
 import com.ruoyi.alipay.domain.AlipayRunOrderEntity;
 import com.ruoyi.alipay.service.IAlipayRunOrderEntityService;
 import com.ruoyi.common.annotation.Log;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 /**
- * 流水订单记录Controller
+ * 利润报表Controller
  *
  * @author kiwi
  * @date 2020-03-18
@@ -64,5 +65,27 @@ public class AlipayRunOrderEntityController extends BaseController {
 		ExcelUtil<AlipayRunOrderEntity> util = new ExcelUtil<AlipayRunOrderEntity>(AlipayRunOrderEntity.class);
 		AjaxResult runOrder = util.exportExcel(list, "runOrder");
 		return runOrder;
+	}
+
+
+
+
+	@GetMapping("/groupByDate")
+	@RequiresPermissions("alipay:running:view")
+	public String groupByDate() {
+		return prefix + "/groupByDate";
+	}
+
+	/**
+	 * 查询流水订单记录列表
+	 */
+	@PostMapping("/groupByDate/list")
+	@RequiresPermissions("running:alipay:list")
+	@ResponseBody
+	public TableDataInfo groupByDateList(AlipayRunOrderEntity alipayRunOrderEntity) {
+		startPage();
+		List<AlipayProfitReport> list = alipayRunOrderEntityService.selectProfitGroupByDate(alipayRunOrderEntity);
+
+		return getDataTable(list);
 	}
 }

@@ -1,5 +1,6 @@
 package com.ruoyi.alipay.service.impl;
 
+import com.ruoyi.alipay.domain.AlipayProfitReport;
 import com.ruoyi.alipay.domain.AlipayRunOrderEntity;
 import com.ruoyi.alipay.mapper.AlipayRunOrderEntityMapper;
 import com.ruoyi.alipay.service.IAlipayRunOrderEntityService;
@@ -68,4 +69,11 @@ public class AlipayRunOrderEntityServiceImpl implements IAlipayRunOrderEntitySer
         return alipayRunOrderEntityMapper.witAgentFee(yesToday, today);
     }
 
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayProfitReport> selectProfitGroupByDate(AlipayRunOrderEntity alipayRunOrderEntity)
+    {
+        return alipayRunOrderEntityMapper.selectProfitGroupByDate(alipayRunOrderEntity);
+    }
 }

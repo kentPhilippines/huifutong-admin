@@ -1,6 +1,9 @@
 package com.ruoyi.alipay.service;
 
+import com.ruoyi.alipay.domain.AlipayProfitReport;
 import com.ruoyi.alipay.domain.AlipayRunOrderEntity;
+import com.ruoyi.common.annotation.DataSource;
+import com.ruoyi.common.enums.DataSourceType;
 
 import java.util.List;
 
@@ -59,4 +62,6 @@ public interface IAlipayRunOrderEntityService {
      * @return
      */
     Double witAgentFee(String yesToday, String today);
+
+    List<AlipayProfitReport> selectProfitGroupByDate(AlipayRunOrderEntity alipayRunOrderEntity);
 }
