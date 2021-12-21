@@ -81,13 +81,17 @@
     <select id="selectAlipayDealOrderAppListGroupByOrderAccount" parameterType="AlipayDealOrderApp"
             resultType="java.util.HashMap">
 
-        select dealDescribe,orderAccount,SUM( CASE WHEN orderStatus = '2' THEN
-        1 ELSE 0 END) as sucessCn,SUM( CASE WHEN orderStatus = '3' THEN
-        1 ELSE 0 END)  as failCn,SUM( CASE WHEN orderStatus = '2' THEN
-        orderAmount ELSE 0 END) as sucessAmount,SUM( CASE WHEN orderStatus = '3' THEN
-        orderAmount ELSE 0 END) as failAmount   from alipay_deal_order_app adoa
+        select dealDescribe,orderAccount,
+               SUM( CASE WHEN orderStatus = '2' THEN 1 ELSE 0 END) as sucessCn,
+               SUM( CASE WHEN orderStatus = '4' THEN 1 ELSE 0 END)  as failCn,
+               SUM( CASE WHEN orderStatus = '2' THEN orderAmount ELSE 0 END) as sucessAmount,
+               SUM( CASE WHEN orderStatus = '4' THEN orderAmount ELSE 0 END) as failAmount ,
+        SUM( CASE WHEN orderStatus = '1' THEN 1 ELSE 0 END)  as processingCn,
+        SUM( CASE WHEN orderStatus = '1' THEN orderAmount ELSE 0 END) as processingAmount
+
+        from alipay_deal_order_app adoa
         <where>
-            orderStatus in("2","3")
+            orderStatus in("1","2","3","4")
             <if test="params.dayStart != null and params.dayEnd != ''  ">
                 and createTime between #{params.dayStart} and #{params.dayEnd}
             </if>
