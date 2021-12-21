@@ -139,4 +139,7 @@ public interface AlipayDealOrderEntityMapper {
     @Update("update alipay_deal_order set  lockWit = 0  " +
             "      where id = #{id} ")
     int updateUnLock(Long id);
+
+    List<AlipayDealOrderEntity> selectAlipayDealOrderEntityListIsCharen(AlipayDealOrderEntity alipayDealOrderEntity);
+
 }

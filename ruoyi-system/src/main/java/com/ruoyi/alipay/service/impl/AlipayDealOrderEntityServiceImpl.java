@@ -64,12 +64,17 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
      * 查询交易订单列表
      *
      * @param alipayDealOrderEntity 交易订单
+     * @param isCharen
      * @return 交易订单
      */
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
-    public List<AlipayDealOrderEntity> selectAlipayDealOrderEntityList(AlipayDealOrderEntity alipayDealOrderEntity) {
-        return alipayDealOrderEntityMapper.selectAlipayDealOrderEntityList(alipayDealOrderEntity);
+    public List<AlipayDealOrderEntity> selectAlipayDealOrderEntityList(AlipayDealOrderEntity alipayDealOrderEntity, Boolean isCharen) {
+     if(isCharen){
+         return alipayDealOrderEntityMapper.selectAlipayDealOrderEntityListIsCharen(alipayDealOrderEntity);
+     }else {
+         return alipayDealOrderEntityMapper.selectAlipayDealOrderEntityList(alipayDealOrderEntity);
+     }
     }
 
     @Override

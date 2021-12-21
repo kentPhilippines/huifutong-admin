@@ -91,6 +91,7 @@ public class AlipayDealOrderEntity extends BaseEntity {
     /**
      * 数据id
      */
+    @Excel(name = "付款人")
     private String payer;
 
     public String getPayer() {
@@ -122,6 +123,7 @@ public class AlipayDealOrderEntity extends BaseEntity {
         this.bankAmountNow = bankAmountNow;
     }
 
+    @Excel(name = "付款明细")
     private String payInfo;
     private Integer lockWit;
     private Integer grabOrder;

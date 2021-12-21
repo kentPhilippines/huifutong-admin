@@ -184,9 +184,14 @@
             backOrderUrl: prefix + "/backOrder/{id}",
             viewBankDataUrl: prefix1+"/bank/{orderQr}",
             modalName: "主交易订单",
-            detailView:true,
+           /* detailView:true,
             detailFormatter:function(index,row){
                     return ' <img class="image" src= '+ row.payImg + ' style=" width: auto; height: auto;"' + '>'
+            },*/
+            detailView:true,
+            onExpandRow: function (index, row, $detail) {
+                //这里优先展示 子母代付订单数据如果 有订单处理数据  次要展示
+                initChildTable(index, row, $detail );
             },
             showFooter: true,   //注册加载子表的事件。注意下这里的三个参数！
             columns: [{
@@ -195,11 +200,11 @@
                 {field: 'id', title: '数据ID', visible: false },
                 {
                     field: 'orderId', title: '平台订单', formatter: function (value, row, index) {
-                        var table = '<ul>'
-                        table += '<li>' + '主订单：' + row.orderId + '</li>'
+                        var table = '<ul><a class="accordion-toggle" data-toggle="collapse" data-parent="#bootstrap-table" href="#collapseOne"> '
+                        table += '<li> ' + '主订单：' + row.orderId + '</li>'
                         table += '<li>' + '关联订单：' + row.associatedId + '</li>'
                         table += '<li>' + '外部订单：' + row.externalOrderId + '</li>'
-                        table += '</ul>'
+                        table += '</a></ul>'
                         return table;
                     }
                 },
@@ -402,11 +407,75 @@
                 }]
         };
         $.table.init(options);
-
-
-
-
     });
+
+    /**
+     *  签
+     * @param index
+     * @param row
+     * @param $detail
+     */
+    initChildTable = function (index, row, $detail) {
+        var orderId = row.orderId;
+        var childTable = $detail.html('<table style="table-layout:fixed"></table>').find('table');
+        $(childTable).bootstrapTable({
+            url: prefix + "/childrenOrderList",
+            method: 'post',
+            sidePagination: "server",
+            contentType: "application/x-www-form-urlencoded",
+            queryParams: {
+                orderId: orderId,
+            },
+            columns: [
+                {
+                    field: 'orderId',
+                    title: '订单号'
+                },
+                {
+                    field: 'exceptType',
+                    title: '类型'
+                    ,formatter: function (value, row, index) {
+                        if(row.exceptType == 6 ){
+                            return  '<span>抢单</span>'
+                        }else if(row.exceptType == 7){
+                            return  '<span>查看出款信息</span>'
+                        }else if(row.exceptType == 8){
+                            return  '<span>放弃出款</span>'
+                        }else if(row.exceptType == 9){
+                            return  '<span>确认出款</span>'
+                        }else{
+                            return  '<span>运营操作</span>'
+                        }
+                    }
+                },
+                {
+                    field: 'orderAccount',
+                    title: '商户账号'
+                },
+                {
+                    field: 'exceptOrderAmount',
+                    title: '金额'
+                },
+                {
+                    field: 'orderGenerationip',
+                    title: '操作ip'
+                },
+                {
+                    field: 'explains',
+                    title: '说明'
+                },
+                {
+                    field: 'operation',
+                    title: '操作人'
+                },
+                {
+                    field: 'createTime',
+                    title: '数据生成时间'
+                }]
+
+        });
+    };
+
 
     function setTop(obj,id) {
         $.cookie('orderDealWit_setTop', id);
