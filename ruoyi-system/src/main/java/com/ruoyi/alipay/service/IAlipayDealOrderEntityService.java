@@ -81,7 +81,7 @@ public interface IAlipayDealOrderEntityService {
 
     AlipayDealOrderEntity findOrderByOrderId(String order);
 
-    AlipayDealOrderEntity selectAlipayDealOrderEntityListSum(AlipayDealOrderEntity alipayDealOrderEntity);
+    AlipayDealOrderEntity selectAlipayDealOrderEntityListSum(AlipayDealOrderEntity alipayDealOrderEntity,Boolean flag );
 
     /**
      * 修改原订单金额

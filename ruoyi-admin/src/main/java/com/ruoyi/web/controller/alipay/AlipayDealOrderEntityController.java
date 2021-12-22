@@ -99,6 +99,17 @@ public class AlipayDealOrderEntityController extends BaseController {
         List<AlipayUserFundEntity> rateList = alipayUserFundEntityService.findUserFundRate();
         return prefix + "/orderDealWit";
     }
+    @GetMapping("/WitOrder")
+    @RequiresPermissions("orderDeal:qr:view")
+    public String orderDealWitOrder(ModelMap mmap) {
+        AlipayProductEntity alipayProductEntity = new AlipayProductEntity();
+        alipayProductEntity.setStatus(1);
+        //查询产品类型下拉菜单
+        List<AlipayProductEntity> list = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
+        mmap.put("productList", list);
+        List<AlipayUserFundEntity> rateList = alipayUserFundEntityService.findUserFundRate();
+        return prefix + "/merchant_withdrawal";
+    }
 
     @Autowired
     private IAlipayUserFundEntityService alipayUserFundEntityService;
@@ -173,7 +184,7 @@ public class AlipayDealOrderEntityController extends BaseController {
             }
         }
         userCollect = null;
-        AlipayDealOrderEntity deal = alipayDealOrderEntityService.selectAlipayDealOrderEntityListSum(alipayDealOrderEntity);
+        AlipayDealOrderEntity deal = alipayDealOrderEntityService.selectAlipayDealOrderEntityListSum(alipayDealOrderEntity,isCharen);
         if (null != deal && CollUtil.isNotEmpty(list)) {
             for (int mark = 0; mark < 1; mark++) {
                 list.get(mark).setSunCountAmountFee(deal.getSunCountAmountFee());
@@ -789,12 +800,17 @@ public class AlipayDealOrderEntityController extends BaseController {
     @Autowired
     private IAlipayExceptionOrderService alipayExceptionOrderService;
     @PostMapping("/childrenOrderList")
-    @RequiresPermissions("orderDeal:qr:statistics")
     @ResponseBody
     public TableDataInfo childrenOrderList(AlipayExceptionOrder alipayExceptionOrder) {
         startPage1();
         List<AlipayExceptionOrder> alipayExceptionOrders = alipayExceptionOrderService.selectAlipayExceptionOrderListBank(alipayExceptionOrder);
         return getDataTable(alipayExceptionOrders) ;
+    }
+    @PostMapping("/witOrderList")
+    @ResponseBody
+    public TableDataInfo witOrderList(AlipayDealOrderEntity alipayDealOrderEntity) {
+        alipayDealOrderEntity.setOrderType("4");
+          return list(alipayDealOrderEntity,true) ;
     }
 
 
