@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AlipayMessageRegMapper">
+    
+    <resultMap type="AlipayMessageReg" id="AlipayMessageRegResult">
+        <result property="id"    column="id"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="sourcePhone"    column="source_phone"    />
+        <result property="regex"    column="regex"    />
+        <result property="template"    column="template"    />
+        <result property="transactionTypeDetail"    column="transaction_type_detail"    />
+        <result property="transactionType"    column="transaction_type"    />
+        <result property="templateFlag"    column="template_flag"    />
+        <result property="createdDate"    column="created_date"    />
+        <result property="remark1"    column="remark1"    />
+        <result property="remark2"    column="remark2"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="tailSplit"    column="tail_split"    />
+    </resultMap>
+
+    <sql id="selectAlipayMessageRegVo">
+        select id, bank_name, source_phone, regex, template, transaction_type_detail, transaction_type, template_flag, created_date, remark1, remark2, update_date, update_by,tail_split from alipay_message_reg
+    </sql>
+
+    <select id="selectAlipayMessageRegList" parameterType="AlipayMessageReg" resultMap="AlipayMessageRegResult">
+        <include refid="selectAlipayMessageRegVo"/>
+        <where>
+            created_date between #{params.dayStart} and #{params.dayEnd}
+            <if test="bankName != null  and bankName != ''"> and bank_name like concat('%', #{bankName}, '%')</if>
+            <if test="sourcePhone != null  and sourcePhone != ''"> and source_phone = #{sourcePhone}</if>
+            <if test="regex != null  and regex != ''"> and regex = #{regex}</if>
+            <if test="template != null  and template != ''"> and template = #{template}</if>
+            <if test="transactionTypeDetail != null  and transactionTypeDetail != ''"> and transaction_type_detail = #{transactionTypeDetail}</if>
+            <if test="transactionType != null  and transactionType != ''"> and transaction_type = #{transactionType}</if>
+            <if test="templateFlag != null  and templateFlag != ''"> and template_flag = #{templateFlag}</if>
+            <if test="createdDate != null "> and created_date = #{createdDate}</if>
+            <if test="remark1 != null  and remark1 != ''"> and remark1 = #{remark1}</if>
+            <if test="remark2 != null  and remark2 != ''"> and remark2 = #{remark2}</if>
+            <if test="tailSplit != null  and tailSplit != ''"> and tail_split = #{tailSplit}</if>
+            <if test="updateDate != null "> and update_date = #{updateDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectAlipayMessageRegById" parameterType="Long" resultMap="AlipayMessageRegResult">
+        <include refid="selectAlipayMessageRegVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAlipayMessageReg" parameterType="AlipayMessageReg" useGeneratedKeys="true" keyProperty="id">
+        insert into alipay_message_reg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bankName != null  and bankName != ''">bank_name,</if>
+            <if test="sourcePhone != null  and sourcePhone != ''">source_phone,</if>
+            <if test="regex != null  and regex != ''">regex,</if>
+            <if test="template != null  and template != ''">template,</if>
+            <if test="transactionTypeDetail != null  and transactionTypeDetail != ''">transaction_type_detail,</if>
+            <if test="transactionType != null  and transactionType != ''">transaction_type,</if>
+            <if test="templateFlag != null  and templateFlag != ''">template_flag,</if>
+            <if test="createdDate != null ">created_date,</if>
+            <if test="remark1 != null  and remark1 != ''">remark1,</if>
+            <if test="remark2 != null  and remark2 != ''">remark2,</if>
+            <if test="tailSplit != null  and tailSplit != ''">tail_split,</if>
+            <if test="updateDate != null ">update_date,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bankName != null  and bankName != ''">#{bankName},</if>
+            <if test="sourcePhone != null  and sourcePhone != ''">#{sourcePhone},</if>
+            <if test="regex != null  and regex != ''">#{regex},</if>
+            <if test="template != null  and template != ''">#{template},</if>
+            <if test="transactionTypeDetail != null  and transactionTypeDetail != ''">#{transactionTypeDetail},</if>
+            <if test="transactionType != null  and transactionType != ''">#{transactionType},</if>
+            <if test="templateFlag != null  and templateFlag != ''">#{templateFlag},</if>
+            <if test="createdDate != null ">#{createdDate},</if>
+            <if test="remark1 != null  and remark1 != ''">#{remark1},</if>
+            <if test="remark2 != null  and remark2 != ''">#{remark2},</if>
+            <if test="tailSplit != null  and tailSplit != ''">#{tailSplit},</if>
+            <if test="updateDate != null ">#{updateDate},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAlipayMessageReg" parameterType="AlipayMessageReg">
+        update alipay_message_reg
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bankName != null  and bankName != ''">bank_name = #{bankName},</if>
+            <if test="sourcePhone != null  and sourcePhone != ''">source_phone = #{sourcePhone},</if>
+            <if test="regex != null  and regex != ''">regex = #{regex},</if>
+            <if test="template != null  and template != ''">template = #{template},</if>
+            <if test="transactionTypeDetail != null  and transactionTypeDetail != ''">transaction_type_detail = #{transactionTypeDetail},</if>
+            <if test="transactionType != null  and transactionType != ''">transaction_type = #{transactionType},</if>
+            <if test="templateFlag != null  and templateFlag != ''">template_flag = #{templateFlag},</if>
+            <if test="createdDate != null ">created_date = #{createdDate},</if>
+            <if test="remark1 != null  and remark1 != ''">remark1 = #{remark1},</if>
+            <if test="remark2 != null  and remark2 != ''">remark2 = #{remark2},</if>
+
+            <if test="updateDate != null ">update_date = #{updateDate},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="tailSplit != null  and tailSplit != ''">tail_split = #{tailSplit},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAlipayMessageRegById" parameterType="Long">
+        delete from alipay_message_reg where id = #{id}
+    </delete>
+
+    <delete id="deleteAlipayMessageRegByIds" parameterType="String">
+        delete from alipay_message_reg where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

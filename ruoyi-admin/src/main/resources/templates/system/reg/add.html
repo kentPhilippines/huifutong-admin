@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增短信正则模板')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-reg-add">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">银行名称
+：</label>
+                <div class="col-sm-8">
+                    <textarea name="bankName" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">银行短信来源号码：</label>
+                <div class="col-sm-8">
+                    <textarea name="sourcePhone" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">短信模板正则：</label>
+                <div class="col-sm-8">
+                    <textarea name="regex" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">短信模板占位：</label>
+                <div class="col-sm-8">
+                    <textarea name="template" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">具体的交易方式
+：</label>
+                <div class="col-sm-8">
+                    <textarea name="transactionTypeDetail" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">平台规定的交易方式：</label>
+                <div class="col-sm-8">
+                    <select name="transactionType" th:with="type=${@dict.getType('transactionType')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+                                th:value="${dict.dictValue}"></option>
+                    </select>
+                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">支持解析 ：</label>
+                <div class="col-sm-8">
+                    <select name="templateFlag" th:with="type=${@dict.getType('templateFlag')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+                                th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">尾号切割符：</label>
+                <div class="col-sm-8">
+                    <input name="tailSplit" class="form-control" type="text">
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "system/reg"
+        $("#form-reg-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-reg-add').serialize());
+            }
+        }
+
+        $("input[name='createdDate']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='updateDate']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+    </script>
+</body>
+</html>
