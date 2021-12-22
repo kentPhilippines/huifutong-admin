@@ -129,6 +129,7 @@ public interface AlipayDealOrderEntityMapper {
     AlipayDealOrderEntity findOrderByOrderId(@Param("order") String order);
 
     AlipayDealOrderEntity selectAlipayDealOrderEntityListSum(AlipayDealOrderEntity alipayDealOrderEntity);
+    AlipayDealOrderEntity selectAlipayDealOrderEntityListSumCharen(AlipayDealOrderEntity alipayDealOrderEntity);
 
 
 
