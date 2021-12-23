@@ -51,6 +51,16 @@ public class AlipayMessageReg extends BaseEntity
  */
     @Excel(name = "开关开启1，支持解析，开关关闭0，不支持解析")
     private String templateFlag;
+    private String sourceMsg;
+
+
+    public void setSourceMsg(String sourceMsg) {
+        this.sourceMsg = sourceMsg;
+    }
+
+    public String getSourceMsg() {
+        return sourceMsg;
+    }
 
     /** 创建时间 */
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
@@ -72,7 +82,16 @@ public class AlipayMessageReg extends BaseEntity
     @Excel(name = "备用2", width = 30, dateFormat = "yyyy-MM-dd")
     private Date updateDate;
 
-    public void setId(Long id) 
+
+    public void setTailSplit(String tailSplit) {
+        this.tailSplit = tailSplit;
+    }
+
+    public String getTailSplit() {
+        return tailSplit;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

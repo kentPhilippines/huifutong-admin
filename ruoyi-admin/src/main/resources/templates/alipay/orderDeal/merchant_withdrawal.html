@@ -142,7 +142,20 @@
                     field: 'orderStatus',
                     title: '订单状态',
                     formatter: function (value, row, index) {
-                        return $.table.selectDictLabel(orderStatus, value);
+                        var table ='';
+                        if(1 == row.orderStatus || '1' == row.orderStatus){
+                            table +=   '<span class="badge badge-info">审核中</span>'
+                        }
+                        if(2 == row.orderStatus || '2' == row.orderStatus){
+                            table += '<span class="badge badge-warning">成功</span>'
+                        }
+                        if(3 == row.orderStatus || '3' == row.orderStatus){
+                            table +=   '<span class="badge badge-info">失败</span>'
+                        }
+                        if(4 == row.orderStatus || '4' == row.orderStatus){
+                            table +=   '<span class="badge badge-info">已推送出款</span>'
+                        }
+                        return table;
                     }
                 },
                 {
@@ -310,7 +323,7 @@
                             return '<span class="badge badge-primary">商户充值->渠道主交易订单</span>'
                         } else if (value == 4) {
                             var table = '<ul>'
-                            table += '<li>' + '<span class="badge badge-danger">商户代付->渠道出款主交易订单</span>' + '</li>'
+                            table += '<li>' + '<span class="badge badge-danger">商户代付->&nbsp;渠道出款主交易订单</span>' + '</li>'
                             if('zhongbang-bank' == row.orderQrUser){
                                 table += '<li>' + '<span class="badge badge-danger">等待切款</span>' + '</li>'
                             }
@@ -326,41 +339,41 @@
                             if(2 == row.grabOrder || '2' == row.grabOrder ){//卡商放弃出款
                                 table += '<li>' + '<span class="badge badge-warning">卡商放弃出款</span>' + '</li>'
                             }
+                            table +=  $.table.selectDictLabel(orderstatusDatas, row.orderStatus);
                             table += '</ul>'
                             return table;
                         } else if (value == 3) {
-                            return '<span class="badge badge-info">卡商充值->渠道主交易订单</span>'
+                            return '<span class="badge badge-info">卡商充值->&nbsp;渠道主交易订单</span>'
                         }
                     }
                 },
-                {
+              /*  {
                     field: 'orderStatus', title: '订单状态',
                     formatter: function (value, row, index) {
-                        return  $.table.selectDictLabel(orderstatusDatas, value);
+                        return
                     }
-                },
+                },*/
                 // {field: 'externalOrderId',   title: '外部订单号'},
                 {
                     field: 'dealAmount', title: '交易金额',
                     footerFormatter: function (rows) {
-                        var sumAmount = 0;
-                        var sumFee = 0;
-                        var sumActualAmount = 0;
-                        var sunCountAmount = 0;//数据总计代付金额
-                        var sunCountAmountFee = 0;//数据总计收取手续费
-                        var sunCountActualAmount = 0;//数据总计实际到账
+                        var sumAmount = 0;//总金额
+                        var sumActualAmount = 0;//已处理金额
+                        var sunCountAmount = 0;//未处理金额
+                        var sumCount = 0;//笔数
                         for (var i in rows) {
+                            sumCount++;
                             sumAmount += parseFloat(rows[i].dealAmount);
-                            sumFee += parseFloat(rows[i].dealFee);
-                            sumActualAmount += parseFloat(rows[i].actualAmount);
-                            sunCountAmount += parseFloat(rows[i].sunCountAmount);
-                            sunCountAmountFee += parseFloat(rows[i].sunCountAmountFee);
-                            sunCountActualAmount += parseFloat(rows[i].sunCountActualAmount);
+                            if(rows.orderStatus=='2' || rows.orderStatus==2){
+                                sumActualAmount += parseFloat(rows[i].dealAmount);
+                            }else{
+                                sunCountAmount += parseFloat(rows[i].dealAmount);
+                            }
+
                         }
                         var table = '<ul>'
-                        table += '<li><span style="color: green"><strong>' + '当页金额：' + sumAmount + '</strong></span><span style="color: red">&nbsp;&nbsp;&nbsp;&nbsp;<strong>总金额 ： ' + sunCountAmount + '</strong></span></li>'
-                        table += '<li><span style="color: green"><strong>' + '当页手续费：' + sumFee + '</strong></span><span style="color: red">&nbsp;&nbsp;&nbsp;&nbsp;<strong>总手续费 ： ' + sunCountAmountFee + '</strong></span></li>'
-                        table += '<li><span style="color: green"><strong>' + '已处理：' + sumActualAmount + '</strong></span><span style="color: red">&nbsp;&nbsp;&nbsp;&nbsp;<strong>未处理 ： ' + sunCountActualAmount + '</strong></span></li>'
+                        table += '<li><span style="color: green"><strong>' + '总金额：' + sumAmount + '</strong></span><span style="color: green">&nbsp;&nbsp;&nbsp;&nbsp;<strong>总笔数 ： ' + sumCount + '</strong></span></li>'
+                        table += '<li><span style="color: green"><strong>' + '已处理：' + sumActualAmount + '</strong></span><span style="color: red">&nbsp;&nbsp;&nbsp;&nbsp;<strong>未处理 ： ' + sunCountAmount + '</strong></span></li>'
                         table += '</ul>'
                         return table;
                     },formatter: function (value, row, index) {
@@ -460,10 +473,10 @@
 
 
         initChildTable1 = function (index, row, $detail) {
-            var orderId = row.orderId;
+            var orderId = row.associatedId;
             var childTable = $detail.html('<table style="table-layout:fixed"></table>').find('table');
             $(childTable).bootstrapTable({
-                url: prefix + "/childrenOrderList",
+                url: prefixOrder + "/childrenOrderList",
                 method: 'post',
                 sidePagination: "server",
                 contentType: "application/x-www-form-urlencoded",
