@@ -10,6 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 	
     <artifactId>ruoyi-framework</artifactId>
+
+	<properties>
+		<redisson-spring-boot-starter.version>3.13.3</redisson-spring-boot-starter.version>
+		<jetcache-starter-redis.version>2.6.0</jetcache-starter-redis.version>
+	</properties>
 	
 	<description>
 	    framework框架核心
@@ -111,6 +116,10 @@
 			<artifactId>commons-codec</artifactId>
 			<version>1.14</version>
 		</dependency>
+
+
+
+
 
 	</dependencies>
     
