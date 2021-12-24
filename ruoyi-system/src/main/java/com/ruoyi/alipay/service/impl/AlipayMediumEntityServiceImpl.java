@@ -2,6 +2,7 @@ package com.ruoyi.alipay.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -119,15 +120,18 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     }
 
     /**
-     * 删除收款媒介列信息
+     * 删除收款媒介列信息  软删除 改isdeal状态
      *
      * @param id 收款媒介列ID
      * @return 结果
      */
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
-    public int deleteAlipayMediumEntityById(Long id) {
-        return alipayMediumEntityMapper.deleteAlipayMediumEntityById(id);
+    public int deleteAlipayMediumEntityById(AlipayMediumEntity alipayMediumEntity) {
+       /* AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
+        alipayMediumEntity.setId(id);*/
+        alipayMediumEntity.setIsDeal("1");//1 is deleted , 2 is normal
+        return alipayMediumEntityMapper.updateAlipayMediumEntity(alipayMediumEntity);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.ruoyi.framework.aspectj;
 import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.SysUser;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -29,7 +30,8 @@ public class ServiceAuditAspect {
 
         String methodName = jp.getSignature().getName();
         Object[] args = jp.getArgs();
-        if(!methodName.contains("update") || args.length==0)
+
+        if(!StringUtils.containsAny(methodName,"update","delete") || args.length==0)
         {
             return;
         }
