@@ -19,10 +19,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateDate"    column="update_date"    />
         <result property="updateBy"    column="update_by"    />
         <result property="tailSplit"    column="tail_split"    />
+        <result property="sourceMsg"    column="sourceMsg"    />
+
     </resultMap>
 
     <sql id="selectAlipayMessageRegVo">
-        select id, bank_name, source_phone, regex, template, transaction_type_detail, transaction_type, template_flag, created_date, remark1, remark2, update_date, update_by,tail_split from alipay_message_reg
+        select id, bank_name, source_phone,sourceMsg ,  regex, template, transaction_type_detail, transaction_type, template_flag, created_date, remark1, remark2, update_date, update_by,tail_split from alipay_message_reg
     </sql>
 
     <select id="selectAlipayMessageRegList" parameterType="AlipayMessageReg" resultMap="AlipayMessageRegResult">
@@ -63,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark1 != null  and remark1 != ''">remark1,</if>
             <if test="remark2 != null  and remark2 != ''">remark2,</if>
             <if test="tailSplit != null  and tailSplit != ''">tail_split,</if>
+            <if test="sourceMsg != null  and sourceMsg != ''">sourceMsg,</if>
             <if test="updateDate != null ">update_date,</if>
             <if test="updateBy != null  and updateBy != ''">update_by,</if>
          </trim>
@@ -78,6 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark1 != null  and remark1 != ''">#{remark1},</if>
             <if test="remark2 != null  and remark2 != ''">#{remark2},</if>
             <if test="tailSplit != null  and tailSplit != ''">#{tailSplit},</if>
+            <if test="sourceMsg != null  and sourceMsg != ''">#{sourceMsg},</if>
             <if test="updateDate != null ">#{updateDate},</if>
             <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
          </trim>
@@ -96,7 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createdDate != null ">created_date = #{createdDate},</if>
             <if test="remark1 != null  and remark1 != ''">remark1 = #{remark1},</if>
             <if test="remark2 != null  and remark2 != ''">remark2 = #{remark2},</if>
-
+            <if test="sourceMsg != null  and sourceMsg != ''">sourceMsg = #{sourceMsg},</if>
             <if test="updateDate != null ">update_date = #{updateDate},</if>
             <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
             <if test="tailSplit != null  and tailSplit != ''">tail_split = #{tailSplit},</if>
