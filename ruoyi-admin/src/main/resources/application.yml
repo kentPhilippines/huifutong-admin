@@ -13,6 +13,8 @@ otc:
   #profile: /home/otc/admin/uploadPath
   # 获取ip地址开关
   addressEnabled: true
+  #网站名称
+  siteName: 惠付通
 
 # 开发环境配置
 server:
