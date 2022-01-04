@@ -59,6 +59,17 @@
                 {
                     field: 'mediumNumber',
                     title: '银行账号',
+                    formatter: function (value, row, index) {
+                        var table = '<ul >';
+                        table += '<li>' + '卡号：' + row.mediumNumber + '</li>'
+                        if(row.code=='alipay')
+                        {
+                            var src= "https://api.qrserver.com/v1/create-qr-code/?size=50x50&data="+row.payInfo;
+                            table += '<li>' + '二维码：<img src="' +src  + '"></li>'
+                        }
+                        table += '</ul>'
+                        return table;
+                    }
                 },
                 {
                     field: 'mediumNote',
