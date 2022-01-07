@@ -107,30 +107,33 @@
             },
                 {
                     field: 'mediumNumber',
-                    title: '银行信息',
+                    title: '媒介信息',
                     formatter: function (value, row, index) {
-                        var table = '<ul>'
+                        var table = '<ul >';
                         /*if(row.isDeal=='1')
                         {
                             table = '<ul style="background-color: lightgray">'
                         }*/
-                        if (row.error == '1') {
-                            table += '<li>' + '媒介ID：' + row.mediumId + '</li>'
-                            table += '<li>' + '银行账号：' + '<span style="color: red">' + row.mediumNumber + '</span>' + '</li>'
-                            table += '<li>' + '开户行：' + '<span style="color: red">' + row.account + '</span>' + '</li>'
-                            table += '<li>' + '手机号：' + '<span style="color: red">' + row.mediumPhone + '</span>' + '</li>'
-                            table += '<li>' + '卡商账户：' + '<span style="color: red">' + row.qrcodeId + '</span>' + '</li>'
-                            table += '<li>' + '持卡人：' + '<span style="color: red">' + row.mediumHolder + '</span>' + '</li>'
-                            table += '</ul>'
-                        } else {
-                            table += '<li>' + '媒介ID：' + row.mediumId + '</li>'
-                            table += '<li>' + '银行账号：' + '<span  >' + row.mediumNumber + '</span>' + '</li>'
-                            table += '<li>' + '开户行：' + row.account + '</li>'
-                            table += '<li>' + '手机号：' + row.mediumPhone + '</li>'
-                            table += '<li>' + '卡商账户：' + row.qrcodeId + '</li>'
-                            table += '<li>' + '持卡人：' + row.mediumHolder + '</li>'
-                            table += '</ul>'
+                        if(row.error == '1')
+                        {
+                            table = '<ul style="color: red">';
                         }
+                        table += '<li>' + '媒介ID：' + row.mediumId + '</li>';
+                        table += '<li>' + '媒介账号：' + '<span  >' + row.mediumNumber + '</span>' + '</li>';
+                        //支付宝显示二维码，银行卡显示开户行
+                        if(row.code=='alipay')
+                        {
+                            var src= "https://api.qrserver.com/v1/create-qr-code/?size=50x50&data="+row.payInfo;
+                            table += '<li>' + '二维码：<img src="' +src  + '"></li>';
+                        }else {
+                            table += '<li>' + '开户行：' + row.account + '</li>';
+                        }
+
+                        table += '<li>' + '手机号：' + row.mediumPhone + '</li>';
+                        table += '<li>' + '卡商账户：' + row.qrcodeId + '</li>';
+                        table += '<li>' + '持卡人：' + row.mediumHolder + '</li>';
+                        table += '</ul>';
+
                         return table;
                     }
                 },
