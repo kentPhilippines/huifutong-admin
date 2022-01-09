@@ -274,6 +274,10 @@
                         if(null != row.payInfo && '' != row.payInfo){
                             table += '<li>' + '回调：' + row.payInfo + '</li>'
                         }
+                        if(null != row.payInfoForImgUrl && '' != row.payInfoForImgUrl){
+                            var src= "https://api.qrserver.com/v1/create-qr-code/?size=50x50&data="+row.payInfoForImgUrl;
+                            table += '<li>' + '二维码：<img src="' +src  + '"></li>';
+                        }
                         if(1 == row.orderType  &&  'YES' == row.isNotify){
                             table += '<li>' + '商户回调已发送'  + '</li>'
                         }

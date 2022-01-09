@@ -14,6 +14,7 @@ import java.util.List;
  */
 public interface AlipayMediumEntityMapper {
     public List<AlipayMediumEntity> selectAlipayMediumEntityByIds(List list);
+    public List<AlipayMediumEntity> selectByMediumIds(List list);
     /**
      * 查询收款媒介列
      *

@@ -14,6 +14,10 @@ import java.util.List;
  */
 public interface IAlipayMediumEntityService {
     public List<AlipayMediumEntity> selectByIds(List<String> ids);
+
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    List<AlipayMediumEntity> selectByMediumIds(List<String> ids);
+
     /**
      * 查询收款媒介列
      *

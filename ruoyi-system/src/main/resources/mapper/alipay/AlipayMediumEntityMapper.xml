@@ -39,6 +39,7 @@
         <result column="sc" property="sc"/>
         <result column="sumAmounlimit" property="sumAmounlimit"/>
         <result column="auditLog" property="auditLog"/>
+        <result column="payInfo" property="payInfo"/>
     </resultMap>
 
     <sql id="selectAlipayMediumEntityVo">
@@ -76,7 +77,8 @@
                mountLimit,
                notfiyMask,
                witAmount,
-               auditLog
+               auditLog,
+               payInfo
         from alipay_medium
     </sql>
 
@@ -106,6 +108,15 @@
     <select id="selectAlipayMediumEntityById" parameterType="Long" resultMap="AlipayMediumEntityResult">
         <include refid="selectAlipayMediumEntityVo"/>
         where id = #{id}
+    </select>
+
+    <select id="selectByMediumIds" parameterType="java.util.List" resultMap="AlipayMediumEntityResult">
+        <include refid="selectAlipayMediumEntityVo"/>
+        where mediumId in
+
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </select>
     <select id="selectAlipayMediumEntityByIds" parameterType="java.util.List" resultMap="AlipayMediumEntityResult">
         <include refid="selectAlipayMediumEntityVo"/>

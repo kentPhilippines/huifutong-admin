@@ -125,6 +125,18 @@ public class AlipayDealOrderEntity extends BaseEntity {
 
     @Excel(name = "付款明细")
     private String payInfo;
+
+    public String getPayInfoForImgUrl() {
+        return payInfoForImgUrl;
+    }
+
+    public void setPayInfoForImgUrl(String payInfoForImgUrl) {
+        this.payInfoForImgUrl = payInfoForImgUrl;
+    }
+
+    //支付宝扫码 图片码 对应 medium payInfo
+    private String payInfoForImgUrl;
+
     private Integer lockWit;
     private Integer grabOrder;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

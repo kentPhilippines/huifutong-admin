@@ -24,6 +24,7 @@ import com.ruoyi.framework.util.DictionaryUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysUserService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -132,6 +133,16 @@ public class AlipayDealOrderEntityController extends BaseController {
         startPage1();
         List<AlipayDealOrderEntity> list = alipayDealOrderEntityService
                 .selectAlipayDealOrderEntityList(alipayDealOrderEntity,isCharen);
+        //支付宝扫码 关联查询payinfo from medium start
+        List<String> mediumIds = list.stream().filter(order->order.getRetain1().equals("ALIPAY")).map(AlipayDealOrderEntity::getOrderQr).collect(Collectors.toList());
+        if(CollectionUtils.isNotEmpty(mediumIds)) {
+            List<AlipayMediumEntity> mediumEntities = alipayMediumEntityService.selectByMediumIds(mediumIds);
+            list.stream().filter(order -> order.getRetain1().equals("ALIPAY")).forEach(order -> {
+                AlipayMediumEntity mediumEntity = mediumEntities.stream().filter(medium -> medium.getMediumId().equals(order.getOrderQr())).findFirst().get();
+                order.setPayInfoForImgUrl(mediumEntity.getPayInfo());
+            });
+        }
+        //支付宝扫码 关联查询payinfo from medium end
         SysUser user = new SysUser();
         List<SysUser> sysUsers = userService.selectUserList(user);
         AlipayProductEntity alipayProductEntity = new AlipayProductEntity();
