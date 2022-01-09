@@ -80,7 +80,9 @@
 </div>
 <script th:inline="javascript"> var ctx = [[@{/}]]; var captchaType = [[${captchaType}]]; </script>
 <!-- 全局js -->
-<script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+<script  th:src="@{/js/jquery-1.12.4.min.js}"></script>
+<script th:src="@{/js/jquery-migrate-1.2.1.min.js}"></script>
+
 <script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
 <!-- 验证插件 -->
 <script src="../static/ajax/libs/validate/jquery.validate.min.js" th:src="@{/ajax/libs/validate/jquery.validate.min.js}"></script>
