@@ -1,6 +1,9 @@
 package com.ruoyi.alipay.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.annotation.DataSource;
+import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,7 @@ public class AlipayLogEntityServiceImpl implements IAlipayLogEntityService
      * @return 日志表
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public AlipayLogEntity selectAlipayLogEntityById(Long id)
     {
         return alipayLogEntityMapper.selectAlipayLogEntityById(id);
@@ -40,6 +44,7 @@ public class AlipayLogEntityServiceImpl implements IAlipayLogEntityService
      * @return 日志表
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public List<AlipayLogEntity> selectAlipayLogEntityList(AlipayLogEntity alipayLogEntity)
     {
         return alipayLogEntityMapper.selectAlipayLogEntityList(alipayLogEntity);
@@ -52,6 +57,7 @@ public class AlipayLogEntityServiceImpl implements IAlipayLogEntityService
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int insertAlipayLogEntity(AlipayLogEntity alipayLogEntity)
     {
         alipayLogEntity.setCreateTime(DateUtils.getNowDate());
@@ -65,6 +71,7 @@ public class AlipayLogEntityServiceImpl implements IAlipayLogEntityService
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int updateAlipayLogEntity(AlipayLogEntity alipayLogEntity)
     {
         return alipayLogEntityMapper.updateAlipayLogEntity(alipayLogEntity);
@@ -77,6 +84,7 @@ public class AlipayLogEntityServiceImpl implements IAlipayLogEntityService
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int deleteAlipayLogEntityByIds(String ids)
     {
         return alipayLogEntityMapper.deleteAlipayLogEntityByIds(Convert.toStrArray(ids));
@@ -89,6 +97,7 @@ public class AlipayLogEntityServiceImpl implements IAlipayLogEntityService
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int deleteAlipayLogEntityById(Long id)
     {
         return alipayLogEntityMapper.deleteAlipayLogEntityById(id);
