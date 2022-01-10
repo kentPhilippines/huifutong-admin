@@ -13,7 +13,12 @@
                     <ul>
                         <li>
                             <span>顶代账户：</span>
-                            <input type="text" name="qrcodeId"/>
+                         <!--   <input type="text" name="qrcodeId"/>-->
+                            <select id="qrcodeId" name="qrcodeId" th:with="type=${@dict.getType('qrcodeId')}"
+                                    class="selectpicker" data-none-selected-text="请选择">
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+                                        th:value="${dict.dictValue}"></option>
+                            </select>
                         </li>
                         <li>
                             <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
@@ -61,7 +66,7 @@
                     title: '媒介付款账号',
                     formatter: function (value, row, index) {
                         var table = '<ul >';
-                        table += '<li>' + '卡号：' + row.mediumNumber + '</li>'
+                        table += '<li>' + '媒介账号：' + row.mediumNumber + '</li>'
                         if(row.code=='alipay')
                         {
                             var src= "https://api.qrserver.com/v1/create-qr-code/?size=50x50&data="+row.payInfo;
@@ -76,7 +81,7 @@
                     title: '详情',
                  formatter: function (value, row, index) {
                      var table = '<ul >'
-                     table += '<li>' + '卡信息：' + row.mediumNote + '</li>'
+                     table += '<li>' + '信息：' + row.mediumNote + '</li>'
                      if(row.code){
                          table += '<li style="color: red">' + '提示：' + row.code + '</li>'
                          table += '</ul>'

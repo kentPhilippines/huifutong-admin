@@ -206,7 +206,7 @@ public interface AlipayDealOrderAppMapper {
     List<AlipayDealOrderApp> listAgent(@Param("order") AlipayDealOrderApp alipayDealOrderApp);
 
 
-    @Select(" select sum(retain3) from alipay_deal_order where orderStatus = 2 " +
+    @Select(" select sum(retain3) as sumProfit from alipay_deal_order where orderStatus = 2 " +
             " and createTime between #{yesToday}  and #{today} ")
     Double sumDealorderProfit(@Param("yesToday") String yesToday, @Param("today") String today);
 
