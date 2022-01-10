@@ -32,6 +32,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="submitTime != null "> and submitTime = #{submitTime}</if>
             <if test="status != null "> and status = #{status}</if>
         </where>
+
+        order by id desc
     </select>
     
     <select id="selectAlipayLogEntityById" parameterType="Long" resultMap="AlipayLogEntityResult">
