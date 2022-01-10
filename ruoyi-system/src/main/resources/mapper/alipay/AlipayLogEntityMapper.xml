@@ -25,12 +25,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="ipAddr != null  and ipAddr != ''"> and ipAddr = #{ipAddr}</if>
             <if test="loginLocation != null  and loginLocation != ''"> and loginLocation = #{loginLocation}</if>
-            <if test="loginTime != null "> and loginTime = #{loginTime}</if>
+            <!--<if test="loginTime != null "> and loginTime = #{loginTime}</if>-->
             <if test="msg != null  and msg != ''"> and msg = #{msg}</if>
             <if test="useName != null  and useName != ''"> and useName like concat('%', #{useName}, '%')</if>
-            <if test="createTime != null "> and createTime = #{createTime}</if>
-            <if test="submitTime != null "> and submitTime = #{submitTime}</if>
+            <!--<if test="createTime != null "> and createTime = #{createTime}</if>
+            <if test="submitTime != null "> and submitTime = #{submitTime}</if>-->
             <if test="status != null "> and status = #{status}</if>
+
+            <if test="params.beginLoginTime != null and params.beginLoginTime != ''"><!-- 开始时间检索 -->
+                and date_format(loginTime,'%y%m%d') &gt;= date_format(#{params.beginLoginTime},'%y%m%d')
+            </if>
+            <if test="params.endLoginTime != null and params.endLoginTime != ''"><!-- 结束时间检索 -->
+                and date_format(loginTime,'%y%m%d') &lt;= date_format(#{params.endLoginTime},'%y%m%d')
+            </if>
         </where>
 
         order by id desc
