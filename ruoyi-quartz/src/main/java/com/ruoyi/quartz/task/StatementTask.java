@@ -55,11 +55,14 @@ public class StatementTask {
     private void runTask1() {
 
         try {
-            List ids = alipayStatementService.selectTotalData().stream().map(alipayStatement -> alipayStatement.getUserId()).collect(Collectors.toList());
+            //查询用户报表
+            List<AlipayStatement> statements = alipayStatementService.selectTotalData();
+            //过滤出用户id
+            List ids = statements.stream().map(alipayStatement -> alipayStatement.getUserId()).collect(Collectors.toList());
+            //查询出用户的媒介卡
             List<AlipayMediumEntity> alipayMediumEntities = alipayMediumEntityService.selectByIds(ids);
 
-            List<AlipayStatement> statements = alipayStatementService.selectTotalData();
-
+            //维系每个用户和卡的关系
             statements.stream().forEach(alipayStatement -> {
 
                 List<AlipayUserMedium> userMediums = alipayMediumEntities.stream().filter(alipayMediumEntity -> alipayMediumEntity.getQrcodeId().equals(alipayStatement.getUserId())).map(medium -> {
