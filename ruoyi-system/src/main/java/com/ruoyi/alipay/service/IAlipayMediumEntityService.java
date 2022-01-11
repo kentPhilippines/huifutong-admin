@@ -3,6 +3,7 @@ package com.ruoyi.alipay.service;
 import com.ruoyi.alipay.domain.AlipayMediumEntity;
 import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.enums.DataSourceType;
+import com.ruoyi.system.domain.SysUser;
 
 import java.util.List;
 
@@ -80,7 +81,7 @@ public interface IAlipayMediumEntityService {
      * @param id 收款媒介列ID
      * @return 结果
      */
-    public int deleteAlipayMediumEntityById(AlipayMediumEntity alipayMediumEntity);
+    public int deleteAlipayMediumEntityById(AlipayMediumEntity alipayMediumEntity, SysUser sysUser);
 
     //int deleteAlipayMediumEntityById(AlipayMediumEntity alipayMediumEntity);
 

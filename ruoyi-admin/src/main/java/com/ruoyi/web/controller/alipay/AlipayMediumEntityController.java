@@ -22,6 +22,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.util.DictionaryUtils;
 import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.system.domain.SysUser;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -194,7 +195,8 @@ public class AlipayMediumEntityController extends BaseController {
     public AjaxResult remove(String ids) {
         AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
         alipayMediumEntity.setId(Long.valueOf(ids));
-        return toAjax(alipayMediumEntityService.deleteAlipayMediumEntityById(alipayMediumEntity));
+        SysUser currentUser = ShiroUtils.getSysUser();
+        return toAjax(alipayMediumEntityService.deleteAlipayMediumEntityById(alipayMediumEntity,currentUser));
     }
 
     @Log(title = "剔除银行卡", businessType = BusinessType.UPDATE)

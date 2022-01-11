@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.system.domain.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.alipay.mapper.AlipayMediumEntityMapper;
@@ -135,9 +136,14 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
      */
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
-    public int deleteAlipayMediumEntityById(AlipayMediumEntity alipayMediumEntity) {
+    public int deleteAlipayMediumEntityById(AlipayMediumEntity alipayMediumEntity,SysUser sysUser) {
        /* AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
         alipayMediumEntity.setId(id);*/
+        if(sysUser.getLoginName().equalsIgnoreCase("admin"))
+        {
+            return alipayMediumEntityMapper.deleteAlipayMediumEntityById(alipayMediumEntity.getId());
+        }
+
         alipayMediumEntity.setIsDeal("1");//1 is deleted , 2 is normal
         return alipayMediumEntityMapper.updateAlipayMediumEntity(alipayMediumEntity);
     }
