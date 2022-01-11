@@ -477,7 +477,7 @@ public class AlipayMediumEntityController extends BaseController {
 
                 AlipayMediumEntity mediumEntity = collect.get(bankId);
                 try {
-                   if(startFund.equals("配额")){
+                   if(startFund.contains("配额")){
                        startFund = "500";
                    }
                    if(  (Double.valueOf(fund) - Double.valueOf(freezeBalance) )  < Double.valueOf(startFund) ){
@@ -515,6 +515,7 @@ public class AlipayMediumEntityController extends BaseController {
                        med.setToDayDeal(toDayDeal);
                        med.setToDayWit(mediumEntity.getToDayWit());
                        String black = mediumEntity.getBlack();
+                       med.setStartFund(mediumEntity.getStartFund());
                        if("0".equals(black)){
                            String mediumNote = med.getCode();
                            if(StrUtil.isEmpty(mediumNote)){
