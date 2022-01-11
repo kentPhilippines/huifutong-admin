@@ -30,7 +30,7 @@
                         </li>
                         <li class="select-selectpicker">
                             <label>交易类型：</label>
-                            <select name="transactionType" th:with="type=${@dict.getType('bank_info_transaction_type')}"
+                            <select name="transactionType" th:with="type=${@dict.getType('transactionType')}"
                                     class="selectpicker"
                                     data-none-selected-text="请选择">
                                 <option value="">所有</option>
@@ -76,6 +76,7 @@
 <th:block th:include="include :: bootstrap-select-js"/>
 <script th:inline="javascript">
     const mediumType = [[${@dict.getType('medium_type')}]]
+    const transactionType = [[${@dict.getType('transactionType')}]];
      $(document).ready(function(){
          $.table.search()
     });
@@ -120,7 +121,10 @@
                 },
                 {
                     field: 'transactionType',
-                    title: '交易类型'
+                    title: '交易类型',
+                    formatter: function (value, row, index) {
+                        return  $.table.selectDictLabel(transactionType, value);
+                    }
                 },
                 {
                     field: 'phoneId',
