@@ -45,6 +45,14 @@
                             <input type="text" name="orderQr"/>
                         </li>
                         <li class="select-selectpicker">
+                            <label>产品类型：</label>
+                            <select class="selectpicker" data-none-selected-text="请选择" id="retain1" name="retain1">
+                                <option value="">所有</option>
+                                <option th:each="product : ${productList}" th:text="${product.productName}"
+                                        th:value="${product.productId}"></option>
+                            </select>
+                        </li>
+                        <li class="select-selectpicker">
                             <label>货币类型： </label>
                             <select class="selectpicker" data-none-selected-text="请选择" id="currency"
                                     name="currency" th:with="type=${@dict.getType('currency')}">
