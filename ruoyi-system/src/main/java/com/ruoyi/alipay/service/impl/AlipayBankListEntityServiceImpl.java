@@ -1,5 +1,7 @@
 package com.ruoyi.alipay.service.impl;
 
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.ruoyi.alipay.domain.AlipayBankListEntity;
 import com.ruoyi.alipay.mapper.AlipayBankListEntityMapper;
 import com.ruoyi.alipay.service.IAlipayBankListEntityService;
@@ -25,6 +27,13 @@ import java.util.List;
 public class AlipayBankListEntityServiceImpl implements IAlipayBankListEntityService {
     @Resource
     private AlipayBankListEntityMapper alipayBankListEntityMapper;
+
+    @Cached(name="IAlipayBankListEntityService.selectAll", expire = 3600,cacheType = CacheType.LOCAL)
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayBankListEntity> selectAll() {
+        return alipayBankListEntityMapper.findAll();
+    }
 
     /**
      * 查询银行卡列表

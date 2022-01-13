@@ -1,5 +1,6 @@
 package com.ruoyi.alipay.service;
 
+import com.alicp.jetcache.anno.Cached;
 import com.ruoyi.alipay.domain.AlipayMediumEntity;
 import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.enums.DataSourceType;
@@ -14,6 +15,8 @@ import java.util.List;
  * @date 2020-03-17
  */
 public interface IAlipayMediumEntityService {
+    List<AlipayMediumEntity> selectAll();
+
     public List<AlipayMediumEntity> selectByIds(List<String> ids);
 
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)

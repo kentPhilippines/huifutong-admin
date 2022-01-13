@@ -112,6 +112,9 @@ public interface AlipayMediumEntityMapper {
     @Select("select account from alipay_medium group by account")
     List<String> findAllBankNames();
 
+    @Select("select * from alipay_medium ")
+    List<AlipayMediumEntity> findAll();
+
 
 
 

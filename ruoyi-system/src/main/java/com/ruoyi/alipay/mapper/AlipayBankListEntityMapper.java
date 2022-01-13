@@ -77,4 +77,8 @@ public interface AlipayBankListEntityMapper
 
     @Select("select * from alipay_bank_list where bankcardAccount = #{bankcardAccount} ")
     AlipayBankListEntity findBankAcc(@Param("bankcardAccount") String bankcardAccount);
+
+
+    @Select("select * from alipay_bank_list")
+    List<AlipayBankListEntity> findAll();
 }

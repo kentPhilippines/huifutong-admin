@@ -1,6 +1,8 @@
 package com.ruoyi.alipay.service;
 
 import com.ruoyi.alipay.domain.AlipayBankListEntity;
+import com.ruoyi.alipay.domain.AlipayMediumEntity;
+
 import java.util.List;
 
 /**
@@ -11,6 +13,7 @@ import java.util.List;
  */
 public interface IAlipayBankListEntityService 
 {
+    List<AlipayBankListEntity> selectAll();
     /**
      * 查询银行卡列表
      * 

@@ -2,6 +2,8 @@ package com.ruoyi.alipay.service.impl;
 
 import java.util.List;
 
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.system.domain.SysUser;
@@ -26,6 +28,14 @@ import javax.annotation.Resource;
 public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService {
     @Resource
     private AlipayMediumEntityMapper alipayMediumEntityMapper;
+
+    @Cached(name="IAlipayMediumEntityService.selectAll", expire = 3600,cacheType = CacheType.LOCAL)
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayMediumEntity> selectAll()
+    {
+        return alipayMediumEntityMapper.findAll();
+    }
 
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)

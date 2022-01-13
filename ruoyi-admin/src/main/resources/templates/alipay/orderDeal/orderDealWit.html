@@ -306,7 +306,14 @@
 
                 },
                 {field: 'orderQr', title: '银行卡信息',formatter: function (value, row, index) {
+
                         var table = '<ul>'
+                        //风控变色
+                        if(null != row.riskReason && '' != row.riskReason)
+                        {
+                            table = '<ul style="background-color: lightpink">';
+                        }
+
                         table += '<li  >' + '银行卡：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>'+ '</li>'
                         table += '<li  >' + row.bankAccount  + '</li>'
                         if(row.bankAmountNow){

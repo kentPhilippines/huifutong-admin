@@ -11,6 +11,7 @@ import com.ruoyi.alipay.domain.*;
 import com.ruoyi.alipay.service.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.annotation.RepeatSubmit;
+import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.StaticConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -133,6 +134,12 @@ public class AlipayDealOrderEntityController extends BaseController {
         startPage1();
         List<AlipayDealOrderEntity> list = alipayDealOrderEntityService
                 .selectAlipayDealOrderEntityList(alipayDealOrderEntity,isCharen);
+        //出款操作 做风控判断 填充  riskReason  start
+        if(alipayDealOrderEntity.getOrderType().equals("4")) {
+            alipayDealOrderEntityService.fillRiskReasonForWithdrwal(list);
+        }
+        //做风控判断 填充  riskReason  end
+
         //支付宝扫码 关联查询payinfo from medium start
         List<String> mediumIds = list.stream().filter(order->order.getRetain1().contains("ALIPAY")).map(AlipayDealOrderEntity::getOrderQr).collect(Collectors.toList());
         if(CollectionUtils.isNotEmpty(mediumIds)) {

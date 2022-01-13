@@ -27,7 +27,18 @@ public class AlipayDealOrderEntity extends BaseEntity {
 
 
 
+    //风控原因
+    private String riskReason;
 
+
+
+    public String getRiskReason() {
+        return riskReason;
+    }
+
+    public void setRiskReason(String riskReason) {
+        this.riskReason = riskReason;
+    }
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }

@@ -2,7 +2,9 @@ package com.ruoyi.alipay.service;
 
 import com.ruoyi.alipay.domain.AlipayDealOrderApp;
 import com.ruoyi.alipay.domain.AlipayDealOrderEntity;
+import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.core.domain.StatisticsEntity;
+import com.ruoyi.common.enums.DataSourceType;
 
 import java.util.List;
 
@@ -30,6 +32,8 @@ public interface IAlipayDealOrderEntityService {
      * @return 交易订单集合
      */
     List<AlipayDealOrderEntity> selectAlipayDealOrderEntityList(AlipayDealOrderEntity alipayDealOrderEntity, Boolean isCharen);
+
+    void fillRiskReasonForWithdrwal(List<AlipayDealOrderEntity> alipayDealOrder);
 
     /**
      * 根据财务角色查看财务角色特定的  交易订单
