@@ -2,8 +2,10 @@ package com.ruoyi.web.controller.alipay;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.ruoyi.alipay.domain.AlipayDealOrderApp;
+import com.ruoyi.alipay.domain.AlipayProductEntity;
 import com.ruoyi.alipay.domain.AlipayUserFundEntity;
 import com.ruoyi.alipay.service.IAlipayDealOrderAppService;
+import com.ruoyi.alipay.service.IAlipayProductService;
 import com.ruoyi.alipay.service.IAlipayUserFundEntityService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -39,9 +41,15 @@ public class AlipayDealOrderAppController extends BaseController {
     private IAlipayDealOrderAppService alipayDealOrderAppService;
     @Autowired
     private IAlipayUserFundEntityService alipayUserFundEntityService;
+    @Autowired
+    IAlipayProductService iAlipayProductService;
 
     @GetMapping()
-    public String orderApp() {
+    public String orderApp(ModelMap modelMap) {
+        AlipayProductEntity alipayProductEntity = new AlipayProductEntity();
+        //查询产品类型下拉菜单
+        List<AlipayProductEntity> list = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
+        modelMap.put("productList", list);
         return prefix + "/orderApp";
     }
 
@@ -57,9 +65,10 @@ public class AlipayDealOrderAppController extends BaseController {
     @ResponseBody
     public TableDataInfo group(AlipayDealOrderApp alipayDealOrderApp) {
         startPage();
-        List<Map<String,Object>> list = alipayDealOrderAppService.selectAlipayDealOrderAppListGroupByOrderAccount(alipayDealOrderApp);
+        List<Map<String, Object>> list = alipayDealOrderAppService.selectAlipayDealOrderAppListGroupByOrderAccount(alipayDealOrderApp);
         return getDataTable(list);
     }
+
     /**
      * 查询商户订单登记列表
      */
