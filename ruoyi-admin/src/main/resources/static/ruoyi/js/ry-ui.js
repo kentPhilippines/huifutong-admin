@@ -1754,8 +1754,8 @@ var table = {
             },
             // 成功回调执行事件（父窗体静默更新）
             successCallback: function (result) {
-                console.log(result);
-                debugger;
+                /*console.log(result);
+                debugger;*/
                 if (result.code == web_status.SUCCESS) {
                     var parent = window.parent;
                     if (parent.table.options.type == table_type.bootstrapTable) {
