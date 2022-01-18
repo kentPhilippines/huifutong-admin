@@ -1355,6 +1355,9 @@ var table = {
                 else if (flag == 'orderAppGroupQuery') {
                     $.modal.open(title, $.operate.groupUrl(id))
                 }
+                else if (flag == 'editBankName') {
+                    $.modal.open(title, $.operate.editBankName(id))
+                }
 
 
             },
@@ -1570,6 +1573,13 @@ var table = {
                 }
                 return url;
             },
+            editBankName: function (id) {
+                var url = "/404.html";
+                if ($.common.isNotEmpty(id)) {
+                    url = table.options.editBankName.replace("{id}", id);
+                }
+                return url;
+            },
 
             editeCreditUrl: function (id) {
                 var url = "/404.html";
@@ -1744,6 +1754,8 @@ var table = {
             },
             // 成功回调执行事件（父窗体静默更新）
             successCallback: function (result) {
+                console.log(result);
+                debugger;
                 if (result.code == web_status.SUCCESS) {
                     var parent = window.parent;
                     if (parent.table.options.type == table_type.bootstrapTable) {

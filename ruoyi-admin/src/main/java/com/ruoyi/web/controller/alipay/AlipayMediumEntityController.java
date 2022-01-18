@@ -133,6 +133,16 @@ public class AlipayMediumEntityController extends BaseController {
         return prefix + "/editAmountByCode";
     }
 
+    /**
+     * 修改银行名称
+     */
+    @GetMapping("/editBankName/{id}")
+    public String editBankName(@PathVariable("id") Long id, ModelMap mmap) {
+        AlipayMediumEntity alipayMediumEntity = alipayMediumEntityService.selectAlipayMediumEntityById(id);
+        mmap.put("alipayMediumEntity", alipayMediumEntity);
+        return prefix + "/editBankName";
+    }
+
 
     /**
      * 新增保存收款媒介列
