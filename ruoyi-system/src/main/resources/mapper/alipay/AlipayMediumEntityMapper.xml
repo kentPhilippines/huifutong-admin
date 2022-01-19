@@ -163,6 +163,7 @@
         update alipay_medium
         <trim prefix="SET" suffixOverrides=",">
             <if test="mediumId != null  and mediumId != ''">mediumId = #{mediumId},</if>
+            <if test="account != null  and account != ''">account = #{account},</if>
             <if test="mediumNumber != null  and mediumNumber != ''">mediumNumber = #{mediumNumber},</if>
             <if test="mediumHolder != null  and mediumHolder != ''">mediumHolder = #{mediumHolder},</if>
             <if test="mediumNote != null  and mediumNote != ''">mediumNote = #{mediumNote},</if>
