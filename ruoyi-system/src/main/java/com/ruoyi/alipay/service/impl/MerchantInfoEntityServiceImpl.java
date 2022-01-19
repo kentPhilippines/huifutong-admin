@@ -193,13 +193,16 @@ public class MerchantInfoEntityServiceImpl implements IMerchantInfoEntityService
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public AlipayUserInfo selectBackUserByUserId(String userId) {
         try {
-            AlipayUserInfo alipayUserInfo = merchantInfoEntityMapper.findBackUserByUserId(userId);
+            AlipayUserInfo alipayUserInfo1 = merchantInfoEntityMapper.findBackUserByUserId(userId);
             Map<String, Object> map = merchantInfoEntityMapper.findFundUserBalanceByUserId(userId);
-            alipayUserInfo.getParams().put("rechargeNumber", map.get("rechargeNumber"));
-            alipayUserInfo.getParams().put("accountBalance", map.get("accountBalance"));
-            alipayUserInfo.getParams().put("freezeBalance", map.get("freezeBalance"));
-            alipayUserInfo.getParams().put("quota", map.get("quota"));
-            return alipayUserInfo;
+            Optional.ofNullable(alipayUserInfo1).ifPresent(alipayUserInfo -> {
+                alipayUserInfo.getParams().put("rechargeNumber", map.get("rechargeNumber"));
+                alipayUserInfo.getParams().put("accountBalance", map.get("accountBalance"));
+                alipayUserInfo.getParams().put("freezeBalance", map.get("freezeBalance"));
+                alipayUserInfo.getParams().put("quota", map.get("quota"));
+
+            });
+            return alipayUserInfo1;
         } catch (Exception e) {
             throw new BusinessException("查询结果不唯一,请核实");
         }
