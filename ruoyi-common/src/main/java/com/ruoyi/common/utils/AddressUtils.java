@@ -24,7 +24,7 @@ public class AddressUtils {
         if (IpUtils.internalIp(ip)) {
             return "内网IP";
         }
-        if (Global.isAddressEnabled()) {
+        /*if (Global.isAddressEnabled()) {
             String rspStr = HttpUtils.sendPost(IP_URL, "ip=" + ip);
             if (StringUtils.isEmpty(rspStr)) {
                 log.error("获取地理位置异常 {}", ip);
@@ -40,7 +40,7 @@ public class AddressUtils {
             } catch (Exception e) {
                 log.error("获取地理位置异常 {}", ip);
             }
-        }
+        }*/
         return address;
     }
 }
