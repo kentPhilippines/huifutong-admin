@@ -180,14 +180,27 @@
                 {field: 'mediumHolder', title: '开户人'},
                 {field: 'qrcodeId', title: '卡商账户'},
                 {field: 'account', title: '开户行'},
-                {
+                /*{
                     field: 'mountSystem', title: '交易余额'
                 },
                 {
                     field: 'witAmount',
                     title: '出款金额',
                 },
-                {field: 'mountNow', title: '参考余额'},
+                {field: 'mountNow', title: '参考余额'},*/
+                {
+                    field: 'mountLimit',
+                    title: '实时数据',
+                    formatter: function (value, row, index) {
+                        var amount = row.toDayDeal - row.toDayWit + row.yseToday;
+                        var table = '<ul>'
+                        table += '<li>' + '交易余额：' + amount + '</li>'
+                        table += '<li>' + '参考余额：' + row.mountNow + '</li>'
+                        table += '<li>' + '昨日交易余额：' + row.yseToday + '</li>'
+                        table += '</ul>'
+                        return table;
+                    }
+                },
                 {
                     field: 'status',
                     title: '接单状态',
