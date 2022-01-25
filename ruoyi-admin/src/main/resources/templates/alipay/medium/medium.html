@@ -158,6 +158,7 @@
                         var table = '<ul>'
                         table += '<li>' + '不让接单：' + statusTools(row, 'black') + '</li>'
                         table += '<li>' + '接单状态：' + statusTools(row, 'acceptOrder') + '</li>'
+                        table += '<li>' + '回调户名验证：' + statusTools(row, 'isClickPay') + '</li>'
                         return table;
                     }
                 },
@@ -168,6 +169,7 @@
                     formatter: function (value, row, index) {
                         var table = '<ul>'
                         table += '<li>' + '接单限制余额：' + row.mountLimit + '</li>'
+                        table += '<li>' + '日总接单限制：' + row.sumAmounlimit + '</li>'
                         table += '<li>' + '起始收款金额：' + row.startAmount + '</li>'
                         table += '<li>' + '接单开始时间：' + row.startTime + '</li>'
                         table += '<li>' + '接单结束时间：' + row.endTime + '</li>'
@@ -269,6 +271,17 @@
                 return '<i class=\"fa fa-toggle-off text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="disableStatus(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
             }
         }
+        if (param === 'isClickPay') {
+            if (row.isClickPay == 1 || row.isClickPay == '1') {
+                let msg = "确认【关闭姓名验证】吗？";
+                let val = 0;
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="isClickPayStatusEnd(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            } else {
+                let msg = "确认【开启姓名验证】吗？";
+                let val = 1;
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="isClickPayStatusOpen(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            }
+        }
 
     }
 
@@ -317,6 +330,23 @@
             $.operate.post(prefix + "/updateBankcard", {
                 "id": qrcodeId,
                 "black": val
+            });
+        })
+    }
+    /* 姓名验证-停用 */
+    function isClickPayStatusEnd(qrcodeId, param, msg, val) {
+        $.modal.confirm(msg, function () {
+            $.operate.post(prefix + "/updateBankcardToName", {
+                "id": qrcodeId,
+                "isClickPay": val
+            });
+        })
+    }  /* 姓名验证-开启 */
+    function isClickPayStatusOpen(qrcodeId, param, msg, val) {
+        $.modal.confirm(msg, function () {
+            $.operate.post(prefix + "/updateBankcardToName", {
+                "id": qrcodeId,
+                "isClickPay": val
             });
         })
     }

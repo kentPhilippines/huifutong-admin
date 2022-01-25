@@ -525,7 +525,9 @@ public class AlipayMediumEntityController extends BaseController {
                        med.setToDayDeal(toDayDeal);
                        med.setToDayWit(mediumEntity.getToDayWit());
                        String black = mediumEntity.getBlack();
-                       med.setStartFund(mediumEntity.getStartFund());
+                       if(null != mediumEntity.getStartAmount()) {
+                           med.setStartFund(mediumEntity.getStartAmount().toString());
+                       }
                        if("0".equals(black)){
                            String mediumNote = med.getCode();
                            if(StrUtil.isEmpty(mediumNote)){
@@ -617,6 +619,18 @@ public class AlipayMediumEntityController extends BaseController {
         mediumEntity.setId(alipayMediumEntity.getId());
         mediumEntity.setBlack(alipayMediumEntity.getBlack());
         mediumEntity.setStatus(alipayMediumEntity.getStatus());
+        mediumEntity.setIsClickPay(alipayMediumEntity.getIsClickPay());
+        int i = alipayMediumEntityService.updateAlipayMediumEntity(mediumEntity);
+        return toAjax(i);
+    }
+    @Log(title = "回调户名验证", businessType = BusinessType.UPDATE)
+    @PostMapping("/updateBankcardToName")
+    @ResponseBody
+    public AjaxResult changeIsNameStatus(AlipayMediumEntity alipayMediumEntity) {
+        logger.info("[修改银行卡户名验证：" + ShiroUtils.getSysUser().getLoginName() + "]");
+        AlipayMediumEntity mediumEntity = new AlipayMediumEntity();
+        mediumEntity.setId(alipayMediumEntity.getId());
+        mediumEntity.setIsClickPay(alipayMediumEntity.getIsClickPay());
         int i = alipayMediumEntityService.updateAlipayMediumEntity(mediumEntity);
         return toAjax(i);
     }

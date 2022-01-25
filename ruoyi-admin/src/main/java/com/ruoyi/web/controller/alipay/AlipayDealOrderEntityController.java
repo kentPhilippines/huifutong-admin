@@ -26,6 +26,7 @@ import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysUserService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -145,9 +146,13 @@ public class AlipayDealOrderEntityController extends BaseController {
         if(CollectionUtils.isNotEmpty(mediumIds)) {
             List<AlipayMediumEntity> mediumEntities = alipayMediumEntityService.selectByMediumIds(mediumIds);
             list.stream().filter(order -> order.getRetain1().contains("ALIPAY")).forEach(order -> {
-                AlipayMediumEntity mediumEntity = mediumEntities.stream().filter(medium -> medium.getMediumId().equals(order.getOrderQr())).findFirst().get();
-                order.setPayInfoForImgUrl(mediumEntity.getPayInfo());
-                order.setOrderQr(mediumEntity.getMediumNumber()+":"+mediumEntity.getMediumHolder()+":"+":"+mediumEntity.getMediumPhone());
+                try {
+                    AlipayMediumEntity mediumEntity = mediumEntities.stream().filter(medium -> medium.getMediumId().equals(order.getOrderQr())).findFirst().get();
+                    order.setPayInfoForImgUrl(mediumEntity.getPayInfo());
+                    order.setOrderQr(mediumEntity.getMediumNumber()+":"+mediumEntity.getMediumHolder()+":"+mediumEntity.getMediumPhone());
+                }catch (Throwable t ){
+
+                }
             });
         }
         //支付宝扫码 关联查询payinfo from medium end
