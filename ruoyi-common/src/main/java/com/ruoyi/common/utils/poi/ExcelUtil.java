@@ -64,7 +64,8 @@ public class ExcelUtil<T> {
     /**
      * Excel sheet最大行数，默认65536
      */
-    public static final int sheetSize = 65536;
+//    public static final int sheetSize = 65536;
+    public static final int sheetSize = 20000;
 
     /**
      * 工作表名称
@@ -295,7 +296,7 @@ public class ExcelUtil<T> {
                     fillExcelData(index, row);
                 }
                 //每当行数达到设置的值就刷新数据到硬盘,以清理内存
-                if(index % 100 == 0){
+                if(index % 5000 == 0){
                     ((SXSSFSheet)sheet).flushRows();
                 }
             }
