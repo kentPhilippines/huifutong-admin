@@ -28,7 +28,7 @@ public class AlipayBankListEntityServiceImpl implements IAlipayBankListEntitySer
     @Resource
     private AlipayBankListEntityMapper alipayBankListEntityMapper;
 
-    @Cached(name="IAlipayBankListEntityService.selectAll", expire = 3600,cacheType = CacheType.LOCAL)
+    @Cached(name="IAlipayBankListEntityService.selectAll", expire = 3600,cacheType = CacheType.REMOTE)
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public List<AlipayBankListEntity> selectAll() {

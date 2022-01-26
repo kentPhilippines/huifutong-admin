@@ -29,7 +29,7 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     @Resource
     private AlipayMediumEntityMapper alipayMediumEntityMapper;
 
-    @Cached(name="IAlipayMediumEntityService.selectAll", expire = 3600,cacheType = CacheType.LOCAL)
+    @Cached(name="IAlipayMediumEntityService.selectAll", expire = 3600,cacheType = CacheType.REMOTE)
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public List<AlipayMediumEntity> selectAll()
