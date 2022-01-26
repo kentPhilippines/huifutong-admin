@@ -22,15 +22,6 @@
                 <input name="endTime" th:field="*{endTime}" placeholder="结束时间"  class="form-control" type="text" required>
             </div>
         </div>
-    <div class="form-group">
-            <label class="col-sm-3 control-label is-required">收款户名验证：</label>
-            <div class="col-sm-8">
-                <select class="form-control"   th:value="*{isClickPay}" id="isClickPay" name="isClickPay"  required>
-                    <option value="1"   >是</option>
-                    <option value="0"  selected >否</option>
-                </select>
-            </div>
-        </div>
         <div class="form-group">
             <label class="col-sm-3 control-label is-required">起始收款金额：</label>
             <div class="col-sm-8">
