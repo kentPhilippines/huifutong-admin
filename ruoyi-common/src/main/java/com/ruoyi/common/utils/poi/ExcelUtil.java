@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -64,8 +65,9 @@ public class ExcelUtil<T> {
     /**
      * Excel sheet最大行数，默认65536
      */
-//    public static final int sheetSize = 65536;
-    public static final int sheetSize = 20000;
+    public static final int sheetSize = 65536;
+    public static final Long MAX_EXPORT_ROWS = 20000L;
+
 
     /**
      * 工作表名称
@@ -255,6 +257,8 @@ public class ExcelUtil<T> {
      */
     public AjaxResult exportExcel(List<T> list, String sheetName) {
         log.info("进入数据导出解析");
+        log.info("最大导出数据行数：{}",MAX_EXPORT_ROWS);
+        list = list.stream().limit(MAX_EXPORT_ROWS).collect(Collectors.toList());
         this.init(list, sheetName, Type.EXPORT);
         return exportExcel();
     }
