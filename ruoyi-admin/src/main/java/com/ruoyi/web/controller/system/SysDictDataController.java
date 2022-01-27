@@ -4,8 +4,9 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -149,8 +150,8 @@ public class SysDictDataController extends BaseController {
         }
         Object o = this.cache.get(RATE_KEY + DateUtils.getTime());
         if (null == o) {
-            String urlbuy = "https://otc-api-hk.eiijo.cn/v1/data/trade-market?coinId=2&currency=1&tradeType=buy&currPage=1&payMethod=0&acceptOrder=-1&country=&blockType=block&online=1&range=0&amount=";
-            String rate = getRate(urlbuy);
+            String urlbuy = "https://www.pexpay.com/bapi/c2c/v1/friendly/c2c/ad/search";
+            String rate = getRate(urlbuy,"buy");
             this.cache.put(RATE_KEY + DateUtils.getTime(), rate);
             return rate;
         } else {
@@ -166,51 +167,75 @@ public class SysDictDataController extends BaseController {
          */
         List<HUOBI> list = new ArrayList<HUOBI>();
         HUOBI bigsell = new HUOBI();
-        String urlsell = "https://otc-api-hk.eiijo.cn/v1/data/trade-market?coinId=2&currency=1&tradeType=sell&currPage=1&payMethod=0&acceptOrder=-1&country=&blockType=block&online=1&range=0&amount=";
+        String urlsell = "https://www.pexpay.com/bapi/c2c/v1/friendly/c2c/ad/search";
         bigsell.setId("1");
         bigsell.setRateType("大宗买入价格");
-        bigsell.setPrice(getRate(urlsell));
+        bigsell.setPrice(getRate(urlsell,"sell"));
         bigsell.setCaeateTime(DateUtils.getTime());
         list.add(bigsell);
         HUOBI bigbuy = new HUOBI();
-        String urlbuy = "https://otc-api-hk.eiijo.cn/v1/data/trade-market?coinId=2&currency=1&tradeType=buy&currPage=1&payMethod=0&acceptOrder=-1&country=&blockType=block&online=1&range=0&amount=";
+        String urlbuy = "https://www.pexpay.com/bapi/c2c/v1/friendly/c2c/ad/search";
         bigbuy.setId("2");
         bigbuy.setRateType("大宗出售价格");
-        bigbuy.setPrice(getRate(urlbuy));
+        bigbuy.setPrice(getRate(urlbuy,"buy"));
         bigbuy.setCaeateTime(DateUtils.getTime());
         list.add(bigbuy);
         HUOBI smalls = new HUOBI();
-        String smallSell = "https://otc-api-hk.eiijo.cn/v1/data/trade-market?coinId=2&currency=1&tradeType=sell&currPage=1&payMethod=0&acceptOrder=-1&country=&blockType=general&online=1&range=0&amount=";
+        String smallSell = "https://www.pexpay.com/bapi/c2c/v1/friendly/c2c/ad/search";
         smalls.setId("3");
         smalls.setRateType("自选交易购买价格");
-        smalls.setPrice(getRate(smallSell));
+        smalls.setPrice(getRate(smallSell,"sell"));
         smalls.setCaeateTime(DateUtils.getTime());
         list.add(smalls);
         HUOBI smallb = new HUOBI();
-        String smallbull = "https://otc-api-hk.eiijo.cn/v1/data/trade-market?coinId=2&currency=1&tradeType=buy&currPage=1&payMethod=0&acceptOrder=-1&country=&blockType=general&online=1&range=0&amount=";
+        String smallbull = "https://www.pexpay.com/bapi/c2c/v1/friendly/c2c/ad/search";
         smallb.setId("4");
         smallb.setRateType("自选交易出售价格");
-        smallb.setPrice(getRate(smallbull));
+        smallb.setPrice(getRate(smallbull,"buy"));
         smallb.setCaeateTime(DateUtils.getTime());
         list.add(smallb);
         return getDataTable(list);
     }
 
 
-    String getRate(String url) {
+    String getRate(String url, String type) {
         try {
-            String sell = HttpUtil.get(url);
-            JSONObject jsonObjectsell = JSONUtil.parseObj(sell);
-            String codesell = jsonObjectsell.getStr("code");
-            if ("200".contains(codesell)) {
-                String date1sell = jsonObjectsell.getStr("data");
-                JSONArray datesell = JSONUtil.parseArray(date1sell);
-                Object[] objectssell = datesell.stream().toArray();
-                Object objectsell = objectssell[0];
-                JSONObject jsonObject1sell = JSONUtil.parseObj(objectsell);
-                String pricesell = jsonObject1sell.getStr("price");
-                return pricesell;
+            String params = null;
+            if (type.equals("sell")) {
+                params = "{\"page\":1,\"rows\":10,\"payTypes\":[],\"classifies\":[],\"asset\":\"USDT\",\"tradeType\":\"SELL\",\"fiat\":\"CNY\",\"publisherType\":null,\"filter\":{\"payTypes\":[]}}";
+            } else if (type.equals("buy")) {
+                params = "{\"page\":1,\"rows\":10,\"payTypes\":[],\"classifies\":[],\"asset\":\"USDT\",\"tradeType\":\"BUY\",\"fiat\":\"CNY\",\"publisherType\":null,\"filter\":{\"payTypes\":[]}}";
             }
+            String sell = HttpUtil.post(url, params);
+            com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(sell);
+            String code = jsonObject.getString("code");
+            if ("000000".equals(code) && type.contains("sell")) {
+                String data = jsonObject.getString("data");
+                JSONArray objects = JSONUtil.parseArray(data);
+                String price = null;
+                if (objects.size() >= 5) {
+                    String o = objects.getStr(4);
+                    com.alibaba.fastjson.JSONObject jsonObject1 = JSON.parseObject(o);
+                    com.alibaba.fastjson.JSONObject adDetailResp = jsonObject1.getJSONObject("adDetailResp");
+                    price = adDetailResp.getString("price");
+                }
+                return price;
+            }
+
+            Set<Object> setList = new HashSet<>();
+            if ("000000".equals(code) && type.contains("buy")) {
+                String data = jsonObject.getString("data");
+                JSONArray objects = JSONUtil.parseArray(data);
+                String price = null;
+                if (objects.size() >= 1) {
+                    String o = objects.getStr(0);
+                    com.alibaba.fastjson.JSONObject jsonObject1 = JSON.parseObject(o);
+                    JSONObject adDetailResp = jsonObject1.getJSONObject("adDetailResp");
+                    price = adDetailResp.getString("price");
+                }
+                return price;
+            }
+
         } catch (Exception e) {
             return "获取错误";
         }
