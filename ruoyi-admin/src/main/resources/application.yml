@@ -67,8 +67,8 @@ jetcache:
 spring:
   redis:
     host: redis-server
-    port: 6380
-    password: Ltd3411??
+    port: 6379
+    password: will1234
 
   # 模板引擎
   thymeleaf:

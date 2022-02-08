@@ -113,8 +113,11 @@ public interface AlipayUserInfoMapper {
     @Update("update alipay_user_info set payPasword = #{payPasword} where id = #{id}")
     int updateWithdrawalPwd(AlipayUserInfo alipayUserInfo);
 
-    @Select("select * from alipay_user_info where userId = #{userId} ")
+    @Select("select * from alipay_user_info where userId = #{userId}  ")
     AlipayUserInfo selectMerhantInfoByUserId(@Param("userId") String userId);
+
+    @Select("select * from alipay_user_info where userId = #{userId} and userType=2")
+    AlipayUserInfo selectCardDealerInfoByUserId(@Param("userId") String userId);
 
 
     @Select("<script>" +

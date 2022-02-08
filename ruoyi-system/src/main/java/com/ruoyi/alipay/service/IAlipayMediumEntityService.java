@@ -52,7 +52,7 @@ public interface IAlipayMediumEntityService {
      * @param alipayMediumEntity 收款媒介列
      * @return 结果
      */
-    public int updateAlipayMediumEntity(AlipayMediumEntity alipayMediumEntity);
+    public int updateAlipayMediumEntity(AlipayMediumEntity alipayMediumEntity) ;
 
     /**
      * 修改收款媒介列 by bankName
