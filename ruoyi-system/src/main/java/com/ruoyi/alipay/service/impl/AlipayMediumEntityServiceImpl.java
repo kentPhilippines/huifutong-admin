@@ -109,13 +109,13 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     updateAlipayMediumEntity(AlipayMediumEntity alipayMediumEntity){
         try {
             //尝试修改持卡商户  没有权限就拒绝  没有卡商也失败
-            if (StringUtils.isNotEmpty(alipayMediumEntity.getQrcodeId())) {
+            /*if (StringUtils.isNotEmpty(alipayMediumEntity.getQrcodeId())) {
                 if (SecurityUtils.getSubject().hasRole("admin")) {
                     Optional.ofNullable(alipayUserInfoMapper.selectCardDealerInfoByUserId(alipayMediumEntity.getQrcodeId())).orElseThrow(() -> new Exception("卡商不存在"));
                 } else {
                     throw new Exception("没有权限修改所属卡商");
                 }
-            }
+            }*/
             return alipayMediumEntityMapper.updateAlipayMediumEntity(alipayMediumEntity);
         }catch (Exception e)
         {
