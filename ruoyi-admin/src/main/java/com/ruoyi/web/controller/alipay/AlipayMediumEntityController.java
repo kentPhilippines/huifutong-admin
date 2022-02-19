@@ -117,10 +117,10 @@ public class AlipayMediumEntityController extends BaseController {
      * 单个媒介修改金额页面
      */
     @GetMapping("/editAmountByBank")
-    public String editAmountByBank( ModelMap mmap) {
+    public String editAmountByBank(ModelMap mmap) {
         //AlipayMediumEntity alipayMediumEntity = alipayMediumEntityService.selectAlipayMediumEntityById(Long.valueOf(id));
         mmap.put("alipayMediumEntity", new AlipayMediumEntity());
-        mmap.put("banks",alipayMediumEntityService.findAllBankNames());
+        mmap.put("banks", alipayMediumEntityService.findAllBankNames());
         return prefix + "/editAmountByBank";
     }
 
@@ -141,6 +141,26 @@ public class AlipayMediumEntityController extends BaseController {
         AlipayMediumEntity alipayMediumEntity = alipayMediumEntityService.selectAlipayMediumEntityById(id);
         mmap.put("alipayMediumEntity", alipayMediumEntity);
         return prefix + "/editBankName";
+    }
+
+    /**
+     * 修改姓名验证
+     */
+    @GetMapping("/editVerifyStatus")
+    public String editVerifyStatus( ModelMap mmap) {
+        mmap.put("alipayMediumEntity", new AlipayMediumEntity());
+        mmap.put("banks", alipayMediumEntityService.findAllBankNames());
+        return prefix + "/editVerifyStatus";
+    }
+
+    /**
+     * 修改保存收款媒介列
+     */
+    @Log(title = "修改姓名验证", businessType = BusinessType.UPDATE)
+    @PostMapping("/editVerifyStatus")
+    @ResponseBody
+    public AjaxResult editVerifyStatus(AlipayMediumEntity alipayMediumEntity) {
+        return toAjax(alipayMediumEntityService.updateAlipayMediumEntityByBankName(alipayMediumEntity));
     }
 
 
@@ -206,7 +226,7 @@ public class AlipayMediumEntityController extends BaseController {
         AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
         alipayMediumEntity.setId(Long.valueOf(ids));
         SysUser currentUser = ShiroUtils.getSysUser();
-        return toAjax(alipayMediumEntityService.deleteAlipayMediumEntityById(alipayMediumEntity,currentUser));
+        return toAjax(alipayMediumEntityService.deleteAlipayMediumEntityById(alipayMediumEntity, currentUser));
     }
 
     @Log(title = "剔除银行卡", businessType = BusinessType.UPDATE)
@@ -487,60 +507,60 @@ public class AlipayMediumEntityController extends BaseController {
 
                 AlipayMediumEntity mediumEntity = collect.get(bankId);
                 try {
-                   if(startFund.contains("配额")){
-                       startFund = "500";
-                   }
-                   if(  (Double.valueOf(fund) - Double.valueOf(freezeBalance) )  < Double.valueOf(startFund) ){
-                       med.setIsRed(1);
-                   }
+                    if (startFund.contains("配额")) {
+                        startFund = "500";
+                    }
+                    if ((Double.valueOf(fund) - Double.valueOf(freezeBalance)) < Double.valueOf(startFund)) {
+                        med.setIsRed(1);
+                    }
 
-                  if(Double.valueOf(fund) > (Double.valueOf(deposit) + 3000) ){
-                      med.setIsRed(1);
-                  }
-                   if(Double.valueOf(fund)  < Double.valueOf(freezeBalance)  ){
-                       med.setIsRed(1);
-                   }
+                    if (Double.valueOf(fund) > (Double.valueOf(deposit) + 3000)) {
+                        med.setIsRed(1);
+                    }
+                    if (Double.valueOf(fund) < Double.valueOf(freezeBalance)) {
+                        med.setIsRed(1);
+                    }
                     med.setCode("");
-                   if(ObjectUtil.isNotNull(mediumEntity)){
-                       String error = mediumEntity.getError();
-                       if("1".equals(error)){
-                           med.setIsRed(1);
-                           med.setError("异常卡");
-                       }
-                       if(new BigDecimal(fund).compareTo(new BigDecimal(500)) < 0 ){
-                           med.setIsRed(1);
-                           med.setCode("需要出款 - ");
-                       }
-                       BigDecimal toDayDeal = mediumEntity.getToDayDeal();
-                       BigDecimal sumAmounlimit = mediumEntity.getSumAmounlimit();
-                       if(sumAmounlimit.compareTo(toDayDeal) < 0 ){
-                           String mediumNote = med.getCode();
-                           if(StrUtil.isEmpty(mediumNote)){
-                               mediumNote = "";
-                           }
-                           mediumNote += "  当前卡限制入款 - ";
-                           med.setCode(mediumNote);
-                           med.setIsRed(1);
-                       }
-                       med.setToDayDeal(toDayDeal);
-                       med.setToDayWit(mediumEntity.getToDayWit());
-                       String black = mediumEntity.getBlack();
-                       if(null != mediumEntity.getStartAmount()) {
-                           med.setStartFund(mediumEntity.getStartAmount().toString());
-                       }
-                       if("0".equals(black)){
-                           String mediumNote = med.getCode();
-                           if(StrUtil.isEmpty(mediumNote)){
-                               mediumNote = "";
-                           }
-                           mediumNote += " 不让接单 - ";
-                           med.setCode(mediumNote);
-                           med.setIsRed(1);
-                       }
-                   }
-               }catch (Exception c ){
+                    if (ObjectUtil.isNotNull(mediumEntity)) {
+                        String error = mediumEntity.getError();
+                        if ("1".equals(error)) {
+                            med.setIsRed(1);
+                            med.setError("异常卡");
+                        }
+                        if (new BigDecimal(fund).compareTo(new BigDecimal(500)) < 0) {
+                            med.setIsRed(1);
+                            med.setCode("需要出款 - ");
+                        }
+                        BigDecimal toDayDeal = mediumEntity.getToDayDeal();
+                        BigDecimal sumAmounlimit = mediumEntity.getSumAmounlimit();
+                        if (sumAmounlimit.compareTo(toDayDeal) < 0) {
+                            String mediumNote = med.getCode();
+                            if (StrUtil.isEmpty(mediumNote)) {
+                                mediumNote = "";
+                            }
+                            mediumNote += "  当前卡限制入款 - ";
+                            med.setCode(mediumNote);
+                            med.setIsRed(1);
+                        }
+                        med.setToDayDeal(toDayDeal);
+                        med.setToDayWit(mediumEntity.getToDayWit());
+                        String black = mediumEntity.getBlack();
+                        if (null != mediumEntity.getStartAmount()) {
+                            med.setStartFund(mediumEntity.getStartAmount().toString());
+                        }
+                        if ("0".equals(black)) {
+                            String mediumNote = med.getCode();
+                            if (StrUtil.isEmpty(mediumNote)) {
+                                mediumNote = "";
+                            }
+                            mediumNote += " 不让接单 - ";
+                            med.setCode(mediumNote);
+                            med.setIsRed(1);
+                        }
+                    }
+                } catch (Exception c) {
 
-               }
+                }
                 if (CollectionUtil.isNotEmpty(userCollect)) {
                     AlipayUserInfo alipayUserInfo = userCollect.get(userId);
                     if (null != alipayUserInfo) {
@@ -567,14 +587,6 @@ public class AlipayMediumEntityController extends BaseController {
                         med.setPayInfo(payInfo);
                     }
                 }
-
-
-
-
-
-
-
-
 
 
                 listQueue.add(med);
@@ -607,6 +619,7 @@ public class AlipayMediumEntityController extends BaseController {
         }
         return AjaxResult.success(list);
     }
+
     /**
      * 码商状态修改（调用api）
      */
@@ -623,6 +636,7 @@ public class AlipayMediumEntityController extends BaseController {
         int i = alipayMediumEntityService.updateAlipayMediumEntity(mediumEntity);
         return toAjax(i);
     }
+
     @Log(title = "回调户名验证", businessType = BusinessType.UPDATE)
     @PostMapping("/updateBankcardToName")
     @ResponseBody
@@ -634,6 +648,7 @@ public class AlipayMediumEntityController extends BaseController {
         int i = alipayMediumEntityService.updateAlipayMediumEntity(mediumEntity);
         return toAjax(i);
     }
+
     @Log(title = "释放银行卡", businessType = BusinessType.UPDATE)
     @PostMapping("/openbank")
     @ResponseBody
@@ -645,6 +660,7 @@ public class AlipayMediumEntityController extends BaseController {
         int i = alipayMediumEntityService.updateAlipayMediumEntity(mediumEntity);
         return toAjax(i);
     }
+
     @Log(title = "处理异常卡", businessType = BusinessType.UPDATE)
     @PostMapping("/offbank")
     @ResponseBody
@@ -656,8 +672,6 @@ public class AlipayMediumEntityController extends BaseController {
         int i = alipayMediumEntityService.updateAlipayMediumEntity(mediumEntity);
         return toAjax(i);
     }
-
-
 
 
 }

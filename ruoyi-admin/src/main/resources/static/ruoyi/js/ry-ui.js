@@ -1358,6 +1358,9 @@ var table = {
                 else if (flag == 'editBankName') {
                     $.modal.open(title, $.operate.editBankName(id))
                 }
+                else if (flag == 'editVerifyStatus') {
+                    $.modal.open(title, $.operate.editVerifyStatus(id))
+                }
 
 
             },
@@ -1580,6 +1583,15 @@ var table = {
                 }
                 return url;
             },
+            editVerifyStatus: function (id) {
+                var url = "/404.html";
+                if ($.common.isNotEmpty(id)) {
+                    url = table.options.editVerifyStatus.replace("{id}", id);
+                }
+                return url;
+            },
+
+
 
             editeCreditUrl: function (id) {
                 var url = "/404.html";

@@ -74,6 +74,9 @@
             <a class="btn btn-primary" onclick="$.operate.openAccount(1,'修改银行风控规则','editAmountByBank')">
                 <i class="fa fa-bar-chart"></i> 根据银行名称修改风控规则
             </a>
+            <a class="btn btn-primary" onclick="$.operate.openAccount(1,'修改姓名验证','editVerifyStatus')">
+                <i class="fa fa-bar-chart"></i> 修改姓名验证
+            </a>
         </div>
         <div class="col-sm-12 select-table table-striped">
             <table id="bootstrap-table"></table>
@@ -102,6 +105,7 @@
             editAmountByCode: prefix + "/editAmountByCode/{id}",
             openUrl: prefix + "/show/{userId}",
             editBankName:prefix + "/editBankName/{id}",
+            editVerifyStatus:prefix + "/editVerifyStatus",
             modalName: "收款媒介",
             columns: [{
                 checkbox: true
