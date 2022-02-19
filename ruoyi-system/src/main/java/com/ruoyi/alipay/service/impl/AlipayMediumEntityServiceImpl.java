@@ -1,12 +1,18 @@
 package com.ruoyi.alipay.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
+import com.ruoyi.alipay.domain.AlipayUserInfo;
+import com.ruoyi.alipay.mapper.AlipayUserInfoMapper;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysUser;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.alipay.mapper.AlipayMediumEntityMapper;
@@ -25,15 +31,18 @@ import javax.annotation.Resource;
  * @date 2020-03-17
  */
 @Service
+@Slf4j
 public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService {
     @Resource
     private AlipayMediumEntityMapper alipayMediumEntityMapper;
 
-    @Cached(name="IAlipayMediumEntityService.selectAll", expire = 3600,cacheType = CacheType.REMOTE)
+    @Resource
+    private AlipayUserInfoMapper alipayUserInfoMapper;
+
+    @Cached(name = "IAlipayMediumEntityService.selectAll", expire = 3600, cacheType = CacheType.REMOTE)
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
-    public List<AlipayMediumEntity> selectAll()
-    {
+    public List<AlipayMediumEntity> selectAll() {
         return alipayMediumEntityMapper.findAll();
     }
 
@@ -97,8 +106,22 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     @Override
     public int
-    updateAlipayMediumEntity(AlipayMediumEntity alipayMediumEntity) {
-        return alipayMediumEntityMapper.updateAlipayMediumEntity(alipayMediumEntity);
+    updateAlipayMediumEntity(AlipayMediumEntity alipayMediumEntity){
+        try {
+            //尝试修改持卡商户  没有权限就拒绝  没有卡商也失败
+            /*if (StringUtils.isNotEmpty(alipayMediumEntity.getQrcodeId())) {
+                if (SecurityUtils.getSubject().hasRole("admin")) {
+                    Optional.ofNullable(alipayUserInfoMapper.selectCardDealerInfoByUserId(alipayMediumEntity.getQrcodeId())).orElseThrow(() -> new Exception("卡商不存在"));
+                } else {
+                    throw new Exception("没有权限修改所属卡商");
+                }
+            }*/
+            return alipayMediumEntityMapper.updateAlipayMediumEntity(alipayMediumEntity);
+        }catch (Exception e)
+        {
+            log.error("修改媒介异常",e);
+        }
+        return -1;
     }
 
     /**
@@ -146,11 +169,10 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
      */
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
-    public int deleteAlipayMediumEntityById(AlipayMediumEntity alipayMediumEntity,SysUser sysUser) {
+    public int deleteAlipayMediumEntityById(AlipayMediumEntity alipayMediumEntity, SysUser sysUser) {
        /* AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
         alipayMediumEntity.setId(id);*/
-        if(sysUser.getLoginName().equalsIgnoreCase("admin"))
-        {
+        if (sysUser.getLoginName().equalsIgnoreCase("admin")) {
             return alipayMediumEntityMapper.deleteAlipayMediumEntityById(alipayMediumEntity.getId());
         }
 
