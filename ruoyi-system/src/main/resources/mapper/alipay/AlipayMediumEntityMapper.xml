@@ -180,7 +180,7 @@
             <if test="mountSystem != null  and mountSystem != ''">mountSystem = #{mountSystem},</if>
             <if test="mountLimit != null  and mountLimit != ''">mountLimit = #{mountLimit},</if>
             <if test="black != null  and black != ''">black = #{black},</if>
-            <if test="startAmount != null  and startAmount != ''">startAmount = #{startAmount},</if>
+            <if test="startAmount != null  ">startAmount = #{startAmount},</if>
             <if test="error != null  and error != ''">error = #{error},</if>
             <if test="startTime != null  and startTime != ''">startTime = #{startTime},</if>
             <if test="endTime != null  and endTime != ''">endTime = #{endTime},</if>
