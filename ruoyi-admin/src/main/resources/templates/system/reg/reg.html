@@ -11,6 +11,10 @@
                 <div class="select-list">
                     <ul>
                         <li>
+                            <p>银行名称：</p>
+                            <input type="text" name="bankName"/>
+                        </li>
+                        <li>
                             <!--                                <p>平台规定的交易方式，income(收入),expenditure(支出)，fundback：</p>-->
                             <p>平台规定的交易方式：</p>
                             <select name="transactionType" th:with="type=${@dict.getType('transactionType')}">
