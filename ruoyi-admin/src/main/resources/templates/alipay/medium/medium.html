@@ -88,6 +88,7 @@
 <script th:inline="javascript">
     const codeFlag = [[${@permission.hasPermi('alipay:medium:showCode')}]];
     const removeFlag = [[${@permission.hasPermi('alipay:medium:remove')}]];
+    const removeRoleFlag = [[${@permission.hasRole('alipay:medium:remove')}]];
     const editAmountById = [[${@permission.hasPermi('alipay:medium:editAmountById')}]];
     const editAmountByCode = [[${@permission.hasPermi('alipay:medium:editAmountByCode')}]];
     const mediumType = [[${@dict.getType('medium_type')}]];

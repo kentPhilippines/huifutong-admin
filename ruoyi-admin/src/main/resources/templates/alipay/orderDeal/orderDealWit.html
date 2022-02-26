@@ -165,6 +165,7 @@
     const backOrderFlag = [[${@permission.hasPermi('orderDeal:qr:backOrder')}]];
     const notifyFlag = [[${@permission.hasPermi('orderDeal:qr:renotify')}]];
     const updataOrder = [[${@permission.hasPermi('orderDeal:qr:status')}]];
+    const resetOperaterFlag = [[${@permission.hasPermi('orderDeal:qr:resetOperater')}]];
     //数据
     const orderstatusDatas = [[${@dict.getType('orderStatus')}]];
     //请求路径
@@ -388,6 +389,7 @@
                         actions.push('<a class="btn btn-primary btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.id + '\')"><i class="fa fa-search"></i>详情</a> ');
                         // actions.push('<a class="btn btn-primary btn-xs ' + backOrderFlag + '" onclick="$.operate.openAccount(\'' + row.id + '\',\'补单\',\'backOrderUrl\')"><i class="fa fa-plus"></i>补单</a> ');
 
+                        actions.push('<a class="btn btn-warning btn-xs ' + resetOperaterFlag + '" href="javascript:void(0)" onclick="resetOperater(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>重置操作人</a> ');
                         if (row.orderStatus === '2') {
                             actions.push('<a class="btn btn-warning btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="back(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>回滚</a> ');
                         }
@@ -494,6 +496,12 @@
     function onUpdataOrder(id) {
         $.modal.confirm("该笔订单确认转为人工处理", function () {
             $.operate.post(prefix + "/updataOrder", {"id": id});
+        });
+    }
+
+    function resetOperater(id) {
+        $.modal.confirm("确认重置操作人？", function () {
+            $.operate.post(prefix + "/reset/operater", {"id": id});
         });
     }
 

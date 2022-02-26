@@ -727,6 +727,21 @@ public class AlipayDealOrderEntityController extends BaseController {
     }
 
 
+
+    /**
+     * 重置操作人
+     */
+    @PostMapping("/reset/operater")
+    @RequiresPermissions("orderDeal:qr:resetOperater")
+    @ResponseBody
+    @Log(title = "重置操作人", businessType = BusinessType.UPDATE)
+    public AjaxResult resetOperater( String id) {
+        AlipayDealOrderEntity order = alipayDealOrderEntityService.selectAlipayDealOrderEntityById(Long.valueOf(id));
+        order.setOperater("");//
+        int i = alipayDealOrderEntityService.updateAlipayDealOrderEntityByOrder(order);
+        return toAjax(i);
+    }
+
     @Log(title = "交易订单", businessType = BusinessType.UPDATE)
     @PostMapping("/renotify")
     @ResponseBody
