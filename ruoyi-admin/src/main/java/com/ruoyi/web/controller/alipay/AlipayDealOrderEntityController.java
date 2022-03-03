@@ -28,6 +28,7 @@ import com.ruoyi.system.service.ISysUserService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -732,7 +733,7 @@ public class AlipayDealOrderEntityController extends BaseController {
      * 重置操作人
      */
     @PostMapping("/reset/operater")
-    @RequiresPermissions("orderDeal:qr:resetOperater")
+    //@RequiresPermissions("orderDeal:qr:resetOperater")
     @ResponseBody
     @Log(title = "重置操作人", businessType = BusinessType.UPDATE)
     public AjaxResult resetOperater( String id) {

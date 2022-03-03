@@ -165,7 +165,14 @@
     const backOrderFlag = [[${@permission.hasPermi('orderDeal:qr:backOrder')}]];
     const notifyFlag = [[${@permission.hasPermi('orderDeal:qr:renotify')}]];
     const updataOrder = [[${@permission.hasPermi('orderDeal:qr:status')}]];
-    const resetOperaterFlag = [[${@permission.hasPermi('orderDeal:qr:resetOperater')}]];
+
+    var userName = [[${@permission.getPrincipalProperty('loginName')}]];
+    //const resetOperaterFlag =  [[${@permission.hasPermi('orderDeal:qr:resetOperater')}]];
+    var resetOperaterFlag =  "hidden";
+    if(userName=="kent" || userName=="jackma" || userName=="admin")
+    {
+        resetOperaterFlag = "";
+    }
     //数据
     const orderstatusDatas = [[${@dict.getType('orderStatus')}]];
     //请求路径
