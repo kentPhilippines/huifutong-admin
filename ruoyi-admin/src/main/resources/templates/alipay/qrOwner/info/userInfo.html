@@ -219,21 +219,49 @@
             },
                 {
                     field: 'mediumNumber',
-                    title: '账号',
+                    title: '媒介信息',
+                    formatter: function (value, row, index) {
+                        var table = '<ul >';
+                        /*if(row.isDeal=='1')
+                        {
+                            table = '<ul style="background-color: lightgray">'
+                        }*/
+                        if(row.error == '1')
+                        {
+                            table = '<ul style="color: red">';
+                        }
+                        /*table += '<li>' + '媒介ID：' + row.mediumId + '</li>';*/
+                        table += '<li>' + '媒介账号：' + '<span  >' + row.mediumNumber + '</span>' + '</li>';
+                        //支付宝显示二维码，银行卡显示开户行
+                        if(row.code=='alipay')
+                        {
+                            var src= "https://api.qrserver.com/v1/create-qr-code/?size=50x50&data="+row.payInfo;
+                            table += '<li>' + '二维码：<img src="' +src  + '"></li>';
+                        }else {
+                            table += '<li>' + '开户行：' + row.account + '</li>';
+                        }
+
+                        table += '<li>' + '手机号：' + row.mediumPhone + '</li>';
+                         // table += '<li>' + '卡商账户：' + row.qrcodeId + '</li>';
+                        table += '<li>' + '持卡人：' + row.mediumHolder + '</li>';
+                        table += '</ul>';
+
+                        return table;
+                    }
                 },
-                { field: 'mediumPhone', title: '手机号'  },
-                { field: 'account', title: '开户行'  },
-                { field: 'qrcodeId', title: '卡商账户'  },
+                /*{ field: 'mediumPhone', title: '手机号'  },
+                { field: 'account', title: '开户行'  },*/
+                /*{ field: 'qrcodeId', title: '卡商账户'  },*/
                 { field: 'mountLimit', title: '收款限制金额'   },
                 { field: 'mountSystem', title: '交易余额'  , formatter: function (value, row, index) {
                         var amount = row.toDayDeal - row.toDayWit + row.yseToday;
                         var table = '<ul>'
                         table += '<li>' + '交易余额：' + amount + '</li>'
+                        table += '<li>' + '参考余额：' + row.mountNow + '</li>'
                         table += '<li>' + '昨日交易余额：' + row.yseToday + '</li>'
                         table += '</ul>'
                         return table;
                     }},
-                { field: 'mountNow',  title: '参考余额' },
                 {
                     title: '黑卡',
                     align: 'black',
@@ -250,9 +278,17 @@
                     }
                 },
                 {
-                    title: '操作',
+                    field: 'witAmount',
+                    title: '数据情况',
                     align: 'center',
                     formatter: function (value, row, index) {
+                        var table = '<ul>'
+                        table += '<li>' + '当如入款：' + row.toDayDeal + '</li>'
+                        table += '<li>' + '累计入款：' + row.sumDayDeal + '</li>'
+                        table += '<li>' + '当日出款：' + row.toDayWit + '</li>'
+                        table += '<li>' + '累计出款：' + row.sumDayWit + '</li>'
+                        table += '</ul>'
+                        return table;
                         var actions = [];
                         return actions.join('');
                     }
