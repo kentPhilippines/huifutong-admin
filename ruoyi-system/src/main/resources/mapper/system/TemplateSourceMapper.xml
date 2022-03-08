@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TemplateSourceMapper">
+    
+    <resultMap type="TemplateSource" id="TemplateSourceResult">
+        <result property="id"    column="id"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="sourcePhone"    column="source_phone"    />
+        <result property="status"    column="status"    />
+        <result property="remark1"    column="remark1"    />
+        <result property="remark2"    column="remark2"    />
+    </resultMap>
+
+    <sql id="selectTemplateSourceVo">
+        select id, bank_name, source_phone, status, remark1, remark2 from template_source
+    </sql>
+
+    <select id="selectTemplateSourceList" parameterType="TemplateSource" resultMap="TemplateSourceResult">
+        <include refid="selectTemplateSourceVo"/>
+        <where>  
+            <if test="bankName != null  and bankName != ''"> and bank_name like concat('%', #{bankName}, '%')</if>
+            <if test="sourcePhone != null  and sourcePhone != ''"> and source_phone = #{sourcePhone}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="remark1 != null  and remark1 != ''"> and remark1 = #{remark1}</if>
+            <if test="remark2 != null  and remark2 != ''"> and remark2 = #{remark2}</if>
+        </where>
+    </select>
+    
+    <select id="selectTemplateSourceById" parameterType="Long" resultMap="TemplateSourceResult">
+        <include refid="selectTemplateSourceVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTemplateSource" parameterType="TemplateSource" useGeneratedKeys="true" keyProperty="id">
+        insert into template_source
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bankName != null  and bankName != ''">bank_name,</if>
+            <if test="sourcePhone != null  and sourcePhone != ''">source_phone,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="remark1 != null  and remark1 != ''">remark1,</if>
+            <if test="remark2 != null  and remark2 != ''">remark2,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bankName != null  and bankName != ''">#{bankName},</if>
+            <if test="sourcePhone != null  and sourcePhone != ''">#{sourcePhone},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="remark1 != null  and remark1 != ''">#{remark1},</if>
+            <if test="remark2 != null  and remark2 != ''">#{remark2},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTemplateSource" parameterType="TemplateSource">
+        update template_source
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bankName != null  and bankName != ''">bank_name = #{bankName},</if>
+            <if test="sourcePhone != null  and sourcePhone != ''">source_phone = #{sourcePhone},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="remark1 != null  and remark1 != ''">remark1 = #{remark1},</if>
+            <if test="remark2 != null  and remark2 != ''">remark2 = #{remark2},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTemplateSourceById" parameterType="Long">
+        delete from template_source where id = #{id}
+    </delete>
+
+    <delete id="deleteTemplateSourceByIds" parameterType="String">
+        delete from template_source where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
