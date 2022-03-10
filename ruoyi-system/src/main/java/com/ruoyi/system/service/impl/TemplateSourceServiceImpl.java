@@ -1,6 +1,9 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.annotation.DataSource;
+import com.ruoyi.common.enums.DataSourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.TemplateSourceMapper;
@@ -27,6 +30,7 @@ public class TemplateSourceServiceImpl implements ITemplateSourceService
      * @return 来源匹配
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public TemplateSource selectTemplateSourceById(Long id)
     {
         return templateSourceMapper.selectTemplateSourceById(id);
@@ -39,6 +43,7 @@ public class TemplateSourceServiceImpl implements ITemplateSourceService
      * @return 来源匹配
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public List<TemplateSource> selectTemplateSourceList(TemplateSource templateSource)
     {
         return templateSourceMapper.selectTemplateSourceList(templateSource);
@@ -51,6 +56,7 @@ public class TemplateSourceServiceImpl implements ITemplateSourceService
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int insertTemplateSource(TemplateSource templateSource)
     {
         return templateSourceMapper.insertTemplateSource(templateSource);
@@ -63,6 +69,7 @@ public class TemplateSourceServiceImpl implements ITemplateSourceService
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int updateTemplateSource(TemplateSource templateSource)
     {
         return templateSourceMapper.updateTemplateSource(templateSource);
@@ -75,6 +82,7 @@ public class TemplateSourceServiceImpl implements ITemplateSourceService
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int deleteTemplateSourceByIds(String ids)
     {
         return templateSourceMapper.deleteTemplateSourceByIds(Convert.toStrArray(ids));
@@ -87,6 +95,7 @@ public class TemplateSourceServiceImpl implements ITemplateSourceService
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int deleteTemplateSourceById(Long id)
     {
         return templateSourceMapper.deleteTemplateSourceById(id);
