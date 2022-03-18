@@ -169,7 +169,13 @@
                 {field: 'id', title: '数据ID', visible: false},
                 {
                     field: 'orderId', title: '平台订单', formatter: function (value, row, index) {
-                        var table = '<ul>'
+                        var table = '<ul>';
+                        //小额变色
+                        if('小额' == row.retain1 )
+                        {
+                            table = '<ul style="background-color: lawngreen">';
+                        }
+
                         table += '<li>' + '主订单：' + row.orderId + '</li>'
                         table += '<li>' + '关联订单：' + row.associatedId + '</li>'
                         table += '<li>' + '外部订单：' + row.externalOrderId + '</li>'
