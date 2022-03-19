@@ -171,9 +171,9 @@
                     field: 'orderId', title: '平台订单', formatter: function (value, row, index) {
                         var table = '<ul>';
                         //小额变色
-                        if('小额' == row.retain1 )
+                        if(null != row.retain1 && '' != row.retain1 && row.retain1.indexOf('小额')>-1 )
                         {
-                            table = '<ul style="background-color: lawngreen">';
+                            table = '<ul style="background-color: orange">';
                         }
 
                         table += '<li>' + '主订单：' + row.orderId + '</li>'
