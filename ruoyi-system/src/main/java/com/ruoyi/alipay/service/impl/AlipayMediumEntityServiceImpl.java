@@ -237,6 +237,7 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
 
+        dataList.stream().filter(data->(data.getStatus()!=1 && data.getStatus()!=0)).findAny().ifPresent(d->{throw new RuntimeException(d.getBankName()+"状态输入异常:"+d.getStatus());});
         List<AlipayMediumEntity> alipayMediumEntities = dataList.stream().filter(data -> {
                     return (data.getStatus() == 1 || data.getStatus() == 0) && StringUtils.isNotEmpty(data.getBankName());
                 }
