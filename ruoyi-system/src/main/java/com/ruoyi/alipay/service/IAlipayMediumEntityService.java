@@ -4,6 +4,7 @@ import com.alicp.jetcache.anno.Cached;
 import com.ruoyi.alipay.domain.AlipayMediumEntity;
 import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.enums.DataSourceType;
+import com.ruoyi.system.domain.ImportBankVerifyDto;
 import com.ruoyi.system.domain.SysUser;
 
 import java.util.List;
@@ -110,4 +111,6 @@ public interface IAlipayMediumEntityService {
 
 
     List<AlipayMediumEntity> findMedSum();
+
+    String importData(List<ImportBankVerifyDto> dataList, boolean updateSupport, String operName);
 }

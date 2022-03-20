@@ -2,14 +2,18 @@ package com.ruoyi.alipay.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
 import com.ruoyi.alipay.domain.AlipayUserInfo;
 import com.ruoyi.alipay.mapper.AlipayUserInfoMapper;
 import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.security.Md5Utils;
+import com.ruoyi.system.domain.ImportBankVerifyDto;
 import com.ruoyi.system.domain.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
@@ -106,7 +110,7 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     @Override
     public int
-    updateAlipayMediumEntity(AlipayMediumEntity alipayMediumEntity){
+    updateAlipayMediumEntity(AlipayMediumEntity alipayMediumEntity) {
         try {
             //尝试修改持卡商户  没有权限就拒绝  没有卡商也失败
             /*if (StringUtils.isNotEmpty(alipayMediumEntity.getQrcodeId())) {
@@ -117,9 +121,8 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
                 }
             }*/
             return alipayMediumEntityMapper.updateAlipayMediumEntity(alipayMediumEntity);
-        }catch (Exception e)
-        {
-            log.error("修改媒介异常",e);
+        } catch (Exception e) {
+            log.error("修改媒介异常", e);
         }
         return -1;
     }
@@ -221,5 +224,30 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public List<AlipayMediumEntity> findMedSum() {
         return alipayMediumEntityMapper.findMedSum();
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public String importData(List<ImportBankVerifyDto> dataList, boolean updateSupport, String operName) {
+        if (StringUtils.isNull(dataList) || dataList.size() == 0) {
+            throw new BusinessException("导入数据不能为空！");
+        }
+        int successNum = 0;
+        int failureNum = 0;
+        StringBuilder successMsg = new StringBuilder();
+        StringBuilder failureMsg = new StringBuilder();
+
+        List<AlipayMediumEntity> alipayMediumEntities = dataList.stream().filter(data -> {
+                    return (data.getStatus() == 1 || data.getStatus() == 0) && StringUtils.isNotEmpty(data.getBankName());
+                }
+        ).map(importBankVerifyDto -> {
+            AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
+            alipayMediumEntity.setIsClickPay(importBankVerifyDto.getStatus());
+            alipayMediumEntity.getParams().put("bankName", importBankVerifyDto.getBankName());
+            return alipayMediumEntity;
+        }).collect(Collectors.toList());
+
+        alipayMediumEntities.forEach(alipayMediumEntity -> updateAlipayMediumEntityByBankName(alipayMediumEntity));
+        return successMsg.toString();
     }
 }

@@ -22,12 +22,14 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.util.DictionaryUtils;
 import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.system.domain.ImportBankVerifyDto;
 import com.ruoyi.system.domain.SysUser;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -151,6 +153,25 @@ public class AlipayMediumEntityController extends BaseController {
         mmap.put("alipayMediumEntity", new AlipayMediumEntity());
         mmap.put("banks", alipayMediumEntityService.findAllBankNames());
         return prefix + "/editVerifyStatus";
+    }
+
+    @GetMapping("/importTemplate")
+    @ResponseBody
+    public AjaxResult importTemplate() {
+        ExcelUtil<ImportBankVerifyDto> util = new ExcelUtil<ImportBankVerifyDto>(ImportBankVerifyDto.class);
+        return util.importTemplateExcel("姓名验证数据");
+    }
+
+    //@Log(title = "用户管理", businessType = BusinessType.IMPORT)
+    //@RequiresPermissions("system:user:import")
+    @PostMapping("/importData")
+    @ResponseBody
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
+        ExcelUtil<ImportBankVerifyDto> util = new ExcelUtil<ImportBankVerifyDto>(ImportBankVerifyDto.class);
+        List<ImportBankVerifyDto> dataList = util.importExcel(file.getInputStream());
+        String operName = ShiroUtils.getSysUser().getLoginName();
+        String message = alipayMediumEntityService.importData(dataList, updateSupport, operName);
+        return AjaxResult.success(message);
     }
 
     /**
