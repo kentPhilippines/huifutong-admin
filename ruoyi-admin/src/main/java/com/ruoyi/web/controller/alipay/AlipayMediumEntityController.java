@@ -535,9 +535,9 @@ public class AlipayMediumEntityController extends BaseController {
                         med.setIsRed(1);
                     }
 
-                    if (Double.valueOf(fund) > (Double.valueOf(deposit) + 3000)) {
+                   /* if (Double.valueOf(fund) > (Double.valueOf(deposit) + 3000)) {
                         med.setIsRed(1);
-                    }
+                    }*/
                     if (Double.valueOf(fund) < Double.valueOf(freezeBalance)) {
                         med.setIsRed(1);
                     }
