@@ -233,25 +233,33 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
             throw new BusinessException("导入数据不能为空！");
         }
 
-        StringBuilder successMsg = new StringBuilder("导入成功");
+        StringBuilder successMsg = new StringBuilder("导入成功。");
+        StringBuilder failMsg = new StringBuilder();
 
-        dataList.stream().filter(data -> (data.getStatus() != 1 && data.getStatus() != 0)).findAny().ifPresent(d -> {
+        dataList.stream().filter(data -> (data.getStatus() != 1 && data.getStatus() != 0)).forEach(data->failMsg.append(data.getBankName()+"-"+data.getStatus()+","));
+        if(StringUtils.isNotEmpty(failMsg))
+        {
+            throw new BusinessException("导入状态异常："+failMsg.toString());
+        }
+        /*dataList.stream().filter(data -> (data.getStatus() != 1 && data.getStatus() != 0)).findAny().ifPresent(d -> {
             throw new RuntimeException(d.getBankName() + "状态输入异常:" + d.getStatus());
-        });
+        });*/
         dataList.stream()
-                /*.filter(data -> {
-                    return (data.getStatus() == 1 || data.getStatus() == 0) && StringUtils.isNotEmpty(data.getBankName());
-                })*/
                 .forEach(importBankVerifyDto -> {
                     AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
                     alipayMediumEntity.setIsClickPay(importBankVerifyDto.getStatus());
                     alipayMediumEntity.getParams().put("bankName", importBankVerifyDto.getBankName());
                     int i = updateAlipayMediumEntityByBankName(alipayMediumEntity);
                     if (i == 0) {
-                        throw new RuntimeException("此银行：" + importBankVerifyDto.getBankName() + "  不存在");
+                        failMsg.append(importBankVerifyDto.getBankName()+",");
+                        //throw new RuntimeException("此银行：" + importBankVerifyDto.getBankName() + "  不存在");
                     }
                     //return alipayMediumEntity;
                 });
+        if(StringUtils.isNotEmpty(failMsg))
+        {
+            throw new BusinessException(failMsg.toString()+"不存在，请确认数据");
+        }
 
 
         return successMsg.toString();
