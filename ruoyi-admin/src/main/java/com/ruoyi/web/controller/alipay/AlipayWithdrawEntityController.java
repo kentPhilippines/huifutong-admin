@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.alipay;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
@@ -145,6 +146,18 @@ public class AlipayWithdrawEntityController extends BaseController {
         List<AlipayProductEntity> productlist = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
         mmap.put("channelList", rateList);
         mmap.put("productList", productlist);
+
+
+        List<AlipayRunOrderEntity> alipayRunOrders = alipayRunOrderEntityService.findAssocidOrder(alipayWithdrawEntity.getOrderId());
+        if(CollectionUtil.isEmpty(alipayRunOrders))
+        {
+            //throw new BusinessException("订单尚未结算，请稍后再试。");
+            mmap.put("errorMessage","订单尚未结算，请稍后再试。");
+            return "/error/business";
+        }
+
+
+
         return prefix + "/edit";
     }
 
