@@ -79,13 +79,24 @@
                witAmount,
                auditLog,
                payInfo
-        from alipay_medium
+        from
+        <if test="params.isHistoryQuery == null  or params.isHistoryQuery == ''">
+             alipay_medium
+        </if>
+
+        <if test="params.isHistoryQuery != null  and params.isHistoryQuery != ''">
+            alipay_medium_bak
+        </if>
+
     </sql>
+
+
 
     <select id="selectAlipayMediumEntityList" parameterType="AlipayMediumEntity" resultMap="AlipayMediumEntityResult">
         <include refid="selectAlipayMediumEntityVo"/>
         <where>
             isDeal = 2
+
             <if test="mediumHolder != null  and mediumHolder != ''">and mediumHolder like concat('%', #{mediumHolder},
                 '%')
             </if>

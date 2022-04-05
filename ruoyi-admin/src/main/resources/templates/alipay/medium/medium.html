@@ -59,10 +59,11 @@
                                    name="params[endCreateTime]"/>
                         </li>
                         <li>
-                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$('#isHistoryQuery').val('');$.table.search()"><i
                                     class="fa fa-search"></i>&nbsp;搜索</a>
                             <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
                                     class="fa fa-refresh"></i>&nbsp;重置</a>
+                            <input type="hidden" id="isHistoryQuery" name="params[isHistoryQuery]">
                         </li>
                     </ul>
                 </div>
@@ -79,6 +80,9 @@
             </a>
             <a class="btn btn-info" onclick="$.table.importExcel()" >
                 <i class="fa fa-upload"></i> 导入姓名验证状态
+            </a>
+            <a class="btn btn-info" onclick="$('#isHistoryQuery').val('1');$.table.search();" >
+                <i class="fa fa-upload"></i> 查询历史数据
             </a>
         </div>
         <div class="col-sm-12 select-table table-striped">
