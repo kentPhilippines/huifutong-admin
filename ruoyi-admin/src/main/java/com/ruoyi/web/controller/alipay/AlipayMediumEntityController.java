@@ -71,7 +71,14 @@ public class AlipayMediumEntityController extends BaseController {
         startPage();
         List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
         if (StrUtil.isNotEmpty(alipayMediumEntity.getQrcodeId())) {
-            AlipayMediumEntity mediumEntity = alipayMediumEntityService.findBankSum(alipayMediumEntity.getQrcodeId());
+            AlipayMediumEntity mediumEntity = null;
+            //有标识就查询历史数据
+            if(alipayMediumEntity.getParams().containsKey("isHistoryQuery") && alipayMediumEntity.getParams().get("isHistoryQuery").toString().equals("1")  )
+            {
+                mediumEntity = alipayMediumEntityService.findBankSumBak(alipayMediumEntity.getQrcodeId());
+            }else {
+                mediumEntity = alipayMediumEntityService.findBankSum(alipayMediumEntity.getQrcodeId());
+            }
             if (null != mediumEntity && CollUtil.isNotEmpty(list)) {
                 for (int mark = 0; mark < 1; mark++) {
                     list.get(mark).setBankSumAmountsys(mediumEntity.getBankSumAmountsys());

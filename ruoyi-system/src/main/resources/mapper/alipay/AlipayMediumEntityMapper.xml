@@ -80,8 +80,50 @@
                auditLog,
                payInfo
         from
+            alipay_medium
+
+    </sql>
+
+    <sql id="selectAlipayMediumEntityVoBak">
+        select id,
+        error,
+        mediumId,
+        mediumNumber,
+        mediumHolder,
+        mediumNote,
+        mediumPhone,
+        qrcodeId,
+        yseToday,
+        code,
+        createTime,
+        submitTime,
+        status,
+        isDeal,
+        black,
+        toDayDeal,
+        sumDayDeal,
+        toDayWit,
+        sumDayWit,
+        startAmount,
+        sumDayWit,
+        startTime,
+        endTime,
+        isClickPay,
+        sc,
+        sumAmounlimit,
+        attr,
+        bankcode,
+        account,
+        mountNow,
+        mountSystem,
+        mountLimit,
+        notfiyMask,
+        witAmount,
+        auditLog,
+        payInfo
+        from
         <if test="params.isHistoryQuery == null  or params.isHistoryQuery == ''">
-             alipay_medium
+            alipay_medium
         </if>
 
         <if test="params.isHistoryQuery != null  and params.isHistoryQuery != ''">
@@ -92,8 +134,10 @@
 
 
 
+
+
     <select id="selectAlipayMediumEntityList" parameterType="AlipayMediumEntity" resultMap="AlipayMediumEntityResult">
-        <include refid="selectAlipayMediumEntityVo"/>
+        <include refid="selectAlipayMediumEntityVoBak"/>
         <where>
             isDeal = 2
 

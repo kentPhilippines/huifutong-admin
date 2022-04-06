@@ -102,6 +102,21 @@ public interface AlipayMediumEntityMapper {
             "WHERE  qrcodeId  = #{userId} and isDeal  = '2' and status = 1  ")
     List<AlipayMediumEntity> findBankSum(@Param("userId") String userId);
 
+    @Select(
+            "SELECT  sum(mountNow) as mountNow ,   " +
+                    "sum(mountSystem) as mountSystem , " +
+                    " 'all' as amounttype " +
+                    "from   alipay_medium_bak   " +
+                    "WHERE  qrcodeId  =  #{userId}  and isDeal  = '2'      " +
+                    "union all  " +
+                    "SELECT  " +
+                    "sum(mountNow) as mountNow ,  " +
+                    "sum(mountSystem) as mountSystem, " +
+                    " 'open' as amounttype  " +
+                    "from  alipay_medium_bak  " +
+                    "WHERE  qrcodeId  = #{userId} and isDeal  = '2' and status = 1  ")
+    List<AlipayMediumEntity> findBankSumBak(@Param("userId") String userId);
+
 
 
 
