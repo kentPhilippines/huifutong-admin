@@ -407,16 +407,17 @@
                         }
 
                         if (row.orderStatus === '2' && row.orderType == 4) {
-                            actions.push('<a class="btn btn-danger btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="onUpdataOrder(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>转发财务</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="onUpdataOrder(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>转发财务</a><br><br> ');
                         }
                         if (row.orderStatus != 7 && row.orderStatus != '2') {
-                            actions.push('<a class="btn btn-danger btn-xs ' + updataOrder + '" href="javascript:void(0)" onclick="onUpdataOrder(\'' + row.id + '\')"><i class="fa fa-google-wallet"></i>转发财务</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + updataOrder + '" href="javascript:void(0)" onclick="onUpdataOrder(\'' + row.id + '\')"><i class="fa fa-google-wallet"></i>转发财务</a><br><br> ');
                         }
 
                         if (row.orderStatus === '1' && row.orderType == 4 &&  1 != row.grabOrder) {
                             actions.push('<a class="btn btn-warning btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="updateBankCard(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>修改出款卡商</a> ');
                             actions.push('<a class="btn btn-warning btn-xs ' + notifyFlag + '" href="javascript:void(0)" onclick="updateBankCardMore(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>拆单出款</a> ');
                         }
+
                         if (  row.orderType == 4 &&  row.orderStatus == 2 && row.enterPay == 0 ) {
                             actions.push('<a class="btn btn-warning btn-xs ' + updataOrder + '" href="javascript:void(0)" onclick="enterPay(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>审核出款</a> ');
                         }
