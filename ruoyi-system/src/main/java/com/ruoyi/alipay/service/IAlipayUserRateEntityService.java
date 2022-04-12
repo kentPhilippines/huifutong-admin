@@ -99,7 +99,7 @@ public interface IAlipayUserRateEntityService {
 
     List<AlipayUserRateEntity> findRates(String ids);
 
-
+     List<AlipayUserRateEntity> findRates(String ids,String payType);
     /**
      * 根据商户账号和产品类型查询当前开启的费率
      *

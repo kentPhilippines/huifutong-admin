@@ -37,7 +37,17 @@ public class AlipayMediumEntity extends BaseEntity {
     private String endTime;//接单结束 时间
     private Integer isClickPay;// 收款户名验证是否验证户名   1 验证    0 不验证
     private Long sc;//接单间隔秒数
+    /*
+            是否是小额
+             */
+    private boolean small=false;
+    public boolean isSmall() {
+        return small;
+    }
 
+    public void setSmall(boolean small) {
+        this.small = small;
+    }
     public BigDecimal getSumAmounlimit() {
         return sumAmounlimit;
     }

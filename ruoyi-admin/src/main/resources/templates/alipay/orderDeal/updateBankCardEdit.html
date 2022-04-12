@@ -101,7 +101,13 @@
                             openSumBankAmountsys += parseFloat(rows[i].openSumBankAmountsys);
                             openSumBankAmountnow += parseFloat(rows[i].openSumBankAmountnow);
                         }
-                        var table = '<ul>'
+                        var table = '<ul>';
+                        console.log(row.small);
+                        console.log(null != row.small && '' != row.small && row.small==true);
+                                if(null != row.small && '' != row.small && row.small==true  )
+                                {
+                                    table = '<ul style="background-color: yellow">';
+                                }
                         table += '<li><span style="color: green"><strong>' + '开启业务余额：' + openSumBankAmountsys + '</strong></span><span style="color: red">&nbsp;&nbsp;&nbsp;&nbsp;<strong>开启监控余额 ： ' + openSumBankAmountnow + '</strong></span></li>'
                         table += '<li><span style="color: green"><strong>' + '所有业务余额：' + bankSumAmountsys + '</strong></span><span style="color: red">&nbsp;&nbsp;&nbsp;&nbsp;<strong>所有监控余额 ： ' + bankSumAmountnow + '</strong></span></li>'
                         table += '</ul>'

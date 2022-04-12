@@ -159,6 +159,7 @@
                 },
                 {
                     field: 'mediumNumber', title: '银行账号',
+
                     footerFormatter: function (rows) {
                         var bankSumAmountsys = 0;
                         var bankSumAmountnow = 0;//
@@ -171,6 +172,7 @@
                             openSumBankAmountnow += parseFloat(rows[i].openSumBankAmountnow);
                         }
                         var table = '<ul>'
+
                         table += '<li><span style="color: green"><strong>' + '开启业务余额：' + openSumBankAmountsys + '</strong></span><span style="color: red">&nbsp;&nbsp;&nbsp;&nbsp;<strong>开启监控余额 ： ' + openSumBankAmountnow + '</strong></span></li>'
                         table += '<li><span style="color: green"><strong>' + '所有业务余额：' + bankSumAmountsys + '</strong></span><span style="color: red">&nbsp;&nbsp;&nbsp;&nbsp;<strong>所有监控余额 ： ' + bankSumAmountnow + '</strong></span></li>'
                         table += '</ul>'
@@ -194,6 +196,12 @@
                     formatter: function (value, row, index) {
                         var amount = row.toDayDeal - row.toDayWit + row.yseToday;
                         var table = '<ul>'
+                        //console.log(rows);
+                        //console.log(null != rows.small && '' != rows.small && rows.small==true);
+                        if(null != row.small && '' != row.small && row.small==true  )
+                        {
+                            table = '<ul style="background-color: yellow">';
+                        }
                         table += '<li>' + '交易余额：' + amount + '</li>'
                         table += '<li>' + '参考余额：' + row.mountNow + '</li>'
                         table += '<li>' + '昨日交易余额：' + row.yseToday + '</li>'

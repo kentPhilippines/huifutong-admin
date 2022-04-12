@@ -115,6 +115,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </select>
 
+    <select id="findRatesAndPayType" parameterType="String" resultMap="AlipayUserRateEntityResult">
+        select * from alipay_user_rate where userId in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and payTypr=#{payType}
+    </select>
 
     <!-- 查询码商的费率-->
 

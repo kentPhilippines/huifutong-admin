@@ -9,10 +9,7 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.ruoyi.alipay.domain.*;
-import com.ruoyi.alipay.service.IAlipayFileListEntityService;
-import com.ruoyi.alipay.service.IAlipayMediumEntityService;
-import com.ruoyi.alipay.service.IAlipayUserFundEntityService;
-import com.ruoyi.alipay.service.IAlipayUserInfoService;
+import com.ruoyi.alipay.service.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.StaticConstants;
 import com.ruoyi.common.core.controller.BaseController;
@@ -57,6 +54,9 @@ public class AlipayMediumEntityController extends BaseController {
     @Autowired
     private IAlipayFileListEntityService alipayFileListEntityService;
 
+    @Autowired
+    private IAlipayUserRateEntityService alipayUserRateEntityService;
+
     @GetMapping()
     public String medium() {
         return prefix + "/medium";
@@ -70,6 +70,14 @@ public class AlipayMediumEntityController extends BaseController {
     public TableDataInfo list(AlipayMediumEntity alipayMediumEntity) {
         startPage();
         List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
+
+        //根据用户查询出相关的通道费率  如果包含小额BANK_WIT_S  就返回给前端
+        List ids = list.stream().map(AlipayMediumEntity::getQrcodeId).distinct().collect(Collectors.toList());
+        List<AlipayUserRateEntity> userRateEntities =alipayUserRateEntityService.findRates(String.join(",", ids),"BANK_WIT_S");
+        List smallUserIds = userRateEntities.stream().map(AlipayUserRateEntity::getUserId).collect(Collectors.toList());
+        list.stream().filter(entity -> smallUserIds.contains(entity.getQrcodeId())).forEach(entity -> entity.setSmall(true));
+
+
         if (StrUtil.isNotEmpty(alipayMediumEntity.getQrcodeId())) {
             AlipayMediumEntity mediumEntity = null;
             //有标识就查询历史数据

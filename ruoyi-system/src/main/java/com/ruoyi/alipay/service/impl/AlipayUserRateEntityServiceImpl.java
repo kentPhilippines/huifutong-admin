@@ -246,6 +246,16 @@ public class AlipayUserRateEntityServiceImpl implements IAlipayUserRateEntitySer
 
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayUserRateEntity> findRates(String ids,String payType) {
+
+        String[] split = ids.split(",");
+
+
+        return alipayUserRateEntityMapper.findRatesAndPayType(split,payType);
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public AlipayUserRateEntity findRateByType(String userId, String rechange) {
         return alipayUserRateEntityMapper.findRateByType(userId, rechange);
     }

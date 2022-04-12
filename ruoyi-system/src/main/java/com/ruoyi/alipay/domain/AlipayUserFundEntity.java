@@ -16,6 +16,10 @@ import java.util.Date;
  */
 public class AlipayUserFundEntity extends BaseEntity {
     private static final long serialVersionUID = 1L;
+
+
+
+
     private String userNode;
     private String payInfo;//卡商是否上班
 

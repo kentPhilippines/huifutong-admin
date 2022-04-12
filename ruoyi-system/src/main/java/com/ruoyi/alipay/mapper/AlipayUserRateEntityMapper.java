@@ -166,6 +166,7 @@ public interface AlipayUserRateEntityMapper {
     AlipayUserRateEntity findFee(@Param("userId") String userId, @Param("channelId") String channelId, @Param("payTypr") String payTypr);
 
     List<AlipayUserRateEntity> findRates(String[] ids);
+    List<AlipayUserRateEntity> findRatesAndPayType(@Param("ids")String[] ids,@Param("payType") String payType);
 
     @Select("select * from alipay_user_rate b , " +
             "(select payTypr,retain1,channelId , userId from alipay_user_rate where id = #{id}) a  " +
