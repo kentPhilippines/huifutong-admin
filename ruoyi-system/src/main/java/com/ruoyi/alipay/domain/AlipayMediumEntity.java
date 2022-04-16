@@ -26,7 +26,7 @@ public class AlipayMediumEntity extends BaseEntity {
     private  String freezeBalance ;
     private  String payInfo ;
     private  String cre ;
-    private BigDecimal toDayDeal;//当如入款
+    private BigDecimal toDayDeal;//当日入款
     private BigDecimal sumDayDeal;//累计入款
     private BigDecimal toDayWit;//当日出款
     private BigDecimal sumAmounlimit;//日总结单限制
@@ -42,6 +42,25 @@ public class AlipayMediumEntity extends BaseEntity {
     private Integer countLimit;//日交易限制笔数
 
 
+
+    private Integer todayCountWit;//当日出款笔数
+    private Integer sumCountWit;//累计出款笔数
+
+    public Integer getTodayCountWit() {
+        return todayCountWit;
+    }
+
+    public void setTodayCountWit(Integer todayCountWit) {
+        this.todayCountWit = todayCountWit;
+    }
+
+    public Integer getSumCountWit() {
+        return sumCountWit;
+    }
+
+    public void setSumCountWit(Integer sumCountWit) {
+        this.sumCountWit = sumCountWit;
+    }
     public Integer getTodayCount() {
         return todayCount;
     }

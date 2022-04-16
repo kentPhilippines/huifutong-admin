@@ -110,7 +110,17 @@
                     }
                 },
                 {field: 'mediumHolder', title: '开户人'},
-                {field: 'qrcodeId', title: '卡商账户'},
+                {field: 'qrcodeId', title: '卡商账户',formatter: function (value, row, index) {
+                        var table = '<ul style="list-style: none;">'
+                        if(null != row.small && '' != row.small && row.small==true  )
+                        {
+                            table = '<ul style="background-color: yellow;list-style: none;">';
+                        }
+                        table += '<li>' + row.qrcodeId + '</li>'
+                        table += '</ul>'
+                        return table;
+                    }
+                },
                 {field: 'account', title: '开户行'},
                 {
                     field: 'mountSystem', title: '交易余额'

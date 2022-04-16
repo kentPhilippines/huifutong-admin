@@ -44,6 +44,8 @@
         <result column="todayCount" property="todayCount"/>
         <result column="sumCount" property="sumCount"/>
         <result column="countLimit" property="countLimit"/>
+        <result column="todayCountWit" property="todayCountWit"/>
+        <result column="sumCountWit" property="sumCountWit"/>
     </resultMap>
 
     <sql id="selectAlipayMediumEntityVo">
@@ -82,7 +84,7 @@
                notfiyMask,
                witAmount,
                auditLog,
-               payInfo,todayCount,sumCount,countLimit
+               payInfo,todayCount,sumCount,countLimit,todayCountWit,sumCountWit
         from
             alipay_medium
 
@@ -164,6 +166,8 @@
             <if test="todayCount != null  and todayCount != ''">and todayCount = #{todayCount}</if>
             <if test="sumCount != null  and sumCount != ''"> and sumCount = #{sumCount}</if>
             <if test="countLimit != null  and countLimit != ''">and countLimit = #{countLimit}</if>
+            <if test="todayCountWit != null  and todayCountWit != ''">and todayCountWit = #{todayCountWit}</if>
+            <if test="sumCountWit != null  and sumCountWit != ''">and sumCountWit = #{sumCountWit}</if>
         </where>
         order by mountNow desc
     </select>
@@ -208,6 +212,8 @@
             <if test="todayCount != null  and todayCount != ''">todayCount,</if>
             <if test="sumCount != null  and sumCount != ''">sumCount,</if>
             <if test="countLimit != null  and countLimit != ''">countLimit,</if>
+            <if test="todayCountWit != null  and todayCountWit != ''">todayCountWit,</if>
+            <if test="sumCountWit != null  and sumCountWit != ''">sumCountWit,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="mediumId != null  and mediumId != ''">#{mediumId},</if>
@@ -225,6 +231,8 @@
             <if test="todayCount != null  and todayCount != ''">#{todayCount},</if>
             <if test="sumCount != null  and sumCount != ''">#{sumCount},</if>
             <if test="countLimit != null  and countLimit != ''">#{countLimit},</if>
+            <if test="todayCountWit != null  and todayCountWit != ''">#{todayCountWit},</if>
+            <if test="sumCountWit != null  and sumCountWit != ''">#{sumCountWit},</if>
         </trim>
     </insert>
 
@@ -261,6 +269,8 @@
             <if test="todayCount != null  and todayCount != ''">todayCount = #{todayCount},</if>
             <if test="sumCount != null  and sumCount != ''">sumCount = #{sumCount},</if>
             <if test="countLimit != null  and countLimit != ''">countLimit = #{countLimit},</if>
+            <if test="todayCountWit != null  and todayCountWit != ''"> todayCountWit = #{todayCountWit},</if>
+            <if test="sumCountWit != null  and sumCountWit != ''"> sumCountWit = #{sumCountWit},</if>
         </trim>
         where id = #{id}
     </update>
@@ -297,6 +307,8 @@
             <if test="todayCount != null  and todayCount != ''">todayCount = #{todayCount},</if>
             <if test="sumCount != null  and sumCount != ''">sumCount = #{sumCount},</if>
             <if test="countLimit != null  and countLimit != ''">countLimit = #{countLimit},</if>
+            <if test="todayCountWit != null  and todayCountWit != ''"> todayCountWit = #{todayCountWit},</if>
+            <if test="sumCountWit != null  and sumCountWit != ''"> sumCountWit = #{sumCountWit},</if>
         </trim>
         where account = #{params.bankName}
     </update>
@@ -325,6 +337,8 @@
             <if test="todayCount != null  and todayCount != ''">todayCount = #{todayCount},</if>
             <if test="sumCount != null  and sumCount != ''">sumCount = #{sumCount},</if>
             <if test="countLimit != null  and countLimit != ''">countLimit = #{countLimit},</if>
+            <if test="todayCountWit != null  and todayCountWit != ''"> todayCountWit = #{todayCountWit},</if>
+            <if test="sumCountWit != null  and sumCountWit != ''"> sumCountWit = #{sumCountWit},</if>
         </trim>
         where code = #{code}
     </update>

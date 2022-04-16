@@ -160,7 +160,7 @@
                         var table = '<ul>'
                         if(row.todayCount >= row.countLimit)
                         {
-                            table = '<ul style="background-color: red">';
+                            table = '<ul style="color: red">';
                             table += '<li>此卡超过今日最大交易次数限制</li>';
                         }
                         table += '<li>' + '交易余额：' + amount + '</li>'
@@ -207,7 +207,7 @@
                     title: '数据情况',
                     formatter: function (value, row, index) {
                         var table = '<ul>'
-                        table += '<li>' + '当如入款：' + row.toDayDeal + '</li>'
+                        table += '<li>' + '当日入款：' + row.toDayDeal + '</li>'
                         table += '<li>' + '累计入款：' + row.sumDayDeal + '</li>'
                         table += '<li>' + '当日出款：' + row.toDayWit + '</li>'
                         table += '<li>' + '累计出款：' + row.sumDayWit + '</li>'
