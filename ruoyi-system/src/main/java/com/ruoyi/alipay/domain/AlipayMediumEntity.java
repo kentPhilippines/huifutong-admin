@@ -37,6 +37,34 @@ public class AlipayMediumEntity extends BaseEntity {
     private String endTime;//接单结束 时间
     private Integer isClickPay;// 收款户名验证是否验证户名   1 验证    0 不验证
     private Long sc;//接单间隔秒数
+    private Integer todayCount;//当日交易笔数
+    private Integer sumCount;//累计交易笔数
+    private Integer countLimit;//日交易限制笔数
+
+
+    public Integer getTodayCount() {
+        return todayCount;
+    }
+
+    public void setTodayCount(Integer todayCount) {
+        this.todayCount = todayCount;
+    }
+
+    public Integer getSumCount() {
+        return sumCount;
+    }
+
+    public void setSumCount(Integer sumCount) {
+        this.sumCount = sumCount;
+    }
+
+    public Integer getCountLimit() {
+        return countLimit;
+    }
+
+    public void setCountLimit(Integer countLimit) {
+        this.countLimit = countLimit;
+    }
     /*
             是否是小额
              */
