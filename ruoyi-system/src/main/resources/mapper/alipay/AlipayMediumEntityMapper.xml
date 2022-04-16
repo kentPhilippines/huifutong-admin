@@ -40,6 +40,10 @@
         <result column="sumAmounlimit" property="sumAmounlimit"/>
         <result column="auditLog" property="auditLog"/>
         <result column="payInfo" property="payInfo"/>
+
+        <result column="todayCount" property="todayCount"/>
+        <result column="sumCount" property="sumCount"/>
+        <result column="countLimit" property="countLimit"/>
     </resultMap>
 
     <sql id="selectAlipayMediumEntityVo">
@@ -78,7 +82,7 @@
                notfiyMask,
                witAmount,
                auditLog,
-               payInfo
+               payInfo,todayCount,sumCount,countLimit
         from
             alipay_medium
 
@@ -156,6 +160,10 @@
             <if test="submitTime != null ">and submitTime = #{submitTime}</if>
             <if test="status != null ">and status = #{status}</if>
             <if test="black != null ">and black = #{black}</if>
+
+            <if test="todayCount != null  and todayCount != ''">and todayCount = #{todayCount}</if>
+            <if test="sumCount != null  and sumCount != ''"> and sumCount = #{sumCount}</if>
+            <if test="countLimit != null  and countLimit != ''">and countLimit = #{countLimit}</if>
         </where>
         order by mountNow desc
     </select>
@@ -197,6 +205,9 @@
             <if test="status != null ">status,</if>
             <if test="isDeal != null  and isDeal != ''">isDeal,</if>
             <if test="black != null  and black != ''">black,</if>
+            <if test="todayCount != null  and todayCount != ''">todayCount,</if>
+            <if test="sumCount != null  and sumCount != ''">sumCount,</if>
+            <if test="countLimit != null  and countLimit != ''">countLimit,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="mediumId != null  and mediumId != ''">#{mediumId},</if>
@@ -211,6 +222,9 @@
             <if test="status != null ">#{status},</if>
             <if test="isDeal != null  and isDeal != ''">#{isDeal},</if>
             <if test="black != null  and black != ''">#{black},</if>
+            <if test="todayCount != null  and todayCount != ''">#{todayCount},</if>
+            <if test="sumCount != null  and sumCount != ''">#{sumCount},</if>
+            <if test="countLimit != null  and countLimit != ''">#{countLimit},</if>
         </trim>
     </insert>
 
@@ -243,6 +257,10 @@
             <if test="sc != null  and sc != ''">sc = #{sc},</if>
             <if test="sumAmounlimit != null  and sumAmounlimit != ''">sumAmounlimit = #{sumAmounlimit},</if>
             <if test="auditLog != null  and auditLog != ''">auditLog = CONCAT(ifnull(auditLog,''),#{auditLog}),</if>
+
+            <if test="todayCount != null  and todayCount != ''">todayCount = #{todayCount},</if>
+            <if test="sumCount != null  and sumCount != ''">sumCount = #{sumCount},</if>
+            <if test="countLimit != null  and countLimit != ''">countLimit = #{countLimit},</if>
         </trim>
         where id = #{id}
     </update>
@@ -275,6 +293,10 @@
             <if test="sc != null  and sc != ''">sc = #{sc},</if>
             <if test="sumAmounlimit != null  and sumAmounlimit != ''">sumAmounlimit = #{sumAmounlimit},</if>
             <if test="auditLog != null  and auditLog != ''">auditLog = CONCAT(ifnull(auditLog,''),#{auditLog}),</if>
+
+            <if test="todayCount != null  and todayCount != ''">todayCount = #{todayCount},</if>
+            <if test="sumCount != null  and sumCount != ''">sumCount = #{sumCount},</if>
+            <if test="countLimit != null  and countLimit != ''">countLimit = #{countLimit},</if>
         </trim>
         where account = #{params.bankName}
     </update>
@@ -299,6 +321,10 @@
             <if test="mountSystem != null  and mountSystem != ''">mountSystem = #{mountSystem},</if>
             <if test="mountLimit != null  and mountLimit != ''">mountLimit = #{mountLimit},</if>
             <if test="auditLog != null  and auditLog != ''">auditLog = CONCAT(ifnull(auditLog,''),#{auditLog}),</if>
+
+            <if test="todayCount != null  and todayCount != ''">todayCount = #{todayCount},</if>
+            <if test="sumCount != null  and sumCount != ''">sumCount = #{sumCount},</if>
+            <if test="countLimit != null  and countLimit != ''">countLimit = #{countLimit},</if>
         </trim>
         where code = #{code}
     </update>

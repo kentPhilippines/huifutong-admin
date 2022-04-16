@@ -531,6 +531,9 @@ public class AlipayMediumEntityController extends BaseController {
                 String deposit = queue.getStr("deposit");// 押金
                 String fund = queue.getStr("fund");// 滚动
                 String freezeBalance = queue.getStr("freezeBalance");//接单冻结
+
+                med = com.alibaba.fastjson.JSONObject.parseObject(JSONUtil.toJsonStr(queue),AlipayMediumEntity.class);
+
                 med.setDeposit(deposit);
                 med.setStartFund(startFund);
                 med.setFund(fund);

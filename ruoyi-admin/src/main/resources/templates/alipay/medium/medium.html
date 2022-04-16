@@ -158,6 +158,11 @@
                     formatter: function (value, row, index) {
                         var amount = row.toDayDeal - row.toDayWit + row.yseToday;
                         var table = '<ul>'
+                        if(row.todayCount >= row.countLimit)
+                        {
+                            table = '<ul style="background-color: red">';
+                            table += '<li>此卡超过今日最大交易次数限制</li>';
+                        }
                         table += '<li>' + '交易余额：' + amount + '</li>'
                         table += '<li>' + '参考余额：' + row.mountNow + '</li>'
                         table += '<li>' + '昨日交易余额：' + row.yseToday + '</li>'

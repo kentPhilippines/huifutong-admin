@@ -81,6 +81,12 @@
                     title: '详情',
                  formatter: function (value, row, index) {
                      var table = '<ul >'
+                     console.log(row.todayCount+"-------"+row.countLimit);
+                     if(row.todayCount >= row.countLimit)
+                     {
+                         table = '<ul style="color: red">';
+                         table += '<li>此卡超过今日最大交易次数限制</li>';
+                     }
                      table += '<li>' + '信息：' + row.mediumNote + '</li>'
                      if(row.code){
                          table += '<li style="color: red">' + '提示：' + row.code + '</li>'
