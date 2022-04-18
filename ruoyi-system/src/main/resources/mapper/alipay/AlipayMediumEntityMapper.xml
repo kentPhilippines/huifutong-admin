@@ -126,7 +126,7 @@
         notfiyMask,
         witAmount,
         auditLog,
-        payInfo
+        payInfo,todayCount,sumCount,countLimit,todayCountWit,sumCountWit
         from
         <if test="params.isHistoryQuery == null  or params.isHistoryQuery == ''">
             alipay_medium
