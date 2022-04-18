@@ -159,16 +159,6 @@
                         var amount = row.toDayDeal - row.toDayWit + row.yseToday;
                         var table = '<ul>'
                         //console.log(isNumber(row.todayCount) +"====" + row.todayCount);
-                        if(isNumber(row.todayCount) && isNumber(row.countLimit) &&  row.todayCount >= row.countLimit)
-                        {
-                            table = '<ul style="color: red">';
-                            table += '<li>此卡超过今日最大交易次数限制</li>';
-                        }
-                        table += '<li>' + '当日交易笔数：' + row.todayCount + '</li>'
-                        table += '<li>' + '累计交易笔数：' + row.sumCount + '</li>'
-                        table += '<li>' + '日交易限制笔数限制：' + row.countLimit + '</li>'
-                        table += '<li>' + '当日出款笔数：' + row.todayCountWit + '</li>'
-                        table += '<li>' + '累计出款笔数：' + row.sumCountWit + '</li>'
 
                         table += '<li>' + '交易余额：' + amount + '</li>'
                         table += '<li>' + '参考余额：' + row.mountNow + '</li>'
@@ -205,6 +195,25 @@
                             table += '<li>' + '收款户名验证是否验证户名：否' + '</li>'
                         }
                         table += '<li>' + '接单间隔秒数：' + row.sc + '</li>'
+                        table += '</ul>'
+                        return table;
+                    }
+                },
+                {
+                    field: 'witAmount',
+                    title: '交易笔数',
+                    formatter: function (value, row, index) {
+                        var table = '<ul>'
+                        if(isNumber(row.todayCount) && isNumber(row.countLimit) &&  row.todayCount >= row.countLimit)
+                        {
+                            table = '<ul style="color: red">';
+                            table += '<li>此卡超过今日最大交易次数限制</li>';
+                        }
+                        table += '<li>' + '当日交易笔数：' + row.todayCount + '</li>'
+                        table += '<li>' + '累计交易笔数：' + row.sumCount + '</li>'
+                        table += '<li>' + '日交易限制笔数限制：' + row.countLimit + '</li>'
+                        table += '<li>' + '当日出款笔数：' + row.todayCountWit + '</li>'
+                        table += '<li>' + '累计出款笔数：' + row.sumCountWit + '</li>'
                         table += '</ul>'
                         return table;
                     }

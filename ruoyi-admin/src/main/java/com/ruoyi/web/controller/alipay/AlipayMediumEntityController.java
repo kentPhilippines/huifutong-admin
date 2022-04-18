@@ -517,6 +517,7 @@ public class AlipayMediumEntityController extends BaseController {
             ConcurrentHashMap<String, AlipayUserInfo> userCollect = userUserAllToBankNot.stream().
                     collect(Collectors.toConcurrentMap(AlipayUserInfo::getUserId, Function.identity(), (o1, o2)
                             -> o1, ConcurrentHashMap::new));
+
             for (int i = 0; i < objects.size(); i++) {
                 AlipayMediumEntity med = new AlipayMediumEntity();
                 JSONObject queue = objects.getJSONObject(i);
@@ -532,7 +533,8 @@ public class AlipayMediumEntityController extends BaseController {
                 String fund = queue.getStr("fund");// 滚动
                 String freezeBalance = queue.getStr("freezeBalance");//接单冻结
 
-                med = com.alibaba.fastjson.JSONObject.parseObject(JSONUtil.toJsonStr(queue),AlipayMediumEntity.class);
+                med = medList.stream().filter(e->e.getMediumNumber().equals(bankId)).findFirst().get();
+                //med = com.alibaba.fastjson.JSONObject.parseObject(JSONUtil.toJsonStr(queue),AlipayMediumEntity.class);
 
                 med.setDeposit(deposit);
                 med.setStartFund(startFund);
@@ -598,7 +600,7 @@ public class AlipayMediumEntityController extends BaseController {
                         }
                     }
                 } catch (Exception c) {
-
+                    logger.error("exception:",c);
                 }
                 if (CollectionUtil.isNotEmpty(userCollect)) {
                     AlipayUserInfo alipayUserInfo = userCollect.get(userId);

@@ -81,17 +81,7 @@
                     title: '详情',
                  formatter: function (value, row, index) {
                      var table = '<ul >'
-                     console.log(row.todayCount+"-------"+row.countLimit);
-                     if(isNumber(row.todayCount) && isNumber(row.countLimit) &&  row.todayCount >= row.countLimit)
-                     {
-                         table = '<ul style="color: red">';
-                         table += '<li>此卡超过今日最大交易次数限制</li>';
-                     }
-                     table += '<li>' + '当日交易笔数：' + row.todayCount + '</li>'
-                     table += '<li>' + '累计交易笔数：' + row.sumCount + '</li>'
-                     table += '<li>' + '日交易限制笔数限制：' + row.countLimit + '</li>'
-                     table += '<li>' + '当日出款笔数：' + row.todayCountWit + '</li>'
-                     table += '<li>' + '累计出款笔数：' + row.sumCountWit + '</li>'
+
                      table += '<li>' + '信息：' + row.mediumNote + '</li>'
                      if(row.code){
                          table += '<li style="color: red">' + '提示：' + row.code + '</li>'
@@ -130,6 +120,37 @@
                         table += '<li>' + '卡押金：' + row.deposit + '</li>'
                         table += '<li>' + '信用分' + row.cre + '</li>'
                         table += '<li>' + '状态：' + row.payInfo + '</li>'
+                        table += '</ul>'
+                        return table;
+                    }
+                },
+
+                {
+                    field: 'mediumNote',
+                    title: '交易笔数',
+                    formatter: function (value, row, index) {
+                        var table = '<ul >'
+                        if(isNumber(row.todayCount) && isNumber(row.countLimit) &&  row.todayCount >= row.countLimit)
+                        {
+                            table = '<ul style="color: red">';
+                            table += '<li>此卡超过今日最大交易次数限制</li>';
+                        }
+                        table += '<li>' + '当日交易笔数：' + row.todayCount + '</li>'
+                        /*table += '<li>' + '累计交易笔数：' + row.sumCount + '</li>'*/
+                        /*table += '<li>' + '日交易限制笔数限制：' + row.countLimit + '</li>'*/
+                        table += '<li>' + '当日出款笔数：' + row.todayCountWit + '</li>'
+                        /*table += '<li>' + '累计出款笔数：' + row.sumCountWit + '</li>'*/
+                        table += '</ul>'
+                        return table;
+                    }
+                },
+                {
+                    field: 'witAmount',
+                    title: '数据情况',
+                    formatter: function (value, row, index) {
+                        var table = '<ul>'
+                        table += '<li>' + '当日入款：' + row.toDayDeal + '</li>'
+                        table += '<li>' + '当日出款：' + row.toDayWit + '</li>'
                         table += '</ul>'
                         return table;
                     }
