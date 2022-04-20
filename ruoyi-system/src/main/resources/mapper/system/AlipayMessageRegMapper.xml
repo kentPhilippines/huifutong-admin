@@ -26,7 +26,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="selectAlipayMessageRegVo">
         select id, bank_name, source_phone,sourceMsg ,  regex, template, transaction_type_detail, transaction_type, template_flag, created_date, remark1, remark2, update_date, update_by,tail_split from alipay_message_reg
     </sql>
-
+    <select id="selectAll" resultMap="AlipayMessageRegResult">
+        select * from alipay_message_reg
+    </select>
     <select id="selectAlipayMessageRegList" parameterType="AlipayMessageReg" resultMap="AlipayMessageRegResult">
         <include refid="selectAlipayMessageRegVo"/>
         <where>

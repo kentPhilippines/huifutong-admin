@@ -11,6 +11,7 @@ import java.util.List;
  */
 public interface AlipayMessageRegMapper 
 {
+    public List<AlipayMessageReg> selectAll();
     /**
      * 查询短信正则模板
      * 

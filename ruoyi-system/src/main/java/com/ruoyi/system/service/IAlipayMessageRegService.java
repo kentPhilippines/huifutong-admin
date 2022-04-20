@@ -11,6 +11,8 @@ import java.util.List;
  */
 public interface IAlipayMessageRegService 
 {
+    public void refreshAllCache();
+    public List<AlipayMessageReg> selectAll();
     /**
      * 查询短信正则模板
      * 
