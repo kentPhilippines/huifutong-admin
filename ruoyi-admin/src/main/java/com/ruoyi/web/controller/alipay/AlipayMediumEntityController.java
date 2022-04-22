@@ -598,6 +598,11 @@ public class AlipayMediumEntityController extends BaseController {
                             med.setCode(mediumNote);
                             med.setIsRed(1);
                         }
+                        //冲正风控
+                        if("6".equals(error))
+                        {
+                            med.setCode(med.getCode()+" 风控");
+                        }
                     }
                 } catch (Exception c) {
                     logger.error("exception:",c);

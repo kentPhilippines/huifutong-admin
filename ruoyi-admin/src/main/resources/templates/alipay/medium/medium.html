@@ -129,7 +129,8 @@
                         {
                             table = '<ul style="background-color: lightgray">'
                         }*/
-                        if(row.error == '1')
+                        //6是冲正风控
+                        if(row.error == '1' || row.error=='6')
                         {
                             table = '<ul style="color: red">';
                         }
