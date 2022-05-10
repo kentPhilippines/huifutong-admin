@@ -72,6 +72,7 @@
     const prefix = ctx + "alipay/medium";
     const prefix1 = ctx + "alipay/orderDeal";
     const prefix2 = ctx + "alipay/medium";
+    const  sumAmountOfPendingWithdralMap = [[${sumAmountOfPendingWithdralMap}]];
     $(function () {
         var options = {
             url: prefix + "/list",
@@ -128,6 +129,14 @@
                 {
                     field: 'witAmount',
                     title: '出款金额',
+                    formatter: function (value, row, index) {
+                        var sumAmountOfPendingWithdral = sumAmountOfPendingWithdralMap[row.mediumNumber];
+                        if(sumAmountOfPendingWithdral>=row.mountNow)
+                        {
+                            return '<span style="color:red;">'+sumAmountOfPendingWithdral+'</span>';
+                        }
+                        return sumAmountOfPendingWithdral;
+                    }
                 },
                 {field: 'mountNow', title: '参考余额'},
                 {

@@ -237,4 +237,11 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
         return alipayDealOrderEntityMapper.updateUnLock(id);
     }
 
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayDealOrderEntity> getSumAmountOfPendingWithdral() {
+        return alipayDealOrderEntityMapper.getSumAmountOfPendingWithdral();
+    }
+
 }

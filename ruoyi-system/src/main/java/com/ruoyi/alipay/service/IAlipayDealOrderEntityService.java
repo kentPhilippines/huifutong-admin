@@ -105,4 +105,6 @@ public interface IAlipayDealOrderEntityService {
      * @return
      */
     int updateUnLock(Long id);
+
+    List<AlipayDealOrderEntity> getSumAmountOfPendingWithdral();
 }

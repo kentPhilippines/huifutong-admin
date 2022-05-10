@@ -275,6 +275,15 @@ public class AlipayDealOrderEntityController extends BaseController {
     @RequiresPermissions("orderDeal:qr:status:updateBankCardShow")
     @Log(title = "修改出款卡商或拆单", businessType = BusinessType.INSERT)
     public String updateBankCardShow(ModelMap mmap, @PathVariable("userId") String orderId) {
+        //根据卡号分组出 在途出款的金额
+        List<AlipayDealOrderEntity> sumAmountOfPendingWithdralList = alipayDealOrderEntityService.getSumAmountOfPendingWithdral();
+        Map sumAmountOfPendingWithdralMap = sumAmountOfPendingWithdralList.stream().filter(alipayDealOrderEntity -> StrUtil.isNotEmpty(alipayDealOrderEntity.getOrderQr()) && alipayDealOrderEntity.getOrderQr().contains(":")).map(alipayDealOrderEntity -> {
+            String cardInfo = alipayDealOrderEntity.getOrderQr();
+            alipayDealOrderEntity.setOrderQr(cardInfo.split(":")[2]);
+            return alipayDealOrderEntity;
+        }).collect(Collectors.toMap(AlipayDealOrderEntity::getOrderQr,AlipayDealOrderEntity::getDealAmount,(o1,o2)->o1,ConcurrentHashMap::new ));
+
+
         List<AlipayUserFundEntity> listFund = alipayUserFundEntityService.findUserFundAllToBank();
         List<AlipayUserInfo> listInfo = iAlipayUserInfoServiceImpl.findUserUserAllToBank();
         ConcurrentHashMap<String, AlipayUserInfo> userMap = listInfo.stream().collect(Collectors.toConcurrentMap(AlipayUserInfo::getUserId, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
@@ -324,6 +333,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         }
         mmap.put("listFund", list);
         mmap.put("orderId", orderId);
+        mmap.put("sumAmountOfPendingWithdralMap", sumAmountOfPendingWithdralMap);
 /*        AlipayDealOrderEntity alipayDealOrderEntity = new AlipayDealOrderEntity();
         alipayDealOrderEntity.setOperater(ShiroUtils.getLoginName());
         alipayDealOrderEntity.setRecordType("2");
