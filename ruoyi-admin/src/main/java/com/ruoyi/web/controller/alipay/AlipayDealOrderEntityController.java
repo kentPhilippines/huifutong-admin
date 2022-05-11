@@ -314,6 +314,7 @@ public class AlipayDealOrderEntityController extends BaseController {
                 if (split[1].equals("amount")) {
                     mmap.put("listFund", list);
                     mmap.put("orderId", split[0]);
+                    mmap.put("sumAmountOfPendingWithdralMap", sumAmountOfPendingWithdralMap);
                     return prefix + "/updateBankCardEditMore";
                 }
             }
