@@ -179,6 +179,14 @@
                     }
                 },
                 {
+                    visible: editFlag == 'hidden' ? false : true,
+                    title: '自动出款开关',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return statusTools(row, 'autoWitState');
+                    }
+                },
+                {
                     field: 'createTime',
                     title: '创建时间',
                     align: 'center'
@@ -350,6 +358,16 @@
                 let msg = "确认此卡【开放】吗？";
                 let val = 1;
                 return '<i class=\"fa fa-toggle-on text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="disable1(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            }
+        }else if(param === 'autoWitState'){
+            if (row.status === 1) {
+                let msg = "确认要【开启】此商户的【自动出款状态】吗？";
+                let val = 1;
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="enable(\'' + row.userId + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            } else {
+                let msg = "确认要【关闭】此商户的【自动出款状态】吗？";
+                let val = 0;
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="disable(\'' + row.userId + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
             }
         } else  {
             if (row.status === 2) {
