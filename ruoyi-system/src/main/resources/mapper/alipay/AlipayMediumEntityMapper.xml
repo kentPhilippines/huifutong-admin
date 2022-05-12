@@ -46,6 +46,7 @@
         <result column="countLimit" property="countLimit"/>
         <result column="todayCountWit" property="todayCountWit"/>
         <result column="sumCountWit" property="sumCountWit"/>
+        <result column="autoWit" property="autoWit"/>
     </resultMap>
 
     <sql id="selectAlipayMediumEntityVo">
@@ -84,7 +85,7 @@
                notfiyMask,
                witAmount,
                auditLog,
-               payInfo,todayCount,sumCount,countLimit,todayCountWit,sumCountWit
+               payInfo,todayCount,sumCount,countLimit,todayCountWit,sumCountWit,autoWit
         from
             alipay_medium
 
@@ -126,7 +127,7 @@
         notfiyMask,
         witAmount,
         auditLog,
-        payInfo,todayCount,sumCount,countLimit,todayCountWit,sumCountWit
+        payInfo,todayCount,sumCount,countLimit,todayCountWit,sumCountWit,autoWit
         from
         <if test="params.isHistoryQuery == null  or params.isHistoryQuery == ''">
             alipay_medium
@@ -214,6 +215,7 @@
             <if test="countLimit != null  and countLimit != ''">countLimit,</if>
             <if test="todayCountWit != null  and todayCountWit != ''">todayCountWit,</if>
             <if test="sumCountWit != null  and sumCountWit != ''">sumCountWit,</if>
+            <if test="autoWit != null  and autoWit != ''">autoWit,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="mediumId != null  and mediumId != ''">#{mediumId},</if>
@@ -233,6 +235,7 @@
             <if test="countLimit != null  and countLimit != ''">#{countLimit},</if>
             <if test="todayCountWit != null  and todayCountWit != ''">#{todayCountWit},</if>
             <if test="sumCountWit != null  and sumCountWit != ''">#{sumCountWit},</if>
+            <if test="autoWit != null  and autoWit != ''">#{autoWit},</if>
         </trim>
     </insert>
 
@@ -271,6 +274,7 @@
             <if test="countLimit != null  and countLimit != ''">countLimit = #{countLimit},</if>
             <if test="todayCountWit != null  and todayCountWit != ''"> todayCountWit = #{todayCountWit},</if>
             <if test="sumCountWit != null  and sumCountWit != ''"> sumCountWit = #{sumCountWit},</if>
+            <if test="autoWit != null  and autoWit != ''"> autoWit = #{autoWit},</if>
         </trim>
         where id = #{id}
     </update>
@@ -309,6 +313,7 @@
             <if test="countLimit != null  and countLimit != ''">countLimit = #{countLimit},</if>
             <if test="todayCountWit != null  and todayCountWit != ''"> todayCountWit = #{todayCountWit},</if>
             <if test="sumCountWit != null  and sumCountWit != ''"> sumCountWit = #{sumCountWit},</if>
+            <if test="autoWit != null  and autoWit != ''"> autoWit = #{autoWit},</if>
         </trim>
         where account = #{params.bankName}
     </update>
@@ -339,6 +344,7 @@
             <if test="countLimit != null  and countLimit != ''">countLimit = #{countLimit},</if>
             <if test="todayCountWit != null  and todayCountWit != ''"> todayCountWit = #{todayCountWit},</if>
             <if test="sumCountWit != null  and sumCountWit != ''"> sumCountWit = #{sumCountWit},</if>
+            <if test="autoWit != null  and autoWit != ''"> autoWit = #{autoWit},</if>
         </trim>
         where code = #{code}
     </update>

@@ -679,6 +679,7 @@ public class AlipayMediumEntityController extends BaseController {
         mediumEntity.setBlack(alipayMediumEntity.getBlack());
         mediumEntity.setStatus(alipayMediumEntity.getStatus());
         mediumEntity.setIsClickPay(alipayMediumEntity.getIsClickPay());
+        mediumEntity.setAutoWit(alipayMediumEntity.getAutoWit());
         int i = alipayMediumEntityService.updateAlipayMediumEntity(mediumEntity);
         return toAjax(i);
     }

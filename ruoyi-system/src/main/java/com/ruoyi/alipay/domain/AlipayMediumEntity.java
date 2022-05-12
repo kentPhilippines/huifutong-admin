@@ -43,9 +43,19 @@ public class AlipayMediumEntity extends BaseEntity {
 
 
 
+    private Integer autoWit;//1 开启。0 关闭 默认 关闭  自动出款
+
+
+
     private Integer todayCountWit;//当日出款笔数
     private Integer sumCountWit;//累计出款笔数
+    public Integer getAutoWit() {
+        return autoWit;
+    }
 
+    public void setAutoWit(Integer autoWit) {
+        this.autoWit = autoWit;
+    }
     public Integer getTodayCountWit() {
         return todayCountWit;
     }

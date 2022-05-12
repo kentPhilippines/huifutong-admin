@@ -176,6 +176,7 @@
                         table += '<li>' + '不让接单：' + statusTools(row, 'black') + '</li>'
                         table += '<li>' + '接单状态：' + statusTools(row, 'acceptOrder') + '</li>'
                         table += '<li>' + '回调户名验证：' + statusTools(row, 'isClickPay') + '</li>'
+                        table += '<li>' + '自动出款：' + statusTools(row, 'autoWit') + '</li>'
                         return table;
                     }
                 },
@@ -306,6 +307,18 @@
             }
         }
 
+        if (param === 'autoWit') {
+            if (row.autoWit == 1) {
+                let msg = "确认此卡【取消自动出款】吗？";
+                let val = 0;
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="enableAutoWit(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            } else {
+                let msg = "确认此卡【开启自动出款】吗？";
+                let val = 1;
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="disableAutoWit(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
+            }
+        }
+
         if (param === 'acceptOrder') {
             if (row.status == 1) {
                 let msg = "确认【关闭接单状态】吗？";
@@ -348,12 +361,33 @@
         })
     }
 
+    /* 自动出款-启用 */
+    function enableAutoWit(qrcodeId, param, msg, val) {
+        $.modal.confirm(msg, function () {
+            $.operate.post(prefix + "/updateBankcard", {
+                "id": qrcodeId,
+                "autoWit": val,
+            });
+        })
+    }
+
+    /* 自动出款-停用 */
+    function disableAutoWit(qrcodeId, param, msg, val) {
+        $.modal.confirm(msg, function () {
+            $.operate.post(prefix + "/updateBankcard", {
+                "id": qrcodeId,
+                "autoWit": val
+            });
+        })
+    }
+
+
     /* 商户管理-启用 */
     function enable(qrcodeId, param, msg, val) {
         $.modal.confirm(msg, function () {
             $.operate.post(prefix + "/updateBankcard", {
                 "id": qrcodeId,
-                "black": val
+                "black": val,
             });
         })
     }
