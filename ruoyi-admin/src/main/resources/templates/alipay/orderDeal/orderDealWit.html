@@ -260,7 +260,10 @@
                                 table += '<li>' + '<span class="badge badge-info">卡商代付已审核</span>' + '</li>'
                             }
                             if(1 == row.lockWit || '1' == row.lockWit){
-                                table += '<li>' + '<span class="badge badge-warning">出款已锁定</span>' + '</li>'
+                                table += '<li>' + '<span class="badge badge-warning">手动锁定</span>' + '</li>'
+                            }else if(2 == row.lockWit || '2' == row.lockWit)
+                            {
+                                table += '<li>' + '<span class="badge badge-warning">自动锁定</span>' + '</li>'
                             }
                             if(1 == row.grabOrder || '1' == row.grabOrder){
                                 table += '<li>' + '<span class="badge badge-info">卡商抢单出款</span>' + '</li>'
@@ -421,8 +424,11 @@
                         if (  row.orderType == 4 &&  row.orderStatus == 2 && row.enterPay == 0 ) {
                             actions.push('<a class="btn btn-warning btn-xs ' + updataOrder + '" href="javascript:void(0)" onclick="enterPay(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>审核出款</a> ');
                         }
-                        if ( row.lockWit == 1 &&  row.orderStatus == 1 ) {
-                            actions.push('<a class="btn btn-danger btn-xs' + updataOrder + '" href="javascript:void(0)" onclick="unLockPay(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>出款解锁</a> ');
+                        /*if ( row.lockWit == 1 &&  row.orderStatus == 1 ) {
+                            actions.push('<a class="btn btn-danger btn-xs' + updataOrder + '" href="javascript:void(0)" onclick="toAuto(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>自动锁定</a> ');
+                        }else */
+                        if ( row.lockWit == 2 &&  row.orderStatus == 1 ) {
+                            actions.push('<a class="btn btn-danger btn-xs' + updataOrder + '" href="javascript:void(0)" onclick="toManual(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>手动锁定</a> ');
                         }
                         return actions.join('');
                     }
@@ -603,6 +609,18 @@
     function unLockPay(id) {
         $.modal.confirm("确认解锁出款订单", function () {
             $.operate.post(prefix + "/unLockPay", {"id": id});
+        });
+    }
+
+    function toAuto(id) {
+        $.modal.confirm("确认自动锁定出款订单", function () {
+            $.operate.post(prefix + "/toAutoLockWit", {"id": id});
+        });
+    }
+
+    function toManual(id) {
+        $.modal.confirm("确认手动锁定出款订单", function () {
+            $.operate.post(prefix + "/toManualLockWit", {"id": id});
         });
     }
     function     operateEvents (row){
