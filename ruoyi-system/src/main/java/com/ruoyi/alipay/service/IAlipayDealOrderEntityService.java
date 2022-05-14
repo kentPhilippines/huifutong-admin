@@ -106,5 +106,11 @@ public interface IAlipayDealOrderEntityService {
      */
     int updateUnLock(Long id);
 
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    int updateLockWitToAuto(Long id);
+
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    int updateLockWitToManual(Long id);
+
     List<AlipayDealOrderEntity> getSumAmountOfPendingWithdral();
 }

@@ -237,6 +237,18 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
         return alipayDealOrderEntityMapper.updateUnLock(id);
     }
 
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public int updateLockWitToAuto(Long id) {
+        return alipayDealOrderEntityMapper.updateLockWitToAuto(id);
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public int updateLockWitToManual(Long id) {
+        return alipayDealOrderEntityMapper.updateLockWitToManual(id);
+    }
+
 
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
