@@ -35,6 +35,10 @@ public class AlipayDealOrderEntity extends BaseEntity {
     }
 
     private Integer autiSuccess;
+
+
+
+    private String msg;//自动出款失败原因
     //风控原因
     private String riskReason;
 
@@ -106,7 +110,13 @@ public class AlipayDealOrderEntity extends BaseEntity {
     public void setSunCountAmount(String sunCountAmount) {
         this.sunCountAmount = sunCountAmount;
     }
+    public String getMsg() {
+        return msg;
+    }
 
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
     /**
      * 数据id
      */

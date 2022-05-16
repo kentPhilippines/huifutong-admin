@@ -282,15 +282,28 @@
                 {
                     field: 'orderStatus', title: '订单状态',
                     formatter: function (value, row, index) {
-                        return  $.table.selectDictLabel(orderstatusDatas, value);
+                        var table = '<ul>'
+                        table += '<li><span ><strong>' + '订单状态:' + $.table.selectDictLabel(orderstatusDatas, value) + '</strong></span></li>'
+                        if (row.autiSuccess != 0 )
+                        {
+                            table += '<li><span ><strong>' + '自动出款状态:' + $.table.selectDictLabel(autiSuccess, row.autiSuccess) + '</strong></span></li>'
+                        }
+                        if (row.autiSuccess == 2 )
+                        {
+                            table += '<li><span ><strong>' + '失败原因:' +row.msg + '</strong></span></li>'
+                        }
+                        table += '</ul>'
+
+
+                        return  table;
                     }
                 },
-                {
+               /* {
                     field: 'autiSuccess', title: '自动出款状态',
                     formatter: function (value, row, index) {
                         return  $.table.selectDictLabel(autiSuccess, value);
                     }
-                },
+                },*/
                 // {field: 'externalOrderId',   title: '外部订单号'},
                 {
                     field: 'dealAmount', title: '交易金额',
