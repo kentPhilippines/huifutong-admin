@@ -175,6 +175,7 @@
     }
     //数据
     const orderstatusDatas = [[${@dict.getType('orderStatus')}]];
+    const autiSuccess = [[${@dict.getType('autiSuccess')}]];
     //请求路径
     const prefix = ctx + "alipay/orderDeal";
 
@@ -282,6 +283,12 @@
                     field: 'orderStatus', title: '订单状态',
                     formatter: function (value, row, index) {
                         return  $.table.selectDictLabel(orderstatusDatas, value);
+                    }
+                },
+                {
+                    field: 'autiSuccess', title: '自动出款状态',
+                    formatter: function (value, row, index) {
+                        return  $.table.selectDictLabel(autiSuccess, value);
                     }
                 },
                 // {field: 'externalOrderId',   title: '外部订单号'},

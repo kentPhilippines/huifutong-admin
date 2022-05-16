@@ -26,7 +26,15 @@ public class AlipayDealOrderEntity extends BaseEntity {
     private String operater;
 
 
+    public Integer getAutiSuccess() {
+        return autiSuccess;
+    }
 
+    public void setAutiSuccess(Integer autiSuccess) {
+        this.autiSuccess = autiSuccess;
+    }
+
+    private Integer autiSuccess;
     //风控原因
     private String riskReason;
 

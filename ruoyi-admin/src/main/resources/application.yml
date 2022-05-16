@@ -68,7 +68,7 @@ jetcache:
 # Spring配置
 spring:
   redis:
-    host: redis-server
+    host: 127.0.0.1
     port: 6379
     password: will1234
 
