@@ -1,6 +1,8 @@
 package com.ruoyi.alipay.service;
 
 import com.ruoyi.alipay.domain.AlipayUserRateEntity;
+import com.ruoyi.common.annotation.DataSource;
+import com.ruoyi.common.enums.DataSourceType;
 
 import java.util.List;
 
@@ -117,6 +119,14 @@ public interface IAlipayUserRateEntityService {
      * @return
      */
     AlipayUserRateEntity findWitRate(String userId);
+
+
+
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    List<AlipayUserRateEntity> findMerchantWithdralRate(String userId);
+
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    List<AlipayUserRateEntity> findMerchantChargeRate(String userId);
 
     AlipayUserRateEntity findUserByChannel(String orderAccount, String product, String orderQrUser);
 

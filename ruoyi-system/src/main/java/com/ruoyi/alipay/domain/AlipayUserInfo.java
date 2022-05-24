@@ -35,6 +35,18 @@ public class AlipayUserInfo extends BaseEntity {
     private Double sumProfit;
     private Double todayProfit;//当日利润
 
+
+
+    private Integer autoWitState; //自动出款状态 0关闭 1开启
+
+    public Integer getAutoWitState() {
+        return autoWitState;
+    }
+
+    public void setAutoWitState(Integer autoWitState) {
+        this.autoWitState = autoWitState;
+    }
+
     public String getTodayOtherWitAmount() {
         return todayOtherWitAmount;
     }

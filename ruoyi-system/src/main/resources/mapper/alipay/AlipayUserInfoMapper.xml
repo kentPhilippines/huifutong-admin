@@ -40,13 +40,14 @@
         <result property="autoWit" column="autoWit"/>
         <result property="enterWitOpen" column="enterWitOpen"/>
         <result property="interFace" column="interFace"/>
+        <result property="autoWitState" column="autowitstatus"/>
     </resultMap>
 
     <sql id="selectAlipayUserInfoVo">
         select id, userId, userName, password, payPasword, salt, userType, switchs, userNode, email, agent,
         isAgent, credit, receiveOrderState, remitOrderState, QQ, telegram, skype, createTime, submitTime, status,queueList,
         privateKey, publicKey, minAmount, maxAmount, timesTotal, startTime, endTime, witip, dealUrl
-        , qrRechargeList,autoWit,interFace,enterWitOpen  from alipay_user_info
+        , qrRechargeList,autoWit,interFace,enterWitOpen,autowitstatus  from alipay_user_info
     </sql>
 
     <select id="selectAlipayUserInfoList" parameterType="AlipayUserInfo" resultMap="AlipayUserInfoResult">
@@ -72,6 +73,7 @@
             <if test="interFace != null  and interFace != ''">and interFace = #{interFace}</if>
             <if test="enterWitOpen != null  and enterWitOpen != ''">and enterWitOpen = #{enterWitOpen}</if>
             <if test="autoWit != null  and autoWit != ''">and autoWit = #{autoWit}</if>
+            <if test="autoWitState != null  and autoWitState != ''">and autowitstatus = #{autoWitState}</if>
         </where>
     </select>
 
@@ -113,6 +115,7 @@
             <if test="witip != null  and witip != ''">witip,</if>
             <if test="dealUrl != null  and dealUrl != ''">dealUrl,</if>
             <if test="autoWit != null  and autoWit != ''">autoWit,</if>
+            <if test="autoWitState != null  and autoWitState != ''">autowitstatus,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null  and userId != ''">#{userId},</if>
@@ -145,6 +148,7 @@
             <if test="witip != null  and witip != ''">#{witip},</if>
             <if test="dealUrl != null  and dealUrl != ''">#{dealUrl},</if>
             <if test="autoWit != null  and autoWit != ''">#{autoWit},</if>
+            <if test="autoWitState != null  and autoWitState != ''">#{autoWitState},</if>
         </trim>
     </insert>
 
@@ -185,6 +189,7 @@
             <if test="autoWit != null  and autoWit != ''">autoWit = #{autoWit},</if>
             <if test="interFace != null  and interFace != ''">interFace = #{interFace},</if>
             <if test="enterWitOpen != null  and enterWitOpen != ''">enterWitOpen = #{enterWitOpen},</if>
+            <if test="autoWitState != null  and autoWitState != ''">autowitstatus = #{autoWitState},</if>
         </trim>
         where id = #{id}
     </update>

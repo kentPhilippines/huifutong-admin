@@ -4,6 +4,7 @@ import com.ruoyi.alipay.domain.AlipayUserRateEntity;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * @date 2020-03-18
  */
 public interface AlipayUserRateEntityMapper {
+    static final String RATE = "USERINFO:INFO";
     /**
      * 查询用户产品费率
      *
@@ -178,12 +180,29 @@ public interface AlipayUserRateEntityMapper {
     @Select("select * from alipay_user_rate where switchs = 1 and payTypr = #{payTypr} and userId = #{userId}")
     AlipayUserRateEntity findRateByType(@Param("userId") String userId, @Param("payTypr") String payTypr);
 
-
+    @Cacheable(cacheNames = {RATE}, unless = "#result == null")
     @Select(" select * from alipay_user_rate where feeType = 2 and `switchs` = 1 and userId = #{userId} ")
     AlipayUserRateEntity findWitRate(@Param("userId") String userId);
     @Select(" select * from alipay_user_rate where userType = #{userType} and    payTypr = #{product} and userId = #{orderQrUser} ")
     AlipayUserRateEntity findbankRate(@Param("orderQrUser")String orderQrUser,@Param("product") String product, @Param("userType") int userType);
 
+    /**
+     * 查询卡商入款费率
+     *
+     * @return
+     */
+    @Cacheable(cacheNames = {RATE}, unless = "#result == null")
+    @Select("select * from alipay_user_rate where feeType = 1 and userId =  #{userId}")
+    List<AlipayUserRateEntity> findMerchantChargeRate(@Param("userId") String userId);
+
+    /**
+     * 查询卡商出款费率
+     *
+     * @return
+     */
+    @Cacheable(cacheNames = {RATE}, unless = "#result == null")
+    @Select("select * from alipay_user_rate where feeType = 2 and userId =  #{userId}")
+    List<AlipayUserRateEntity> findMerchantWithdralRate(@Param("userId") String userId);
 
 
     @Select("select * from alipay_user_rate where     payTypr = #{payTypr} and userId = #{userId}")

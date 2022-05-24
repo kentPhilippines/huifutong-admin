@@ -360,7 +360,7 @@
                 return '<i class=\"fa fa-toggle-on text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="disable1(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
             }
         }else if(param === 'autoWitState'){
-            if (row.status === 1) {
+            if (row.autoWitState === 1) {
                 let msg = "确认要【开启】此商户的【自动出款状态】吗？";
                 let val = 1;
                 return '<i class=\"fa fa-toggle-off text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="enable(\'' + row.userId + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';

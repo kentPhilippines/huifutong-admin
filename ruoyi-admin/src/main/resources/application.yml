@@ -16,7 +16,7 @@ otc:
   #网站名称
   siteName: 惠付通
   #appName 缓存前缀
-  appName: huifutong
+  appName: zhongbang
 
 # 开发环境配置
 server:
@@ -71,7 +71,10 @@ spring:
     host: 127.0.0.1
     port: 6379
     password: will1234
-
+#  redis:
+#    host: 34.150.94.93
+#    port: 6379
+#    password: redis123456
   # 模板引擎
   thymeleaf:
     mode: HTML

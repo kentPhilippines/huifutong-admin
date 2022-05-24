@@ -1,6 +1,11 @@
 package com.ruoyi.alipay.service;
 
 import com.ruoyi.alipay.domain.AlipayCorrelation;
+import com.ruoyi.alipay.vo.UserCountBean;
+import com.ruoyi.common.annotation.DataSource;
+import com.ruoyi.common.enums.DataSourceType;
+
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -58,4 +63,16 @@ public interface IAlipayCorrelationService
      * @return 结果
      */
     public int deleteAlipayCorrelationById(Long id);
+
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    UserCountBean findMyDateAgen(String userId);
+
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    UserCountBean findDealDate(@NotNull String userId);
+
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    int[][] findOnline(String userId);
+
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    String findAgent(String qrcodeId);
 }

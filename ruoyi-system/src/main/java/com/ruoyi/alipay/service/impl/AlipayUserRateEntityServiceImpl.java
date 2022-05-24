@@ -243,7 +243,13 @@ public class AlipayUserRateEntityServiceImpl implements IAlipayUserRateEntitySer
 
         return alipayUserRateEntityMapper.findRates(split);
     }
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public AlipayUserRateEntity findWitRate(String userId) {
 
+        //  "select * from alipay_user_rate where feeType = 2 and `switchs` = 1 and userId = #{userId} "
+        return alipayUserRateEntityMapper.findWitRate(userId);
+    }
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public List<AlipayUserRateEntity> findRates(String ids,String payType) {
@@ -260,12 +266,19 @@ public class AlipayUserRateEntityServiceImpl implements IAlipayUserRateEntitySer
         return alipayUserRateEntityMapper.findRateByType(userId, rechange);
     }
 
+
+
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
-    public AlipayUserRateEntity findWitRate(String userId) {
+    public List<AlipayUserRateEntity> findMerchantWithdralRate(String userId) {
 
-        //  "select * from alipay_user_rate where feeType = 2 and `switchs` = 1 and userId = #{userId} "
-        return alipayUserRateEntityMapper.findWitRate(userId);
+        return alipayUserRateEntityMapper.findMerchantWithdralRate(userId);
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayUserRateEntity> findMerchantChargeRate(String userId) {
+        return alipayUserRateEntityMapper.findMerchantChargeRate(userId);
     }
 
     @Override

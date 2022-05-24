@@ -1,10 +1,14 @@
 package com.ruoyi.alipay.domain;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 代理关系表对象 alipay_correlation
@@ -12,6 +16,7 @@ import java.util.Date;
  * @author ruoyi
  * @date 2020-03-17
  */
+@Data
 public class AlipayCorrelation extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -58,6 +63,24 @@ public class AlipayCorrelation extends BaseEntity
     /** 1代理商 2会员 */
     @Excel(name = "1代理商 2会员")
     private Integer childrenType;
+
+
+    /*总下线人数:
+    可用额度: 1130.0124 当天分润:0
+    成功交易人数:  成功笔数:*/
+
+    /**
+     * 可用额度: 1130.0124 当天分润:0
+     * 成功交易人数:  成功笔数:
+     */
+    private BigDecimal accountBalance;//可用额度
+    private BigDecimal todayProfit;//当天分润
+    private BigDecimal online;//成功交易人数
+    private BigDecimal toDayOrderCount;//成功笔数
+    private List<AlipayUserRateEntity> chargeRates;//入款费率
+    private List<AlipayUserRateEntity> withdralRates;//出款费率
+
+    private Integer totalSubMemberCount;
 
     public void setId(Long id) 
     {
