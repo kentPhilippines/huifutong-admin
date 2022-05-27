@@ -71,7 +71,8 @@ spring:
     host: 127.0.0.1
     port: 6379
     password: will1234
-#  redis:
+    database: 1
+  #  redis:
 #    host: 34.150.94.93
 #    port: 6379
 #    password: redis123456
