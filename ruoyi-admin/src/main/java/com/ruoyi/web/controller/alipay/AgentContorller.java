@@ -12,6 +12,7 @@ import com.ruoyi.alipay.domain.AlipayUserRateEntity;
 import com.ruoyi.alipay.service.*;
 import com.ruoyi.alipay.vo.UserCountBean;
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.result.Result;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.shiro.service.SysPasswordService;
@@ -63,44 +64,29 @@ public class AgentContorller extends BaseController {
      */
     @PostMapping("/list")
     @ResponseBody
-    public List<AlipayCorrelation> list(AlipayCorrelation alipayCorrelation) {
-//        alipayAmountEntity.setUserId(ShiroUtils.getSysUser().getMerchantId());//商户交易账号
-//        alipayAmountEntity.setAmountType(AMOUNT_TYPE_APP);//商户补单
+    public TableDataInfo list(AlipayCorrelation alipayCorrelation) {
         startPage();
-        if(StringUtils.isEmpty(alipayCorrelation.getParentName())) {
-            alipayCorrelation.setParentName(ShiroUtils.getSysUser().getLoginName());
+        List<AlipayCorrelation> list = null;
+        if(StringUtils.isNotEmpty(alipayCorrelation.getParentName()))
+        {
+            list = correlationService.selectByParentNameAlipayCorrelationList(alipayCorrelation);
+        }else {
+            list = correlationService.selectTopAlipayCorrelationList(alipayCorrelation);
         }
-        List<AlipayCorrelation> list = correlationService.selectAlipayCorrelationList(alipayCorrelation);
-        list.stream().map(entity->{
-            //if(entity.getDistance()!=null && ( entity.getDistance()==0 || entity.getParentName().equals(alipayCorrelation.getParentName())))
-            if(entity.getDistance()!=null && entity.getDistance()==0 )
-            {
-                entity.setParentName(null);
-            }
-            String userId = entity.getChildrenName();
+        TableDataInfo td = getDataTable(list);
 
-            List<AlipayUserRateEntity> chargeRates= userRateEntityService.findMerchantChargeRate(userId);
-            entity.setChargeRates(chargeRates);
-            List<AlipayUserRateEntity> witRates = userRateEntityService.findMerchantWithdralRate(userId);
-            entity.setWithdralRates(witRates);
+        return td;
+    }
 
-            AlipayUserFundEntity fundEntity= alipayUserFundEntityService.findAlipayUserFundByUserId(userId);
-            Optional.ofNullable(fundEntity).ifPresent(fund->{
-                if (fund.getTodayProfit() != null) {
-                    entity.setTodayProfit(BigDecimal.valueOf(fund.getTodayProfit()));
-                } else {
-                    entity.setTodayProfit(BigDecimal.ZERO);
-                }
-                if (fund.getAccountBalance() != null) {
-                    entity.setAccountBalance(BigDecimal.valueOf(fund.getAccountBalance()));
-                } else {
-                    entity.setAccountBalance(BigDecimal.ZERO);
-                }
-            });
+    @PostMapping("/childrenList")
+    @ResponseBody
+    public TableDataInfo childrenOrderList(AlipayCorrelation alipayCorrelation) {
+        startPage();
+        List<AlipayCorrelation> list = null;
+        list = correlationService.selectSubAlipayCorrelationList(alipayCorrelation);
+        TableDataInfo td = getDataTable(list);
 
-            return entity;
-        }).collect(Collectors.toList());
-        return list;
+        return td;
     }
 
     /**

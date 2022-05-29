@@ -23,6 +23,8 @@ public interface AlipayCorrelationMapper
      */
     public AlipayCorrelation selectAlipayCorrelationById(Long id);
 
+    public List<AlipayCorrelation> selectTopAlipayCorrelationList();
+
     /**
      * 查询代理关系表列表
      * 
@@ -30,6 +32,8 @@ public interface AlipayCorrelationMapper
      * @return 代理关系表集合
      */
     public List<AlipayCorrelation> selectAlipayCorrelationList(AlipayCorrelation alipayCorrelation);
+    public List<AlipayCorrelation> selectSubAlipayCorrelationList(AlipayCorrelation alipayCorrelation);
+    public List<AlipayCorrelation> selectByParentNameAlipayCorrelationList(AlipayCorrelation alipayCorrelation);
 
     /**
      * 新增代理关系表

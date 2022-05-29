@@ -1,7 +1,16 @@
 package com.ruoyi.alipay.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.ruoyi.alipay.domain.AlipayUserFundEntity;
+import com.ruoyi.alipay.domain.AlipayUserInfo;
+import com.ruoyi.alipay.domain.AlipayUserRateEntity;
+import com.ruoyi.alipay.service.IAlipayUserFundEntityService;
+import com.ruoyi.alipay.service.IAlipayUserInfoService;
+import com.ruoyi.alipay.service.IAlipayUserRateEntityService;
 import com.ruoyi.alipay.vo.UserCountBean;
 import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.enums.DataSourceType;
@@ -25,6 +34,14 @@ import javax.validation.constraints.NotNull;
 public class AlipayCorrelationServiceImpl implements IAlipayCorrelationService {
 	@Autowired
 	private AlipayCorrelationMapper alipayCorrelationMapper;
+	@Autowired
+	private IAlipayUserFundEntityService alipayUserFundEntityService;
+
+	@Autowired
+	private IAlipayUserRateEntityService userRateEntityService;
+
+	@Autowired
+	private IAlipayUserInfoService alipayUserInfoService;
 	/**
 	 * 查询代理关系表
 	 * @param id 代理关系表ID
@@ -44,7 +61,78 @@ public class AlipayCorrelationServiceImpl implements IAlipayCorrelationService {
 	@Override
 	@DataSource(value = DataSourceType.ALIPAY_SLAVE)
 	public List<AlipayCorrelation> selectAlipayCorrelationList(AlipayCorrelation alipayCorrelation) {
-		return alipayCorrelationMapper.selectAlipayCorrelationList(alipayCorrelation);
+		List<AlipayCorrelation> list =  alipayCorrelationMapper.selectAlipayCorrelationList(alipayCorrelation);
+
+		//fillDataWithFundAndRate(list);
+		return list;
+	}
+
+	@Override
+	@DataSource(value = DataSourceType.ALIPAY_SLAVE)
+	public List<AlipayCorrelation> selectSubAlipayCorrelationList(AlipayCorrelation alipayCorrelation) {
+		List<AlipayCorrelation> list =  alipayCorrelationMapper.selectSubAlipayCorrelationList(alipayCorrelation);
+
+		fillDataWithFundAndRate(list);
+		return list;
+	}
+	@Override
+	@DataSource(value = DataSourceType.ALIPAY_SLAVE)
+	public List<AlipayCorrelation> selectByParentNameAlipayCorrelationList(AlipayCorrelation alipayCorrelation) {
+		List<AlipayCorrelation> list =  alipayCorrelationMapper.selectByParentNameAlipayCorrelationList(alipayCorrelation);
+
+		fillDataWithFundAndRate(list);
+		return list;
+	}
+
+	private void fillDataWithFundAndRate(List<AlipayCorrelation> list)
+	{
+		//查询出来后填充相关信息
+		list.stream().map(entity->{
+			String userId = entity.getChildrenName();
+
+			AlipayUserInfo alipayUserInfo = alipayUserInfoService.findMerchantInfoByUserId(userId);
+
+
+			List<AlipayUserRateEntity> chargeRates= userRateEntityService.findMerchantChargeRate(userId);
+			entity.setChargeRates(chargeRates);
+			List<AlipayUserRateEntity> witRates = userRateEntityService.findMerchantWithdralRate(userId);
+			entity.setWithdralRates(witRates);
+
+			AlipayUserFundEntity fundEntity= alipayUserFundEntityService.findAlipayUserFundByUserId(userId);
+			Optional.ofNullable(fundEntity).ifPresent(fund->{
+				if (fund.getTodayProfit() != null) {
+					entity.setTodayProfit(BigDecimal.valueOf(fund.getTodayProfit()));
+				} else {
+					entity.setTodayProfit(BigDecimal.ZERO);
+				}
+				if (fund.getAccountBalance() != null) {
+					entity.setAccountBalance(BigDecimal.valueOf(fund.getAccountBalance()));
+				} else {
+					entity.setAccountBalance(BigDecimal.ZERO);
+				}
+				if (fund.getTodayDealAmount() != null) {
+					entity.setTodayDealAmount(fund.getTodayDealAmount());
+				}
+				if (fund.getTodayOtherWitAmount() != null) {
+					entity.setTodayOtherWitAmount(fund.getTodayOtherWitAmount() + "");
+				}
+			});
+
+			return entity;
+		}).collect(Collectors.toList());
+	}
+
+	/**
+	 * 查询顶级代理关系表列表
+	 * @param alipayCorrelation 代理关系表
+	 * @return 代理关系表
+	 */
+	@Override
+	@DataSource(value = DataSourceType.ALIPAY_SLAVE)
+	public List<AlipayCorrelation> selectTopAlipayCorrelationList(AlipayCorrelation alipayCorrelation) {
+		List<AlipayCorrelation> list = alipayCorrelationMapper.selectTopAlipayCorrelationList();
+		fillDataWithFundAndRate(list);
+		return list;
 	}
 
 	/**

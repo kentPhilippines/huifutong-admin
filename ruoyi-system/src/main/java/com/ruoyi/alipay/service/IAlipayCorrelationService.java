@@ -32,6 +32,15 @@ public interface IAlipayCorrelationService
      */
     public List<AlipayCorrelation> selectAlipayCorrelationList(AlipayCorrelation alipayCorrelation);
 
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    List<AlipayCorrelation> selectSubAlipayCorrelationList(AlipayCorrelation alipayCorrelation);
+
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    List<AlipayCorrelation> selectByParentNameAlipayCorrelationList(AlipayCorrelation alipayCorrelation);
+
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    List<AlipayCorrelation> selectTopAlipayCorrelationList(AlipayCorrelation alipayCorrelation);
+
     /**
      * 新增代理关系表
      * 

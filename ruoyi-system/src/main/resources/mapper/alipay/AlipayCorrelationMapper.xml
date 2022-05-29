@@ -27,9 +27,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectAlipayCorrelationVo"/>
         <where>  
             <if test="parentId != null "> and parentId = #{parentId}</if>
-            <if test="parentName != null  and parentName != ''"> and parentName like concat('%', #{parentName}, '%')</if>
+            <if test="parentName != null  and parentName != ''"> and parentName = #{parentName}</if>
             <if test="childrenId != null "> and childrenId = #{childrenId}</if>
-            <if test="childrenName != null  and childrenName != ''"> and childrenName like concat('%', #{childrenName}, '%')</if>
+            <if test="childrenName != null  and childrenName != ''"> and childrenName = #{childrenName}</if>
             <if test="distance != null "> and distance = #{distance}</if>
             <if test="medium != null  and medium != ''"> and medium = #{medium}</if>
             <if test="status != null "> and status = #{status}</if>
@@ -39,7 +39,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="childrenType != null "> and childrenType = #{childrenType}</if>
         </where>
     </select>
-    
+
+    <select id="selectByParentNameAlipayCorrelationList" resultMap="AlipayCorrelationResult">
+
+        <include refid="selectAlipayCorrelationVo"/> where (parentName=#{parentName} or childrenName =#{childrenName}) and distance = 1
+    </select>
+    <select id="selectTopAlipayCorrelationList" resultMap="AlipayCorrelationResult">
+
+         <include refid="selectAlipayCorrelationVo"/> where parentName =childrenName  and distance =0
+    </select>
+
+    <select id="selectSubAlipayCorrelationList" resultMap="AlipayCorrelationResult">
+
+        <include refid="selectAlipayCorrelationVo"/> where parentName=#{parentName}  and distance = 1
+    </select>
+
     <select id="selectAlipayCorrelationById" parameterType="Long" resultMap="AlipayCorrelationResult">
         <include refid="selectAlipayCorrelationVo"/>
         where id = #{id}

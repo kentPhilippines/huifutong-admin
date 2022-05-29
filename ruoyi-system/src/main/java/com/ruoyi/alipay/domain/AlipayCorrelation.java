@@ -64,6 +64,8 @@ public class AlipayCorrelation extends BaseEntity
     @Excel(name = "1代理商 2会员")
     private Integer childrenType;
 
+    private Double todayDealAmount=0d; //当日出款
+    private String todayOtherWitAmount="0";//当日入款
 
     /*总下线人数:
     可用额度: 1130.0124 当天分润:0
