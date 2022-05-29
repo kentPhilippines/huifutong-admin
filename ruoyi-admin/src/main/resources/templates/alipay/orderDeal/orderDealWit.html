@@ -450,6 +450,9 @@
                         if ( row.lockWit == 2 &&  row.orderStatus == 1 ) {
                             actions.push('<a class="btn btn-danger btn-xs' + updataOrder + '" href="javascript:void(0)" onclick="toManual(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>手动锁定</a> ');
                         }
+                        if ( row.lockWit == 1 &&  row.orderStatus == 1 ) {
+                            actions.push('<a class="btn btn-danger btn-xs' + updataOrder + '" href="javascript:void(0)" onclick="unLockPay(\'' + row.id + '\')"><i class="fa fa-bell-o"></i>出款解锁</a> ');
+                        }
                         return actions.join('');
                     }
                 }]
