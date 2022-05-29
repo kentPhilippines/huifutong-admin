@@ -272,6 +272,14 @@
                             if(2 == row.grabOrder || '2' == row.grabOrder ){//卡商放弃出款
                                 table += '<li>' + '<span class="badge badge-warning">自动抢单出款</span>' + '</li>'
                             }
+                            if (row.autiSuccess != 0 )
+                            {
+                                table += '<li><span class="badge badge-warning">自动出款'  + $.table.selectDictLabel(autiSuccess, row.autiSuccess) + '</span></li>'
+                            }
+                            if (row.autiSuccess == 2 )
+                            {
+                                table += '<li><span ><strong>' + '失败原因:' +row.msg + '</strong></span></li>'
+                            }
                            table += '</ul>'
                             return table;
                         } else if (value == 3) {
@@ -284,14 +292,7 @@
                     formatter: function (value, row, index) {
                         var table = '<ul>'
                         table += '<li><span ><strong>' + '订单状态:' + $.table.selectDictLabel(orderstatusDatas, value) + '</strong></span></li>'
-                        if (row.autiSuccess != 0 )
-                        {
-                            table += '<li><span ><strong>' + '自动出款状态:' + $.table.selectDictLabel(autiSuccess, row.autiSuccess) + '</strong></span></li>'
-                        }
-                        if (row.autiSuccess == 2 )
-                        {
-                            table += '<li><span ><strong>' + '失败原因:' +row.msg + '</strong></span></li>'
-                        }
+
                         table += '</ul>'
 
 
