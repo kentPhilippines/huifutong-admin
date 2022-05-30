@@ -309,11 +309,13 @@
         }
 
         if (param === 'autoWit') {
+            console.log(row.autoWit);
+            console.log(row.autoWit==1);
             if (row.autoWit == 1) {
                 let msg = "确认此卡【取消自动出款】吗？";
                 let val = 0;
                 return '<i class=\"fa fa-toggle-on text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="enableAutoWit(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';
-            } else {
+            } else if (row.autoWit == 0){
                 let msg = "确认此卡【开启自动出款】吗？";
                 let val = 1;
                 return '<i class=\"fa fa-toggle-off text-info fa-2x\" style="cursor:pointer;" title="点击变更状态" onclick="disableAutoWit(\'' + row.id + '\', \'' + param + '\', \'' + msg + '\', \'' + val + '\')"></i> ';

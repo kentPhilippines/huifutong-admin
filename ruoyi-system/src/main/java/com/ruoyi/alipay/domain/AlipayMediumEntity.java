@@ -40,9 +40,6 @@ public class AlipayMediumEntity extends BaseEntity {
     private Integer todayCount;//当日交易笔数
     private Integer sumCount;//累计交易笔数
     private Integer countLimit;//日交易限制笔数
-
-
-
     private Integer autoWit;//1 开启。0 关闭 默认 关闭  自动出款
 
 
