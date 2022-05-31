@@ -274,6 +274,7 @@
             <if test="countLimit != null  and countLimit != ''">countLimit = #{countLimit},</if>
             <if test="todayCountWit != null  and todayCountWit != ''"> todayCountWit = #{todayCountWit},</if>
             <if test="sumCountWit != null  and sumCountWit != ''"> sumCountWit = #{sumCountWit},</if>
+            <if test="payInfo != null  and payInfo != ''"> payInfo = #{payInfo},</if>
             <if test="autoWit != null  "> autoWit = #{autoWit},</if>
         </trim>
         where id = #{id}
@@ -313,7 +314,7 @@
             <if test="countLimit != null  and countLimit != ''">countLimit = #{countLimit},</if>
             <if test="todayCountWit != null  and todayCountWit != ''"> todayCountWit = #{todayCountWit},</if>
             <if test="sumCountWit != null  and sumCountWit != ''"> sumCountWit = #{sumCountWit},</if>
-            <if test="autoWit != null  and autoWit != ''"> autoWit = #{autoWit},</if>
+            <if test="autoWit != null"> autoWit = #{autoWit},</if>
         </trim>
         where account = #{params.bankName}
     </update>
@@ -344,7 +345,7 @@
             <if test="countLimit != null  and countLimit != ''">countLimit = #{countLimit},</if>
             <if test="todayCountWit != null  and todayCountWit != ''"> todayCountWit = #{todayCountWit},</if>
             <if test="sumCountWit != null  and sumCountWit != ''"> sumCountWit = #{sumCountWit},</if>
-            <if test="autoWit != null  and autoWit != ''"> autoWit = #{autoWit},</if>
+            <if test="autoWit != null"> autoWit = #{autoWit},</if>
         </trim>
         where code = #{code}
     </update>
