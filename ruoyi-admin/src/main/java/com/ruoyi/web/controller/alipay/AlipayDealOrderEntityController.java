@@ -811,7 +811,19 @@ public class AlipayDealOrderEntityController extends BaseController {
 
         return toAjax(i);
     }
-
+    @Log(title = "解锁出款订单", businessType = BusinessType.UPDATE)
+    @PostMapping("/unLockPay")
+    @ResponseBody
+    public AjaxResult unLockPay(AlipayDealOrderEntity alipayDealOrderEntity) {
+        int i = alipayDealOrderEntityService.updateUnLock(alipayDealOrderEntity.getId());
+        AlipayExceptionOrder exOrder = new AlipayExceptionOrder();
+        AlipayDealOrderEntity orderEntity = alipayDealOrderEntityService.selectAlipayDealOrderEntityById(alipayDealOrderEntity.getId());
+        exOrder.setOrderId(orderEntity.getOrderId());
+        exOrder.setExceptOrderAmount(orderEntity.getDealAmount()+"");
+        exOrder.setOrderAccount(orderEntity.getOrderQrUser());
+        addEc(exOrder,ShiroUtils.getLoginName(),ShiroUtils.getIp(),"客服解锁出款订单");
+        return toAjax(i);
+    }
     @Log(title = "设置自动出款订单", businessType = BusinessType.UPDATE)
     @PostMapping("/toAutoLockWit")
     @ResponseBody
@@ -822,7 +834,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         exOrder.setOrderId(orderEntity.getOrderId());
         exOrder.setExceptOrderAmount(orderEntity.getDealAmount()+"");
         exOrder.setOrderAccount(orderEntity.getOrderQrUser());
-        addEc(exOrder,ShiroUtils.getLoginName(),ShiroUtils.getIp(),"客服解锁出款订单");
+        addEc(exOrder,ShiroUtils.getLoginName(),ShiroUtils.getIp(),"设置自动出款订单");
         return toAjax(i);
     }
 
@@ -836,7 +848,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         exOrder.setOrderId(orderEntity.getOrderId());
         exOrder.setExceptOrderAmount(orderEntity.getDealAmount()+"");
         exOrder.setOrderAccount(orderEntity.getOrderQrUser());
-        addEc(exOrder,ShiroUtils.getLoginName(),ShiroUtils.getIp(),"客服解锁出款订单");
+        addEc(exOrder,ShiroUtils.getLoginName(),ShiroUtils.getIp(),"设置手动出款订单");
         return toAjax(i);
     }
 
