@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -66,6 +67,8 @@ public class AlipayWithdrawEntityController extends BaseController {
     private IAlipayRunOrderEntityService alipayRunOrderEntityService;
     @Autowired
     private IMerchantInfoEntityService merchantInfoEntityService;
+
+    private ReentrantLock reentrantLock = new ReentrantLock();
 
     @CreateCache(name = "ALIPAY_WITHDRAWAL_LOCK:", expire = 60, timeUnit = TimeUnit.SECONDS, cacheType = CacheType.LOCAL)
     private Cache<String, String> cache;
@@ -190,11 +193,20 @@ public class AlipayWithdrawEntityController extends BaseController {
     @ResponseBody
     @RepeatSubmit
     public AjaxResult apporval(AlipayWithdrawEntity alipayWithdrawEntity) {
-        if(cache.get(alipayWithdrawEntity.getOrderId())!=null)
-        {
-            return error("1分钟内不允许重复操作");
+        try {
+            reentrantLock.tryLock(10,TimeUnit.SECONDS);
+            if(cache.get(alipayWithdrawEntity.getOrderId())!=null)
+            {
+                return error("1分钟内不允许重复操作");
+            }
+            cache.put(alipayWithdrawEntity.getOrderId(),alipayWithdrawEntity.getOrderId());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            reentrantLock.unlock();
         }
-        cache.put(alipayWithdrawEntity.getOrderId(),alipayWithdrawEntity.getOrderId());
+
+
 
         // 获取当前的用户
         SysUser currentUser = ShiroUtils.getSysUser();
