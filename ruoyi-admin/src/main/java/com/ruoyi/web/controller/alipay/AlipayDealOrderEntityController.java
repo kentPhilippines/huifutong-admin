@@ -6,6 +6,9 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alicp.jetcache.Cache;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.CreateCache;
 import com.google.common.collect.Maps;
 import com.ruoyi.alipay.domain.*;
 import com.ruoyi.alipay.service.*;
@@ -30,6 +33,7 @@ import org.apache.poi.ss.formula.functions.T;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +41,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.Size;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -74,6 +79,13 @@ public class AlipayDealOrderEntityController extends BaseController {
 
     @Autowired
     private IBankInfoSplitResultService bankInfoSplitResultService;
+
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
+   /* @Autowired
+    RedisTemplate redis;
+    @CreateCache(name = "ALIPAY_WITHDRAWAL_LOCKWIT:", expire = 600, timeUnit = TimeUnit.SECONDS, cacheType = CacheType.LOCAL)
+    private Cache<String, String> cache;*/
 
     @GetMapping()
     @RequiresPermissions("orderDeal:qr:view")
@@ -816,8 +828,14 @@ public class AlipayDealOrderEntityController extends BaseController {
     @ResponseBody
     public AjaxResult unLockPay(AlipayDealOrderEntity alipayDealOrderEntity) {
         int i = alipayDealOrderEntityService.updateUnLock(alipayDealOrderEntity.getId());
+
         AlipayExceptionOrder exOrder = new AlipayExceptionOrder();
         AlipayDealOrderEntity orderEntity = alipayDealOrderEntityService.selectAlipayDealOrderEntityById(alipayDealOrderEntity.getId());
+        //更新成功放缓存  在卡商出款时进行通知
+        if(i==1)
+        {
+            redisTemplate.opsForValue().set("ALIPAY_WITHDRAWAL_LOCKWIT:"+orderEntity.getOrderId(),"0",600,TimeUnit.SECONDS);
+        }
         exOrder.setOrderId(orderEntity.getOrderId());
         exOrder.setExceptOrderAmount(orderEntity.getDealAmount()+"");
         exOrder.setOrderAccount(orderEntity.getOrderQrUser());
