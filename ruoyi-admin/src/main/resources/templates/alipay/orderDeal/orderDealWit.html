@@ -133,7 +133,7 @@
                         </li>
 
                         <li>
-                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                            <a class="btn btn-primary btn-rounded btn-sm" id="searchBtn" onclick="$.table.search()"><i
                                     class="fa fa-search"></i>&nbsp;搜索</a>
                             <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
                                     class="fa fa-refresh"></i>&nbsp;重置</a>
@@ -659,6 +659,13 @@
                 content: ' <img  style="width: 100%; height: 100%;" class="image" src= "'+ url + '"/> '
             })
         }
+
+    function notifyRefresh()
+    {
+        console.log("test");
+        //$("#searchBtn").click();
+        $.table.refresh();
+    }
     //初始化时间
     layui.use('laydate', function () {
         const laydate = layui.laydate;

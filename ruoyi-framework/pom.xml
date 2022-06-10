@@ -21,6 +21,10 @@
 	</description>
     
     <dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
 		<!-- shiro+redis缓存插件 -->
 		<dependency>
 			<groupId>org.crazycake</groupId>
