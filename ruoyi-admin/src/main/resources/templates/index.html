@@ -344,12 +344,16 @@ $(function() {
 		}
 	}
 	var index;
+
+	var loc = window.location;
+
 	var userName =[[${user.loginName}]];
 	if(typeof(WebSocket) == "undefined") {
 		console.log("您的浏览器不支持WebSocket");
 	}else{
 		console.log("您的浏览器支持WebSocket");
-		index = new WebSocket("ws://localhost:803/WebSocketServer/"+userName);
+		index = new WebSocket("ws://"+loc.host+"/WebSocketServer/"+userName);
+		console.log("ws://"+loc.host+"/WebSocketServer/"+userName);
 
 		//打开事件
 		index.onopen = function() {
