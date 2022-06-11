@@ -130,13 +130,13 @@ public class AlipayUserRateEntity extends BaseEntity {
     private String retain2;
 
     /**
-     * 预留，添加业务使用
+     * 预留，添加业务使用  商户最高充值限额 商户才会有的属性
      */
     @Excel(name = "预留，添加业务使用")
     private String retain3;
 
     /**
-     * 预留，添加业务使用
+     * 预留，添加业务使用  夜间上浮费率，卡商/商户都会有的属性
      */
     @Excel(name = "预留，添加业务使用")
     private String retain4;
