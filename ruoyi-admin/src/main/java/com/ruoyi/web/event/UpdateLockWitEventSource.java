@@ -13,6 +13,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Data
 //@Builder
+/**
+ * 解锁出款订单
+ */
 public class UpdateLockWitEventSource extends BaseProtocol {
 
     private String operateUserId;//操作人

@@ -20,4 +20,11 @@ public class UpdateLockWitEventListener {
         log.info("listener1线程:{}", Thread.currentThread().getThreadGroup() + Thread.currentThread().getName());
         log.info("event:{}", event);
     }
+
+    @EventListener(value = UpdateWitCardDealerEvent.class)
+    public void listen(UpdateWitCardDealerEvent event) throws IOException {
+        WebSocketServer.sendInfo(event.getSource(),null);
+        log.info("listener1线程:{}", Thread.currentThread().getThreadGroup() + Thread.currentThread().getName());
+        log.info("event:{}", event);
+    }
 }

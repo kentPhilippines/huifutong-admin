@@ -30,6 +30,8 @@ import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.web.event.UpdateLockWitEvent;
 import com.ruoyi.web.event.UpdateLockWitEventSource;
+import com.ruoyi.web.event.UpdateWitCardDealerEvent;
+import com.ruoyi.web.event.UpdateWitCardDealerEventSource;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -431,6 +433,8 @@ public class AlipayDealOrderEntityController extends BaseController {
             i = 0;
         }
         if (i == 1) {
+            //发布事件通知前端刷新页面
+            applicationContext.publishEvent(new UpdateWitCardDealerEvent(UpdateWitCardDealerEventSource.of(orderId,ShiroUtils.getLoginName())));
             AlipayDealOrderEntity alipayDealOrderEntity = new AlipayDealOrderEntity();
             alipayDealOrderEntity.setOperater(ShiroUtils.getLoginName());
             alipayDealOrderEntity.setRecordType("2");
