@@ -253,7 +253,7 @@
                             return '<span class="badge badge-primary">商户充值->渠道主交易订单</span>'
                         } else if (value == 4) {
                             var table = '<ul>'
-                            table += '<li>' + '<span class="badge badge-danger">商户代付->渠道出款主交易订单</span>' + '</li>'
+                            table += '<li>' + '<span class="badge badge-danger">出款主订单</span>' + '</li>'
                             if('zhongbang-bank' == row.orderQrUser){
                                 table += '<li>' + '<span class="badge badge-danger">等待切款</span>' + '</li>'
                             }
@@ -288,10 +288,10 @@
                     }
                 },
                 {
-                    field: 'orderStatus', title: '订单状态',
+                    field: 'orderStatus', title: '状态',
                     formatter: function (value, row, index) {
                         var table = '<ul>'
-                        table += '<li><span ><strong>' + '订单状态:' + $.table.selectDictLabel(orderstatusDatas, value) + '</strong></span></li>'
+                        table += '<li><span ><strong>'  + $.table.selectDictLabel(orderstatusDatas, value) + '</strong></span></li>'
 
                         table += '</ul>'
 
