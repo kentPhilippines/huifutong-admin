@@ -19,7 +19,7 @@ public class UpdateWitCardDealerEventSource extends BaseProtocol {
     private String message;
 
     public UpdateWitCardDealerEventSource() {
-        setCmdKey(CmdKey.RELEASE_LOCKWIT);
+        setCmdKey(CmdKey.UPDATE_WIT_CARD_DEALER);
     }
 
     public static UpdateWitCardDealerEventSource of(String orderId,  String operateUserId) {
