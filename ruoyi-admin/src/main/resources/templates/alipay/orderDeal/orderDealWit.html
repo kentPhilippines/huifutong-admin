@@ -348,27 +348,27 @@
                 },
                 {field: 'orderQr', title: '银行卡信息',align: 'left',formatter: function (value, row, index) {
 
-                        var table = '<table>'
+                        var table = '<ul>'
                         //风控变色
                         if(null != row.riskReason && '' != row.riskReason)
                         {
-                            table = '<table style="background-color: lightpink">';
+                            table = '<ul style="background-color: lightpink">';
                         }
                         if(row.orderQr != null && row.orderQr != ''){
-                            table += '<tr><td>' + '出款：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>'+ '</td></tr>'
+                            table += '<li>' + '出款：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>'+ '</li>'
                         }
-                        table += '<tr><td>' + row.bankAccount  + '</td></tr>'
+                        table += '<li>' + row.bankAccount  + '</li>'
                         /*if(row.bankAmountNow){
                             table += '<li>' +'真实余额：'+ '<span style="color: red">'+ row.bankAmountNow + '</span>'+'</li>'
                             table += '<li>' +'业务余额：'+ '<span style="color: red">'+ row.systemAmount + '</span>'+'</li>'
                         }*/
                         if(null != row.payInfo && '' != row.payInfo){
-                            table += '<tr><td>' + '回调：' + row.payInfo + '</td></tr>'
+                            table += '<li>' + '回调：' + row.payInfo + '</li>'
                         }
                         if(1 == row.orderType  &&  'YES' == row.isNotify){
-                            table += '<tr><td>' + '商户回调已发送'  + '</td></tr>'
+                            table += '<li>' + '商户回调已发送'  + '</li>'
                         }
-                        table += '</table>'
+                        table += '</ul>'
                         return table;
                     }},
                 /*                {   field: 'orderQr',       title: '关联二维码'  },*/
