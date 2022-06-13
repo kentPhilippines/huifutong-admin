@@ -121,6 +121,9 @@ public interface AlipayDealOrderEntityMapper {
     @Select("select orderQr,SUM(dealAmount) dealAmount  from alipay_deal_order ado where orderType =4 and orderStatus =1 group by orderQr")
     List<AlipayDealOrderEntity> getSumAmountOfPendingWithdral();
 
+    @Select("select orderQrUser,SUM(dealAmount) dealAmount  from alipay_deal_order ado where orderType =4 and orderStatus =1 group by orderQrUser")
+    List<AlipayDealOrderEntity> getSumAmountOfPendingWithdralGroupByQrUser();
+
 
     @Update("update alipay_deal_order set orderQrUser = #{userId} ,orderQr = #{orderQr} , " +
             "retain2 = #{fee} , feeId =#{feeId}  ,retain3 = #{profit} , lockWit  = 0  , payImg = null,  enterPayTime  = null , grabOrder = 0   where orderId = #{orderId} ")

@@ -113,4 +113,7 @@ public interface IAlipayDealOrderEntityService {
     int updateLockWitToManual(Long id);
 
     List<AlipayDealOrderEntity> getSumAmountOfPendingWithdral();
+
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    List<AlipayDealOrderEntity> getSumAmountOfPendingWithdralGroupByQrUser();
 }

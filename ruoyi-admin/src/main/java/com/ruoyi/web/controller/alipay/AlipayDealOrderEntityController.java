@@ -296,13 +296,14 @@ public class AlipayDealOrderEntityController extends BaseController {
     @RequiresPermissions("orderDeal:qr:status:updateBankCardShow")
     @Log(title = "修改出款卡商或拆单", businessType = BusinessType.INSERT)
     public String updateBankCardShow(ModelMap mmap, @PathVariable("userId") String orderId) {
-        //根据卡号分组出 在途出款的金额
-        List<AlipayDealOrderEntity> sumAmountOfPendingWithdralList = alipayDealOrderEntityService.getSumAmountOfPendingWithdral();
-        Map sumAmountOfPendingWithdralMap = sumAmountOfPendingWithdralList.stream().filter(alipayDealOrderEntity -> StrUtil.isNotEmpty(alipayDealOrderEntity.getOrderQr()) && alipayDealOrderEntity.getOrderQr().contains(":")).map(alipayDealOrderEntity -> {
-            String cardInfo = alipayDealOrderEntity.getOrderQr();
-            alipayDealOrderEntity.setOrderQr(cardInfo.split(":")[2]);
+        //根据用户分组出 在途出款的金额
+
+        List<AlipayDealOrderEntity> sumAmountOfPendingWithdralList = alipayDealOrderEntityService.getSumAmountOfPendingWithdralGroupByQrUser();
+        Map sumAmountOfPendingWithdralMap = sumAmountOfPendingWithdralList.stream().filter(alipayDealOrderEntity -> StrUtil.isNotEmpty(alipayDealOrderEntity.getOrderQrUser())).map(alipayDealOrderEntity -> {
+            String userId = alipayDealOrderEntity.getOrderQrUser();
+            //alipayDealOrderEntity.setOrderQr(cardInfo.split(":")[2]);
             return alipayDealOrderEntity;
-        }).collect(Collectors.toMap(AlipayDealOrderEntity::getOrderQr, AlipayDealOrderEntity::getDealAmount, (o1, o2) -> o1, ConcurrentHashMap::new));
+        }).collect(Collectors.toMap(AlipayDealOrderEntity::getOrderQrUser, AlipayDealOrderEntity::getDealAmount, (o1, o2) -> o1, ConcurrentHashMap::new));
 
 
         List<AlipayUserFundEntity> listFund = alipayUserFundEntityService.findUserFundAllToBank();

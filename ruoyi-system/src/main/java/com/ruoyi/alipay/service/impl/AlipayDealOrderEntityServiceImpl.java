@@ -256,4 +256,10 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
         return alipayDealOrderEntityMapper.getSumAmountOfPendingWithdral();
     }
 
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayDealOrderEntity> getSumAmountOfPendingWithdralGroupByQrUser() {
+        return alipayDealOrderEntityMapper.getSumAmountOfPendingWithdralGroupByQrUser();
+    }
+
 }

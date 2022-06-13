@@ -194,7 +194,7 @@
                     field: 'mountLimit',
                     title: '实时数据',
                     formatter: function (value, row, index) {
-                        var withAmount= sumAmountOfPendingWithdralMap[row.mediumNumber];
+                        var withAmount= sumAmountOfPendingWithdralMap[row.qrcodeId];
                         if (typeof(withAmount) == "undefined")
                         {
                             withAmount=0;
