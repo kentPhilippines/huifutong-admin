@@ -70,7 +70,8 @@ var bankcard = '';
           queryParams: {
               qrcodeId: bankcard
           },
-
+          pageSize: 200,
+          pageList: [10, 25, 50, 100, 200],
           contentType: "application/x-www-form-urlencoded",
           columns: [{
               checkbox: true

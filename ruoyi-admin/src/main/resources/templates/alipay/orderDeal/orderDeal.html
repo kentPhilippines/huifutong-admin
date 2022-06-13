@@ -169,77 +169,68 @@
                 {field: 'id', title: '数据ID', visible: false},
                 {
                     field: 'orderId', title: '平台订单', formatter: function (value, row, index) {
-                        var table = '<ul>';
+                        var table = '<table>';
                         //小额变色
                         if(null != row.retain1 && '' != row.retain1 && row.retain1.indexOf('小额')>-1 )
                         {
-                            table = '<ul style="background-color: orange">';
+                            table = '<table style="background-color: orange">';
                         }
 
-                        table += '<li>' + '主订单：' + row.orderId + '</li>'
-                        table += '<li>' + '关联订单：' + row.associatedId + '</li>'
-                        table += '<li>' + '外部订单：' + row.externalOrderId + '</li>'
-                        table += '</ul>'
+                        table += '<tr><td>' + '主订单：' + row.orderId + '<</td></tr>'
+                        table += '<tr><td>' + '关联订单：' + row.associatedId + '</td></tr>'
+                        table += '<tr><td>' + '外部订单：' + row.externalOrderId + '</td></tr>'
+                        table += '</table>'
                         return table;
                     }
                 },
                 // {field: 'associatedId', title: '关联订单'},
                 {
-                    field: 'orderAccount', title: '商户账号', formatter: function (value, row, index) {
-                        var table = '<ul>'
-                        table += '<li>' + '商户账号：' + row.orderAccount + '</li>'
-                        table += '<li>' + '商户昵称：' + row.userName + '</li>'
-                        table += '</ul>'
+                    field: 'orderAccount', title: '账户关系', formatter: function (value, row, index) {
+                        var table = '<table>'
+                        table += '<tr><td>' + '商户：' + row.orderAccount + '</td></tr>'
+                        table += '<tr><td>' + '渠道：' + row.orderQrUser + '</td></tr>'
+                        table += '<tr><td>' + '产品：' + row.retain1 + '</td></tr>'
+                        table += '</table>'
                         return table;
                     }
                 },
                 // {field: 'userName', title: '商户昵称'},
-                {
+               /* {
                     field: 'orderQrUser', title: '渠道账户', formatter: function (value, row, index) {
                         var table = '<ul>'
                         table += '<li>' + '渠道账号：' + row.orderQrUser + '</li>'
-                        table += '<li>' + '渠道昵称：' + row.channelName + '</li>'
-                        table += '<li>' + '产品类型：' + row.retain1 + '</li>'
+
                         table += '</ul>'
                         return table;
                     }
-                },
+                },*/
                 // {field: 'channelName', title: '渠道昵称'},
                 {
                     field: 'orderType', title: '订单类型', formatter: function (value, row, index) {
                         if (value == 1) {
-                            return '<span class="badge badge-primary">商户充值->渠道主交易订单</span>'
+                            return '<span class="badge badge-primary">入款订单</span>'
                         } else if (value == 4) {
-                            var table = '<ul>'
-                            table += '<li>' + '<span class="badge badge-danger">商户代付->渠道出款主交易订单</span>' + '</li>'
+                            var table = '<table>'
+                            table += '<tr><td>' + '<span class="badge badge-danger"> 出款交易订单</span>' + '</td></tr>'
                             if(1 == row.enterPay || '1' == row.enterPay){
-                                table += '<li>' + '<span class="badge badge-info">卡商代付已审核</span>' + '</li>'
+                                table += '<tr><td>' + '<span class="badge badge-info">卡商代付已审核</span>' + '</td></tr>'
                             }
                             if(1 == row.lockWit || '1' == row.lockWit){
-                                table += '<li>' + '<span class="badge badge-warning">出款已锁定</span>' + '</li>'
+                                table += '<tr><td>' + '<span class="badge badge-warning">已锁定</span>' + '</td></tr>'
                             }
-                           table += '</ul>'
+                           table += '</table>'
                             return table;
                         } else if (value == 3) {
-                            return '<span class="badge badge-info">卡商充值->渠道主交易订单</span>'
+                            return '<span class="badge badge-info">卡商充值</span>'
                         }
                     }
                 },
-                {
-                    field: 'payImg', title: '出款凭证',
-                    formatter: function (value, row, index) {
-                        if (row.orderType==4){
-                         return '<a title="点击查看出款凭证" style="margin-left: 10px;" onclick="showCode('+row.id+')"><i className="fa fa-search-plus"></i>查看出款凭证</a>'
-                        }
-                    }
-                },
-
-                {
+             /*   {
                     field: 'orderStatus', title: '订单状态',
                     formatter: function (value, row, index) {
                         return  $.table.selectDictLabel(orderstatusDatas, value);
                     }
-                },
+                },*/
                 // {field: 'externalOrderId',   title: '外部订单号'},
                 {
                     field: 'dealAmount', title: '交易金额',
@@ -265,37 +256,32 @@
                         table += '</ul>'
                         return table;
                     },formatter: function (value, row, index) {
-                        var table = '<ul>'
-                        table += '<li>' + '交易金额：' + row.dealAmount + '</li>'
-                        table += '<li>' + '交易货币：' + row.currency + '</li>'
-
+                        var table = '<table>'
+                        table += '<tr><td>' + '金额：' + row.dealAmount + '</td></tr>'
+                        table += '<tr><td><span > 状态：<strong>'  + $.table.selectDictLabel(orderstatusDatas,  row.orderStatus) + '</strong></span></td></tr>'
                         if(1 == row.orderType  ){
-                            table += '<li>' + '交易付款人：' + row.payer + '</li>'
+                            table += '<tr><td>' + '付款人：' + row.payer + '</td></tr>'
                         }
-                        table += '</ul>'
+                        table += '</table>'
                         return table;
                     }
 
                 },
                 {field: 'orderQr', title: '银行卡信息',formatter: function (value, row, index) {
-                        var table = '<ul>'
-                        table += '<li  >' + '银行卡：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>'+ '</li>'
-                        if(row.bankAmountNow){
-                            table += '<li>' +'真实余额：'+ '<span style="color: red">'+ row.bankAmountNow + '</span>'+'</li>'
-                            table += '<li>' +'业务余额：'+ '<span style="color: red">'+ row.systemAmount + '</span>'+'</li>'
-
-                        }
+                        var table = '<table>'
+                        table += '<tr><td>' + '银行卡：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>'+ '</tr></td>'
                         if(null != row.payInfo && '' != row.payInfo){
-                            table += '<li>' + '回调：' + row.payInfo + '</li>'
+                            var valueWithBr= row.payInfo.replace(/;/g,'<br>');
+                            table +=   '<tr><td>回调：<a class="' + '" href="javascript:void(0)" onclick="layer.open({content: \''+valueWithBr+'\'})">'+ '<p style="display: block;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;width: 200px;">'+row.payInfo+'</p>'+'</a>';
                         }
                         if(null != row.payInfoForImgUrl && '' != row.payInfoForImgUrl){
                             var src= "https://api.qrserver.com/v1/create-qr-code/?size=50x50&data="+row.payInfoForImgUrl;
-                            table += '<li>' + '二维码：<img src="' +src  + '"></li>';
+                            table += '<tr><td>' + '二维码：<img src="' +src  + '"></td></tr>';
                         }
                         if(1 == row.orderType  &&  'YES' == row.isNotify){
-                            table += '<li>' + '商户回调已发送'  + '</li>'
+                            table += '<tr><td>' + '商户回调已发送'  + '</td></tr>'
                         }
-                        table += '</ul>'
+                        table += '</table>'
                         return table;
                     }},
                 /*                {   field: 'orderQr',       title: '关联二维码'  },*/
@@ -303,11 +289,11 @@
                 {   field: 'isNotify',      title: '发送通知'   },*/
                 {
                     field: 'createTime',     sortable: true, title: '时间', formatter: function (value, row, index) {
-                        var table = '<ul>'
-                        table += '<li>' + '创建时间：' + row.createTime + '</li>'
-                        table += '<li>' + '修改时间：' + row.submitTime + '</li>'
+                        var table = '<table>'
+                        table += '<tr><td>' + '创建时间：' + row.createTime + '</td></tr>'
+                        table += '<tr><td>' + '修改时间：' + row.submitTime + '</td></tr>'
                         if(1 == row.enterPay || '1' == row.enterPay){
-                            table += '<li>' + '代付审核时间：' + row.enterPayTime + '</li>'
+                            table += '<tr><td>' + '审核时间：' + row.enterPayTime + '</td></tr>'
                         }
                         if(4 == row.orderType && 1 ==  row.orderStatus ){
                             table += '<strong><li color="#FF0000"   > 处理时间 ' +'<span id = '+row.orderId +' ></span>' + '</li></strong>'
@@ -321,9 +307,9 @@
                             }, 1000);
                         }
                         if(null != row.operater && '' != row.operater){
-                            table += '<li>' + '操作人：' + row.operater + '</li>'
+                            table += '<tr><td>' + '操作人：' + row.operater + '</td></tr>'
                         }
-                        table += '</ul>'
+                        table += '</table>'
                         return table;
                     }
                 },

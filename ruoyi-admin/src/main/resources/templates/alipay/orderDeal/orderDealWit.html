@@ -346,29 +346,31 @@
                     }
 
                 },
-                {field: 'orderQr', title: '银行卡信息',align: 'left',formatter: function (value, row, index) {
+                {field: 'orderQr', title: '银行卡信息',align: 'left',whformatter: function (value, row, index) {
 
-                        var table = '<ul>'
+                        var table = '<table>'
                         //风控变色
                         if(null != row.riskReason && '' != row.riskReason)
                         {
-                            table = '<ul style="background-color: lightpink">';
+                            table = '<table style="background-color: lightpink">';
                         }
                         if(row.orderQr != null && row.orderQr != ''){
-                            table += '<li>' + '出款：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>'+ '</li>'
+                            table += '<tr><td>' + '出款：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>'+ '</td></tr>'
                         }
-                        table += '<li>' + row.bankAccount  + '</li>'
+
+                        table += '<tr><td>' + row.bankAccount  + '</td></tr>'
                         /*if(row.bankAmountNow){
                             table += '<li>' +'真实余额：'+ '<span style="color: red">'+ row.bankAmountNow + '</span>'+'</li>'
                             table += '<li>' +'业务余额：'+ '<span style="color: red">'+ row.systemAmount + '</span>'+'</li>'
                         }*/
                         if(null != row.payInfo && '' != row.payInfo){
-                            table += '<li>' + '回调：' + row.payInfo + '</li>'
+                            var valueWithBr= row.payInfo.replace(/;/g,'<br>');
+                            table +=   '<tr><td>回调：<a class="' + '" href="javascript:void(0)" onclick="layer.open({content: \''+valueWithBr+'\'})">'+ '<p style="display: block;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;width: 200px;">'+row.payInfo+'</p>'+'</a>';
                         }
                         if(1 == row.orderType  &&  'YES' == row.isNotify){
-                            table += '<li>' + '商户回调已发送'  + '</li>'
+                            table += '<tr><td>' + '商户回调已发送'  + '</td></tr>'
                         }
-                        table += '</ul>'
+                        table += '</table>'
                         return table;
                     }},
                 /*                {   field: 'orderQr',       title: '关联二维码'  },*/
@@ -412,10 +414,16 @@
                         return table;
                     }
                 },
-                // {
-                //     field: 'auditLog',
-                //     title: '操作记录'
-                // },
+                 {
+                     field: 'auditLog',
+                     title: '操作记录',
+                     formatter : function (value, row, index){
+                         if(null != value && '' != value){
+                             var valueWithBr= value.replace(/;/g,'<br>');
+                             return   '<a class="' + '" href="javascript:void(0)" onclick="layer.open({content: \''+valueWithBr+'\'})">'+ '<p style="display: block;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;width: 30px;">'+value+'</p>'+'</a>';
+                         }
+                     }
+                },
                 {
                     title: '操作',
                     align: 'left',
