@@ -14,7 +14,6 @@ import com.ruoyi.alipay.domain.*;
 import com.ruoyi.alipay.service.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.annotation.RepeatSubmit;
-import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.StaticConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -33,9 +32,7 @@ import com.ruoyi.web.event.UpdateLockWitEventSource;
 import com.ruoyi.web.event.UpdateWitCardDealerEvent;
 import com.ruoyi.web.event.UpdateWitCardDealerEventSource;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -355,6 +352,7 @@ public class AlipayDealOrderEntityController extends BaseController {
                     mmap.put("listFund", list);
                     mmap.put("orderId", split[0]);
                     mmap.put("sumAmountOfPendingWithdralMap", sumAmountOfPendingWithdralMap);
+                    cache.remove(orderId);
                     return prefix + "/updateBankCardEditMore";
                 }
             }
@@ -363,12 +361,14 @@ public class AlipayDealOrderEntityController extends BaseController {
         String operater = order.getOperater();
         if (StrUtil.isNotEmpty(operater) && !ShiroUtils.getLoginName().equals(operater)) {
             mmap.put("errorMessage", "请与第一切款人联系完成切款，当前账号暂无权限");
+            cache.remove(orderId);
             return prefix + "/business";
         }
         if (1 == order.getLockWit()) {
             Date lockWitTime = order.getLockWitTime();
             if (DateUtil.isExpired(lockWitTime, DateField.SECOND, Integer.valueOf(600), new Date())) {
                 mmap.put("errorMessage", "当前订单已锁定，请解锁后重新配置");
+                cache.remove(orderId);
                 return prefix + "/business";
             }
         }
@@ -380,6 +380,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         alipayDealOrderEntity.setRecordType("2");
         alipayDealOrderEntity.setOrderId(orderId);
         alipayDealOrderEntityService.updateAlipayDealOrderEntityByOrder(alipayDealOrderEntity);*/
+        cache.remove(orderId);
         return prefix + "/updateBankCardEdit";
     }
 
@@ -387,6 +388,7 @@ public class AlipayDealOrderEntityController extends BaseController {
     private IAlipayMediumEntityService alipayMediumEntityService;
     private static final String MARK = ":";
     private ReentrantLock reentrantLock = new ReentrantLock();
+    @CreateCache(name = "ALIPAY_WITHDRAWAL_LOCK:", expire = 30, timeUnit = TimeUnit.SECONDS, cacheType = CacheType.LOCAL)
     private Cache<String, String> cache;
     /**
      * 代付主交易订单修改卡商账户
@@ -490,6 +492,7 @@ public class AlipayDealOrderEntityController extends BaseController {
 
 
         }
+        cache.remove(orderId);
         return toAjax(i);
     }
 
@@ -609,6 +612,7 @@ public class AlipayDealOrderEntityController extends BaseController {
 
 
         }
+        cache.remove(orderId);
         return toAjax(i);
     }
 
