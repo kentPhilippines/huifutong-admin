@@ -352,7 +352,6 @@ public class AlipayDealOrderEntityController extends BaseController {
                     mmap.put("listFund", list);
                     mmap.put("orderId", split[0]);
                     mmap.put("sumAmountOfPendingWithdralMap", sumAmountOfPendingWithdralMap);
-                    cache.remove(orderId);
                     return prefix + "/updateBankCardEditMore";
                 }
             }
@@ -361,14 +360,12 @@ public class AlipayDealOrderEntityController extends BaseController {
         String operater = order.getOperater();
         if (StrUtil.isNotEmpty(operater) && !ShiroUtils.getLoginName().equals(operater)) {
             mmap.put("errorMessage", "请与第一切款人联系完成切款，当前账号暂无权限");
-            cache.remove(orderId);
             return prefix + "/business";
         }
         if (1 == order.getLockWit()) {
             Date lockWitTime = order.getLockWitTime();
             if (DateUtil.isExpired(lockWitTime, DateField.SECOND, Integer.valueOf(600), new Date())) {
                 mmap.put("errorMessage", "当前订单已锁定，请解锁后重新配置");
-                cache.remove(orderId);
                 return prefix + "/business";
             }
         }
@@ -492,7 +489,6 @@ public class AlipayDealOrderEntityController extends BaseController {
 
 
         }
-        cache.remove(orderId);
         return toAjax(i);
     }
 
@@ -612,7 +608,6 @@ public class AlipayDealOrderEntityController extends BaseController {
 
 
         }
-        cache.remove(orderId);
         return toAjax(i);
     }
 
