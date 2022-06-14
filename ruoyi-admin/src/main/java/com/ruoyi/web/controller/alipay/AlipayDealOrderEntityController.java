@@ -47,6 +47,7 @@ import javax.validation.constraints.Size;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -162,7 +163,6 @@ public class AlipayDealOrderEntityController extends BaseController {
             alipayDealOrderEntityService.fillRiskReasonForWithdrwal(list);
         }
         //做风控判断 填充  riskReason  end
-
         //支付宝扫码 关联查询payinfo from medium start
         List<String> mediumIds = list.stream().filter(order -> order.getRetain1().contains("ALIPAY")).map(AlipayDealOrderEntity::getOrderQr).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(mediumIds)) {
@@ -218,10 +218,16 @@ public class AlipayDealOrderEntityController extends BaseController {
 
 
                 AlipayWithdrawEntity alipayWithdrawEntity = dataMap.get(order.getAssociatedId());
-                order.setBankAccount("入款信息：" + alipayWithdrawEntity.getBankName() + ":" + alipayWithdrawEntity.getAccname() + ":" + alipayWithdrawEntity.getBankNo() + " 金额 ：" + alipayWithdrawEntity.getAmount());
+                order.setBankAccount("入款：" + alipayWithdrawEntity.getBankName() + ":" + alipayWithdrawEntity.getAccname() + ":" + alipayWithdrawEntity.getBankNo() + " 金额 ：" + alipayWithdrawEntity.getAmount());
                 order.setOrderNo(alipayWithdrawEntity.getOrderId());
             }
             AlipayProductEntity product = prCollect.get(order.getRetain1());
+
+
+
+
+
+
             if (ObjectUtil.isNotNull(product)) {
                 order.setRetain1(product.getProductName());
             }
@@ -297,7 +303,19 @@ public class AlipayDealOrderEntityController extends BaseController {
     @Log(title = "修改出款卡商或拆单", businessType = BusinessType.INSERT)
     public String updateBankCardShow(ModelMap mmap, @PathVariable("userId") String orderId) {
         //根据用户分组出 在途出款的金额
-
+        try {
+            reentrantLock.tryLock(10,TimeUnit.SECONDS);
+            if(cache.get(orderId)!=null)
+            {
+                mmap.put("errorMessage", "不允许重复操作");
+                return prefix + "/business";
+            }
+            cache.put(orderId,orderId);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            reentrantLock.unlock();
+        }
         List<AlipayDealOrderEntity> sumAmountOfPendingWithdralList = alipayDealOrderEntityService.getSumAmountOfPendingWithdralGroupByQrUser();
         Map sumAmountOfPendingWithdralMap = sumAmountOfPendingWithdralList.stream().filter(alipayDealOrderEntity -> StrUtil.isNotEmpty(alipayDealOrderEntity.getOrderQrUser())).map(alipayDealOrderEntity -> {
             String userId = alipayDealOrderEntity.getOrderQrUser();
@@ -368,7 +386,8 @@ public class AlipayDealOrderEntityController extends BaseController {
     @Autowired
     private IAlipayMediumEntityService alipayMediumEntityService;
     private static final String MARK = ":";
-
+    private ReentrantLock reentrantLock = new ReentrantLock();
+    private Cache<String, String> cache;
     /**
      * 代付主交易订单修改卡商账户
      */
@@ -382,6 +401,18 @@ public class AlipayDealOrderEntityController extends BaseController {
     ) {
         if (StrUtil.isEmpty(mediumNumber)) {
             return error("请选择银行卡");
+        }
+        try {
+            reentrantLock.tryLock(10,TimeUnit.SECONDS);
+            if(cache.get(orderId)!=null)
+            {
+                return error("不允许重复操作");
+            }
+            cache.put(orderId,orderId);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            reentrantLock.unlock();
         }
 
         String orderBankOld = "";
@@ -473,6 +504,18 @@ public class AlipayDealOrderEntityController extends BaseController {
     public AjaxResult updateBankCard(String orderId, String amount, String mediumNumber, String qrcodeId) {
         if (StrUtil.isEmpty(mediumNumber)) {
             return error("请选择银行卡");
+        }
+        try {
+            reentrantLock.tryLock(10,TimeUnit.SECONDS);
+            if(cache.get(orderId)!=null)
+            {
+                return error("不允许重复操作");
+            }
+            cache.put(orderId,orderId);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            reentrantLock.unlock();
         }
         String orderBankOld = "";
         String orderBankNew = "";
@@ -924,6 +967,8 @@ public class AlipayDealOrderEntityController extends BaseController {
         exceptionOrder.setOrderAccount(alipayExceptionOrder.getOrderAccount());
         alipayExceptionOrderService.insertAlipayExceptionOrder(exceptionOrder);
     }
+
+
 
 
 }
