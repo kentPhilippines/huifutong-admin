@@ -383,7 +383,7 @@ public class AlipayDealOrderEntityController extends BaseController {
     private IAlipayMediumEntityService alipayMediumEntityService;
     private static final String MARK = ":";
     private ReentrantLock reentrantLock = new ReentrantLock();
-    @CreateCache(name = "ALIPAY_WITHDRAWAL_LOCK_WIT:", expire = 600, timeUnit = TimeUnit.SECONDS, cacheType = CacheType.LOCAL)
+    @CreateCache(name = "ALIPAY_WITHDRAWAL_LOCK_WIT:", expire = 100, timeUnit = TimeUnit.SECONDS, cacheType = CacheType.LOCAL)
     private Cache<String, String> cache;
 
     /**
