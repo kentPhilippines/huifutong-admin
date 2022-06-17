@@ -272,7 +272,10 @@
                         table += '<tr><td>' + '银行卡：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>'+ '</tr></td>'
                         if(null != row.payInfo && '' != row.payInfo){
                             var valueWithBr= row.payInfo.replace(/;/g,'<br>');
-                            table +=   '<tr><td>回调：<a class="' + '" href="javascript:void(0)" onclick="layer.open({content: \''+valueWithBr+'\'})">'+ '<p style="display: block;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;width: 200px;">'+row.payInfo+'</p>'+'</a>';
+                            table +='<tr><td> '+ '回调：' + row.payInfo + '</td>></tr>>'
+
+
+                            //    '<tr><td>回调：<a class="' + '" href="javascript:void(0)" onclick="layer.open({content: \''+valueWithBr+'\'})">'+ '<p style="display: block;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;width: 200px;">'+row.payInfo+'</p>'+'</a>';
                         }
                         if(null != row.payInfoForImgUrl && '' != row.payInfoForImgUrl){
                             var src= "https://api.qrserver.com/v1/create-qr-code/?size=50x50&data="+row.payInfoForImgUrl;

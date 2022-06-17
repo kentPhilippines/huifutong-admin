@@ -14,7 +14,6 @@ import com.ruoyi.alipay.domain.*;
 import com.ruoyi.alipay.service.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.annotation.RepeatSubmit;
-import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.StaticConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -33,9 +32,7 @@ import com.ruoyi.web.event.UpdateLockWitEventSource;
 import com.ruoyi.web.event.UpdateWitCardDealerEvent;
 import com.ruoyi.web.event.UpdateWitCardDealerEventSource;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -47,6 +44,7 @@ import javax.validation.constraints.Size;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -162,7 +160,6 @@ public class AlipayDealOrderEntityController extends BaseController {
             alipayDealOrderEntityService.fillRiskReasonForWithdrwal(list);
         }
         //做风控判断 填充  riskReason  end
-
         //支付宝扫码 关联查询payinfo from medium start
         List<String> mediumIds = list.stream().filter(order -> order.getRetain1().contains("ALIPAY")).map(AlipayDealOrderEntity::getOrderQr).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(mediumIds)) {
@@ -218,10 +215,12 @@ public class AlipayDealOrderEntityController extends BaseController {
 
 
                 AlipayWithdrawEntity alipayWithdrawEntity = dataMap.get(order.getAssociatedId());
-                order.setBankAccount("入款信息：" + alipayWithdrawEntity.getBankName() + ":" + alipayWithdrawEntity.getAccname() + ":" + alipayWithdrawEntity.getBankNo() + " 金额 ：" + alipayWithdrawEntity.getAmount());
+                order.setBankAccount("入款：" + alipayWithdrawEntity.getBankName() + ":" + alipayWithdrawEntity.getAccname() + ":" + alipayWithdrawEntity.getBankNo() + " 金额 ：" + alipayWithdrawEntity.getAmount());
                 order.setOrderNo(alipayWithdrawEntity.getOrderId());
             }
             AlipayProductEntity product = prCollect.get(order.getRetain1());
+
+
             if (ObjectUtil.isNotNull(product)) {
                 order.setRetain1(product.getProductName());
             }
@@ -296,8 +295,22 @@ public class AlipayDealOrderEntityController extends BaseController {
     @RequiresPermissions("orderDeal:qr:status:updateBankCardShow")
     @Log(title = "修改出款卡商或拆单", businessType = BusinessType.INSERT)
     public String updateBankCardShow(ModelMap mmap, @PathVariable("userId") String orderId) {
+        String loginName =
+                ShiroUtils.getLoginName();
         //根据用户分组出 在途出款的金额
-
+        try {
+            reentrantLock.tryLock(10, TimeUnit.SECONDS);
+            String s = cache.get(orderId);
+            if (cache.get(orderId) != null && !loginName.equals(cache.get(orderId)) ){
+                mmap.put("errorMessage", "不允许重复操作,请联系："+cache.get(orderId)+"，操作");
+                return prefix + "/business";
+            }
+            cache.put(orderId, loginName);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            reentrantLock.unlock();
+        }
         List<AlipayDealOrderEntity> sumAmountOfPendingWithdralList = alipayDealOrderEntityService.getSumAmountOfPendingWithdralGroupByQrUser();
         Map sumAmountOfPendingWithdralMap = sumAmountOfPendingWithdralList.stream().filter(alipayDealOrderEntity -> StrUtil.isNotEmpty(alipayDealOrderEntity.getOrderQrUser())).map(alipayDealOrderEntity -> {
             String userId = alipayDealOrderEntity.getOrderQrUser();
@@ -362,12 +375,16 @@ public class AlipayDealOrderEntityController extends BaseController {
         alipayDealOrderEntity.setRecordType("2");
         alipayDealOrderEntity.setOrderId(orderId);
         alipayDealOrderEntityService.updateAlipayDealOrderEntityByOrder(alipayDealOrderEntity);*/
+        cache.remove(orderId);
         return prefix + "/updateBankCardEdit";
     }
 
     @Autowired
     private IAlipayMediumEntityService alipayMediumEntityService;
     private static final String MARK = ":";
+    private ReentrantLock reentrantLock = new ReentrantLock();
+    @CreateCache(name = "ALIPAY_WITHDRAWAL_LOCK_WIT:", expire = 600, timeUnit = TimeUnit.SECONDS, cacheType = CacheType.LOCAL)
+    private Cache<String, String> cache;
 
     /**
      * 代付主交易订单修改卡商账户
@@ -383,7 +400,19 @@ public class AlipayDealOrderEntityController extends BaseController {
         if (StrUtil.isEmpty(mediumNumber)) {
             return error("请选择银行卡");
         }
-
+        String loginName =
+                ShiroUtils.getLoginName();
+        try {
+            reentrantLock.tryLock(10, TimeUnit.SECONDS);
+            if (cache.get(orderId) != null&& !loginName.equals(cache.get(orderId))) {
+                return error("不允许重复操作,请联系："+cache.get(orderId)+"，操作");
+            }
+            cache.put(orderId, loginName);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            reentrantLock.unlock();
+        }
         String orderBankOld = "";
         String orderBankNew = "";
         String orderIdOld = "";
@@ -435,7 +464,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         }
         if (i == 1) {
             //发布事件通知前端刷新页面
-            applicationContext.publishEvent(new UpdateWitCardDealerEvent(UpdateWitCardDealerEventSource.of(orderId,ShiroUtils.getLoginName())));
+            applicationContext.publishEvent(new UpdateWitCardDealerEvent(UpdateWitCardDealerEventSource.of(orderId, ShiroUtils.getLoginName())));
             AlipayDealOrderEntity alipayDealOrderEntity = new AlipayDealOrderEntity();
             alipayDealOrderEntity.setOperater(ShiroUtils.getLoginName());
             alipayDealOrderEntity.setRecordType("2");
@@ -474,10 +503,25 @@ public class AlipayDealOrderEntityController extends BaseController {
         if (StrUtil.isEmpty(mediumNumber)) {
             return error("请选择银行卡");
         }
+        String loginName =
+                ShiroUtils.getLoginName();
+        //根据用户分组出 在途出款的金额
+        try {
+            reentrantLock.tryLock(10, TimeUnit.SECONDS);
+            if (cache.get(orderId) != null &&   !loginName.equals(cache.get(orderId))) {
+                return error("不允许重复操作,请联系："+cache.get(orderId)+"，操作");
+            }
+            cache.put(orderId, loginName);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            reentrantLock.unlock();
+        }
         String orderBankOld = "";
         String orderBankNew = "";
         String orderIdOld = "";
         Double dealAmount = 0.0;
+
         AlipayDealOrderEntity orderEntityList = new AlipayDealOrderEntity();
         int i = 0;
         try {
@@ -830,7 +874,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         AlipayDealOrderEntity orderEntity = alipayDealOrderEntityService.selectAlipayDealOrderEntityById(alipayDealOrderEntity.getId());
         //更新成功放缓存  在卡商出款时进行通知
         if (i == 1) {
-            applicationContext.publishEvent(new UpdateLockWitEvent(UpdateLockWitEventSource.of(orderEntity.getOrderId(),"0",ShiroUtils.getLoginName())));
+            applicationContext.publishEvent(new UpdateLockWitEvent(UpdateLockWitEventSource.of(orderEntity.getOrderId(), "0", ShiroUtils.getLoginName())));
             redisTemplate.opsForValue().set("ALIPAY_WITHDRAWAL_LOCKWIT:" + orderEntity.getOrderId(), "0", 600, TimeUnit.SECONDS);
         }
         exOrder.setOrderId(orderEntity.getOrderId());

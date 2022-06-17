@@ -159,7 +159,11 @@
 </div>
 <th:block th:include="include :: footer"/>
 <th:block th:include="include :: bootstrap-select-js"/>
+<style type="text/css">
+    .table {table-layout:fixed;word-break:break-all;}
+</style>
 <script th:inline="javascript">
+
     //权限
     const detailFlag = [[${@permission.hasPermi('orderDeal:qr:detail')}]];
     const backOrderFlag = [[${@permission.hasPermi('orderDeal:qr:backOrder')}]];
@@ -342,7 +346,7 @@
 
                 },
                 {
-                    field: 'orderQr', title: '银行卡信息', align: 'left', formatter: function (value, row, index) {
+                    field: 'orderQr', title: '银行卡信息', align: 'left',formatter: function (value, row, index) {
 
                         var table = '<table>'
                         //风控变色
@@ -357,7 +361,7 @@
                         }*/
                         if (null != row.payInfo && '' != row.payInfo) {
                             var valueWithBr = row.payInfo.replace(/;/g, '<br>');
-                            table += '<tr><td>回调：<a class="' + '" href="javascript:void(0)" onclick="layer.open({content: \'' + valueWithBr + '\'})">' + '<p style="display: block;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;width: 200px;">' + row.payInfo + '</p>' + '</a>';
+                            table += '<tr ><th  style="vertical-align: middle !important;text-align: center;" width="30%" > '+ '回调： ' + row.payInfo + '</th></tr>'  ;
                         }
                         if (1 == row.orderType && 'YES' == row.isNotify) {
                             table += '<tr><td>' + '回调已发送' + '</td></tr>'

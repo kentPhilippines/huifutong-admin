@@ -105,7 +105,8 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
         }
         List<AlipayWithdrawEntity> witOrders = iAlipayWithdrawEntityService.selectAlipayWithdrawEntityByIds(orderIds);//出款订单 入款人
 
-
+        List<AlipayMediumEntity> allMediums = iAlipayMediumEntityService.selectAll();
+        List<AlipayBankListEntity> banks = iAlipayBankListEntityService.selectAll();
         alipayDealOrders.stream().forEach(alipayDealOrder -> {
             List<String> reasonList = Lists.newArrayList();
             //条件1  1.出款卡 和入款卡的姓名,卡号匹配
@@ -122,8 +123,7 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
                     reasonList.add("短信内容包含出款人名字");
                 }
                 //条件 3.入款卡 卡号或者姓名 和内部卡(medium,bank_list) 匹配
-                List<AlipayMediumEntity> allMediums = iAlipayMediumEntityService.selectAll();
-                List<AlipayBankListEntity> banks = iAlipayBankListEntityService.selectAll();
+
                 if (allMediums.stream().anyMatch(alipayMediumEntity ->
                         withdrawEntity.getAccname().equalsIgnoreCase(alipayMediumEntity.getMediumHolder())
                                 || withdrawEntity.getBankNo().equalsIgnoreCase(alipayMediumEntity.getMediumNumber()))) {
