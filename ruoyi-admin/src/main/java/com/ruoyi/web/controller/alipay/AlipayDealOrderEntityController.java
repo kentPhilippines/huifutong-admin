@@ -801,7 +801,7 @@ public class AlipayDealOrderEntityController extends BaseController {
     @Log(title = "重置操作人", businessType = BusinessType.UPDATE)
     public AjaxResult resetOperater(String id) {
         AlipayDealOrderEntity order = alipayDealOrderEntityService.selectAlipayDealOrderEntityById(Long.valueOf(id));
-        order.setOperater(ShiroUtils.getLoginName());//
+        order.setOperater("");//
         int i = alipayDealOrderEntityService.updateAlipayDealOrderEntityByOrder(order);
         return toAjax(i);
     }
@@ -815,7 +815,7 @@ public class AlipayDealOrderEntityController extends BaseController {
     @Log(title = "重置抢单", businessType = BusinessType.UPDATE)
     public AjaxResult resetGrabOrder(String id) {
         AlipayDealOrderEntity order = alipayDealOrderEntityService.selectAlipayDealOrderEntityById(Long.valueOf(id));
-        order.setOperater(ShiroUtils.getLoginName());//
+        //order.setOperater(ShiroUtils.getLoginName());//
         order.setGrabOrder(2);//重新抢单
         int i = alipayDealOrderEntityService.updateAlipayDealOrderEntityByOrder(order);
         return toAjax(i);
