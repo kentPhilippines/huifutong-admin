@@ -544,7 +544,7 @@ public class AlipayMediumEntityController extends BaseController {
                 med.setMountLimit(score);
                 med.setQrcodeId(userId);
                 med.setMediumNote(bankName + ":" + bankAccount + ":参考余额:" + amount);
-                med.setMediumNumber(bankId);
+                med.setMediumNumber(bankId);D
 
                 AlipayMediumEntity mediumEntity = collect.get(bankId);
                 try {
@@ -566,7 +566,7 @@ public class AlipayMediumEntityController extends BaseController {
                         String error = mediumEntity.getError();
                         if ("1".equals(error)) {
                             med.setIsRed(1);
-                            med.setError("异常卡");
+                            med.setCode("异常卡");
                         }
                         if (new BigDecimal(fund).compareTo(new BigDecimal(500)) < 0) {
                             med.setIsRed(1);
