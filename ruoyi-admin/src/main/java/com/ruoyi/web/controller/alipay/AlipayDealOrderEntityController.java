@@ -300,8 +300,9 @@ public class AlipayDealOrderEntityController extends BaseController {
         //根据用户分组出 在途出款的金额
         try {
             reentrantLock.tryLock(10, TimeUnit.SECONDS);
-            if (cache.get(orderId) != null && loginName !=  cache.get(orderId)) {
-                mmap.put("errorMessage", "不允许重复操作,请联系："+loginName+"，操作");
+            String s = cache.get(orderId);
+            if (cache.get(orderId) != null && !loginName.equals(cache.get(orderId)) ){
+                mmap.put("errorMessage", "不允许重复操作,请联系："+cache.get(orderId)+"，操作");
                 return prefix + "/business";
             }
             cache.put(orderId, loginName);
@@ -399,26 +400,12 @@ public class AlipayDealOrderEntityController extends BaseController {
         if (StrUtil.isEmpty(mediumNumber)) {
             return error("请选择银行卡");
         }
-        try {
-            reentrantLock.tryLock(10, TimeUnit.SECONDS);
-            if (cache.get(orderId) != null) {
-                return error("不允许重复操作");
-            }
-            cache.put(orderId, orderId);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            reentrantLock.unlock();
-        }
-
-
         String loginName =
                 ShiroUtils.getLoginName();
-        //根据用户分组出 在途出款的金额
         try {
             reentrantLock.tryLock(10, TimeUnit.SECONDS);
-            if (cache.get(orderId) != null && loginName !=  cache.get(orderId)) {
-                return error("不允许重复操作,请联系："+loginName+"，操作");
+            if (cache.get(orderId) != null&& !loginName.equals(cache.get(orderId))) {
+                return error("不允许重复操作,请联系："+cache.get(orderId)+"，操作");
             }
             cache.put(orderId, loginName);
         } catch (InterruptedException e) {
@@ -521,8 +508,8 @@ public class AlipayDealOrderEntityController extends BaseController {
         //根据用户分组出 在途出款的金额
         try {
             reentrantLock.tryLock(10, TimeUnit.SECONDS);
-            if (cache.get(orderId) != null && loginName !=  cache.get(orderId)) {
-                return error("不允许重复操作,请联系："+loginName+"，操作");
+            if (cache.get(orderId) != null &&   !loginName.equals(cache.get(orderId))) {
+                return error("不允许重复操作,请联系："+cache.get(orderId)+"，操作");
             }
             cache.put(orderId, loginName);
         } catch (InterruptedException e) {
@@ -534,6 +521,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         String orderBankNew = "";
         String orderIdOld = "";
         Double dealAmount = 0.0;
+
         AlipayDealOrderEntity orderEntityList = new AlipayDealOrderEntity();
         int i = 0;
         try {
