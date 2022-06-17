@@ -222,6 +222,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="recordType != null ">recordType = #{recordType},</if>
             <if test="operater != null ">operater = #{operater},</if>
+            <if test="grabOrder != null ">grabOrder = #{grabOrder},</if>
             <if test="auditLog != null  and auditLog != ''">auditLog =  CONCAT(ifnull(auditLog,''),#{auditLog}),</if>
         </trim>
         where orderId = #{orderId}
