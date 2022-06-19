@@ -3,12 +3,15 @@ package com.ruoyi.system.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.json.JSONUtil;
 import com.alicp.jetcache.Cache;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.CreateCache;
+import com.ruoyi.alipay.domain.BankInfoSplitEntity;
 import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.enums.DataSourceType;
+import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.system.domain.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,5 +136,22 @@ public class AlipayMessageRegServiceImpl implements IAlipayMessageRegService {
         int i = alipayMessageRegMapper.deleteAlipayMessageRegById(id);
         refreshAllCache();
         return i;
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public BankInfoSplitEntity validate(AlipayMessageReg alipayMessageReg) {
+        String pattern = alipayMessageReg.getRegex();
+        String content = alipayMessageReg.getSourceMsg();
+        /**
+         * 银行卡，自己卡尾号，对方户名，对方卡尾号，交易时间,转账金额,余额
+         */
+        String extractStr = ReUtil.extractMulti(pattern, content, alipayMessageReg.getTemplate());
+        boolean isMatch = ReUtil.isMatch(pattern, content);
+        if(!isMatch)
+        {
+            throw new BusinessException("模板与内容不匹配，请检查数据。");
+        }
+        return BankInfoSplitEntity.of(extractStr);
     }
 }

@@ -3,6 +3,8 @@ package com.ruoyi.web.controller.alipay;
 import java.util.Date;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.alipay.domain.BankInfoSplitEntity;
 import com.ruoyi.framework.util.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +94,13 @@ public class AlipayMessageRegController extends BaseController
         alipayMessageReg.setCreatedDate(new Date());
         alipayMessageReg.setUpdateBy(ShiroUtils.getSysUser().getLoginName());
         return toAjax(alipayMessageRegService.insertAlipayMessageReg(alipayMessageReg));
+    }
+
+    @PostMapping("/validate")
+    @ResponseBody
+    public AjaxResult validate(AlipayMessageReg alipayMessageReg)
+    {
+        return AjaxResult.warn(alipayMessageRegService.validate(alipayMessageReg).getMsg());
     }
 
     /**

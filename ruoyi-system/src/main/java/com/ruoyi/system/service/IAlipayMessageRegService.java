@@ -1,5 +1,8 @@
 package com.ruoyi.system.service;
 
+import com.ruoyi.alipay.domain.BankInfoSplitEntity;
+import com.ruoyi.common.annotation.DataSource;
+import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.system.domain.AlipayMessageReg;
 import java.util.List;
 
@@ -60,4 +63,7 @@ public interface IAlipayMessageRegService
      * @return 结果
      */
     public int deleteAlipayMessageRegById(Long id);
+
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    BankInfoSplitEntity validate(AlipayMessageReg alipayMessageReg);
 }

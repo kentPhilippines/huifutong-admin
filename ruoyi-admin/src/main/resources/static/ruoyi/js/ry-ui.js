@@ -1065,6 +1065,24 @@ var table = {
                 };
                 $.ajax(config)
             },
+            ajaxSubmit: function (url, type, dataType, data,callback) {
+                var config = {
+                    url: url,
+                    type: type,
+                    dataType: dataType,
+                    data: data,
+                    beforeSend: function () {
+                        $.modal.loading("正在处理中，请稍后...");
+                    },
+                    success: function (result) {
+                        if (typeof callback == "function") {
+                            callback(result);
+                        }
+
+                    }
+                };
+                $.ajax(config)
+            },
             ajaxSubmit: function (url, type, dataType, data) {
                 var config = {
                     url: url,
@@ -1092,6 +1110,10 @@ var table = {
             // fixPost请求传输
             fixPost: function (url, data) {
                 $.operate.ajaxSubmit(url, "post", "json", data);
+            },
+            ajaxPostForm: function (url, data,callBack) {
+                debugger;
+                $.operate.notBackSubmit(url, "post", "json", data,callBack);
             },
             // get请求传输
             get: function (url, callback) {

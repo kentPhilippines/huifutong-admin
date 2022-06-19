@@ -85,7 +85,12 @@
                     <input name="remark2" class="form-control" type="text">
                 </div>
             </div>
-
+            <div class="form-group">
+                <a class="btn btn-danger multiple " onclick="validate();"
+                >
+                    <i class="fa fa-edit"></i> 校验模板
+                </a>
+            </div>
         </form>
     </div>
     <th:block th:include="include :: footer" />
@@ -113,6 +118,24 @@
             minView: "month",
             autoclose: true
         });
+
+
+        /* 校验模板 */
+        function validate() {
+            $.ajax({
+                type : "POST",
+                url : prefix + "/validate",
+                data : $('#form-reg-edit').serialize(),
+                async : false,
+                error : function(request) {
+                    $.modal.alertError("系统错误");
+                },
+                success : function(data) {
+
+                    $.operate.successCallback(data);
+                }
+            });
+        }
     </script>
 </body>
 </html>

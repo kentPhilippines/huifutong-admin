@@ -1,8 +1,18 @@
 package com.ruoyi.alipay.domain;
 
 
+import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.exception.BusinessException;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author water
@@ -10,6 +20,47 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 
 public class BankInfoSplitEntity extends BaseEntity {
+
+    public static void main(String[] args) {
+        BankInfoSplitEntity bankInfoSplitEntity = BankInfoSplitEntity.of("山东农商银行;5326;张兰英;5616;16:10;2700.00;3551.01;");
+        System.out.println(bankInfoSplitEntity.getMsg());
+        System.out.println(JSON.toJSONString(bankInfoSplitEntity));
+        System.out.println(JSONObject.toJSONString(bankInfoSplitEntity));
+        System.out.println(JSONUtil.toJsonStr(bankInfoSplitEntity));
+    }
+
+
+    public String getMsg()
+    {
+        String format = "模板校验成功，请确认以下解析信息,银行卡:%s，自己卡尾号:%s，对方户名:%s，对方卡尾号:%s，交易时间:%s,转账金额:%s,余额:%s";
+        return String.format(format,getBankName(),getMyselfTailNumber(),getCounterpartyAccountName(),getCounterpartyTailNumber(),getTransactionDate(),getTransactionDate(),getBalance());
+    }
+    /**
+     * 根据解析后的字符串构建对象
+     * 银行卡，自己卡尾号，对方户名，对方卡尾号，交易时间,转账金额,余额
+     * example:  山东农商银行;5326;张兰英;5616;16:10;2700.00;3551.01;
+     * @param extractString
+     * @return
+     */
+    public static BankInfoSplitEntity of(String extractString){
+        BankInfoSplitEntity entity = new BankInfoSplitEntity();
+        List<String> stringList = Arrays.asList(extractString.split(";"));
+        if(stringList.size()!=7)
+        {
+            throw new BusinessException("解析数据异常,元素大于或小于7："+extractString);
+        }
+        entity.setBankName(stringList.get(0));
+        entity.setMyselfTailNumber(stringList.get(1));
+        entity.setCounterpartyAccountName(stringList.get(2));
+        entity.setCounterpartyTailNumber(stringList.get(3));
+        entity.setTransactionDate(stringList.get(4));
+        entity.setTransactionAmount(stringList.get(5));
+        entity.setBalance(stringList.get(6));
+//        entity.setMsg(stringList);
+
+        return entity;
+    }
+
     private static final long serialVersionUID = 1L;
 
     /**
