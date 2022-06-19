@@ -93,6 +93,7 @@ public class AlipayMessageRegController extends BaseController
     {
         alipayMessageReg.setCreatedDate(new Date());
         alipayMessageReg.setUpdateBy(ShiroUtils.getSysUser().getLoginName());
+        alipayMessageRegService.validate(alipayMessageReg);//校验不通过会丢异常
         return toAjax(alipayMessageRegService.insertAlipayMessageReg(alipayMessageReg));
     }
 
@@ -123,6 +124,7 @@ public class AlipayMessageRegController extends BaseController
     @ResponseBody
     public AjaxResult editSave(AlipayMessageReg alipayMessageReg)
     {
+        alipayMessageRegService.validate(alipayMessageReg);//校验不通过会丢异常
         alipayMessageReg.setUpdateDate(new Date());
         alipayMessageReg.setUpdateBy(ShiroUtils.getSysUser().getLoginName());
         return toAjax(alipayMessageRegService.updateAlipayMessageReg(alipayMessageReg));

@@ -8,10 +8,10 @@
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-reg-add">
             <div class="form-group">
-                <label class="col-sm-3 control-label">银行名称
+                <label class="col-sm-3 control-label" is-required>银行名称
 ：</label>
                 <div class="col-sm-8">
-                    <textarea name="bankName" class="form-control"></textarea>
+                    <textarea name="bankName" class="form-control" required></textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -21,32 +21,32 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">原始短信案例：</label>
+                <label class="col-sm-3 control-label" is-required>原始短信案例：</label>
                 <div class="col-sm-8">
-                    <textarea name="sourceMsg" class="form-control"></textarea>
+                    <textarea name="sourceMsg" class="form-control" required></textarea>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">短信模板正则：</label>
+                <label class="col-sm-3 control-label" is-required>短信模板正则：</label>
                 <div class="col-sm-8">
-                    <textarea name="regex" class="form-control"></textarea>
+                    <textarea name="regex" class="form-control" required></textarea>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">短信模板占位：</label>
+                <label class="col-sm-3 control-label" is-required>短信模板占位：</label>
                 <div class="col-sm-8">
-                    <textarea name="template" class="form-control"></textarea>
+                    <textarea name="template" class="form-control" required></textarea>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">具体的交易方式
 ：</label>
                 <div class="col-sm-8">
-                    <textarea name="transactionTypeDetail" class="form-control"></textarea>
+                    <textarea name="transactionTypeDetail" class="form-control" ></textarea>
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">平台规定的交易方式：</label>
+                <label class="col-sm-3 control-label" >平台规定的交易方式：</label>
                 <div class="col-sm-8">
                     <select name="transactionType" th:with="type=${@dict.getType('transactionType')}">
                         <option th:each="dict : ${type}" th:text="${dict.dictLabel}"

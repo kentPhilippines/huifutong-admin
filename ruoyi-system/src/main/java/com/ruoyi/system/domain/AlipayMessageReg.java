@@ -4,6 +4,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 /**
@@ -21,6 +23,7 @@ public class AlipayMessageReg extends BaseEntity
 
     /** 银行名称
  */
+    @NotBlank(message="银行名称不能为空")
     @Excel(name = "银行名称")
     private String bankName;
 
