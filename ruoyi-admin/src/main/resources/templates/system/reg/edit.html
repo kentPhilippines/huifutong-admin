@@ -43,11 +43,9 @@
             <div class="form-group">    
                 <label class="col-sm-3 control-label">平台规定的交易方式：</label>
                 <div class="col-sm-8">
-                    <select name="transactionType" class="form-control m-b">
-                        <select name="transactionType" th:with="type=${@dict.getType('templateFlag')}">
-                            <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
-                                    th:value="${dict.dictValue}" th:field="*{transactionType}"></option>
-                        </select>
+                    <select name="transactionType" th:with="type=${@dict.getType('transactionType')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+                                th:value="${dict.dictValue}" th:field="*{transactionType}"></option>
                     </select>
                     <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
                 </div>
