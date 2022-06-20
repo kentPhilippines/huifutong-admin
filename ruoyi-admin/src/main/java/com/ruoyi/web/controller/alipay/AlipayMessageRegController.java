@@ -160,12 +160,13 @@ public class AlipayMessageRegController extends BaseController
                 return AjaxResult.error("解析为空");
             }
             int i = alipayMessageRegService.insertAlipayMessageReg(alipayMessageReg);
+            return toAjax(i);
         }catch (Exception e)
         {
             e.printStackTrace();
             return AjaxResult.error(e.getMessage());
         }
 
-        return toAjax(i);
+
     }
 }
