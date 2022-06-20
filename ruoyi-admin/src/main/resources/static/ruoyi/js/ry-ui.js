@@ -1383,6 +1383,9 @@ var table = {
                 else if (flag == 'editVerifyStatus') {
                     $.modal.open(title, $.operate.editVerifyStatus(id))
                 }
+                else if (flag == 'addContentTemple') {
+                    $.modal.open(title, $.operate.addContentTemple(id))
+                }
 
 
             },
@@ -1609,6 +1612,14 @@ var table = {
                 var url = "/404.html";
                 if ($.common.isNotEmpty(id)) {
                     url = table.options.editVerifyStatus.replace("{id}", id);
+                }
+                return url;
+            },
+
+            addContentTemple: function (id) {
+                var url = "/404.html";
+                if ($.common.isNotEmpty(id)) {
+                    url = table.options.addContentTempleUrl.replace("{id}", id);
                 }
                 return url;
             },

@@ -6,15 +6,13 @@ import java.util.List;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.alipay.domain.BankInfoSplitEntity;
 import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.system.domain.TemplateInfoSplitEntity;
+import com.ruoyi.system.service.impl.TemplateUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.domain.AlipayMessageReg;
@@ -141,5 +139,33 @@ public class AlipayMessageRegController extends BaseController
     {
 
         return toAjax(alipayMessageRegService.deleteAlipayMessageRegByIds(ids));
+    }
+
+    /**
+     * 新增短信正则模板
+     */
+    @GetMapping("/addTemplate")
+    public String addTemplate()
+    {
+        return prefix + "/addTemplate";
+    }
+
+    @ResponseBody
+    @PostMapping("/addTemplate")
+    public AjaxResult addTemplate( TemplateInfoSplitEntity templateInfoSplitEntity) {
+        AlipayMessageReg alipayMessageReg = null;
+        try {
+            alipayMessageReg =  TemplateUtil.insertTemplate(templateInfoSplitEntity);
+            if (null == alipayMessageReg) {
+                return AjaxResult.error("解析为空");
+            }
+            int i = alipayMessageRegService.insertAlipayMessageReg(alipayMessageReg);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return AjaxResult.error(e.getMessage());
+        }
+
+        return toAjax(i);
     }
 }

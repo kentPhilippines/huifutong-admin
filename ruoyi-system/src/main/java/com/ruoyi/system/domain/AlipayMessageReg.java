@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -14,10 +15,11 @@ import java.util.Date;
  * @author ruoyi
  * @date 2021-12-22
  */
+@Data
 public class AlipayMessageReg extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
-
+    private String blackKey;
     /** id */
     private Long id;
 

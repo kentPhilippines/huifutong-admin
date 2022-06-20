@@ -66,8 +66,11 @@
         </div>
 
         <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.openAccount('1','添加内容模板','addContentTemple')" >
+                <i class="fa fa-plus"></i> 添加内容模板
+            </a>
             <a class="btn btn-success" onclick="$.operate.add()" >
-                <i class="fa fa-plus"></i> 添加
+                <i class="fa fa-plus"></i> 添加正则模板
             </a>
             <a class="btn btn-primary single disabled" onclick="$.operate.edit()" >
                 <i class="fa fa-edit"></i> 修改
@@ -96,6 +99,7 @@
         var options = {
             url: prefix + "/list",
             createUrl: prefix + "/add",
+            addContentTempleUrl: prefix + "/addTemplate",
             updateUrl: prefix + "/edit/{id}",
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
