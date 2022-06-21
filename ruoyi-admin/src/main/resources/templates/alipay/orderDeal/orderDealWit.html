@@ -608,8 +608,11 @@
             skin: 'layui-layer-gray',
             btn: ['关闭'],
             yes: function (index, layero) {
-                layer.close(index);
+                var parent = window.parent;
+                parent.$.table.refresh();
                 $.table.refresh();
+                layer.close(index);
+
             }
         };
         $.modal.openOptions(options);
@@ -634,8 +637,12 @@
             skin: 'layui-layer-gray',
             btn: ['关闭'],
             yes: function (index, layero) {
-                layer.closeAll();
+                var parent = window.parent;
+                parent.$.table.refresh();
                 $.table.refresh();
+                layer.closeAll();
+
+
             }
         };
         $.modal.openOptions(options);
