@@ -456,6 +456,7 @@ public class AlipayDealOrderEntityController extends BaseController {
                     String mediumNumber1 = first.getMediumNumber();//银行卡号
                     String mediumPhone = first.getMediumPhone();
                     bankInfo = account + MARK + mediumHolder + MARK + mediumNumber1 + MARK + "电话" + MARK + mediumPhone;
+                    orderBankNew = mediumNumber;
                 }
             }
             i = alipayDealOrderEntityService.updateOrderQr(orderId, qrcodeId, bankInfo, rate.getId(), fee, profit);

@@ -292,6 +292,8 @@
             type: "get",
             url: prefix1 + "/updateBankCardMore?mediumNumber="+mediumNumber+"&qrcodeId="+qrcodeId+"&orderId="+orderId+"&amount="+amount,
             success: function (data) {
+                var parent = window.parent;
+                parent.$.table.refresh();
                 $.modal.close();
             }
         });
