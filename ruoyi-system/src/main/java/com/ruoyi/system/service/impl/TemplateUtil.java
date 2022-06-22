@@ -149,6 +149,7 @@ public class TemplateUtil {
         alipayMessageReg.setRemark2(remark2);
         alipayMessageReg.setTemplateFlag("1");
         alipayMessageReg.setBankName(bankName);
+        alipayMessageReg.setCreatedDate(new Date());
         if (match && StringUtils.isNotBlank(s)) {
             return alipayMessageReg;
         }
