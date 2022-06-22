@@ -67,8 +67,7 @@ public class TemplateInfoSplitEntity implements Serializable {
     //    @ApiModelProperty(value = "自己银行尾号程序解析错误时,强制走尾号正则,不常用,由技术判定是否添加", example = "无")
     private String remark2;
 
-    //    @ApiModelProperty(value = "客服不填写", example = "无")
-    private String userName;
+
 
     public String getOriginText() {
         return originText;
@@ -206,13 +205,6 @@ public class TemplateInfoSplitEntity implements Serializable {
         this.remark2 = remark2;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 
 
     public String getWildcardSize() {
