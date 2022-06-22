@@ -32,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectAlipayMessageRegList" parameterType="AlipayMessageReg" resultMap="AlipayMessageRegResult">
         <include refid="selectAlipayMessageRegVo"/>
         <where>
-            created_date between #{params.dayStart} and #{params.dayEnd}
+            1=1
             <if test="bankName != null  and bankName != ''"> and bank_name like concat('%', #{bankName}, '%')</if>
             <if test="sourcePhone != null  and sourcePhone != ''"> and source_phone = #{sourcePhone}</if>
             <if test="regex != null  and regex != ''"> and regex = #{regex}</if>
