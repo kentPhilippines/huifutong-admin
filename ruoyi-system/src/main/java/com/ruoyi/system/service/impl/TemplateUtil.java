@@ -2,16 +2,53 @@ package com.ruoyi.system.service.impl;
 
 import cn.hutool.core.util.ReUtil;
 import com.ruoyi.common.enums.TransactionTypeEnum;
+import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.system.domain.AlipayMessageReg;
 import com.ruoyi.system.domain.TemplateInfoSplitEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
 @Slf4j
 public class TemplateUtil {
-    public static AlipayMessageReg insertTemplate(TemplateInfoSplitEntity templateInfoSplitEntity) {
+    public static int getSpecialIndex(String n, String tem, String text) {
+        Integer x = StringUtils.isBlank(n) ? 1 : Integer.valueOf(n);
+        Matcher matcher = Pattern.compile(tem).matcher(text);
+        int index = 0;
+        while (matcher.find()) {
+            index++;
+            if (index == x.intValue()) {
+                break;
+            }
+        }
+        return matcher.start();
+    }
+
+    /**
+     * 客服运营人员走不同校验
+     *
+     * @param tem
+     * @param text
+     * @return
+     */
+    public static int duplicateTimes(String tem, String text, Boolean isDevelop) {
+        if (!isDevelop || StringUtils.isBlank(tem)) {
+            return 1;
+        }
+        Matcher matcher = Pattern.compile(tem).matcher(text);
+        int index = 0;
+        while (matcher.find()) {
+            index++;
+        }
+        return index;
+    }
+
+
+    public static AlipayMessageReg insertTemplate(TemplateInfoSplitEntity templateInfoSplitEntity, boolean isDevelop) {
         String regex = templateInfoSplitEntity.getOriginText();
         String originText = regex;
         regex = regex.replace("[", "\\[").replace("]", "\\]")
@@ -26,7 +63,9 @@ public class TemplateUtil {
         String transactionType = templateInfoSplitEntity.getTransactionType();
         String balance = templateInfoSplitEntity.getBalance();
         String wildcard = templateInfoSplitEntity.getWildcard();
+        String wildcardSize = templateInfoSplitEntity.getWildcardSize();
         String wildcard2 = templateInfoSplitEntity.getWildcard2();
+        String wildcard2Size = templateInfoSplitEntity.getWildcard2Size();
         String blackKey = templateInfoSplitEntity.getBlackKey();
         String spiltTail = templateInfoSplitEntity.getSpiltTail();
         String sourcePhone = templateInfoSplitEntity.getSourcePhone();
@@ -47,35 +86,59 @@ public class TemplateUtil {
             regex = regex.replace(bankName, re);
         }
         if (StringUtils.isNotBlank(counterpartyTailNumber)) {
+            if (duplicateTimes(counterpartyTailNumber, originText, isDevelop) > 1) {
+                throw new BusinessException("操作失败，请联系技术添加");
+            }
             counterpartyTailNumberIndex = regex.indexOf(counterpartyTailNumber);
             regex = regex.replace(counterpartyTailNumber, re);
         }
         if (StringUtils.isNotBlank(myselfTailNumber)) {
+            if (duplicateTimes(myselfTailNumber, originText, isDevelop) > 1) {
+                throw new BusinessException("操作失败，请联系技术添加");
+            }
             myselfTailNumberIndex = originText.indexOf(myselfTailNumber);
             regex = regex.replace(myselfTailNumber, re);
         }
         if (StringUtils.isNotBlank(counterpartyAccountName)) {
+            if (duplicateTimes(counterpartyAccountName, originText, isDevelop) > 1) {
+                throw new BusinessException("操作失败，请联系技术添加");
+            }
             counterpartyAccountNameIndex = originText.indexOf(counterpartyAccountName);
             regex = regex.replace(counterpartyAccountName, re);
         }
         if (StringUtils.isNotBlank(transactionDate)) {
+            if (duplicateTimes(transactionDate, originText, isDevelop) > 1) {
+                throw new BusinessException("操作失败，请联系技术添加");
+            }
             transactionDateIndex = originText.indexOf(transactionDate);
             regex = regex.replace(transactionDate, re);
         }
         if (StringUtils.isNotBlank(transactionAmount)) {
+            if (duplicateTimes(transactionAmount, originText, isDevelop) > 1) {
+                throw new BusinessException("操作失败，请联系技术添加");
+            }
             transactionAmountIndex = originText.indexOf(transactionAmount);
             regex = regex.replace(transactionAmount, re);
         }
         if (StringUtils.isNotBlank(balance)) {
+            if (duplicateTimes(balance, originText, isDevelop) > 1) {
+                throw new BusinessException("操作失败，请联系技术添加");
+            }
             balanceIndex = originText.indexOf(balance);
             regex = regex.replace(balance, re);
         }
         if (StringUtils.isNotBlank(wildcard)) {
-            wildcardIndex = originText.indexOf(wildcard);
+            if (duplicateTimes(wildcard, originText, isDevelop) > 1) {
+                throw new BusinessException("操作失败，请联系技术添加");
+            }
+            wildcardIndex = getSpecialIndex(wildcardSize, wildcard, originText);
             regex = regex.replace(wildcard, re);
         }
         if (StringUtils.isNotBlank(wildcard2)) {
-            wildcard2Index = originText.indexOf(wildcard2);
+            if (duplicateTimes(wildcard2, originText, isDevelop) > 1) {
+                throw new BusinessException("操作失败，请联系技术添加");
+            }
+            wildcard2Index = getSpecialIndex(wildcard2Size, wildcard2, wildcard2Size);
             regex = regex.replace(wildcard2, re);
         }
         String template = "bankIndex;myselfTailNumberIndex;counterpartyAccountNameIndex;counterpartyTailNumberIndex;transactionDateIndex;transactionAmountIndex;balanceIndex;";
@@ -118,13 +181,13 @@ public class TemplateUtil {
                 .replace("balanceIndex", "@");
         boolean match = ReUtil.isMatch(regex, originText);
         String s = ReUtil.extractMulti(regex, originText, template);
-        log.info(template);
-        log.info(regex);
-        log.info(bankName);
-        log.info(typeDetail);
-        log.info(transactionType);
-        log.info(s);
-        log.info(match+"");
+        System.out.println(template);
+        System.out.println(regex);
+        System.out.println(bankName);
+        System.out.println(typeDetail);
+        System.out.println(transactionType);
+        System.out.println(s);
+        System.out.println(match);
         AlipayMessageReg alipayMessageReg = new AlipayMessageReg();
         if (transactionType.equals("收入")) {
             transactionType = TransactionTypeEnum.income.name();
@@ -149,7 +212,6 @@ public class TemplateUtil {
         alipayMessageReg.setRemark2(remark2);
         alipayMessageReg.setTemplateFlag("1");
         alipayMessageReg.setBankName(bankName);
-        alipayMessageReg.setCreatedDate(new Date());
         if (match && StringUtils.isNotBlank(s)) {
             return alipayMessageReg;
         }
@@ -168,7 +230,7 @@ public class TemplateUtil {
         templateInfoSplitEntity.setTransactionType("支出");
         templateInfoSplitEntity.setTypeDetail("跨行实时汇出交易");
         templateInfoSplitEntity.setWildcard("备注：转账");
-        insertTemplate(templateInfoSplitEntity);
+        insertTemplate(templateInfoSplitEntity, true);
 
 //        BankInfoSplitEntity bankInfoSplitEntity = new BankInfoSplitEntity();
 //        bankInfoSplitEntity.setBankName("云南农信");

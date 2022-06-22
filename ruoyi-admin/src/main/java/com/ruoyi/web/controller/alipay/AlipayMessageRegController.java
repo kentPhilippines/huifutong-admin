@@ -8,6 +8,7 @@ import com.ruoyi.alipay.domain.BankInfoSplitEntity;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.TemplateInfoSplitEntity;
 import com.ruoyi.system.service.impl.TemplateUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,14 +25,13 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 短信正则模板Controller
- * 
+ *
  * @author ruoyi
  * @date 2021-12-22
  */
 @Controller
 @RequestMapping("/system/reg")
-public class AlipayMessageRegController extends BaseController
-{
+public class AlipayMessageRegController extends BaseController {
     private String prefix = "system/reg";
 
     @Autowired
@@ -39,8 +39,7 @@ public class AlipayMessageRegController extends BaseController
 
     @RequiresPermissions("system:reg:view")
     @GetMapping()
-    public String reg()
-    {
+    public String reg() {
         return prefix + "/reg";
     }
 
@@ -50,8 +49,7 @@ public class AlipayMessageRegController extends BaseController
     @RequiresPermissions("system:reg:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(AlipayMessageReg alipayMessageReg)
-    {
+    public TableDataInfo list(AlipayMessageReg alipayMessageReg) {
         startPage();
         List<AlipayMessageReg> list = alipayMessageRegService.selectAlipayMessageRegList(alipayMessageReg);
         return getDataTable(list);
@@ -64,8 +62,7 @@ public class AlipayMessageRegController extends BaseController
     @Log(title = "短信正则模板", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(AlipayMessageReg alipayMessageReg)
-    {
+    public AjaxResult export(AlipayMessageReg alipayMessageReg) {
         List<AlipayMessageReg> list = alipayMessageRegService.selectAlipayMessageRegList(alipayMessageReg);
         ExcelUtil<AlipayMessageReg> util = new ExcelUtil<AlipayMessageReg>(AlipayMessageReg.class);
         return util.exportExcel(list, "reg");
@@ -75,8 +72,7 @@ public class AlipayMessageRegController extends BaseController
      * 新增短信正则模板
      */
     @GetMapping("/add")
-    public String add()
-    {
+    public String add() {
         return prefix + "/add";
     }
 
@@ -87,8 +83,7 @@ public class AlipayMessageRegController extends BaseController
     @Log(title = "短信正则模板", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(AlipayMessageReg alipayMessageReg)
-    {
+    public AjaxResult addSave(AlipayMessageReg alipayMessageReg) {
         alipayMessageReg.setCreatedDate(new Date());
         alipayMessageReg.setUpdateBy(ShiroUtils.getSysUser().getLoginName());
         alipayMessageRegService.validate(alipayMessageReg);//校验不通过会丢异常
@@ -97,8 +92,7 @@ public class AlipayMessageRegController extends BaseController
 
     @PostMapping("/validate")
     @ResponseBody
-    public AjaxResult validate(AlipayMessageReg alipayMessageReg)
-    {
+    public AjaxResult validate(AlipayMessageReg alipayMessageReg) {
         return AjaxResult.warn(alipayMessageRegService.validate(alipayMessageReg).getMsg());
     }
 
@@ -106,8 +100,7 @@ public class AlipayMessageRegController extends BaseController
      * 修改短信正则模板
      */
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Long id, ModelMap mmap)
-    {
+    public String edit(@PathVariable("id") Long id, ModelMap mmap) {
         AlipayMessageReg alipayMessageReg = alipayMessageRegService.selectAlipayMessageRegById(id);
         mmap.put("alipayMessageReg", alipayMessageReg);
         return prefix + "/edit";
@@ -120,8 +113,7 @@ public class AlipayMessageRegController extends BaseController
     @Log(title = "短信正则模板", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(AlipayMessageReg alipayMessageReg)
-    {
+    public AjaxResult editSave(AlipayMessageReg alipayMessageReg) {
         alipayMessageRegService.validate(alipayMessageReg);//校验不通过会丢异常
         alipayMessageReg.setUpdateDate(new Date());
         alipayMessageReg.setUpdateBy(ShiroUtils.getSysUser().getLoginName());
@@ -133,10 +125,9 @@ public class AlipayMessageRegController extends BaseController
      */
     @RequiresPermissions("system:reg:remove")
     @Log(title = "短信正则模板", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
+    @PostMapping("/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
-    {
+    public AjaxResult remove(String ids) {
 
         return toAjax(alipayMessageRegService.deleteAlipayMessageRegByIds(ids));
     }
@@ -145,24 +136,27 @@ public class AlipayMessageRegController extends BaseController
      * 新增短信正则模板
      */
     @GetMapping("/addTemplate")
-    public String addTemplate()
-    {
+    public String addTemplate() {
         return prefix + "/addTemplate";
     }
 
     @ResponseBody
     @PostMapping("/addTemplate")
-    public AjaxResult addTemplate( TemplateInfoSplitEntity templateInfoSplitEntity) {
+    public AjaxResult addTemplate(TemplateInfoSplitEntity templateInfoSplitEntity) {
         AlipayMessageReg alipayMessageReg = null;
+        String loginName = ShiroUtils.getLoginName();
         try {
-            alipayMessageReg =  TemplateUtil.insertTemplate(templateInfoSplitEntity);
+            alipayMessageReg = TemplateUtil.insertTemplate(templateInfoSplitEntity,
+                    StringUtils.equals("jackchen", loginName)
+                            || StringUtils.equals("jackma", loginName)
+                            || StringUtils.equals("admin", loginName) ||
+                            StringUtils.equals("superman", templateInfoSplitEntity.getUserName()) ? true : false);
             if (null == alipayMessageReg) {
                 return AjaxResult.error("解析为空");
             }
             int i = alipayMessageRegService.insertAlipayMessageReg(alipayMessageReg);
             return toAjax(i);
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return AjaxResult.error(e.getMessage());
         }

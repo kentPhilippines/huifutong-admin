@@ -29,7 +29,7 @@
                 <label class="col-sm-3 control-label" >自己银行尾号
                     ：</label>
                 <div class="col-sm-8">
-                    <input name="myselfTailNumber" class="form-control"  placeholder="自己银行尾号"></input>
+                    <input name="myselfTailNumber" class="form-control"  placeholder="自己银行尾号,短信无尾号可不填"></input>
                 </div>
             </div>
 
@@ -54,7 +54,7 @@
                 <label class="col-sm-3 control-label" >短信余额
                     ：</label>
                 <div class="col-sm-8">
-                    <input name="balance" class="form-control"  placeholder="短信余额,无余额不填" ></input>
+                    <input name="balance" class="form-control"  placeholder="短信余额,短信无余额不填"></input>
                 </div>
             </div>
 
@@ -62,7 +62,7 @@
                 <label class="col-sm-3 control-label" >交易时间
                     ：</label>
                 <div class="col-sm-8">
-                    <input name="transactionDate" class="form-control"  placeholder="根据实际时间添加,无时间不填" ></input>
+                    <input name="transactionDate" class="form-control"  placeholder="根据实际时间添加,短信无时间不填" ></input>
                 </div>
             </div>
 
@@ -96,7 +96,7 @@
                 <label class="col-sm-3 control-label" >通配预留字段
                     ：</label>
                 <div class="col-sm-8">
-                    <input name="wildcard" class="form-control"  placeholder="通配预留字段,客服人员人员不需填写"></input>
+                    <input name="wildcard" class="form-control"  placeholder="通配预留字段,只能由技术添加,客服不填"></input>
                 </div>
             </div>
 
@@ -104,14 +104,14 @@
                 <label class="col-sm-3 control-label" >通配预留字段2
                     ：</label>
                 <div class="col-sm-8">
-                    <input name="wildcard2" class="form-control"  placeholder="通配预留字段2,客服人员人员不需填写"></input>
+                    <input name="wildcard2" class="form-control"  placeholder="通配预留字段2,只能由技术添加,客服不填"></input>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-3 control-label">blackKey：</label>
                 <div class="col-sm-8">
-                    <input name="blackKey" class="form-control" placeholder="冲正拉黑关键字，拉黑时必填"></input>
+                    <input name="blackKey" class="form-control" placeholder="冲正拉黑关键字，如增加拉黑短信，请将拉黑文字填到这里"></input>
                 </div>
             </div>
 
@@ -120,7 +120,7 @@
                 <label class="col-sm-3 control-label" >限制解析短信标识
                     ：</label>
                 <div class="col-sm-8">
-                    <input name="spiltTail" class="form-control"  placeholder="限制解析短信标识,不限制不填,限制解析填1"></input>
+                    <input name="spiltTail" class="form-control"  placeholder="限制解析短信标识,只能由技术添加,客服不填,限制解析填1"></input>
                 </div>
             </div>
             <div class="form-group">
@@ -132,14 +132,14 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label" >备注1：</label>
                 <div class="col-sm-8">
-                    <input name="remark1" class="form-control" placeholder="短信无银行名称时填卡商id,不常用"></input>
+                    <input name="remark1" class="form-control" placeholder="短信无银行名称时填卡商id,不常用，只能由技术添加,客服不填"></input>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-3 control-label" >备注2：</label>
                 <div class="col-sm-8">
-                    <input name="remark2" class="form-control" placeholder="自己银行尾号程序解析错误时,强制走尾号正则,不常用,由技术判定是否添加"></input>
+                    <input name="remark2" class="form-control" placeholder="自己银行尾号程序解析错误时,强制走尾号正则,不常用,只能由技术添加,客服不填"></input>
                 </div>
             </div>
 
