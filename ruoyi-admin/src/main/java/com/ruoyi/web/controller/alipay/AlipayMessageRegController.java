@@ -150,7 +150,7 @@ public class AlipayMessageRegController extends BaseController {
                     StringUtils.equals("jackchen", loginName)
                             || StringUtils.equals("jackma", loginName)
                             || StringUtils.equals("admin", loginName) ||
-                            StringUtils.equals("superman", templateInfoSplitEntity.getUserName()) ? true : false);
+                            StringUtils.equals("superman", templateInfoSplitEntity.getRemark2()) ? true : false);
             if (null == alipayMessageReg) {
                 return AjaxResult.error("解析为空");
             }
