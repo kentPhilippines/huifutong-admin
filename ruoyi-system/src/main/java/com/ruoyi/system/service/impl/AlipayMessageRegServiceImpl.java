@@ -36,7 +36,7 @@ public class AlipayMessageRegServiceImpl implements IAlipayMessageRegService {
     private AlipayMessageRegMapper alipayMessageRegMapper;
 
     @Autowired
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
    /* @CreateCache(name="allRegs_",cacheType = CacheType.REMOTE)
     private Cache<String, List<AlipayMessageReg>> alipayMessageRegCache;*/
 
@@ -59,9 +59,9 @@ public class AlipayMessageRegServiceImpl implements IAlipayMessageRegService {
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public void refreshAllCache() {
-        redisTemplate.opsForValue().set(prefixKey+appName, JSONUtil.toJsonStr(alipayMessageRegMapper.selectAll()));
+        redisTemplate.opsForValue().set(prefixKey + appName, JSONUtil.toJsonStr(alipayMessageRegMapper.selectAll()));
         //alipayMessageRegCache.put(appName, alipayMessageRegMapper.selectAll());
-        log.info("{} load {} rows AlipayMessageReg success!", prefixKey+appName, JSONUtil.parseArray(redisTemplate.opsForValue().get(prefixKey+appName)).size());
+        log.info("{} load {} rows AlipayMessageReg success!", prefixKey + appName, JSONUtil.parseArray(redisTemplate.opsForValue().get(prefixKey + appName)).size());
     }
 
     @Override
@@ -141,6 +141,9 @@ public class AlipayMessageRegServiceImpl implements IAlipayMessageRegService {
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public BankInfoSplitEntity validate(AlipayMessageReg alipayMessageReg) {
+        if (alipayMessageReg.getTemplateFlag().equals("1")){
+            return null ;
+        }
         String pattern = alipayMessageReg.getRegex();
         String content = alipayMessageReg.getSourceMsg();
         /**
@@ -148,8 +151,7 @@ public class AlipayMessageRegServiceImpl implements IAlipayMessageRegService {
          */
         String extractStr = ReUtil.extractMulti(pattern, content, alipayMessageReg.getTemplate());
         boolean isMatch = ReUtil.isMatch(pattern, content);
-        if(!isMatch)
-        {
+        if (!isMatch) {
             throw new BusinessException("模板与内容不匹配，请检查数据。");
         }
         return BankInfoSplitEntity.of(extractStr);
