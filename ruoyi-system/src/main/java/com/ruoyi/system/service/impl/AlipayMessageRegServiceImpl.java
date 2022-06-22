@@ -141,7 +141,7 @@ public class AlipayMessageRegServiceImpl implements IAlipayMessageRegService {
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public BankInfoSplitEntity validate(AlipayMessageReg alipayMessageReg) {
-        if (alipayMessageReg.getTemplateFlag().equals("1")){
+        if (!alipayMessageReg.getTemplateFlag().equals("1")){
             return null ;
         }
         String pattern = alipayMessageReg.getRegex();
