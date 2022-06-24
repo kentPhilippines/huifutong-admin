@@ -15,6 +15,8 @@
 
         <div class="col-sm-12 search-collapse">
             <form id="formId">
+                <input type="hidden" name="orderType" th:value="4">
+                <input type="hidden" name="currency" th:value="CNY">
                 <div class="select-list">
                     <ul>
                         <li>
@@ -41,67 +43,43 @@
                             <span>银行卡信息：</span>
                             <input type="text" name="orderQr"/>
                         </li>
-                        <li class="select-selectpicker">
-                            <label>货币类型： </label>
-                            <select class="selectpicker" data-none-selected-text="请选择" id="currency"
-                                    name="currency" th:with="type=${@dict.getType('currency')}">
-                                <option value="">所有</option>
-                                <option th:each="dict : ${type}" th:selected="${dict.dictLabel}=='CNY'? 'selected':''"
-                                        th:text="${dict.dictLabel}"
-                                        th:value="${dict.dictValue}"></option>
-                            </select>
-                        </li>
+
                         <li>
                             <span>订单金额：</span>
                             <input type="text" id="exactlyAmount" placeholder="准确金额"
-                                   name="params[exactlyAmount]"/>
+                                   name="params[exactlyAmount]" style="width: 100px;"/>
 
                             <input type="text" id="minAmount" placeholder="最小金额"
-                                   name="params[minAmount]"/>
+                                   name="params[minAmount]" style="width: 100px;"/>
                             <span>-</span>
                             <input type="text" id="maxAmount" placeholder="最大金额"
-                                   name="params[maxAmount]"/>
+                                   name="params[maxAmount]" style="width: 100px;"/>
 
 
                         </li>
                         <li class="select-selectpicker">
                             <label>产品类型：</label>
-                            <select class="selectpicker" data-none-selected-text="请选择" id="retain1" name="retain1">
+                            <select class="selectpicker" data-none-selected-text="请选择" id="retain1" name="retain1" data-width="100px">
                                 <option value="">所有</option>
                                 <option th:each="product : ${productList}" th:text="${product.productName}"
                                         th:value="${product.productId}"></option>
                             </select>
                         </li>
-                        <li class="select-selectpicker">
-                            <label>订单类型：</label>
-                            <select class="selectpicker" data-none-selected-text="请选择" id="orderType" name="orderType">
-                                <option value="4">商户代付渠道主交易订单</option>
 
-                            </select>
-                        </li>
                         <li class="select-selectpicker">
                             <label>卡商代付订单审核：</label>
-                            <select class="selectpicker" data-none-selected-text="请选择" id="enterPay" name="enterPay">
+                            <select class="selectpicker" data-none-selected-text="请选择" id="enterPay" name="enterPay" data-width="100px">
                                 <option value="">所有</option>
                                 <option value="1">已审核</option>
                                 <option value="0">未审核</option>
                             </select>
                         </li>
-                        <li class="select-selectpicker">
-                            <label>渠道类型：</label>
-                            <select class="selectpicker"
-                                    data-none-selected-text="请选择" id="orderQrUser"
-                                    name="orderQrUser">
-                                <option value="">所有</option>
-                                <option th:each="channel : ${rateList}" th:text="${channel.userName}"
-                                        th:value="${channel.userId}"></option>
-                            </select>
-                        </li>
+
                         <li class="select-selectpicker">
                             <label>记录类型：</label>
                             <select class="selectpicker"
                                     data-none-selected-text="请选择" id="recordType"
-                                    name="recordType">
+                                    name="recordType" data-width="100px">
                                 <option value="">所有</option>
                                 <option value="1">补单</option>
                                 <option value="2">切换卡商</option>
@@ -115,7 +93,7 @@
                         <li class="select-selectpicker">
                             <label>订单状态： </label>
                             <select id="orderStatus" name="orderStatus" th:with="type=${@dict.getType('orderStatus')}"
-                                    class="selectpicker" data-none-selected-text="请选择">
+                                    class="selectpicker" data-none-selected-text="请选择" data-width="100px">
                                 <option value="">所有</option>
                                 <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
                                         th:value="${dict.dictValue}"
@@ -222,7 +200,6 @@
                         return table;
                     }
                 },
-                // {field: 'associatedId', title: '关联订单'},
                 {
                     field: 'orderAccount', title: '账号详情', align: 'left', formatter: function (value, row, index) {
                         var table = '<table>'
@@ -238,21 +215,7 @@
                         return table;
                     }
                 },
-                // {field: 'userName', title: '商户昵称'},
-                /*      {
-                          field: 'orderQrUser', title: '渠道账户', formatter: function (value, row, index) {
-                              var table = '<ul>'
-                              if(row.orderQrUser == 'zhongbang-bank'){
-                                  row.orderQrUser = '切款账户';
-                              }
-                              table += '<li>' + '渠道账号：' + row.orderQrUser + '</li>'
-                          //    table += '<li>' + '渠道昵称：' + row.channelName + '</li>'
-                              table += '<li>' + '产品类型：' + row.retain1 + '</li>'
-                              table += '</ul>'
-                              return table;
-                          }
-                      },*/
-                // {field: 'channelName', title: '渠道昵称'},
+
                 {
                     field: 'orderType', title: '类型&操作状态', align: 'left', formatter: function (value, row, index) {
                         if (value == 1) {
@@ -290,25 +253,7 @@
                         }
                     }
                 },
-                /*{
-                    field: 'orderStatus', title: '状态',
-                    formatter: function (value, row, index) {
-                        var table = '<ul>'
-                        table += '<li><span ><strong>'  + $.table.selectDictLabel(orderstatusDatas, value) + '</strong></span></li>'
 
-                        table += '</ul>'
-
-
-                        return  table;
-                    }
-                },*/
-                /* {
-                     field: 'autiSuccess', title: '自动出款状态',
-                     formatter: function (value, row, index) {
-                         return  $.table.selectDictLabel(autiSuccess, value);
-                     }
-                 },*/
-                // {field: 'externalOrderId',   title: '外部订单号'},
                 {
                     field: 'dealAmount', title: '交易情况', align: 'left',
                     footerFormatter: function (rows) {
@@ -370,9 +315,7 @@
                         return table;
                     }
                 },
-                /*                {   field: 'orderQr',       title: '关联二维码'  },*/
-                /*
-                {   field: 'isNotify',      title: '发送通知'   },*/
+
                 {
                     field: 'payImg', title: '出款凭证', align: 'left',
                     formatter: function (value, row, index) {
