@@ -363,6 +363,11 @@ $(function() {
 		//获得消息事件
 		index.onmessage = function(msg) {
 			console.log("获得消息："+msg.data);
+			if(!isJsonString(msg.data))
+			{
+				//不是json协议的内容返回 防止报错
+				return;
+			}
 			const obj = JSON.parse(msg.data);
 			//var obj = {"orderId":"BW20220607083301828596658","operateUserId":"kent","lockWitStatus":"0","cmdKey":"RELEASE_LOCKWIT","message":"kent已经解锁出款订单BW20220607083301828596658"};
 			console.log(obj.cmdKey=='RELEASE_LOCKWIT');
