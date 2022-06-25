@@ -238,7 +238,7 @@
                                 table += '<tr><td>' + '<span class="badge badge-info">抢单出款</span>' + '</td></tr>'
                             }
                             if (2 == row.grabOrder || '2' == row.grabOrder) {//卡商放弃出款
-                                table += '<tr><td>' + '<span class="badge badge-warning">放弃出款</span>' + '</td></tr>'
+                                table += '<tr><td>' + '<span class="badge badge-warning" style="background-color:purple; ">放弃出款</span>' + '</td></tr>'
                             }
                             if (row.autiSuccess != 0) {
                                 table += '<tr><td><span class="badge badge-warning">自动出款' + $.table.selectDictLabel(autiSuccess, row.autiSuccess) + '</span></td></tr>'
