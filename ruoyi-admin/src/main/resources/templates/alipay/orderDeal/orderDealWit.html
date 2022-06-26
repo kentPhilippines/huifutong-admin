@@ -59,7 +59,7 @@
                         </li>
                         <li class="select-selectpicker">
                             <label>产品类型：</label>
-                            <select class="selectpicker" data-none-selected-text="请选择" id="retain1" name="retain1" data-width="100px">
+                            <select class="selectpicker" data-none-selected-text="请选择" id="retain1" name="retain1">
                                 <option value="">所有</option>
                                 <option th:each="product : ${productList}" th:text="${product.productName}"
                                         th:value="${product.productId}"></option>
@@ -137,9 +137,6 @@
 </div>
 <th:block th:include="include :: footer"/>
 <th:block th:include="include :: bootstrap-select-js"/>
-<style type="text/css">
-    .table {table-layout:fixed;word-break:break-all;}
-</style>
 <script th:inline="javascript">
 
     //权限
@@ -200,15 +197,19 @@
                         return table;
                     }
                 },
+                // {field: 'associatedId', title: '关联订单'},
                 {
                     field: 'orderAccount', title: '账号详情', align: 'left', formatter: function (value, row, index) {
                         var table = '<table>'
-                        table += '<tr><td>' + '商户：' + row.orderAccount + '</td></tr>'
                         if (row.orderQrUser == 'zhongbang-bank') {
                             row.orderQrUser = '切款';
+                            table = '<table style="background-color: orange">';
                         } else if (row.orderQrUser == 'zhongbang-bank-s') {
+                            table = '<table style="background-color: rgba(156,187,163,0.74)">';
                             row.orderQrUser = '切款';
                         }
+                        table += '<tr><td>' + '商户：' + row.orderAccount + '</td></tr>'
+
                         table += '<tr><td>' + '渠道：' + row.orderQrUser + '</td></tr>'
                         table += '<tr><td>' + '产品：' + row.retain1 + '</td></tr>'
                         table += '</table>'
@@ -306,7 +307,7 @@
                         }*/
                         if (null != row.payInfo && '' != row.payInfo) {
                             var valueWithBr = row.payInfo.replace(/;/g, '<br>');
-                            table += '<tr ><th  style="vertical-align: middle !important;text-align: center;" width="30%" > '+ '回调： ' + row.payInfo + '</th></tr>'  ;
+                            table += '<tr ><th> <!-- style="vertical-align: middle !important;text-align: center;" width="30%" --> '+ '回调： ' + row.payInfo + '</th></tr>'  ;
                         }
                         if (1 == row.orderType && 'YES' == row.isNotify) {
                             table += '<tr><td>' + '回调已发送' + '</td></tr>'
@@ -317,7 +318,7 @@
                 },
 
                 {
-                    field: 'payImg', title: '出款凭证', align: 'left',
+                    field: 'payImg', title: '出款凭证',
                     formatter: function (value, row, index) {
                         if (row.orderType == 4 && 2 == row.orderStatus) {
                             if (null != row.payImg && "" != row.payImg) {
@@ -551,11 +552,8 @@
             skin: 'layui-layer-gray',
             btn: ['关闭'],
             yes: function (index, layero) {
-                var parent = window.parent;
-                parent.$.table.refresh();
-                $.table.refresh();
                 layer.close(index);
-
+                $.table.refresh();
             }
         };
         $.modal.openOptions(options);
