@@ -19,10 +19,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="retain2"    column="retain2"    />
         <result property="retain3"    column="retain3"    />
         <result property="retain4"    column="retain4"    />
+        <result property="queueList"    column="queueList"    />
     </resultMap>
 
     <sql id="selectAlipayUserRateEntityVo">
-        select id, userId, userType, switchs,channelId, payTypr, fee, feeType, createTime, submitTime, status, retain1, retain2, retain3, retain4 from alipay_user_rate
+        select id, userId, userType, switchs,queueList,channelId, payTypr, fee, feeType, createTime, submitTime, status, retain1, retain2, retain3, retain4 from alipay_user_rate
     </sql>
 
     <select id="selectAlipayUserRateEntityList" parameterType="AlipayUserRateEntity" resultMap="AlipayUserRateEntityResult">
@@ -66,6 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="retain2 != null ">retain2,</if>
             <if test="retain3 != null ">retain3,</if>
             <if test="retain4 != null ">retain4,</if>
+            <if test="queueList != null ">queueList,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null  and userId != ''">#{userId},</if>
@@ -82,6 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="retain2 != null ">#{retain2},</if>
             <if test="retain3 != null ">#{retain3},</if>
             <if test="retain4 != null ">#{retain4},</if>
+            <if test="queueList != null ">#{queueList},</if>
          </trim>
     </insert>
 
@@ -102,6 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="retain2 != null and retain2 != '' ">retain2 = #{retain2},</if>
             <if test="retain3 != null and retain3 != '' ">retain3 = #{retain3},</if>
             <if test="retain4 != null and retain4 != '' ">retain4 = #{retain4},</if>
+            <if test="queueList != null and queueList != '' ">queueList = #{queueList},</if>
         </trim>
         where id = #{id}
     </update>
@@ -174,6 +178,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="retain2 != null ">retain2,</if>
             <if test="retain3 != null ">retain3,</if>
             <if test="retain4 != null ">retain4,</if>
+            <if test="queueList != null ">queueList,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null  and userId != ''">#{userId},</if>
@@ -190,6 +195,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="retain2 != null ">#{retain2},</if>
             <if test="retain3 != null ">#{retain3},</if>
             <if test="retain4 != null ">#{retain4},</if>
+            <if test="queueList != null ">#{queueList},</if>
         </trim>
     </insert>
 

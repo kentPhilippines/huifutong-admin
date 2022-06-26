@@ -36,7 +36,7 @@
                 <label th:each="qr:${qrInfo}" class="check-box">
                     <input name="qrUserIds" type="checkbox" th:value="${qr.userId}" th:text="${qr.userId}"
                            th:checked="${qr.checkFlag}"
-                           th:disabled="${qr.switchs == 0}">
+                           th:disabled="true">
                 </label>
             </div>
         </div>

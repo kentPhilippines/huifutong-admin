@@ -11,13 +11,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.alipay.domain.*;
 import com.ruoyi.alipay.service.*;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.constant.StaticConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.RSAUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.dealpay.domain.DealpayUserInfoEntity;
+import com.ruoyi.framework.util.DictionaryUtils;
 import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.system.domain.SysDictData;
+import com.ruoyi.system.service.impl.SysDictDataServiceImpl;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -142,6 +148,10 @@ public class AlipayUserRateEntityController extends BaseController {
         }
         return null;
     }
+    @Autowired
+    private DictionaryUtils dictionaryUtils;
+    @Autowired
+    private SysDictDataServiceImpl sysDictDataServiceImpl;
 
     /*
      * 修改用户产品费率
@@ -157,6 +167,34 @@ public class AlipayUserRateEntityController extends BaseController {
         List<AlipayUserFundEntity> rateList = alipayUserFundEntityService.findUserFundRate();
         mmap.put("rateList", rateList);
         mmap.put("alipayUserRateEntity", alipayUserRateEntity);
+
+        DealpayUserInfoEntity dealpayUserInfoEntity = new DealpayUserInfoEntity();
+        // List<DealpayUserInfoEntity> list = dealpayUserInfoService.selectdealpayUserInfoByAgent(dealpayUserInfoEntity);
+        List<AlipayUserInfo> arlist =  new ArrayList<>();
+        List<SysDictData> qrcodeId = sysDictDataServiceImpl.selectDictDataByType("qrcodeId");
+        for (SysDictData data  : qrcodeId){
+            String dictLabel = data.getDictLabel();
+            String dictValue = data.getDictValue();
+            AlipayUserInfo info = new AlipayUserInfo();
+            info.setUserId(dictValue);
+            info.setUserName(dictLabel);
+            arlist.add(info);
+        }
+        if (alipayUserRateEntity == null) {
+            throw new BusinessException("费率不存在");
+        }
+        if(StringUtils.isEmpty(alipayUserRateEntity.getQueueList())){
+            mmap.put("qrInfo",arlist);
+        } else {
+            String[] str = alipayUserRateEntity.getQueueList().split(",");
+            List<String> qrlist = Arrays.asList(str);
+            for (AlipayUserInfo item : arlist) {
+                if (qrlist.contains(item.getUserId())) {
+                    item.setCheckFlag(true);
+                }
+            }
+            mmap.put("qrInfo",arlist);
+        }
         return prefix + "/edit";
     }
 
