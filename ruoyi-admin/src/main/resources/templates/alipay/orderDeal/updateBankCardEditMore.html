@@ -153,7 +153,7 @@
                     align: 'left',
                     formatter: function (value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-primary btn-xs  " onclick="enters(\'' + row.mediumNumber + '\',\'点击选中\',\'backOrderUrl\')"><i class="fa fa-plus"></i>点击选中</a> ');
+                        actions.push('<a class="btn btn-primary btn-xs  " onclick="enters(\'' + row.mediumNumber+'\',\''+row.qrcodeId + '\',\'点击选中\',\'backOrderUrl\')"><i class="fa fa-plus"></i>点击选中</a> ');
                         return actions.join('');
                     }
                 },
@@ -299,7 +299,7 @@
         });
     }
 
-    function enters(id,title,flag) {
+    function enters(id,qrcodeId,title,flag) {
         $("#mediumNumber").val(id)
         $("#qrcodeId").val(qrcodeId)
         $.modal.alertWarning("已选中银行卡"+id);
