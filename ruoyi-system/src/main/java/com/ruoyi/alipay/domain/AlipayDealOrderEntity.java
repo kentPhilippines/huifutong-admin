@@ -339,7 +339,7 @@ public class AlipayDealOrderEntity extends BaseEntity {
      * 数据修改时间
      */
     @Excel(name = "数据修改时间", width = 30, dateFormat = DatePattern.NORM_DATETIME_PATTERN)
-    @JsonFormat(pattern = "MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date submitTime;
 
     /**
