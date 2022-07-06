@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class TemplateUtil {
+    private static final String CHINESE_REG ="([\\u4e00-\\u9fa5]*)";
+    private static final String ALL_REG ="(.*)";
     public static int getSpecialIndex(String n, String tem, String text) {
         Integer x = StringUtils.isBlank(n) ? 1 : Integer.valueOf(n);
         Matcher matcher = Pattern.compile(tem).matcher(text);
@@ -104,7 +106,7 @@ public class TemplateUtil {
                 throw new BusinessException("操作失败，请联系技术添加");
             }
             counterpartyAccountNameIndex = originText.indexOf(counterpartyAccountName);
-            regex = regex.replace(counterpartyAccountName, re);
+            regex = regex.replace(counterpartyAccountName, CHINESE_REG);//姓名只可能是中文
         }
         if (StringUtils.isNotBlank(transactionDate)) {
             if (duplicateTimes(transactionDate, originText, isDevelop) > 1) {
