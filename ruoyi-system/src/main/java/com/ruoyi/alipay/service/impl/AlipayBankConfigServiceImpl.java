@@ -3,7 +3,9 @@ package com.ruoyi.alipay.service.impl;
 import com.ruoyi.alipay.domain.AlipayBankConfig;
 import com.ruoyi.alipay.mapper.AlipayBankConfigMapper;
 import com.ruoyi.alipay.service.IAlipayBankConfigService;
+import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.core.text.Convert;
+import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ public class AlipayBankConfigServiceImpl implements IAlipayBankConfigService
      * @return bankconfig
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public AlipayBankConfig selectAlipayBankConfigById(Integer id)
     {
         return alipayBankConfigMapper.selectAlipayBankConfigById(id);
@@ -41,6 +44,7 @@ public class AlipayBankConfigServiceImpl implements IAlipayBankConfigService
      * @return bankconfig
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public List<AlipayBankConfig> selectAlipayBankConfigList(AlipayBankConfig alipayBankConfig)
     {
         return alipayBankConfigMapper.selectAlipayBankConfigList(alipayBankConfig);
@@ -53,6 +57,7 @@ public class AlipayBankConfigServiceImpl implements IAlipayBankConfigService
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int insertAlipayBankConfig(AlipayBankConfig alipayBankConfig)
     {
         alipayBankConfig.setCreateTime(DateUtils.getNowDate());
@@ -66,6 +71,7 @@ public class AlipayBankConfigServiceImpl implements IAlipayBankConfigService
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int updateAlipayBankConfig(AlipayBankConfig alipayBankConfig)
     {
         return alipayBankConfigMapper.updateAlipayBankConfig(alipayBankConfig);
@@ -78,6 +84,7 @@ public class AlipayBankConfigServiceImpl implements IAlipayBankConfigService
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int deleteAlipayBankConfigByIds(String ids)
     {
         return alipayBankConfigMapper.deleteAlipayBankConfigByIds(Convert.toStrArray(ids));
@@ -90,6 +97,7 @@ public class AlipayBankConfigServiceImpl implements IAlipayBankConfigService
      * @return 结果
      */
     @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int deleteAlipayBankConfigById(Integer id)
     {
         return alipayBankConfigMapper.deleteAlipayBankConfigById(id);
