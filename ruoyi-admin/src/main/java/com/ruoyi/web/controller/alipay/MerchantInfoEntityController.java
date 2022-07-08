@@ -75,6 +75,7 @@ public class MerchantInfoEntityController extends BaseController {
         SysUser userf = new SysUser();
         startPage();
         userInfolist = merchantInfoEntityService.selectMerchantInfoEntityList(merchantInfoEntity);
+        TableDataInfo tableDataInfo = getDataTable(userInfolist);
         if (CollectionUtils.isNotEmpty(userInfolist)) {
             List<String> loginNames = userInfolist.stream().map(AlipayUserInfo::getUserId).collect(Collectors.toList());
             List<SysUser> sysUsers = userService.selectUserByLoginNames(loginNames);
@@ -89,7 +90,7 @@ public class MerchantInfoEntityController extends BaseController {
                 }
             });
         }
-        return getDataTable(userInfolist);
+        return tableDataInfo;
     }
 
     /**
