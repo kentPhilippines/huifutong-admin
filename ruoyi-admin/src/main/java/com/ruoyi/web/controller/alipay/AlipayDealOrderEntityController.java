@@ -551,6 +551,10 @@ public class AlipayDealOrderEntityController extends BaseController {
             fee = fee * nowAmount;
             Double profit = Double.valueOf(orderEntityList.getRetain3());
             profit = Double.valueOf(orderEntityList.getDealFee()) - fee;
+            if(nowAmount==0)
+            {
+                return error("拆单后金额不能为0");
+            }
             int a = alipayDealOrderEntityService.updateAmountOrder(nowAmount, orderId, fee, profit);
             orderEntityList.setOrderId(findOderId(orderEntityList.getOrderId()));
             orderEntityList.setOrderQrUser(qrcodeId);

@@ -292,9 +292,15 @@
             type: "get",
             url: prefix1 + "/updateBankCardMore?mediumNumber="+mediumNumber+"&qrcodeId="+qrcodeId+"&orderId="+orderId+"&amount="+amount,
             success: function (data) {
-                var parent = window.parent;
-                parent.$.table.refresh();
-                $.modal.close();
+                if(data.code==200)
+                {
+                    var parent = window.parent;
+                    parent.$.table.refresh();
+                    $.modal.close();
+                }else {
+                    $.modal.alertWarning("拆单失败："+data.msg);
+                }
+
             }
         });
     }
