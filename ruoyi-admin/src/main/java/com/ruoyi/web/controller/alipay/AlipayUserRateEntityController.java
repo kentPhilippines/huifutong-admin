@@ -11,7 +11,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.alipay.domain.*;
 import com.ruoyi.alipay.service.*;
 import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.constant.StaticConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -372,7 +371,10 @@ public class AlipayUserRateEntityController extends BaseController {
         if (ObjectUtil.isNull(channel)) {
             return error("当前渠道未接通，请联系技术人员对接");
         }
-        return toAjax(alipayUserRateEntityService.updateAlipayUserRateEntity(alipayUserRateEntity));
+        int i =alipayUserRateEntityService.updateAlipayUserRateEntity(alipayUserRateEntity);
+        //todo 这里做商户费率缓存给网关抢单查询的时候调用
+        alipayUserRateEntityService.getAndRefreshAlipayMerchantRateCache("2");
+        return toAjax(i);
     }
 
     @GetMapping("/paytest")

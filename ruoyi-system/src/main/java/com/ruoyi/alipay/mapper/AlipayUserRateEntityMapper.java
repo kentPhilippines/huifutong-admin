@@ -195,6 +195,9 @@ public interface AlipayUserRateEntityMapper {
     @Select("select * from alipay_user_rate where feeType = 1 and userId =  #{userId}")
     List<AlipayUserRateEntity> findMerchantChargeRate(@Param("userId") String userId);
 
+    @Select("select * from alipay_user_rate where feeType = #{feeType} and userType ='1'")
+    List<AlipayUserRateEntity> findAllMerchantRateByFeeType(@Param("feeType") String feeType);
+
     /**
      * 查询卡商出款费率
      *

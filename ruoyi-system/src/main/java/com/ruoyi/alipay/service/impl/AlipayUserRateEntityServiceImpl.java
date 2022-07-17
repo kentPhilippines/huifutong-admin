@@ -3,6 +3,7 @@ package com.ruoyi.alipay.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.ruoyi.alipay.domain.AlipayChanelFee;
 import com.ruoyi.alipay.domain.AlipayUserInfo;
 import com.ruoyi.alipay.domain.AlipayUserRateEntity;
@@ -16,6 +17,10 @@ import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,7 +40,17 @@ public class AlipayUserRateEntityServiceImpl implements IAlipayUserRateEntitySer
     private AlipayUserInfoMapper alipayUserInfoMapper;
     @Resource
     private AlipayChanelFeeMapper alipayChanelFeeDao;
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
+    @Autowired
+    private CacheManager cacheManager;
+
+    @Value("${otc.appName}")
+    private String appName;
+
+
+    private static final String prefixKey = ":CardDealerMapToMerchant:";
     /**
      * 查询用户产品费率
      *
@@ -105,8 +120,44 @@ public class AlipayUserRateEntityServiceImpl implements IAlipayUserRateEntitySer
     @Override
     @DataSource(DataSourceType.ALIPAY_SLAVE)
     public int updateAlipayUserRateEntity(AlipayUserRateEntity alipayUserRateEntity) {
-        return alipayUserRateEntityMapper.updateAlipayUserRateEntity(alipayUserRateEntity);
+
+        //redisTemplate.opsForValue().set(appName +prefixKey , JSONUtil.toJsonStr(cardDealerMapToMerchant()));
+        int i = alipayUserRateEntityMapper.updateAlipayUserRateEntity(alipayUserRateEntity);
+
+        return i;
     }
+    @Override
+    @DataSource(DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayUserRateEntity> getAndRefreshAlipayMerchantRateCache(String feeType)
+    {
+        String key = this.getClass().getName()+":getAndRefreshAlipayMerchantRateCache:"+feeType;
+        /*String cacheString = redisTemplate.opsForValue().get(key);
+        if( StringUtils.isNotEmpty(cacheString) )
+        {
+            return JSONUtil.parseArray(cacheString).toList(AlipayUserRateEntity.class);
+        }*/
+        List<AlipayUserRateEntity> list = alipayUserRateEntityMapper.findAllMerchantRateByFeeType(feeType);
+        redisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(list));
+        return list;
+    }
+
+/*    *//**
+     * 分为
+     * 存款 -  顶代卡商/商户对应关系
+     * 取款 -  顶代卡商/商户对应关系
+     * @return
+     *//*
+    private Map<String,Map<String,List<String>>> cardDealerMapToMerchant()
+    {
+        Map<String,Map<String,List<String>>> feeTypeToRelation = Maps.newHashMap();
+        Map<String,List<String>> cardDealerMapToMerchant = Maps.newHashMap();
+
+
+
+
+
+        return feeTypeToRelation;
+    }*/
 
     /**
      * 删除用户产品费率对象

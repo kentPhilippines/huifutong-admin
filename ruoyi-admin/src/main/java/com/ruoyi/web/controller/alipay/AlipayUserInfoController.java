@@ -202,7 +202,7 @@ public class AlipayUserInfoController extends BaseController {
     public AjaxResult editCSave(AlipayUserInfo alipayUserInfo) {
         Double credit = alipayUserInfo.getCredit();
         /*if(credit < 0.0  || credit > 100.0 ){
-            return AjaxResult.error("信用分不合法");
+            return AjaxResult.error("虚拟冻结不合法");
         }*/
         return toAjax(alipayUserInfoService.updateAlipayUserInfo(alipayUserInfo));
     }

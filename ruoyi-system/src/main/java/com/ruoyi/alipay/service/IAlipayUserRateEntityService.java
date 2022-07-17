@@ -45,6 +45,10 @@ public interface IAlipayUserRateEntityService {
      */
     int updateAlipayUserRateEntity(AlipayUserRateEntity alipayUserRateEntity);
 
+
+    @DataSource(DataSourceType.ALIPAY_SLAVE)
+    List<AlipayUserRateEntity> getAndRefreshAlipayMerchantRateCache(String feeType);
+
     /**
      * 批量删除用户产品费率
      *
