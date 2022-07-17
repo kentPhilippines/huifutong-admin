@@ -60,7 +60,7 @@ public class TemplateInfoSplitEntity implements Serializable {
     private String remark2;
 
     //1银行名称2自己尾号3对方户名4对方尾号5时间6转账金额7余额
-    //    @ApiModelProperty(value = "替换字符串冲突的时候按照大的包含关系排在前面进行处理", example = "1,2,3,4,5,6,7")
+    //    @ApiModelProperty(value = "排序,替换字符串冲突的时候按照大的包含关系排在前面进行处理", example = "1,2,3,4,5,6,7")
     private String sortStr;
 
     //1银行名称2自己尾号3对方户名4对方尾号5时间6转账金额7余额

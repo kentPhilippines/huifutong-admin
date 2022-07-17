@@ -110,7 +110,7 @@ public class TemplateUtil {
         alipayMessageReg.setSourceMsg(originText);
         alipayMessageReg.setTemplate(template);
         alipayMessageReg.setTailSplit(spiltTail);
-        alipayMessageReg.setBlackKey(blackKey);
+//        alipayMessageReg.setBlackKey(blackKey);
         alipayMessageReg.setTransactionType(transactionType);
         alipayMessageReg.setTransactionTypeDetail(typeDetail);
         alipayMessageReg.setRemark1(remark1);
