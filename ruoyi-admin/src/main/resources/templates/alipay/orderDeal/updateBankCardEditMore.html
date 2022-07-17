@@ -292,7 +292,7 @@
             type: "get",
             url: prefix1 + "/updateBankCardMore?mediumNumber="+mediumNumber+"&qrcodeId="+qrcodeId+"&orderId="+orderId+"&amount="+amount,
             success: function (data) {
-                if(data.code==200)
+                if(data.code==0)
                 {
                     var parent = window.parent;
                     parent.$.table.refresh();
