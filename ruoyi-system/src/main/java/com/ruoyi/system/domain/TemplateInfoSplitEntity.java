@@ -59,12 +59,13 @@ public class TemplateInfoSplitEntity implements Serializable {
     //    @ApiModelProperty(value = "自己银行尾号程序解析错误时,强制走尾号正则,不常用,由技术判定是否添加", example = "无")
     private String remark2;
 
-    //    @ApiModelProperty(value = "替换字符串冲突的时候按照大的包含关系排在前面进行处理,替换后（.*）连在一起使用自定义正则替换", example = "台州银行=2238=陈海飞;([\u4e00-\u9fa5]{2,5})=@=7月17日=585.00=4214.50")
+    //1银行名称2自己尾号3对方户名4对方尾号5时间6转账金额7余额
+    //    @ApiModelProperty(value = "替换字符串冲突的时候按照大的包含关系排在前面进行处理", example = "1,2,3,4,5,6,7")
     private String sortStr;
 
     //1银行名称2自己尾号3对方户名4对方尾号5时间6转账金额7余额
 //    @ApiModelProperty(value = "模板，按照固定顺序填入固定值，无使用占位符@", example = "东营银行=591=,张岩=6947=07月15日12:53=300.00=0.00")
-    private String template = "1,2,3,4,5,6,7";
+    private String template = "";
 
 
     public String getOriginText() {
