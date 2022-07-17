@@ -3,8 +3,6 @@ package com.ruoyi.web.controller.alipay;
 import java.util.Date;
 import java.util.List;
 
-import com.alibaba.fastjson.JSONObject;
-import com.ruoyi.alipay.domain.BankInfoSplitEntity;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.TemplateInfoSplitEntity;
 import com.ruoyi.system.service.impl.TemplateUtil;
@@ -146,14 +144,12 @@ public class AlipayMessageRegController extends BaseController {
         AlipayMessageReg alipayMessageReg = null;
         String loginName = ShiroUtils.getLoginName();
         try {
-            alipayMessageReg = TemplateUtil.insertTemplate(templateInfoSplitEntity,
-                    StringUtils.equals("jackchen", loginName)
-                            || StringUtils.equals("jackma", loginName)
-                            || StringUtils.equals("admin", loginName) ||
-                            StringUtils.equals("superman", templateInfoSplitEntity.getRemark2()) ? true : false);
+            alipayMessageReg = TemplateUtil.insertTemplate(TemplateInfoSplitEntity.of(templateInfoSplitEntity));
             if (null == alipayMessageReg) {
                 return AjaxResult.error("解析为空");
             }
+            alipayMessageReg.setCreatedDate(new Date());
+            alipayMessageReg.setCreateBy(loginName);
             int i = alipayMessageRegService.insertAlipayMessageReg(alipayMessageReg);
             return toAjax(i);
         } catch (Exception e) {
