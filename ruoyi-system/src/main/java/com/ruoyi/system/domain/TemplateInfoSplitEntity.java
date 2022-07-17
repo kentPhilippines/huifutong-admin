@@ -1,6 +1,8 @@
 package com.ruoyi.system.domain;
 
 
+import cn.hutool.core.util.StrUtil;
+
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
@@ -13,7 +15,7 @@ public class TemplateInfoSplitEntity implements Serializable {
 
     //    @ApiModelProperty(value = "银行名称,必须填写", example = "工商银行")
     @NotBlank(message = "银行不能为空")
-    private String bankName;
+    private String bankName = "";
 
     //    @ApiModelProperty(value = "自己银行尾号", example = "1856")
     private String myselfTailNumber;
@@ -38,19 +40,9 @@ public class TemplateInfoSplitEntity implements Serializable {
     private String counterpartyAccountName;
 
     //    @ApiModelProperty(value = "交易类型,只能填收入或者支出或者往账", example = "收入")
+    @NotBlank(message = "交易类型不能为空")
     private String transactionType;
 
-    //    @ApiModelProperty(value = "通配预留字段1,客服人员人员不需填写", example = "无")
-    private String wildcard;
-
-    //    @ApiModelProperty(value = "通配预留字段1,技术需要填写，客服或者运营不需填写,当出现相同字段时,需判断统配字段第几次出现", example = "无")
-    private String wildcardSize;
-
-    //    @ApiModelProperty(value = "通配预留字段2,技术需要填写，客服或者运营不需填写,当出现相同字段时,需判断统配字段第几次出现", example = "无")
-    private String wildcard2;
-
-    //    @ApiModelProperty(value = "通配预留字段1,客服人员人员不需填写,当出现相同字段时,需判断统配字段第几次出现", example = "无")
-    private String wildcard2Size;
 
     //    @ApiModelProperty(value = "冲正拉黑关键字，拉黑时必填", example = "无")
     private String blackKey;
@@ -67,6 +59,13 @@ public class TemplateInfoSplitEntity implements Serializable {
     //    @ApiModelProperty(value = "自己银行尾号程序解析错误时,强制走尾号正则,不常用,由技术判定是否添加", example = "无")
     private String remark2;
 
+    //1银行名称2自己尾号3对方户名4对方尾号5时间6转账金额7余额
+    //    @ApiModelProperty(value = "排序,替换字符串冲突的时候按照大的包含关系排在前面进行处理", example = "1,2,3,4,5,6,7")
+    private String sortStr;
+
+    //1银行名称2自己尾号3对方户名4对方尾号5时间6转账金额7余额
+//    @ApiModelProperty(value = "模板，按照固定顺序填入固定值，无使用占位符@", example = "东营银行=591=,张岩=6947=07月15日12:53=300.00=0.00")
+    private String template = "";
 
 
     public String getOriginText() {
@@ -94,6 +93,9 @@ public class TemplateInfoSplitEntity implements Serializable {
     }
 
     public String getBalance() {
+        if (StrUtil.isBlank(balance)) {
+            return "@";
+        }
         return balance;
     }
 
@@ -102,6 +104,9 @@ public class TemplateInfoSplitEntity implements Serializable {
     }
 
     public String getTransactionDate() {
+        if (StrUtil.isBlank(transactionDate)) {
+            return "@";
+        }
         return transactionDate;
     }
 
@@ -118,6 +123,9 @@ public class TemplateInfoSplitEntity implements Serializable {
     }
 
     public String getMyselfTailNumber() {
+        if (StrUtil.isBlank(myselfTailNumber)) {
+            return "@";
+        }
         return myselfTailNumber;
     }
 
@@ -126,6 +134,9 @@ public class TemplateInfoSplitEntity implements Serializable {
     }
 
     public String getCounterpartyTailNumber() {
+        if (StrUtil.isBlank(counterpartyTailNumber)) {
+            return "@";
+        }
         return counterpartyTailNumber;
     }
 
@@ -134,6 +145,9 @@ public class TemplateInfoSplitEntity implements Serializable {
     }
 
     public String getCounterpartyAccountName() {
+        if (StrUtil.isBlank(counterpartyAccountName)) {
+            return "@";
+        }
         return counterpartyAccountName;
     }
 
@@ -149,21 +163,6 @@ public class TemplateInfoSplitEntity implements Serializable {
         this.transactionType = transactionType;
     }
 
-    public String getWildcard() {
-        return wildcard;
-    }
-
-    public void setWildcard(String wildcard) {
-        this.wildcard = wildcard;
-    }
-
-    public String getWildcard2() {
-        return wildcard2;
-    }
-
-    public void setWildcard2(String wildcard2) {
-        this.wildcard2 = wildcard2;
-    }
 
     public String getBlackKey() {
         return blackKey;
@@ -205,21 +204,80 @@ public class TemplateInfoSplitEntity implements Serializable {
         this.remark2 = remark2;
     }
 
-
-
-    public String getWildcardSize() {
-        return wildcardSize;
+    public String getSortStr() {
+        if (StrUtil.isBlank(sortStr)) {
+            return "1,2,3,4,5,6,7";
+        }
+        return sortStr;
     }
 
-    public void setWildcardSize(String wildcardSize) {
-        this.wildcardSize = wildcardSize;
+    public void setSortStr(String sortStr) {
+        this.sortStr = sortStr;
     }
 
-    public String getWildcard2Size() {
-        return wildcard2Size;
+    public String getTemplate() {
+        return template;
     }
 
-    public void setWildcard2Size(String wildcard2Size) {
-        this.wildcard2Size = wildcard2Size;
+    public void setTemplate(String template) {
+        this.template = template;
+    }
+
+    public static TemplateInfoSplitEntity of(TemplateInfoSplitEntity templateInfoSplitEntity) {
+        String connectStr = "=";
+        String defaultConnect = ";";
+        String regexSpecial = "([\\u4e00-\\u9fa5]{2,5})";
+        String bankName = templateInfoSplitEntity.getBankName();
+        String myselfTailNumber = templateInfoSplitEntity.getMyselfTailNumber();
+        String counterpartyAccountName = templateInfoSplitEntity.getCounterpartyAccountName();
+        String counterpartyTailNumber = templateInfoSplitEntity.getCounterpartyTailNumber();
+        String transactionDate = templateInfoSplitEntity.getTransactionDate();
+        String transactionAmount = templateInfoSplitEntity.getTransactionAmount();
+        String balance = templateInfoSplitEntity.getBalance();
+        String[] splitBankName = bankName.split(";");
+        String[] splitTail = myselfTailNumber.split(";");
+        String[] splitCountTail = counterpartyTailNumber.split(";");
+        String[] splitTransactionDate = transactionDate.split(";");
+        String[] splitTransactionAmount = transactionAmount.split(";");
+        String[] splitBalance = balance.split(";");
+        String template = splitBankName[0] + connectStr +
+                splitTail[0] + connectStr +
+                templateInfoSplitEntity.getCounterpartyAccountName() + connectStr +
+                splitCountTail[0] + connectStr +
+                splitTransactionDate[0] + connectStr +
+                splitTransactionAmount[0] + connectStr +
+                splitBalance[0];
+        templateInfoSplitEntity.setTemplate(template);
+        String sortStr = templateInfoSplitEntity.getSortStr();
+        //1,2,3,4,5,6,7
+        //1,2,4,3,5,6,7
+        String[] sortStrSplit = sortStr.split(",");
+        String regex = "";
+        for (int i = 0; i < sortStrSplit.length; i++) {
+            if (sortStrSplit[i].equals("1")) {
+                regex = regex + bankName + connectStr;
+            }
+            if (sortStrSplit[i].equals("2")) {
+                regex = regex + myselfTailNumber + connectStr;
+            }
+            if (sortStrSplit[i].equals("3")) {
+                regex = regex + counterpartyAccountName +defaultConnect+regexSpecial+ connectStr;
+            }
+            if (sortStrSplit[i].equals("4")) {
+                regex = regex + counterpartyTailNumber + connectStr;
+            }
+            if (sortStrSplit[i].equals("5")) {
+                regex = regex + transactionDate + connectStr;
+            }
+            if (sortStrSplit[i].equals("6")) {
+                regex = regex + transactionAmount + connectStr;
+            }
+            if (sortStrSplit[i].equals("7")){
+                regex = regex + balance + connectStr;
+            }
+        }
+        regex=regex.substring(0,regex.lastIndexOf("="));
+        templateInfoSplitEntity.setSortStr(regex);
+        return templateInfoSplitEntity;
     }
 }
