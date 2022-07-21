@@ -77,6 +77,15 @@ public class AlipayDealOrderAppController extends BaseController {
     public TableDataInfo list(AlipayDealOrderApp alipayDealOrderApp) {
         startPage();
         List<AlipayDealOrderApp> list = alipayDealOrderAppService.selectAlipayDealOrderAppList(alipayDealOrderApp);
+
+        AlipayProductEntity alipayProductEntity = new AlipayProductEntity();
+        alipayProductEntity.setStatus(1);
+        List<AlipayProductEntity> productlist = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
+        ConcurrentHashMap<String, AlipayProductEntity> prCollect = productlist.stream().collect(Collectors.toConcurrentMap(AlipayProductEntity::getProductId, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
+        list = list.stream().map(entity->{
+            entity.setRetain1(prCollect.get(entity.getRetain1()).getProductName());
+            return entity;
+        }).collect(Collectors.toList());
         return getDataTable(list);
     }
 
@@ -135,7 +144,19 @@ public class AlipayDealOrderAppController extends BaseController {
      * 显示统计table
      */
     @GetMapping("/statistics/merchant/table")
-    public String showTable() {
+    public String showTable(ModelMap modelMap) {
+        AlipayProductEntity alipayProductEntity = new AlipayProductEntity();
+        //查询产品类型下拉菜单
+        List<AlipayProductEntity> list = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
+        modelMap.put("productList", list);
+        return prefix + "/currentTable";
+    }
+
+    /**
+     * 显示统计table 产品分组
+     */
+    @GetMapping("/statistics/merchant/table/groupByProduct")
+    public String showTable1() {
         return prefix + "/currentTable";
     }
 

@@ -75,6 +75,10 @@
                shiro:hasPermission="orderApp:merchant:statistics">
                 <i class="fa fa-bar-chart"></i> 当天数据统计
             </a>
+            <!--<a class="btn btn-primary" onclick="$.operate.statistics('统计当天交易订单产品分组数据（商户）')"
+               shiro:hasPermission="orderApp:merchant:statistics">
+                <i class="fa fa-bar-chart"></i> 当天数据产品分组统计
+            </a>-->
             <a class="btn btn-primary" onclick="$.operate.openAccount('123','分组查询','orderAppGroupQuery')"
                shiro:hasPermission="orderApp:merchant:statistics">
                 <i class="fa fa-bar-chart"></i> 汇总数据统计
@@ -98,6 +102,7 @@
             url: prefix + "/list",
             detailUrl: prefix + "/edit/{id}",
             statisticsUrl: prefix + "/statistics/merchant/table",
+            statisticsGroupByProduct: prefix + "/statistics/merchant/table/groupByProduct",
             exportUrl: prefix + "/export",
             groupUrl: prefix + "/group",
             modalName: "商户交易订单",
@@ -116,6 +121,7 @@
                 },
 
                 {field: 'orderAmount', title: '订单金额 '},
+                {field: 'retain1', title: '产品类型 '},
                 {field: 'retain3', title: '交易手续费'},
                 {field: 'orderIp', title: '订单生成IP'},
                 {field: 'createTime', title: '创建时间'},

@@ -14,6 +14,12 @@ public class StatisticsEntity extends BaseEntity implements Serializable {
     private String agentAmount;
     private String userAgent;
 
+
+
+    /**
+     * 产品
+     */
+    private String retain1;
     private String grossCost;
 
 
@@ -218,7 +224,13 @@ public class StatisticsEntity extends BaseEntity implements Serializable {
     public void setProductName(String productName) {
         this.productName = productName;
     }
+    public String getRetain1() {
+        return retain1;
+    }
 
+    public void setRetain1(String retain1) {
+        this.retain1 = retain1;
+    }
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)

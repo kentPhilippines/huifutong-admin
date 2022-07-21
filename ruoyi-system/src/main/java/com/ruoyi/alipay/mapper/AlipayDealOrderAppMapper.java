@@ -87,6 +87,9 @@ public interface AlipayDealOrderAppMapper {
 
     @Select("<script>" +
             "select '所有' userId, " +
+            "<if test = \"statisticsEntity.retain1 != null and statisticsEntity.retain1 != ''\">" +
+            "app.retain1 retain1, " +
+            "</if>" +
             "coalesce(sum(app.orderAmount),0) totalAmount," +
             "coalesce(sum(case app.orderStatus when 2 then app.orderAmount else 0 end),0) successAmount," +
             "count(1) totalCount," +
@@ -96,12 +99,19 @@ public interface AlipayDealOrderAppMapper {
             "from alipay_deal_order_app app " +
             "where " +
             "  app.createTime between #{statisticsEntity.params.dayStart} " +
+            " and #{statisticsEntity.params.dayEnd} and app.orderType = 1 " +
             "<if test = \"statisticsEntity.currency != null and statisticsEntity.currency != ''\">" +
             "and app.currency = #{statisticsEntity.currency} " +
             "</if>" +
-            " and #{statisticsEntity.params.dayEnd} and app.orderType = 1 " +
+            "<if test = \"statisticsEntity.retain1 != null and statisticsEntity.retain1 != ''\">" +
+            "and app.retain1 = #{statisticsEntity.retain1} " +
+            "</if>" +
+
             " union all " +
             "select app.orderAccount userId, " +
+            "<if test = \"statisticsEntity.retain1 != null and statisticsEntity.retain1 != ''\">" +
+            "app.retain1 retain1, " +
+            "</if>" +
             "coalesce(sum(app.orderAmount),0.00) totalAmount," +
             "coalesce(sum(case app.orderStatus when 2 then app.orderAmount else 0 end),0) successAmount," +
             "count(1) totalCount," +
@@ -121,7 +131,13 @@ public interface AlipayDealOrderAppMapper {
             "<if test = \"statisticsEntity.currency != null and statisticsEntity.currency != ''\">" +
             "and app.currency = #{statisticsEntity.currency} " +
             "</if>" +
+            "<if test = \"statisticsEntity.retain1 != null and statisticsEntity.retain1 != ''\">" +
+            "and app.retain1 = #{statisticsEntity.retain1} " +
+            "</if>" +
             "group by app.orderAccount " +
+            "<if test = \"statisticsEntity.retain1 != null and statisticsEntity.retain1 != ''\">" +
+            ",retain1 " +
+            "</if>" +
             "</script>")
     List<StatisticsEntity> selectOrderAppStatDateByDay(@Param("statisticsEntity") StatisticsEntity statisticsEntity, @Param("dayStart") String dayStart, @Param("dayEnd") String dayEnd);
 

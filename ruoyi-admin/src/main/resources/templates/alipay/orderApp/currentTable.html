@@ -27,6 +27,13 @@
                                         th:value="${dict.dictValue}"></option>
                             </select>
                         </li>
+                        <li class="select-selectpicker">
+                            <label>产品类型：</label>
+                            <select id="retain1" name="retain1" class="selectpicker" data-none-selected-text="请选择">
+                                <option value="">所有</option>
+                                <option th:each="product : ${productList}" th:text="${product.productName}" th:value="${product.productId}"></option>
+                            </select>
+                        </li>
                         <li class="select-time">
                             <span>创建时间：</span>
                             <input type="text" class="time-input" id="startTime" placeholder="开始时间"
@@ -69,6 +76,10 @@
                 {
                     field: 'userId',
                     title: '用户账户'
+                },
+                {
+                    field: 'retain1',
+                    title: '产品类型'
                 },
 				{
 					field: 'userName',
