@@ -14,6 +14,7 @@ import com.ruoyi.common.core.domain.StatisticsEntity;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -166,6 +167,13 @@ public class AlipayDealOrderAppController extends BaseController {
     @PostMapping("/statistics/merchant/orderApp")
     @ResponseBody
     public TableDataInfo dayStat(StatisticsEntity statisticsEntity) {
+
+        /*产品类型*/
+        AlipayProductEntity alipayProductEntity = new AlipayProductEntity();
+        alipayProductEntity.setStatus(1);
+        List<AlipayProductEntity> productlist = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
+        ConcurrentHashMap<String, AlipayProductEntity> prCollect = productlist.stream().collect(Collectors.toConcurrentMap(AlipayProductEntity::getProductId, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
+
         startPage();
         List<StatisticsEntity> list = alipayDealOrderAppService.selectMerchantStatisticsDataByDay(statisticsEntity, DateUtils.dayStart(), DateUtils.dayEnd());
         List<AlipayUserFundEntity> listFund = alipayUserFundEntityService.findUserFundAll();
@@ -189,6 +197,9 @@ public class AlipayDealOrderAppController extends BaseController {
                 sta.setAccountAmount(amount.doubleValue() + "");
             }
             sta.setTodayAmount(sta.getSuccessAmount().subtract(new BigDecimal(sta.getSuccessFee())).toString());
+            if(StringUtils.isNotEmpty(sta.getRetain1())) {
+                sta.setRetain1(prCollect.get(sta.getRetain1()).getProductName());//产品转换
+            }
         }
         return getDataTable(list);
     }
