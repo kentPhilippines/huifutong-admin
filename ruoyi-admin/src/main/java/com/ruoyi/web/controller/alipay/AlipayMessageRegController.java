@@ -82,6 +82,8 @@ public class AlipayMessageRegController extends BaseController {
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(AlipayMessageReg alipayMessageReg) {
+        String source = alipayMessageReg.getSourceMsg().replace("\\n", "");
+        alipayMessageReg.setSourceMsg(source);
         alipayMessageReg.setCreatedDate(new Date());
         alipayMessageReg.setUpdateBy(ShiroUtils.getSysUser().getLoginName());
         alipayMessageRegService.validate(alipayMessageReg);//校验不通过会丢异常
