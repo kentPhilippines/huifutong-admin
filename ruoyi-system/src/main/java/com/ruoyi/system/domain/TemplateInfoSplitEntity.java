@@ -224,6 +224,8 @@ public class TemplateInfoSplitEntity implements Serializable {
     }
 
     public static TemplateInfoSplitEntity of(TemplateInfoSplitEntity templateInfoSplitEntity) {
+        String source = templateInfoSplitEntity.getOriginText().replace("\\n", "");
+        templateInfoSplitEntity.setOriginText(source);
         String connectStr = "=";
         String defaultConnect = ";";
         String regexSpecial = "([\\u4e00-\\u9fa5]{2,5})";
