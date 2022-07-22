@@ -78,7 +78,7 @@ public class AlipayDealOrderAppController extends BaseController {
     public TableDataInfo list(AlipayDealOrderApp alipayDealOrderApp) {
         startPage();
         List<AlipayDealOrderApp> list = alipayDealOrderAppService.selectAlipayDealOrderAppList(alipayDealOrderApp);
-
+        TableDataInfo td = getDataTable(list);
         AlipayProductEntity alipayProductEntity = new AlipayProductEntity();
         alipayProductEntity.setStatus(1);
         List<AlipayProductEntity> productlist = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
@@ -87,7 +87,7 @@ public class AlipayDealOrderAppController extends BaseController {
             entity.setRetain1(prCollect.get(entity.getRetain1()).getProductName());
             return entity;
         }).collect(Collectors.toList());
-        return getDataTable(list);
+        return td;
     }
 
     @GetMapping("/orderAppAgent")
