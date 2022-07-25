@@ -224,7 +224,10 @@ public class TemplateInfoSplitEntity implements Serializable {
     }
 
     public static TemplateInfoSplitEntity of(TemplateInfoSplitEntity templateInfoSplitEntity) {
-        String source = templateInfoSplitEntity.getOriginText().replace("\\n", "");
+        String source=templateInfoSplitEntity.getOriginText();
+        if (templateInfoSplitEntity.getBankName().equals("微信银行")) {
+             source = templateInfoSplitEntity.getOriginText().replaceAll("\\r", "").replaceAll("\\n", "");
+        }
         templateInfoSplitEntity.setOriginText(source);
         String connectStr = "=";
         String defaultConnect = ";";
