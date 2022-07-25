@@ -32,6 +32,7 @@
         <result column="toDayWit" property="toDayWit" jdbcType="DECIMAL"/>
         <result column="sumDayWit" property="sumDayWit" jdbcType="DECIMAL"/>
         <result column="startAmount" property="startAmount" jdbcType="DECIMAL"/>
+        <result column="maxAmount" property="maxAmount" jdbcType="DECIMAL"/>
         <result column="yseToday" property="yseToday" jdbcType="DECIMAL"/>
         <result column="startTime" property="startTime"/>
         <result column="endTime" property="endTime"/>
@@ -85,7 +86,7 @@
                notfiyMask,
                witAmount,
                auditLog,
-               payInfo,todayCount,sumCount,countLimit,todayCountWit,sumCountWit,autoWit
+               payInfo,todayCount,sumCount,countLimit,todayCountWit,sumCountWit,autoWit,maxAmount
         from
             alipay_medium
 
@@ -127,7 +128,7 @@
         notfiyMask,
         witAmount,
         auditLog,
-        payInfo,todayCount,sumCount,countLimit,todayCountWit,sumCountWit,autoWit
+        payInfo,todayCount,sumCount,countLimit,todayCountWit,sumCountWit,autoWit,maxAmount
         from
         <if test="params.isHistoryQuery == null  or params.isHistoryQuery == ''">
             alipay_medium
@@ -216,6 +217,7 @@
             <if test="todayCountWit != null  and todayCountWit != ''">todayCountWit,</if>
             <if test="sumCountWit != null  and sumCountWit != ''">sumCountWit,</if>
             <if test="autoWit != null  and autoWit != ''">autoWit,</if>
+
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="mediumId != null  and mediumId != ''">#{mediumId},</if>
@@ -261,6 +263,7 @@
             <if test="mountLimit != null  and mountLimit != ''">mountLimit = #{mountLimit},</if>
             <if test="black != null  and black != ''">black = #{black},</if>
             <if test="startAmount != null  ">startAmount = #{startAmount},</if>
+            <if test="maxAmount != null  ">maxAmount = #{maxAmount},</if>
             <if test="error != null  and error != ''">error = #{error},</if>
             <if test="startTime != null  and startTime != ''">startTime = #{startTime},</if>
             <if test="endTime != null  and endTime != ''">endTime = #{endTime},</if>
@@ -301,6 +304,7 @@
             <if test="mountLimit != null  and mountLimit != ''">mountLimit = #{mountLimit},</if>
             <if test="black != null  and black != ''">black = #{black},</if>
             <if test="startAmount != null  and startAmount != ''">startAmount = #{startAmount},</if>
+            <if test="maxAmount != null  and maxAmount != ''">maxAmount = #{maxAmount},</if>
             <if test="error != null  and error != ''">error = #{error},</if>
             <if test="startTime != null  and startTime != ''">startTime = #{startTime},</if>
             <if test="endTime != null  and endTime != ''">endTime = #{endTime},</if>

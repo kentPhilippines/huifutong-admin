@@ -32,6 +32,10 @@ public class AlipayMediumEntity extends BaseEntity {
     private BigDecimal sumAmounlimit;//日总结单限制
     private BigDecimal sumDayWit;//累计出款
     private BigDecimal startAmount;//起始收款金额
+
+
+
+    private BigDecimal maxAmount;//最大收款金额
     private BigDecimal yseToday;//起始收款金额
     private String startTime;//接单开始时间  格式    hh:mm:ss
     private String endTime;//接单结束 时间
@@ -49,7 +53,13 @@ public class AlipayMediumEntity extends BaseEntity {
     public Integer getAutoWit() {
         return autoWit;
     }
+    public BigDecimal getMaxAmount() {
+        return maxAmount;
+    }
 
+    public void setMaxAmount(BigDecimal maxAmount) {
+        this.maxAmount = maxAmount;
+    }
     public void setAutoWit(Integer autoWit) {
         this.autoWit = autoWit;
     }
