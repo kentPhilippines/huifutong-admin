@@ -135,6 +135,7 @@
     const backOrderFlag = [[${@permission.hasPermi('orderDeal:qr:backOrder')}]];
     const notifyFlag = [[${@permission.hasPermi('orderDeal:qr:renotify')}]];
     const updataOrder = [[${@permission.hasPermi('orderDeal:qr:status')}]];
+    const  userIdMapToId = [[${userIdMapToId}]];
     //数据
     const orderstatusDatas = [[${@dict.getType('orderStatus')}]];
     //请求路径
@@ -178,9 +179,11 @@
                 // {field: 'associatedId', title: '关联订单'},
                 {
                     field: 'orderAccount', title: '账户关系', formatter: function (value, row, index) {
+                        var cardDeallerId = userIdMapToId[row.orderQrUser];
                         var table = '<table>'
                         table += '<tr><td>' + '商户：' + row.orderAccount + '</td></tr>'
-                        table += '<tr><td>' + '渠道：' + row.orderQrUser + '</td></tr>'
+                        table += '<tr><td>' + '渠道：' + row.orderQrUser+'【'+ cardDeallerId +'】' + '</td></tr>'
+                        // table += '<tr><td>' + '渠道：' + row.orderQrUser + '</td></tr>'
                         table += '<tr><td>' + '产品：' + row.retain1 + '</td></tr>'
                         table += '</table>'
                         return table;

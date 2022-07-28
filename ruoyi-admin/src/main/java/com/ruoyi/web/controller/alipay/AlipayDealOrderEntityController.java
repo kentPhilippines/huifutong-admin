@@ -107,6 +107,10 @@ public class AlipayDealOrderEntityController extends BaseController {
         String qrServerAddr = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_KEY, StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_VALUE);
         String qrServerPath = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_KEY, StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_PATH);
         mmap.put("imgUrl", qrServerAddr + qrServerPath);
+
+        List<AlipayUserInfo> userInfos = alipayUserInfoService.selectAllUserInfoList(new AlipayUserInfo());
+        Map<String,Long> userIdMapToId = userInfos.stream().collect(Collectors.toMap(x-> x.getUserId(), x-> x.getId()+60000L));
+        mmap.put("userIdMapToId", userIdMapToId);
         return prefix + "/orderDeal";
     }
 
@@ -119,6 +123,11 @@ public class AlipayDealOrderEntityController extends BaseController {
         List<AlipayProductEntity> list = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
         mmap.put("productList", list);
         List<AlipayUserFundEntity> rateList = alipayUserFundEntityService.findUserFundRate();
+
+        List<AlipayUserInfo> userInfos = alipayUserInfoService.selectAllUserInfoList(new AlipayUserInfo());
+        Map<String,Long> userIdMapToId = userInfos.stream().collect(Collectors.toMap(x-> x.getUserId(), x-> x.getId()+60000L));
+        mmap.put("userIdMapToId", userIdMapToId);
+
         return prefix + "/orderDealWit";
     }
 
