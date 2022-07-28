@@ -287,7 +287,18 @@ public class AlipayUserInfoController extends BaseController {
         }
         return success("重置成功，新的登陆密码：" + resetPwd);
     }
+    /**
+     * 重置用戶的登陸密碼
+     */
+    @Log(title = "重置登录次数", businessType = BusinessType.RESET)
+    @PostMapping("resetLoginErrorCount")
+    @ResponseBody
+    public AjaxResult resetLoginErrorCount(Long id) {
+        String resetPwd = alipayUserInfoService.resetLoginErrorCount(id);
 
+        return success("重置成功");
+
+    }
     /**
      * 重置用戶的提現密碼
      */
