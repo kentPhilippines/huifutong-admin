@@ -44,6 +44,10 @@ public class TemplateInfoSplitEntity implements Serializable {
     private String transactionType;
 
 
+    //    @ApiModelProperty(value = "尾号类型,1:*号首尾都存在中间是数字例如*123*;2:*首部存在尾巴不存在*例如*4443;3:首不存在*尾部存在*例如4444*;4:首尾都无*中间存在*例如1233***2213", example = "收入")
+    private Integer tailType;
+
+
     //    @ApiModelProperty(value = "冲正拉黑关键字，拉黑时必填", example = "无")
     private String blackKey;
 
@@ -66,6 +70,10 @@ public class TemplateInfoSplitEntity implements Serializable {
     //1银行名称2自己尾号3对方户名4对方尾号5时间6转账金额7余额
 //    @ApiModelProperty(value = "模板，按照固定顺序填入固定值，无使用占位符@", example = "东营银行=591=,张岩=6947=07月15日12:53=300.00=0.00")
     private String template = "";
+
+    //灵活通配参数，多个灵活配置引文逗号间隔
+//    @ApiModelProperty(value = "29日19:16账户*9321*汇款汇入收入500.00元，余额2999.98元。对方户名:何远利（hylok520）。[兴业银行]" 例如通配hylok520)
+    private String flexConfig = "";
 
 
     public String getOriginText() {
@@ -211,6 +219,14 @@ public class TemplateInfoSplitEntity implements Serializable {
         return sortStr;
     }
 
+    public Integer getTailType() {
+        return tailType;
+    }
+
+    public void setTailType(Integer tailType) {
+        this.tailType = tailType;
+    }
+
     public void setSortStr(String sortStr) {
         this.sortStr = sortStr;
     }
@@ -223,10 +239,18 @@ public class TemplateInfoSplitEntity implements Serializable {
         this.template = template;
     }
 
+    public String getFlexConfig() {
+        return flexConfig;
+    }
+
+    public void setFlexConfig(String flexConfig) {
+        this.flexConfig = flexConfig;
+    }
+
     public static TemplateInfoSplitEntity of(TemplateInfoSplitEntity templateInfoSplitEntity) {
-        String source=templateInfoSplitEntity.getOriginText();
+        String source = templateInfoSplitEntity.getOriginText();
         if (templateInfoSplitEntity.getBankName().equals("微信银行")) {
-             source = templateInfoSplitEntity.getOriginText().replaceAll("\\r", "").replaceAll("\\n", "");
+            source = templateInfoSplitEntity.getOriginText().replaceAll("\\r", "").replaceAll("\\n", "");
         }
         templateInfoSplitEntity.setOriginText(source);
         String connectStr = "=";
@@ -266,7 +290,7 @@ public class TemplateInfoSplitEntity implements Serializable {
                 regex = regex + myselfTailNumber + connectStr;
             }
             if (sortStrSplit[i].equals("3")) {
-                regex = regex + counterpartyAccountName +defaultConnect+regexSpecial+ connectStr;
+                regex = regex + counterpartyAccountName + defaultConnect + regexSpecial + connectStr;
             }
             if (sortStrSplit[i].equals("4")) {
                 regex = regex + counterpartyTailNumber + connectStr;
@@ -277,11 +301,11 @@ public class TemplateInfoSplitEntity implements Serializable {
             if (sortStrSplit[i].equals("6")) {
                 regex = regex + transactionAmount + connectStr;
             }
-            if (sortStrSplit[i].equals("7")){
+            if (sortStrSplit[i].equals("7")) {
                 regex = regex + balance + connectStr;
             }
         }
-        regex=regex.substring(0,regex.lastIndexOf("="));
+        regex = regex.substring(0, regex.lastIndexOf("="));
         templateInfoSplitEntity.setSortStr(regex);
         return templateInfoSplitEntity;
     }
