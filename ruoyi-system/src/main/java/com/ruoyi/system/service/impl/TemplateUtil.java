@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ReUtil;
 import com.ruoyi.common.enums.TransactionTypeEnum;
 import com.ruoyi.system.domain.AlipayMessageReg;
@@ -29,7 +30,7 @@ public class TemplateUtil {
         } else if (null != reTail && tailType == 2) {
             reTail = "\\d{1,}\\*{1,}(.*)";
         }
-        final String flexConfig = templateInfoSplitEntity.getFlexConfig();
+        String flexConfig = templateInfoSplitEntity.getFlexConfig();
         String spiltTail = templateInfoSplitEntity.getSpiltTail();
         String sourcePhone = templateInfoSplitEntity.getSourcePhone();
         String remark1 = templateInfoSplitEntity.getRemark1();
@@ -65,9 +66,12 @@ public class TemplateUtil {
         }
 
         String[] split2 = flexConfig.split("@");
-        for (String s : split2) {
-            indexData.put(originText.indexOf(s), "flex" + s);
-            regex = regex.replace(s, re);
+        List<String> collect = Arrays.stream(split2).filter(tmp -> StringUtils.isNoneBlank(tmp)).collect(Collectors.toList());
+        if (CollectionUtil.isNotEmpty(collect)){
+            for (String s : collect) {
+                indexData.put(originText.indexOf(s), "flex" + s);
+                regex = regex.replace(s, re);
+            }
         }
 //        String template = "台州银行=2238=陈海飞=@=7月17日=585.00=4214.50";
 //        templateInfoSplitEntity.setUserName(template);
@@ -87,7 +91,6 @@ public class TemplateUtil {
                 template = template.replace(a, "$" + index);
             }
         }
-
         String[] split = regexStr.split("=");
         int i = 0;
         for (String s : split) {
@@ -95,9 +98,10 @@ public class TemplateUtil {
             if (i == 2) {
                 String[] split1 = s.split(";");
                 regex = regex.replace(split1[0], split1.length == 1 ? reTail : split1[1]);
+            } else {
+                String[] split1 = s.split(";");
+                regex = regex.replace(split1[0], split1.length == 1 ? re : split1[1]);
             }
-            String[] split1 = s.split(";");
-            regex = regex.replace(split1[0], split1.length == 1 ? re : split1[1]);
         }
         template = template
                 .replace("bankIndex", "@")
@@ -148,5 +152,20 @@ public class TemplateUtil {
     }
 
     public static void main(String[] args) {
+        String regexStr = "营口银行=623177000001****752=@;([\\u4e00-\\u9fa5]{2,5})=@=30日13:43=3,018.00=51.94";
+        String regex = "您的账户623177000001****752于30日13:43在总行清算中心转帐支出3,018.00元,余额51.94元。本机构吸收的本外币存款依照《存款保险条例》受到保护【营口银行】".replace("[", "\\[").replace("]", "\\]")
+                .replace("(", "\\(").replace(")", "\\)");
+        String[] split = regexStr.split("=");
+        int i = 0;
+        for (String s : split) {
+            i++;
+            if (i == 2) {
+                String[] split1 = s.split(";");
+                regex = regex.replace(split1[0], split1.length == 1 ? "\\d{1,}\\*{1,}(.*)" : split1[1]);
+            } else {
+                String[] split1 = s.split(";");
+                regex = regex.replace(split1[0], split1.length == 1 ? "(.*)" : split1[1]);
+            }
+        }
     }
 }
