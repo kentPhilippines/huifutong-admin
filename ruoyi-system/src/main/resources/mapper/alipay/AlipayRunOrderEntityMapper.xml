@@ -232,6 +232,7 @@
             <if test="params.dayStart != null and params.dayEnd != ''  ">
                 and a.createTime between #{params.dayStart} and #{params.dayEnd}
             </if>
+            and a.orderAccount != 'huifutong3'
         </where>
 
         group by
