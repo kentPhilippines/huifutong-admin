@@ -257,7 +257,6 @@ public class AlipayMediumEntityController extends BaseController {
     @Log(title = "收款媒介列", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     @ResponseBody
-    @RequiresPermissions("alipay:medium:remove")
     public AjaxResult remove(String ids) {
         AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
         alipayMediumEntity.setId(Long.valueOf(ids));
