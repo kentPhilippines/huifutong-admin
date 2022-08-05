@@ -256,6 +256,11 @@ public class TemplateInfoSplitEntity implements Serializable {
         String connectStr = "=";
         String defaultConnect = ";";
         String regexSpecial = "([\\u4e00-\\u9fa5]{2,5})";
+        if (StrUtil.isNotBlank(templateInfoSplitEntity.getCounterpartyAccountName())) {
+            if (templateInfoSplitEntity.getCounterpartyAccountName().indexOf("·")>0) {
+                regexSpecial = "([\\u4e00-\\u9fa5]{2,5}·[\\u4e00-\\u9fa5]{2,5})";
+            }
+        }
         String bankName = templateInfoSplitEntity.getBankName();
         String myselfTailNumber = templateInfoSplitEntity.getMyselfTailNumber();
         String counterpartyAccountName = templateInfoSplitEntity.getCounterpartyAccountName();

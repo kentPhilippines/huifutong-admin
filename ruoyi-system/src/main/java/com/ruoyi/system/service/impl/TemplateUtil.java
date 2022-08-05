@@ -25,9 +25,9 @@ public class TemplateUtil {
         Integer tailType = templateInfoSplitEntity.getTailType();
         //    @ApiModelProperty(value = "1:*首部存在*例如*4443;2:首尾都无*中间存在*例如1233***2213", example = "收入")
         String reTail = "(.*)";
-        if (null != reTail && tailType == 1) {
+        if (null != tailType && tailType == 1) {
             reTail = "\\*{1,}(.*)";
-        } else if (null != reTail && tailType == 2) {
+        } else if (null != tailType && tailType == 2) {
             reTail = "\\d{1,}\\*{1,}(.*)";
         }
         String flexConfig = templateInfoSplitEntity.getFlexConfig();
@@ -67,7 +67,7 @@ public class TemplateUtil {
 
         String[] split2 = flexConfig.split("@");
         List<String> collect = Arrays.stream(split2).filter(tmp -> StringUtils.isNoneBlank(tmp)).collect(Collectors.toList());
-        if (CollectionUtil.isNotEmpty(collect)){
+        if (CollectionUtil.isNotEmpty(collect)) {
             for (String s : collect) {
                 indexData.put(originText.indexOf(s), "flex" + s);
                 regex = regex.replace(s, re);
