@@ -182,6 +182,14 @@ public class SysUserController extends BaseController {
         return prefix + "/resetPwd";
     }
 
+  @Log(title = "重置密码", businessType = BusinessType.UPDATE)
+    @GetMapping("/resetPwd1/{userId}")
+    public String resetPwd1(@PathVariable("userId") String userId, ModelMap mmap) {
+
+        mmap.put("user", userService.selectUserByLoginName(userId));
+        return prefix + "/resetPwd";
+    }
+
     @Log(title = "重置密码", businessType = BusinessType.UPDATE)
     @PostMapping("/resetPwd")
     @ResponseBody

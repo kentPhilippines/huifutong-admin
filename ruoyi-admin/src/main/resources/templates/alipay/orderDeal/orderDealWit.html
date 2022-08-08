@@ -181,6 +181,12 @@
                 initChildTable(index, row, $detail);
             },
             showFooter: true,   //注册加载子表的事件。注意下这里的三个参数！
+            rowStyle: function (row, index) {
+                if (2 == row.lockWit|| '2' == row.lockWit) {
+                    return {css: {'background-color': '#49d098'}};
+                }
+                return "";
+            },
             columns: [
                 {
                     field: 'orderId', title: '平台订单', align: 'left',
@@ -239,6 +245,8 @@
                             if (1 == row.grabOrder || '1' == row.grabOrder) {
                                 table += '<tr><td>' + '<span class="badge badge-info">抢单出款</span>' + '</td></tr>'
                             }
+
+
                             if (2 == row.grabOrder || '2' == row.grabOrder) {//卡商放弃出款
                                 table += '<tr><td>' + '<span class="badge badge-warning" style="background-color:purple; ">放弃出款</span>' + '</td></tr>'
                             }
