@@ -118,14 +118,14 @@
                         </li>
                     </ul>
                 </div>
-                <div class="select-list">
+                <!--<div class="select-list">
                     <ul>
                         <li>
                             <a class="btn btn-primary btn-rounded btn-sm" onclick="update()"><i
                                     class="fa fa-search"></i>&nbsp;保存</a>
                         </li>
                     </ul>
-                </div>
+                </div>-->
             </form>
         </div>
 
@@ -279,6 +279,12 @@
                 "status": val
             });
         })
+    }
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            update();
+        }
     }
     function update() {
 
