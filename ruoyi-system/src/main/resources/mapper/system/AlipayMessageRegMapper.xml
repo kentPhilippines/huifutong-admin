@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateDate != null "> and update_date = #{updateDate}</if>
 
         </where>
-        order by update_date desc, created_date desc
+        order by id desc,update_date  desc
     </select>
     
     <select id="selectAlipayMessageRegById" parameterType="Long" resultMap="AlipayMessageRegResult">
