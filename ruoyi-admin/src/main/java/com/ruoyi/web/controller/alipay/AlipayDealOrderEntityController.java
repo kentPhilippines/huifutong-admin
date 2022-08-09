@@ -831,6 +831,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         AlipayDealOrderEntity order = alipayDealOrderEntityService.selectAlipayDealOrderEntityById(Long.valueOf(id));
         //order.setOperater(ShiroUtils.getLoginName());//
         order.setGrabOrder(2);//重新抢单
+        order.setLockWit(0);
         int i = alipayDealOrderEntityService.updateAlipayDealOrderEntityByOrder(order);
         return toAjax(i);
     }
