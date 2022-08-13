@@ -25,7 +25,7 @@ public interface AlipayUserInfoMapper {
             "SELECT " +
             " id,userId, userName, `password`, payPasword, salt, userType, switchs," +
             " userNode, email, agent, isAgent, credit, receiveOrderState, remitOrderState," +
-            " QQ, telegram, skype, createTime, submitTime, `status`, privateKey, publicKey   " +
+            " QQ, telegram, skype, createTime, submitTime, `status`, privateKey, publicKey,autowitstatus as autoWitState   " +
             " FROM " +
             " alipay_user_info" +
             " where userType = 2 " +
