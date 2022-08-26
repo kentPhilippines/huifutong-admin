@@ -1,32 +1,24 @@
 package com.ruoyi.alipay.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
-import com.ruoyi.alipay.domain.AlipayUserInfo;
-import com.ruoyi.alipay.mapper.AlipayUserInfoMapper;
-import com.ruoyi.common.constant.Constants;
-import com.ruoyi.common.exception.BusinessException;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.security.Md5Utils;
-import com.ruoyi.system.domain.ImportBankVerifyDto;
-import com.ruoyi.system.domain.SysUser;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.ruoyi.alipay.mapper.AlipayMediumEntityMapper;
 import com.ruoyi.alipay.domain.AlipayMediumEntity;
+import com.ruoyi.alipay.mapper.AlipayMediumEntityMapper;
+import com.ruoyi.alipay.mapper.AlipayUserInfoMapper;
 import com.ruoyi.alipay.service.IAlipayMediumEntityService;
 import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.enums.DataSourceType;
+import com.ruoyi.common.exception.BusinessException;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.domain.ImportBankVerifyDto;
+import com.ruoyi.system.domain.SysUser;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 收款媒介列Service业务层处理
@@ -175,12 +167,14 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     public int deleteAlipayMediumEntityById(AlipayMediumEntity alipayMediumEntity, SysUser sysUser) {
        /* AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
         alipayMediumEntity.setId(id);*/
-        if (sysUser.getLoginName().equalsIgnoreCase("admin")) {
+
+        return alipayMediumEntityMapper.deleteAlipayMediumEntityById(alipayMediumEntity.getId());
+        /*if (sysUser.getLoginName().equalsIgnoreCase("admin")) {
             return alipayMediumEntityMapper.deleteAlipayMediumEntityById(alipayMediumEntity.getId());
         }
 
         alipayMediumEntity.setIsDeal("1");//1 is deleted , 2 is normal
-        return alipayMediumEntityMapper.updateAlipayMediumEntity(alipayMediumEntity);
+        return alipayMediumEntityMapper.updateAlipayMediumEntity(alipayMediumEntity);*/
     }
 
     @Override
