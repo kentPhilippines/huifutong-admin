@@ -570,7 +570,6 @@ public class AlipayDealOrderEntityController extends BaseController {
             orderEntityList.setDealAmount(Double.valueOf(amount));
             orderEntityList.setActualAmount(Double.valueOf(amount));
             orderEntityList.setDealFee(0.0);
-            orderEntityList.setExternalOrderId("");
             orderEntityList.setCreateTime(null);
             orderEntityList.setSubmitTime(null);
             orderEntityList.setCreatetime(null);
