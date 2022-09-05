@@ -201,7 +201,8 @@ public class MerchantInfoEntityController extends BaseController {
         List<String> str = new ArrayList();
         str.add(userInfo.getUserId());
         List<SysUser> sysUsers = userService.selectUserByLoginNames(str);
-        sysUsers = sysUsers.stream().filter(u->u.getAccountType()==0).collect(Collectors.toList());//过滤accounttype=0
+        //过滤accounttype=0
+        sysUsers = sysUsers.stream().filter(u->u.getAccountType()!=null &&u.getAccountType()==0).collect(Collectors.toList());
         for (SysUser sys : sysUsers) {
             userInfo.setRemark(sys.getRemark());
         }
