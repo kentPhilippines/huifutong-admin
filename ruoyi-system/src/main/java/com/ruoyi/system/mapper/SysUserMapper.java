@@ -153,4 +153,8 @@ public interface SysUserMapper {
 
     @Update("update sys_user set remark = #{remark} where login_name = #{loginName}")
     int updateUserByLoginName(@Param("loginName") String loginName,@Param("remark") String remark);
+
+    @Update("select  from sys_user   where merchant_id = #{userId} and account_type = #{i} ")
+    SysUser findMerchant(@Param("userId") String userId, @Param("i") int i);
+
 }

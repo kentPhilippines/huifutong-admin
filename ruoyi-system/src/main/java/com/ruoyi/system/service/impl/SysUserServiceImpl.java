@@ -511,4 +511,9 @@ public class SysUserServiceImpl implements ISysUserService {
         return userRoleMapper.selectUserRole(userId);
     }
 
+    @Override
+    public SysUser findMerchant(String userId, int i) {
+        return userMapper.findMerchant(userId,i);
+    }
+
 }

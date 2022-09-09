@@ -2,6 +2,7 @@ package com.ruoyi.alipay.domain;
 
 import cn.hutool.core.date.DatePattern;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.alipay.domain.util.DesUtil;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -353,7 +354,7 @@ public class AlipayWithdrawEntity extends BaseEntity {
     }
 
     public String getBankNo() {
-        return bankNo;
+        return DesUtil.decryptStr( bankNo);
     }
 
     public void setAccname(String accname) {
