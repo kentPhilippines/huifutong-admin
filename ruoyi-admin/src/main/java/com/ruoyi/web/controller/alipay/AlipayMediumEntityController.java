@@ -24,6 +24,8 @@ import com.ruoyi.framework.util.DictionaryUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.ImportBankVerifyDto;
 import com.ruoyi.system.domain.SysUser;
+import com.ruoyi.web.controller.tool.DesUtil;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -78,6 +80,10 @@ public class AlipayMediumEntityController extends BaseController {
         List<AlipayUserRateEntity> userRateEntities =alipayUserRateEntityService.findRates(String.join(",", ids),"BANK_WIT_S");
         List smallUserIds = userRateEntities.stream().map(AlipayUserRateEntity::getUserId).collect(Collectors.toList());
         list.stream().filter(entity -> smallUserIds.contains(entity.getQrcodeId())).forEach(entity -> entity.setSmall(true));
+        //解密卡号
+        list.stream().filter(entity -> !NumberUtils.isDigits(entity.getMediumNumber())).forEach(e->{
+            e.setMediumNumber(DesUtil.decryptStr(e.getMediumNumber()));
+        });
 
 
         if (StrUtil.isNotEmpty(alipayMediumEntity.getQrcodeId())) {
