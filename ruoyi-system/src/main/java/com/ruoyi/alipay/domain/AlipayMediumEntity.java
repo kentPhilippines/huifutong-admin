@@ -320,6 +320,17 @@ public class AlipayMediumEntity extends BaseEntity {
      * 收款媒介登录账号
      */
     private String mediumNumber;
+
+    public String getMediumNumberJiami() {
+        return mediumNumberJiami;
+    }
+
+    public void setMediumNumberJiami(String mediumNumberJiami) {
+        this.mediumNumberJiami = mediumNumberJiami;
+    }
+
+    //加密卡号
+    private String mediumNumberJiami;
     private String error;
     private String witAmount;
 

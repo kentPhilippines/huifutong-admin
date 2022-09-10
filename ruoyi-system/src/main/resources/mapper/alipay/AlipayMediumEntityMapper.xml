@@ -157,7 +157,7 @@
             <if test="qrcodeId != null  and qrcodeId != ''">and qrcodeId = #{qrcodeId}</if>
             <if test="account != null  and account != ''">and account like concat('%', #{account}, '%')</if>
             <if test="mediumNumber != null  and mediumNumber != ''">and mediumNumber like concat('%', #{mediumNumber},
-                '%')
+                '%')  or mediumNumber like concat('%', #{mediumNumberJiami},'%')
             </if>
             <if test="code != null  and code != ''">and code = #{code}</if>
             <if test="createTime != null ">and createTime = #{createTime}</if>
