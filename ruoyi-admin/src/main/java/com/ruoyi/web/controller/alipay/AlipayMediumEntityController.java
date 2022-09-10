@@ -19,13 +19,13 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.util.DictionaryUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.ImportBankVerifyDto;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.web.controller.tool.DesUtil;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -72,6 +72,10 @@ public class AlipayMediumEntityController extends BaseController {
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(AlipayMediumEntity alipayMediumEntity) {
+        if(StringUtils.isNotBlank(alipayMediumEntity.getMediumNumber()))
+        {
+            alipayMediumEntity.setMediumNumberJiami(DesUtil.encryptHex(alipayMediumEntity.getMediumNumber()));
+        }
         startPage();
         List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
 
@@ -81,9 +85,9 @@ public class AlipayMediumEntityController extends BaseController {
         List smallUserIds = userRateEntities.stream().map(AlipayUserRateEntity::getUserId).collect(Collectors.toList());
         list.stream().filter(entity -> smallUserIds.contains(entity.getQrcodeId())).forEach(entity -> entity.setSmall(true));
         //解密卡号
-        list.stream().filter(entity -> !NumberUtils.isDigits(entity.getMediumNumber())).forEach(e->{
+        /*list.stream().filter(entity -> !NumberUtils.isDigits(entity.getMediumNumber())).forEach(e->{
             e.setMediumNumber(DesUtil.decryptStr(e.getMediumNumber()));
-        });
+        });*/
 
 
         if (StrUtil.isNotEmpty(alipayMediumEntity.getQrcodeId())) {
