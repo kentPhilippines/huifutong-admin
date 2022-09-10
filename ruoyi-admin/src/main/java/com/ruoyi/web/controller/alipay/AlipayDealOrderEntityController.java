@@ -221,11 +221,12 @@ public class AlipayDealOrderEntityController extends BaseController {
                 String payImg = order.getPayImg();
 
                 order.setPayImg(qrServerAddr + qrServerPath + payImg);
-
-
                 AlipayWithdrawEntity alipayWithdrawEntity = dataMap.get(order.getAssociatedId());
-                order.setBankAccount("入款：" + alipayWithdrawEntity.getBankName() + ":" + alipayWithdrawEntity.getAccname() + ":" + alipayWithdrawEntity.getBankNo() + " 金额 ：" + alipayWithdrawEntity.getAmount());
-                order.setOrderNo(alipayWithdrawEntity.getOrderId());
+                try {
+                    order.setBankAccount("入款：" + alipayWithdrawEntity.getBankName() + ":" + alipayWithdrawEntity.getAccname() + ":" + alipayWithdrawEntity.getBankNo() + " 金额 ：" + alipayWithdrawEntity.getAmount());
+                    order.setOrderNo(alipayWithdrawEntity.getOrderId());
+                }catch (Exception e ){
+                }
             }
             AlipayProductEntity product = prCollect.get(order.getRetain1());
 

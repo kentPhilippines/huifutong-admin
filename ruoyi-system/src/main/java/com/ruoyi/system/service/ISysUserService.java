@@ -204,4 +204,6 @@ public interface ISysUserService {
     SysUserRole selectUserRoleByUserId(Long userId);
 
 
+    SysUser findMerchant(String userId, int i);
+
 }

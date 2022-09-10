@@ -1,5 +1,6 @@
 package com.ruoyi.alipay.domain;
 
+import com.ruoyi.alipay.domain.util.DesUtil;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -482,7 +483,7 @@ public class AlipayMediumEntity extends BaseEntity {
     }
 
     public String getMediumNumber() {
-        return mediumNumber;
+        return DesUtil.decryptStr(mediumNumber) ;
     }
 
     public void setMediumHolder(String mediumHolder) {
