@@ -3,6 +3,7 @@ package com.ruoyi.alipay.service.impl;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
 import com.ruoyi.alipay.domain.AlipayMediumEntity;
+import com.ruoyi.alipay.domain.util.DesUtil;
 import com.ruoyi.alipay.mapper.AlipayMediumEntityMapper;
 import com.ruoyi.alipay.mapper.AlipayUserInfoMapper;
 import com.ruoyi.alipay.service.IAlipayMediumEntityService;
@@ -275,5 +276,14 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
 
 
         return successMsg.toString();
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public AlipayMediumEntity findBankNo(String mediumNumber) {
+      String bankNo =   DesUtil.encryptHex(mediumNumber);
+
+      return   alipayMediumEntityMapper.findBankNo(mediumNumber,bankNo);
+
     }
 }

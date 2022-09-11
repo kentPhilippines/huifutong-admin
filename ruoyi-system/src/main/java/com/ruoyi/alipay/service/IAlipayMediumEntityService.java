@@ -114,4 +114,7 @@ public interface IAlipayMediumEntityService {
     List<AlipayMediumEntity> findMedSum();
 
     String importData(List<ImportBankVerifyDto> dataList, boolean updateSupport, String operName);
+
+    AlipayMediumEntity findBankNo(String mediumNumber);
+
 }

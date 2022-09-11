@@ -458,16 +458,19 @@ public class AlipayDealOrderEntityController extends BaseController {
             if (StrUtil.isNotEmpty(mediumNumber)) {
                 AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
                 alipayMediumEntity.setMediumNumber(mediumNumber);
-                List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
-                if (CollUtil.isNotEmpty(list)) {
-                    AlipayMediumEntity first = CollUtil.getFirst(list);
+
+               // List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
+                AlipayMediumEntity   first  =  alipayMediumEntityService.findBankNo(mediumNumber);
+
+            //    if (CollUtil.isNotEmpty(list)) {
+            //        AlipayMediumEntity first = CollUtil.getFirst(list);
                     String mediumHolder = first.getMediumHolder();//开户人
                     String account = first.getAccount();//开户行
                     String mediumNumber1 = first.getMediumNumber();//银行卡号
                     String mediumPhone = first.getMediumPhone();
                     bankInfo = account + MARK + mediumHolder + MARK + mediumNumber1 + MARK + "电话" + MARK + mediumPhone;
                     orderBankNew = mediumNumber;
-                }
+              //  }
             }
             i = alipayDealOrderEntityService.updateOrderQr(orderId, qrcodeId, bankInfo, rate.getId(), fee, profit);
         } catch (Throwable t) {

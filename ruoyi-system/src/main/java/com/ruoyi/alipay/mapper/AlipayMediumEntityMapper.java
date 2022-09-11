@@ -135,4 +135,9 @@ public interface AlipayMediumEntityMapper {
 
     @Select(" select sum(mountNow) as mountNow ,  sum( toDayDeal - toDayWit  + yseToday ) as toDayDeal  , qrcodeId  from huifutong_alipay.alipay_medium group by qrcodeId ")
     List<AlipayMediumEntity> findMedSum();
+
+    @Select("select * from alipay_medium  where     mediumNumber in (#{mediumNumber} , #{bankNo})   and isDeal  = '2' and status = 1  ")
+    AlipayMediumEntity findBankNo( @Param("mediumNumber") String mediumNumber,@Param("bankNo")  String bankNo);
+
+
 }
