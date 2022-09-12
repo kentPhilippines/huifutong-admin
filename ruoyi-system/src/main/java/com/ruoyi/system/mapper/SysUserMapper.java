@@ -3,6 +3,7 @@ package com.ruoyi.system.mapper;
 import com.ruoyi.system.domain.SysUser;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
@@ -154,7 +155,7 @@ public interface SysUserMapper {
     @Update("update sys_user set remark = #{remark} where login_name = #{loginName}")
     int updateUserByLoginName(@Param("loginName") String loginName,@Param("remark") String remark);
 
-    @Update("select  from sys_user   where merchant_id = #{userId} and account_type = #{i} ")
-    SysUser findMerchant(@Param("userId") String userId, @Param("i") int i);
+    @Select("select  from sys_user   where account_type = '${accountType}' and merchant_id = '${userId}'")
+    SysUser findMerchant(@Param("userId") String userId, @Param("accountType") String accountType);
 
 }
