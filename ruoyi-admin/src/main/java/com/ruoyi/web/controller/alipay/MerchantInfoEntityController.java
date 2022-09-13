@@ -198,17 +198,14 @@ public class MerchantInfoEntityController extends BaseController {
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Long id, ModelMap mmap) {
         AlipayUserInfo userInfo = merchantInfoEntityService.selectMerchantInfoEntityById(id);
-      // List<String> str = new ArrayList();
-      //  str.add(userInfo.getUserId());
-      //  List<SysUser> sysUsers = userService.selectUserByLoginNames(str);
-        SysUser u =  userService.findMerchant(userInfo.getUserId(),0);
-        userInfo.setRemark(u.getRemark());
-/*
+        List<String> str = new ArrayList();
+        str.add(userInfo.getUserId());
+        List<SysUser> sysUsers = userService.selectUserByLoginNames(str);
         //过滤accounttype=0
         sysUsers = sysUsers.stream().filter(u->u.getAccountType()!=null &&u.getAccountType()==0).collect(Collectors.toList());
         for (SysUser sys : sysUsers) {
             userInfo.setRemark(sys.getRemark());
-        }*/
+        }
         mmap.put("alipayUserInfo", userInfo);
         return prefix + "/edit";
     }
