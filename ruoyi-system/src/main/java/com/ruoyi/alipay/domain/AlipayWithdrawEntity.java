@@ -1,13 +1,18 @@
 package com.ruoyi.alipay.domain;
 
 import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.alipay.domain.util.DesUtil;
+import com.ruoyi.alipay.domain.util.DesUtil2;
+import com.ruoyi.alipay.domain.util.EncryptHexUtil;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -183,16 +188,19 @@ public class AlipayWithdrawEntity extends BaseEntity {
      */
     @Excel(name = "提现金额")
     private Double amount;
+    private String amount1;
     /**
      * 手续费
      */
     @Excel(name = "手续费")
     private Double fee;
+    private String fee1;
     /**
      * 真实到账金额
      */
     @Excel(name = "真实到账金额")
     private Double actualAmount;
+    private String actualAmount1;
     /**
      * 手机号
      */
@@ -239,6 +247,39 @@ public class AlipayWithdrawEntity extends BaseEntity {
      */
     @Excel(name = "后台申请人")
     private String apply;
+    private String sgin;
+
+    public String getActualAmount1() {
+        return actualAmount1;
+    }
+
+    public void setActualAmount1(String actualAmount1) {
+        this.actualAmount1 = actualAmount1;
+    }
+
+    public String getFee1() {
+        return fee1;
+    }
+
+    public void setFee1(String fee1) {
+        this.fee1 = fee1;
+    }
+
+    public String getAmount1() {
+        return amount1;
+    }
+
+    public void setAmount1(String amount1) {
+        this.amount1 = amount1;
+    }
+
+    public String getSgin() {
+        return sgin;
+    }
+
+    public void setSgin(String sgin) {
+        this.sgin = sgin;
+    }
 
     /**
      * 审核人
@@ -354,7 +395,12 @@ public class AlipayWithdrawEntity extends BaseEntity {
     }
 
     public String getBankNo() {
-        return DesUtil.decryptStr( bankNo);
+        if(null != createTime){
+            if( ! getDate (createTime)){
+                return  DesUtil.decryptStr(bankNo);
+            }
+        }
+        return DesUtil2.decryptStr( bankNo);
     }
 
     public void setAccname(String accname) {
@@ -362,7 +408,7 @@ public class AlipayWithdrawEntity extends BaseEntity {
     }
 
     public String getAccname() {
-        return accname;
+        return   DesUtil2.decryptStr(accname);
     }
 
     public void setOrderStatus(String orderStatus) {
@@ -378,7 +424,13 @@ public class AlipayWithdrawEntity extends BaseEntity {
     }
 
     public String getBankName() {
-        return bankName;
+        if(StrUtil.isNotBlank(bankNo) && getDate (createTime) && StrUtil.isNotEmpty(sgin) ){
+            Boolean click = EncryptHexUtil.click(DesUtil2.decryptStr(bankNo), DesUtil2.decryptStr(bankName), DesUtil2.decryptStr(accname), getAmount() + "", sgin);
+            if(!click){
+                return DesUtil2.decryptStr(bankName) + "  当前存在入侵  ";
+            }
+        }
+        return DesUtil2.decryptStr(bankName);
     }
 
     public void setAmount(Double amount) {
@@ -386,15 +438,25 @@ public class AlipayWithdrawEntity extends BaseEntity {
     }
 
     public Double getAmount() {
-        return amount;
+        try {
+            return Double.valueOf(DesUtil2.decryptStr(amount1))  ;
+        }catch (Exception e ){
+            return  amount;
+        }
+
     }
 
     public void setFee(Double fee) {
         this.fee = fee;
     }
-
     public Double getFee() {
-        return fee;
+        try {
+            return Double.valueOf(DesUtil2.decryptStr(fee1));
+        }catch (Exception s ){
+            return fee;
+
+        }
+
     }
 
     public void setActualAmount(Double actualAmount) {
@@ -402,7 +464,11 @@ public class AlipayWithdrawEntity extends BaseEntity {
     }
 
     public Double getActualAmount() {
-        return actualAmount;
+        try {
+            return Double.valueOf(DesUtil2.decryptStr(actualAmount1));
+        }catch (Exception e ){
+            return actualAmount;
+        }
     }
 
     public void setMobile(String mobile) {
@@ -512,5 +578,21 @@ public class AlipayWithdrawEntity extends BaseEntity {
                 .append("approval", getApproval())
                 .append("comment", getComment())
                 .toString();
+    }
+    private static  Boolean getDate(Date date1){
+        //获取当前时间
+        Calendar date = Calendar.getInstance();
+        date.setTime(date1);
+        //获取开始时间
+        Calendar begin = Calendar.getInstance();
+        begin.setTime(date1);
+        //获取结束时间
+        Calendar end = Calendar.getInstance();
+        end.setTime(DateUtil.parseDate("2022-09-14 00:00:01"));
+        if (date.after(end)){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+
     }
 }

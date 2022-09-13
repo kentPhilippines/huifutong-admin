@@ -124,6 +124,12 @@
             exportUrl: prefix + "/merchant/export",
             showFooter: true,
             modalName: "会员提现记录",
+            rowStyle: function (row, index) {
+                if (  row.bankNo &&   ( row.bankNo.indexOf('入侵') != -1 ) ) {
+                    return {css: {'background-color': '#d06f77'}};
+                }
+                return "";
+            },
             columns: [{
                 checkbox: true
             },
@@ -174,9 +180,13 @@
                     title: '银行信息',
                     formatter: function (value, row, index) {
                         var table = '<ul>'
+                        if (   ( row.bankNo.indexOf('入侵') != -1 ) ) {
+                            table = '<ul style="background-color: #a44f4f">';
+                        }
                         if (row.orderStatus == 1 && row.currency != 'CNY') {
                             table += '<li>' + '<i class=\"btn btn-link btn-xs\" style="cursor:pointer;" title="地址"onclick="openScan(\'' + row.bankNo + '\')"><i class="fa fa-google-wallet"></i> 支付地址：' + row.bankNo + '</i> ' + '</li>';
                         } else {
+
                             table += '<li>' + '银行卡号：' + row.bankNo + '</li>'
                         }
                         table += '<li>' + '开户人：' + row.accname + '</li>'

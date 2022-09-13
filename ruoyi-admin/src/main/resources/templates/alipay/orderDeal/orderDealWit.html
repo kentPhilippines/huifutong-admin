@@ -185,6 +185,9 @@
                 if (2 == row.lockWit|| '2' == row.lockWit) {
                     return {css: {'background-color': '#49d098'}};
                 }
+                if (  row.bankAccount &&    ( row.bankAccount.indexOf('入侵') != -1 ) ) {
+                    return {css: {'background-color': '#d06f6f'}};
+                }
                 return "";
             },
             columns: [
