@@ -18,7 +18,8 @@ public class DesUtil2 {
 
     }
 
-    private static DES des;
+
+    public static DES des;
 
     static {
         des = new DES(Mode.CFB, Padding.PKCS5Padding, PASSWORD.getBytes(), SALT.getBytes());
