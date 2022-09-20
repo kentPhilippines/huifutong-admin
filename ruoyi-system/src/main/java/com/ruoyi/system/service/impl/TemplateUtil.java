@@ -14,7 +14,7 @@ public class TemplateUtil {
 
 
     public static AlipayMessageReg insertTemplate(TemplateInfoSplitEntity templateInfoSplitEntity) {
-        String regex = templateInfoSplitEntity.getOriginText();
+        String regex = templateInfoSplitEntity.getSourceMsg();
         String originText = regex;
         regex = regex.replace("[", "\\[").replace("]", "\\]")
                 .replace("(", "\\(").replace(")", "\\)");
@@ -23,7 +23,6 @@ public class TemplateUtil {
         String transactionType = templateInfoSplitEntity.getTransactionType();
         String blackKey = templateInfoSplitEntity.getBlackKey();
         Integer tailType = templateInfoSplitEntity.getTailType();
-        //    @ApiModelProperty(value = "1:*首部存在*例如*4443;2:首尾都无*中间存在*例如1233***2213", example = "收入")
         String reTail = "(.*)";
         if (null != tailType && tailType == 1) {
             reTail = "\\*{1,}(.*)";
@@ -73,9 +72,6 @@ public class TemplateUtil {
                 regex = regex.replace(s, re);
             }
         }
-//        String template = "台州银行=2238=陈海飞=@=7月17日=585.00=4214.50";
-//        templateInfoSplitEntity.setUserName(template);
-//        templateInfoSplitEntity.setPwd("台州银行=2238=陈海飞;([\\u4e00-\\u9fa5]{2,5})=@=7月17日=585.00=4214.50");
 
         String template = "bankIndex;myselfTailNumberIndex;counterpartyAccountNameIndex;counterpartyTailNumberIndex;transactionDateIndex;transactionAmountIndex;balanceIndex;";
 

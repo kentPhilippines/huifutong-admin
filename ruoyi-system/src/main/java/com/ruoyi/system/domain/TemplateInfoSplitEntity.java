@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public class TemplateInfoSplitEntity implements Serializable {
     //    @ApiModelProperty(value = "原始短信", example = "您尾号1856卡12月23日23:10手机银行收入(网转)1,000元，余额6,865.62元，对方户名：张亮，对方账户尾号：1932。【工商银行】")
-    private String originText;
+    private String sourceMsg;
 
     //    @ApiModelProperty(value = "银行名称,必须填写", example = "工商银行")
     @NotBlank(message = "银行不能为空")
@@ -76,12 +76,12 @@ public class TemplateInfoSplitEntity implements Serializable {
     private String flexConfig = "";
 
 
-    public String getOriginText() {
-        return originText;
+    public String getSourceMsg() {
+        return sourceMsg;
     }
 
-    public void setOriginText(String originText) {
-        this.originText = originText;
+    public void setSourceMsg(String sourceMsg) {
+        this.sourceMsg = sourceMsg;
     }
 
     public String getBankName() {
@@ -248,11 +248,11 @@ public class TemplateInfoSplitEntity implements Serializable {
     }
 
     public static TemplateInfoSplitEntity of(TemplateInfoSplitEntity templateInfoSplitEntity) {
-        String source = templateInfoSplitEntity.getOriginText();
+        String source = templateInfoSplitEntity.getSourceMsg();
         if (templateInfoSplitEntity.getBankName().equals("微信银行")) {
-            source = templateInfoSplitEntity.getOriginText().replaceAll("\\r", "").replaceAll("\\n", "");
+            source = templateInfoSplitEntity.getSourceMsg().replaceAll("\\r", "").replaceAll("\\n", "");
         }
-        templateInfoSplitEntity.setOriginText(source);
+        templateInfoSplitEntity.setSourceMsg(source);
         String connectStr = "=";
         String defaultConnect = ";";
         String regexSpecial = "([\\u4e00-\\u9fa5]{2,5})";

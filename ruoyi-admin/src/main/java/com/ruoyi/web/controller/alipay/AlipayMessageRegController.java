@@ -3,6 +3,9 @@ package com.ruoyi.web.controller.alipay;
 import java.util.Date;
 import java.util.List;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ReUtil;
+import cn.hutool.json.JSONUtil;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.TemplateInfoSplitEntity;
 import com.ruoyi.system.service.impl.TemplateUtil;
@@ -164,6 +167,43 @@ public class AlipayMessageRegController extends BaseController {
             return AjaxResult.error(e.getMessage());
         }
 
+    }
 
+    @ResponseBody
+    @PostMapping("/checkTemplate")
+    public AjaxResult checkTemplate(TemplateInfoSplitEntity templateInfoSplitEntity) {
+        AlipayMessageReg alipayMessageReg = new AlipayMessageReg();
+        try {
+            if (null == alipayMessageReg) {
+                return AjaxResult.error("参数为空,请稍后再试" + JSONUtil.toJsonStr(alipayMessageReg));
+            }
+            alipayMessageReg.setBankName(templateInfoSplitEntity.getBankName());
+            String originText = templateInfoSplitEntity.getSourceMsg();
+            List<AlipayMessageReg> alipayMessageRegs = alipayMessageRegService.selectAlipayMessageRegList(alipayMessageReg);
+            if (CollUtil.isNotEmpty(alipayMessageRegs)) {
+                for (AlipayMessageReg messageReg : alipayMessageRegs) {
+                    String regex = messageReg.getRegex();
+                    String template = messageReg.getTemplate();
+                    String templateFlag = messageReg.getTemplateFlag();
+                    boolean match = ReUtil.isMatch(regex, originText);
+                    if (match){
+                        String s = ReUtil.extractMulti(regex, originText, template);
+                        if (StringUtils.isNotBlank(s)){
+                            String msg1="已找到合适模板,原始短信->"+originText+"#";
+                            String msg2="匹配正则->"+regex+"#";
+                            String msg3="匹配模板->"+template+"#";
+                            String ms=templateFlag.equals("1")?"开启":"关闭";
+                            String msg4="模板状态->"+ms+"#";
+                            String msg5="模板解析结果->"+s;
+                            return AjaxResult.success(msg1+msg2+msg3+msg4+msg5);
+                        }
+                    }
+                }
+            }
+            return AjaxResult.error("未找到合适模板,请添加模板");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AjaxResult.error(e.getMessage());
+        }
     }
 }
