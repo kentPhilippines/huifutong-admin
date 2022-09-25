@@ -36,6 +36,7 @@ import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,6 +55,8 @@ import java.util.stream.Collectors;
 @Controller
 public class BackManageController extends BaseController {
     private final String prefix = "merchant/info";
+    @Value("${otc.usdt.rate:http://172.16.32.225:32437/http/rate}")
+    private String otcRate;
     @Autowired
     private IMerchantInfoEntityService merchantInfoEntityService;
     @Autowired
@@ -98,6 +101,7 @@ public class BackManageController extends BaseController {
 
     /**
      * 商户保存修改信息
+     *
      * @param alipayUserInfo
      * @return
      */
@@ -156,7 +160,7 @@ public class BackManageController extends BaseController {
         alipayDealOrderApp.setOrderAccount(sysUser.getMerchantId());
         startPage();
         List<AlipayDealOrderApp> list = alipayDealOrderAppService.selectAlipayDealOrderAppList(alipayDealOrderApp);
-        for(AlipayDealOrderApp orderApp : list) {
+        for (AlipayDealOrderApp orderApp : list) {
             orderApp.setFeeId(null);
         }
         ExcelUtil<AlipayDealOrderApp> util = new ExcelUtil<AlipayDealOrderApp>(AlipayDealOrderApp.class);
@@ -182,6 +186,7 @@ public class BackManageController extends BaseController {
         List<AlipayRunOrderEntity> list = alipayRunOrderEntityService.selectAlipayRunOrderEntityList(alipayRunOrderEntity);
         return getDataTable(list);
     }
+
     /**
      * 导出流水订单记录列表
      */
@@ -344,8 +349,8 @@ public class BackManageController extends BaseController {
         mapParam.put("acctname", alipayWithdrawEntity.getAccname());
         mapParam.put("apply", currentUser.getLoginName());
         mapParam.put("mobile", alipayWithdrawEntity.getMobile());
-        mapParam.put("bankcode",alipayWithdrawEntity.getBankcode());//后台代付
-        mapParam.put("bankName",sysDictData.getDictLabel());//后台代付
+        mapParam.put("bankcode", alipayWithdrawEntity.getBankcode());//后台代付
+        mapParam.put("bankName", sysDictData.getDictLabel());//后台代付
         mapParam.put("dpaytype", "Bankcard");//银行卡代付类型
         mapParam.put("orderStatus", WithdrawalStatusEnum.WITHDRAWAL_STATUS_PROCESS.getCode());
         mapParam.put("notifyurl", "http://localhost/iiiii");
@@ -378,6 +383,7 @@ public class BackManageController extends BaseController {
         }
         return prefix + "/recharge";
     }
+
     @GetMapping("/withdrawal/getRateUsdtFee")
     @ResponseBody
     public AjaxResult getRateUsdtFee(HttpServletRequest request) {
@@ -405,8 +411,7 @@ public class BackManageController extends BaseController {
                     double v = 0;
                     try {
                         Double locatuonRate = Double.valueOf(date.getDictValue());
-                        String urlbuy = "https://www.pexpay.com/bapi/c2c/v1/friendly/c2c/ad/search";
-                        String rate = getRate(urlbuy,"buy");
+                        String rate = getRate("buy");
                         Double onlineRate = Double.valueOf(rate);
                         v = locatuonRate + onlineRate;
                     } catch (Exception e) {
@@ -611,8 +616,8 @@ public class BackManageController extends BaseController {
             list1.remove(0);
             list1.remove(0);
         }
-        if(StrUtil.isNotBlank(alipayUserInfo.getUserId())) {
-            if(list1.contains(alipayUserInfo.getUserId())) {
+        if (StrUtil.isNotBlank(alipayUserInfo.getUserId())) {
+            if (list1.contains(alipayUserInfo.getUserId())) {
                 list1.clear();
                 list1 = new ArrayList();
                 list1.add(alipayUserInfo.getUserId());
@@ -629,11 +634,14 @@ public class BackManageController extends BaseController {
         return prefix + "/agent_order";
     }
 
-    @Autowired private ISysUserService userService;
+    @Autowired
+    private ISysUserService userService;
     /**
      * 查询商户订单
      */
-    @Autowired IMerchantInfoEntityService merchantInfoEntityServiceImpl;
+    @Autowired
+    IMerchantInfoEntityService merchantInfoEntityServiceImpl;
+
     @PostMapping("/agent/order/list")
     @ResponseBody
     public TableDataInfo agentOrder(AlipayDealOrderApp alipayDealOrderApp) {
@@ -650,8 +658,8 @@ public class BackManageController extends BaseController {
             list1.remove(0);
             list1.remove(0);
         }
-        if(StrUtil.isNotBlank(alipayDealOrderApp.getUserName())) {
-            if(list1.contains(alipayDealOrderApp.getUserName())) {
+        if (StrUtil.isNotBlank(alipayDealOrderApp.getUserName())) {
+            if (list1.contains(alipayDealOrderApp.getUserName())) {
                 list1.clear();
                 list1 = new ArrayList();
                 list1.add(alipayDealOrderApp.getUserName());
@@ -675,7 +683,7 @@ public class BackManageController extends BaseController {
                 order.setRetain1(product.getProductName());
             }
         }
-        prCollect  = null;
+        prCollect = null;
         userCollect = null;
         return getDataTable(list);
     }
@@ -687,6 +695,7 @@ public class BackManageController extends BaseController {
     public String showTable() {
         return prefix + "/currentTable";
     }
+
     /**
      * 后台管理员商户交易订单统计（仅当天数据）
      */
@@ -694,7 +703,7 @@ public class BackManageController extends BaseController {
     @ResponseBody
     public TableDataInfo dayStat(StatisticsEntity statisticsEntity) {
         SysUser sysUser = ShiroUtils.getSysUser();
-        if(StringUtils.isEmpty(sysUser.getMerchantId())){
+        if (StringUtils.isEmpty(sysUser.getMerchantId())) {
             throw new BusinessException("获取商户账户异常，请联系管理员");
         }
         statisticsEntity.setUserId(sysUser.getMerchantId());
@@ -709,14 +718,13 @@ public class BackManageController extends BaseController {
         return getDataTable(dataList);
     }
 
-    String getRate(String url, String type) {
+    String getRate(String type) {
         Map<String, Object> data = new HashMap<>();
-        data.put("url", url);
         data.put("type", type);
         String params = JSON.toJSONString(data);
         String post = null;
         try {
-            post = HttpUtil.post("http://47.242.24.220:32412/http/rate", params);
+            post = HttpUtil.post(otcRate, params);
         } catch (Exception e) {
             logger.error("获取汇率失败", e);
             return null;
