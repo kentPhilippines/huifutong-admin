@@ -20,6 +20,7 @@ import com.ruoyi.system.domain.SysDictData;
 import com.ruoyi.system.service.ISysDictDataService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
@@ -37,6 +38,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/system/dict/data")
 public class SysDictDataController extends BaseController {
     private String prefix = "system/dict/data";
+    @Value("${otc.usdt.rate:http://172.16.32.225:32437/http/rate}")
+    private String otcRate;
 
     @Autowired
     private ISysDictDataService dictDataService;
@@ -150,8 +153,7 @@ public class SysDictDataController extends BaseController {
         }
         Object o = this.cache.get(RATE_KEY + DateUtils.getTime());
         if (null == o) {
-            String urlbuy = "https://www.pexpay.com/bapi/c2c/v1/friendly/c2c/ad/search";
-            String rate = getRate(urlbuy,"buy");
+            String rate = getRate("buy");
             this.cache.put(RATE_KEY + DateUtils.getTime(), rate);
             return rate;
         } else {
@@ -167,45 +169,40 @@ public class SysDictDataController extends BaseController {
          */
         List<HUOBI> list = new ArrayList<HUOBI>();
         HUOBI bigsell = new HUOBI();
-        String urlsell = "https://www.pexpay.com/bapi/c2c/v1/friendly/c2c/ad/search";
         bigsell.setId("1");
         bigsell.setRateType("大宗买入价格");
-        bigsell.setPrice(getRate(urlsell,"sell"));
+        bigsell.setPrice(getRate("sell"));
         bigsell.setCaeateTime(DateUtils.getTime());
         list.add(bigsell);
         HUOBI bigbuy = new HUOBI();
-        String urlbuy = "https://www.pexpay.com/bapi/c2c/v1/friendly/c2c/ad/search";
         bigbuy.setId("2");
         bigbuy.setRateType("大宗出售价格");
-        bigbuy.setPrice(getRate(urlbuy,"buy"));
+        bigbuy.setPrice(getRate("buy"));
         bigbuy.setCaeateTime(DateUtils.getTime());
         list.add(bigbuy);
         HUOBI smalls = new HUOBI();
-        String smallSell = "https://www.pexpay.com/bapi/c2c/v1/friendly/c2c/ad/search";
         smalls.setId("3");
         smalls.setRateType("自选交易购买价格");
-        smalls.setPrice(getRate(smallSell,"sell"));
+        smalls.setPrice(getRate("sell"));
         smalls.setCaeateTime(DateUtils.getTime());
         list.add(smalls);
         HUOBI smallb = new HUOBI();
-        String smallbull = "https://www.pexpay.com/bapi/c2c/v1/friendly/c2c/ad/search";
         smallb.setId("4");
         smallb.setRateType("自选交易出售价格");
-        smallb.setPrice(getRate(smallbull,"buy"));
+        smallb.setPrice(getRate("buy"));
         smallb.setCaeateTime(DateUtils.getTime());
         list.add(smallb);
         return getDataTable(list);
     }
 
 
-    String getRate(String url, String type) {
+    String getRate(String type) {
         Map<String, Object> data = new HashMap<>();
-        data.put("url", url);
         data.put("type", type);
         String params = JSON.toJSONString(data);
         String post = null;
         try {
-            post = HttpUtil.post("http://47.242.24.220:32412/http/rate", params);
+            post = HttpUtil.post(otcRate, params);
         } catch (Exception e) {
             logger.error("获取汇率失败", e);
             return null;
