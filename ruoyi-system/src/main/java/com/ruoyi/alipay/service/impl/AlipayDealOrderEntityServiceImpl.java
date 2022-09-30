@@ -11,6 +11,7 @@ import com.ruoyi.alipay.service.IAlipayWithdrawEntityService;
 import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.core.domain.StatisticsEntity;
 import com.ruoyi.common.enums.DataSourceType;
+import com.ruoyi.common.utils.StringUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -83,11 +83,45 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public List<AlipayDealOrderEntity> selectAlipayDealOrderEntityList(AlipayDealOrderEntity alipayDealOrderEntity, Boolean isCharen) {
+        this.identifyOrderId(alipayDealOrderEntity);
         if (isCharen) {
             return alipayDealOrderEntityMapper.selectAlipayDealOrderEntityListIsCharen(alipayDealOrderEntity);
         } else {
             return alipayDealOrderEntityMapper.selectAlipayDealOrderEntityList(alipayDealOrderEntity);
         }
+    }
+
+    /**
+     * 
+     * BA  和BW  是。主订单字段
+     *
+     * 
+     * ZBW 和 ANO。是 关联订单号查询
+     *
+     *
+     * 其他 就是外部订单查询
+     * @param alipayDealOrderEntity
+     */
+    private void identifyOrderId(AlipayDealOrderEntity alipayDealOrderEntity)
+    {
+        String orderId =alipayDealOrderEntity.getOrderId();
+        if(StringUtils.isEmpty(orderId))
+        {
+            return;
+        }
+        if(orderId.startsWith("BA") || orderId.startsWith("BW"))
+        {
+
+        }
+        else if(orderId.startsWith("ZBW") || orderId.startsWith("ANO"))
+        {
+            alipayDealOrderEntity.setAssociatedId(orderId);
+            alipayDealOrderEntity.setOrderId(null);
+        }else{
+            alipayDealOrderEntity.setExternalOrderId(orderId);
+            alipayDealOrderEntity.setOrderId(null);
+        }
+
     }
 
     /**

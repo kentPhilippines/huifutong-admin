@@ -153,6 +153,7 @@ public class AlipayDealOrderEntityController extends BaseController {
     @RequiresPermissions("orderDeal:qr:list")
     @ResponseBody
     public TableDataInfo list(AlipayDealOrderEntity alipayDealOrderEntity, Boolean isCharen) {
+
         if (null == isCharen) {
             isCharen = Boolean.FALSE;
         }
