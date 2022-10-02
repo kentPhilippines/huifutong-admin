@@ -46,6 +46,9 @@ public interface IAlipayDealOrderEntityService {
      */
     List<AlipayDealOrderEntity> selectAlipayOrderList(AlipayDealOrderEntity alipayDealOrderEntity);
 
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    AlipayDealOrderEntity selectAlipayDealOrderEntityByOrderId(String orderId);
+
     /**
      * 修改交易订单
      *

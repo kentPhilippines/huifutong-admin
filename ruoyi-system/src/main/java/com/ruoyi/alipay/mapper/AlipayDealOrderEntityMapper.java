@@ -32,6 +32,7 @@ public interface AlipayDealOrderEntityMapper {
     List<AlipayDealOrderEntity> selectAlipayDealOrderEntityList(AlipayDealOrderEntity alipayDealOrderEntity);
 
     List<AlipayDealOrderEntity> selectAlipayOrderList(AlipayDealOrderEntity alipayDealOrderEntity);
+    AlipayDealOrderEntity selectAlipayDealOrderEntityByOrderId(String orderId);
 
     /**
      * 新增拆单

@@ -62,7 +62,15 @@
 
                             </select>
                         </li>
-
+                        <li class="select-selectpicker">
+                            <label>是否催单：</label>
+                            <select id="urge" name="urge"
+                                    class="selectpicker" data-none-selected-text="请选择">
+                                <option value="">所有</option>
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </li>
                         <li class="select-selectpicker">
                             <label>记录类型：</label>
                             <select class="selectpicker"
@@ -157,6 +165,11 @@
                         if(null != row.retain1 && '' != row.retain1 && row.retain1.indexOf('小额')>-1 )
                         {
                             table = '<table style="background-color: orange">';
+                        }
+                        //催单变色
+                        if(null != row.urge && row.urge==1 )
+                        {
+                            table = '<table style="background-color: pink">';
                         }
 
                         table += '<tr><td>' + '主订单：' + row.orderId + '</td></tr>'
@@ -315,12 +328,12 @@
                         if (row.orderStatus != 7 && row.orderStatus != '2') {
                             actions.push('<a class="btn btn-danger btn-xs ' + updataOrder + '" href="javascript:void(0)" onclick="onUpdataOrder(\'' + row.id + '\')"><i class="fa fa-google-wallet"></i>转发财务</a> ');
                         }
-                        if (row.orderStatus === '7' && row.urge != '1' ) {
+                        if (row.orderStatus != '2' && row.orderStatus != '4' && row.urge != '1' ) {
                             actions.push('<a class="btn btn-warning btn-xs ' +  '" href="javascript:void(0)" onclick="urgeOrder(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>催单</a> ');
                         }
-                        if (row.orderStatus === '7' && row.urge == '1' ) {
+                        /*if (row.orderStatus === '7' && row.urge == '1' ) {
                             actions.push('<a class="btn btn-warning btn-xs ' +  '" href="javascript:void(0)" onclick="cancelUrgeOrder(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>回退资金</a> ');
-                        }
+                        }*/
                         return actions.join('');
                     }
                 }]

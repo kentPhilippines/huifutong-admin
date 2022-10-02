@@ -259,8 +259,18 @@ public class AlipayDealOrderEntityController extends BaseController {
     @ResponseBody
     @Log(title = "催单", businessType = BusinessType.UPDATE)
     public AjaxResult urgeOrder(AlipayDealOrderEntity inputEntity) {
-        inputEntity.setOrderStatus("7");
-        AlipayDealOrderEntity alipayDealOrderEntity = alipayDealOrderEntityService.selectAlipayOrderList(inputEntity).get(0);
+        //inputEntity.setOrderStatus("7");
+        //inputEntity.setUrge(0);
+        AlipayDealOrderEntity alipayDealOrderEntity = alipayDealOrderEntityService.selectAlipayDealOrderEntityByOrderId(inputEntity.getOrderId());
+        if(alipayDealOrderEntity ==null || inputEntity.getUrge()==1)
+        {
+            return AjaxResult.error("订单不存在或已催单");
+        }
+        if(inputEntity.getOrderStatus().equals("2") || inputEntity.getOrderStatus().equals("4"))
+        {
+            return AjaxResult.error("订单已成功或失败，无法催单");
+        }
+
         String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);
         String urlPath = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_SERVICE_API_KEY, StaticConstants.ALIPAY_SERVICE_API_VALUE_5);
 

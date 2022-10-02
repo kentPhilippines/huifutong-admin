@@ -195,6 +195,14 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
         return alipayDealOrderEntityMapper.selectAlipayOrderList(alipayDealOrderEntity);
     }
 
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public AlipayDealOrderEntity selectAlipayDealOrderEntityByOrderId(String orderId) {
+        return alipayDealOrderEntityMapper.selectAlipayDealOrderEntityByOrderId(orderId);
+    }
+
+
+
     /**
      * 修改交易订单
      *
@@ -233,7 +241,7 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
         mapParam.put("userId", alipayAmountEntity.getUserId());
         mapParam.put("amount", alipayAmountEntity.getAmount());
         mapParam.put("type", alipayAmountEntity.getType());
-        mapParam.put("dealDescribe", "urgeorder");
+        mapParam.put("dealDescribe", "催单冻结，请勿人为操作");
         if (alipayAmountEntity.getAmountType().toString().equals(DEDUCT_FREEZE_TYPE.getCode().toString())) {
             mapParam.put("amountType", DEDUCT_FREEZE_TYPE.getCode());//账户冻结
             AlipayUserFundEntity alipayUserFundByUserId = alipayUserFundEntityService.findAlipayUserFundByUserId(alipayAmountEntity.getUserId());
@@ -253,6 +261,7 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
         if(result.isSuccess())
         {
             alipayDealOrderEntity.setUrge(1);
+            alipayDealOrderEntity.setDealDescribe("催单人:"+currentUser.getLoginName());
 //            alipayDealOrderEntity.setOrderStatus("7");
             alipayDealOrderEntityMapper.updateAlipayDealOrderEntity(alipayDealOrderEntity);
         }

@@ -26,7 +26,7 @@ public class AlipayDealOrderEntity extends BaseEntity {
     private String orderNo;
     private String recordType;
     private String operater;
-    private int urge;//催单
+    private Integer urge;//催单
 
 
     public Integer getAutiSuccess() {

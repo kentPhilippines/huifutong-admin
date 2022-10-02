@@ -81,6 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isNotify != null  and isNotify != ''"> and isNotify = #{isNotify}</if>
             <if test="enterPay != null  and enterPay != '' "> and enterPay = #{enterPay}</if>
             <if test="status != null "> and status = #{status}</if>
+            <if test="urge != null "> and urge = #{urge}</if>
             <if test="retain1 != null and retain1 != '' ">and retain1 = #{retain1}</if>
             <if test="currency != null and currency != '' ">and currency = #{currency}</if>
             <if test="payer != null and payer != '' ">and payer = #{payer}</if>
@@ -119,6 +120,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectAlipayDealOrderEntityById" parameterType="Long" resultMap="AlipayDealOrderEntityResult">
         <include refid="selectAlipayDealOrderEntityVo"/>
         where id = #{id}
+    </select>
+
+    <select id="selectAlipayDealOrderEntityByOrderId" parameterType="String" resultMap="AlipayDealOrderEntityResult">
+        <include refid="selectAlipayDealOrderEntityVo"/>
+        where orderId = #{orderId}
     </select>
 
     <insert id="insertAlipayDealOrderEntity" parameterType="AlipayDealOrderEntity" useGeneratedKeys="true" keyProperty="id">
