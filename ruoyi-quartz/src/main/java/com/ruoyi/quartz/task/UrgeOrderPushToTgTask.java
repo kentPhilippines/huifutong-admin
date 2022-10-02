@@ -32,7 +32,7 @@ public class UrgeOrderPushToTgTask {
     public void checkOrder() {
         long l = System.currentTimeMillis();
         log.info("执行订单核对方法");
-        orderApi.checkOrder();
+        //orderApi.checkOrder();
         long h = System.currentTimeMillis();
         long a = h - l;
         log.info("订单核对方法执行完毕，消耗时间：" + a + "");

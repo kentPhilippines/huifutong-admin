@@ -329,7 +329,7 @@
                             actions.push('<a class="btn btn-danger btn-xs ' + updataOrder + '" href="javascript:void(0)" onclick="onUpdataOrder(\'' + row.id + '\')"><i class="fa fa-google-wallet"></i>转发财务</a> ');
                         }
                         if (row.orderStatus != '2' && row.orderStatus != '4' && row.urge != '1' ) {
-                            actions.push('<a class="btn btn-warning btn-xs ' +  '" href="javascript:void(0)" onclick="urgeOrder(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>催单</a> ');
+                            actions.push('<a id="urgeBtn" class="btn btn-warning btn-xs ' +  '" href="javascript:void(0)" onclick="urgeOrder(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>催单</a> ');
                         }
                         /*if (row.orderStatus === '7' && row.urge == '1' ) {
                             actions.push('<a class="btn btn-warning btn-xs ' +  '" href="javascript:void(0)" onclick="cancelUrgeOrder(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>回退资金</a> ');
@@ -342,9 +342,12 @@
     });
 
     function urgeOrder(id) {
+        $("#urgeBtn").hide();
         $.modal.confirm("确定催单", function () {
             $.operate.post(prefix + "/urgeOrder", {"orderId": id});
+            $("#urgeBtn").show();
         });
+
     }
 
     function cancelUrgeOrder(id) {

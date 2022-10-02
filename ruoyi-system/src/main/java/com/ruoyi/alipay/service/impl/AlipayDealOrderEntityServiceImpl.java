@@ -1,5 +1,6 @@
 package com.ruoyi.alipay.service.impl;
 
+import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.ruoyi.alipay.domain.*;
@@ -16,6 +17,7 @@ import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.http.HttpUtils;
 import com.ruoyi.system.domain.SysUser;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,7 @@ import static com.ruoyi.common.enums.RefundDeductType.REFUND_FREEZE_TYPE;
  * @date 2020-03-17
  */
 @Service
+@Slf4j
 public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityService {
     @Resource
     private AlipayDealOrderEntityMapper alipayDealOrderEntityMapper;
@@ -257,6 +260,7 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
         mapParam.put("accname", currentUser.getLoginName());//申请人
         mapParam.put("orderStatus", DeductStatusEnum.DEDUCT_STATUS_PROCESS.getCode());
         mapParam.put("orderId", alipayDealOrderEntity.getOrderId());
+        log.info("urgeorder :url,{},data,{}",url, JSONUtil.toJSONString(mapParam));
         AjaxResult result = HttpUtils.adminRequest2Gateway(mapParam, url);
         if(result.isSuccess())
         {
