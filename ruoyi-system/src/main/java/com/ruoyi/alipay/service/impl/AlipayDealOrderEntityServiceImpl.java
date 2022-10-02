@@ -262,6 +262,7 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
         mapParam.put("orderId", alipayDealOrderEntity.getOrderId());
         log.info("urgeorder :url,{},data,{}",url, JSONUtil.toJsonStr(mapParam));
         AjaxResult result = HttpUtils.adminRequest2Gateway(mapParam, url);
+        log.info("urgeorder result:{}",JSONUtil.toJsonStr(result));
         if(result.isSuccess())
         {
             alipayDealOrderEntity.setUrge(1);
