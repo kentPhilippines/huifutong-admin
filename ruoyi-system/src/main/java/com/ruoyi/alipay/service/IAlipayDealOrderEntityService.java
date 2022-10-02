@@ -36,6 +36,9 @@ public interface IAlipayDealOrderEntityService {
      */
     List<AlipayDealOrderEntity> selectAlipayDealOrderEntityList(AlipayDealOrderEntity alipayDealOrderEntity, Boolean isCharen);
 
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    List<AlipayDealOrderEntity> selectUrgeOrders();
+
     void fillRiskReasonForWithdrwal(List<AlipayDealOrderEntity> alipayDealOrder);
 
     /**

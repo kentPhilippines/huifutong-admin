@@ -107,6 +107,17 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
     }
 
     /**
+     * 查询催单中的数据
+     * @return
+     */
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayDealOrderEntity> selectUrgeOrders()
+    {
+            return alipayDealOrderEntityMapper.selectUrgeOrders();
+    }
+
+    /**
      * 
      * BA  和BW  是。主订单字段
      *
