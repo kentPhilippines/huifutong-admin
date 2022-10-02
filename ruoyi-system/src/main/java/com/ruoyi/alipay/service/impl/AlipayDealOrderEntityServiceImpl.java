@@ -260,7 +260,7 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
         mapParam.put("accname", currentUser.getLoginName());//申请人
         mapParam.put("orderStatus", DeductStatusEnum.DEDUCT_STATUS_PROCESS.getCode());
         mapParam.put("orderId", alipayDealOrderEntity.getOrderId());
-        log.info("urgeorder :url,{},data,{}",url, JSONUtil.toJSONString(mapParam));
+        log.info("urgeorder :url,{},data,{}",url, JSONUtil.toJsonStr(mapParam));
         AjaxResult result = HttpUtils.adminRequest2Gateway(mapParam, url);
         if(result.isSuccess())
         {
