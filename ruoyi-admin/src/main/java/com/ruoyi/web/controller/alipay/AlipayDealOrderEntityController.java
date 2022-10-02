@@ -262,11 +262,11 @@ public class AlipayDealOrderEntityController extends BaseController {
         //inputEntity.setOrderStatus("7");
         //inputEntity.setUrge(0);
         AlipayDealOrderEntity alipayDealOrderEntity = alipayDealOrderEntityService.selectAlipayDealOrderEntityByOrderId(inputEntity.getOrderId());
-        if(alipayDealOrderEntity ==null || inputEntity.getUrge()==1)
+        if(alipayDealOrderEntity ==null || alipayDealOrderEntity.getUrge()==1)
         {
             return AjaxResult.error("订单不存在或已催单");
         }
-        if(inputEntity.getOrderStatus().equals("2") || inputEntity.getOrderStatus().equals("4"))
+        if(alipayDealOrderEntity.getOrderStatus().equals("2") || alipayDealOrderEntity.getOrderStatus().equals("4"))
         {
             return AjaxResult.error("订单已成功或失败，无法催单");
         }
