@@ -358,7 +358,7 @@
 
     function onUpdataOrder(id) {
         $.modal.confirm("该笔订单确认转为人工处理", function () {
-            $.operate.post(prefix + "/updataOrder", {"orderId": id});
+            $.operate.post(prefix + "/updataOrder", {"id": id});
         });
     }
     function openTab(id) {
