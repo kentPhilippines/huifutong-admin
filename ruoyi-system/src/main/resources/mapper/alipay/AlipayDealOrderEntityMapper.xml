@@ -61,7 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, orderId,currency,   associatedId, orderStatus,
         dealAmount, dealFee, actualAmount, orderType, orderAccount,payer, orderQrUser, orderQr, externalOrderId, generationIp, dealDescribe, notify, back, isNotify,
         createTime, submitTime, feeId, status, retain1, retain2,grabOrder,systemAmount,
-        retain3, retain4 , txhash  ,   payImg  , payInfo ,enterPay , lockWit , lockWitTime ,enterPayTime , bankAmountNow,auditLog,autiSuccess,msg  from alipay_deal_order
+        retain3, retain4 , txhash  ,   payImg  , payInfo ,enterPay , lockWit , lockWitTime ,enterPayTime , bankAmountNow,auditLog,autiSuccess,msg,urge  from alipay_deal_order
         <where>
             createTime between #{params.dayStart} and #{params.dayEnd}
             <if test="orderId != null  and orderId != ''"> and orderId = #{orderId}</if>
@@ -187,6 +187,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update alipay_deal_order
         <trim prefix="SET" suffixOverrides=",">
             <if test="orderId != null  and orderId != ''">orderId = #{orderId},</if>
+            <if test="urge != null  and urge != ''">urge = #{urge},</if>
             <if test="associatedId != null  and associatedId != ''">associatedId = #{associatedId},</if>
             <if test="orderStatus != null  and orderStatus != ''">orderStatus = #{orderStatus},</if>
             <if test="dealAmount != null ">dealAmount = #{dealAmount},</if>

@@ -3,6 +3,7 @@ package com.ruoyi.alipay.domain;
 import com.ruoyi.alipay.domain.util.DesUtil;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -15,6 +16,7 @@ import java.util.Date;
  * @author kiwi
  * @date 2020-03-17
  */
+@Data
 public class AlipayMediumEntity extends BaseEntity {
     private static final long serialVersionUID = 1L;
     private  String bankSumAmountsys = "0";//银行卡系统余额汇总
@@ -47,7 +49,7 @@ public class AlipayMediumEntity extends BaseEntity {
     private Integer countLimit;//日交易限制笔数
     private Integer autoWit;//1 开启。0 关闭 默认 关闭  自动出款
 
-
+    private Integer coolDownTime;//接单冷却时间
 
     private Integer todayCountWit;//当日出款笔数
     private Integer sumCountWit;//累计出款笔数

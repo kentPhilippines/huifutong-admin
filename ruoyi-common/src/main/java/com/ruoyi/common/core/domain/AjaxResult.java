@@ -1,8 +1,8 @@
 package com.ruoyi.common.core.domain;
 
-import java.util.HashMap;
-
 import com.ruoyi.common.utils.StringUtils;
+
+import java.util.HashMap;
 
 /**
  * 操作消息提醒
@@ -84,6 +84,14 @@ public class AjaxResult extends HashMap<String, Object> {
         if (StringUtils.isNotNull(data)) {
             super.put(DATA_TAG, data);
         }
+    }
+
+    public boolean isSuccess() {
+        if(super.get(CODE_TAG)!=null && super.get(CODE_TAG).toString().equals("0"))
+        {
+            return true;
+        }
+        return false;
     }
 
     /**

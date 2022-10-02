@@ -4,6 +4,7 @@ import cn.hutool.core.date.DatePattern;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -15,6 +16,7 @@ import java.util.Date;
  * @author kiwi
  * @date 2020-03-17
  */
+@Data
 public class AlipayDealOrderEntity extends BaseEntity {
     private static final long serialVersionUID = 1L;
     private String sunCountAmount = "0";
@@ -24,6 +26,7 @@ public class AlipayDealOrderEntity extends BaseEntity {
     private String orderNo;
     private String recordType;
     private String operater;
+    private int urge;//催单
 
 
     public Integer getAutiSuccess() {

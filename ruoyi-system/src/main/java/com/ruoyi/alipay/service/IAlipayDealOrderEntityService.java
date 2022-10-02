@@ -3,8 +3,11 @@ package com.ruoyi.alipay.service;
 import com.ruoyi.alipay.domain.AlipayDealOrderApp;
 import com.ruoyi.alipay.domain.AlipayDealOrderEntity;
 import com.ruoyi.common.annotation.DataSource;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.StatisticsEntity;
 import com.ruoyi.common.enums.DataSourceType;
+import com.ruoyi.system.domain.SysUser;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -50,6 +53,14 @@ public interface IAlipayDealOrderEntityService {
      * @return 结果
      */
     int updateAlipayDealOrderEntity(AlipayDealOrderEntity alipayDealOrderEntity);
+
+
+    AjaxResult urgeOrder(AlipayDealOrderEntity alipayDealOrderEntity, SysUser currentUser, String url);
+
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    @Transactional
+    AjaxResult cancelUrgeOrder(AlipayDealOrderEntity alipayDealOrderEntity, SysUser currentUser, String url);
+
     int updateAlipayDealOrderEntityByOrder(AlipayDealOrderEntity alipayDealOrderEntity);
 
     /**

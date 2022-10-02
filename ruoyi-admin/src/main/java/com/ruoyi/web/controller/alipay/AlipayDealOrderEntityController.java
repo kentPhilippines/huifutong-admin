@@ -253,6 +253,36 @@ public class AlipayDealOrderEntityController extends BaseController {
     }
 
     /**
+     * 催单
+     */
+    @PostMapping("/urgeOrder")
+    @ResponseBody
+    @Log(title = "催单", businessType = BusinessType.UPDATE)
+    public AjaxResult urgeOrder(AlipayDealOrderEntity inputEntity) {
+        inputEntity.setOrderStatus("7");
+        AlipayDealOrderEntity alipayDealOrderEntity = alipayDealOrderEntityService.selectAlipayOrderList(inputEntity).get(0);
+        String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);
+        String urlPath = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_SERVICE_API_KEY, StaticConstants.ALIPAY_SERVICE_API_VALUE_5);
+
+        return alipayDealOrderEntityService.urgeOrder(alipayDealOrderEntity,ShiroUtils.getSysUser(),ipPort+urlPath);
+    }
+
+    /**
+     * 取消催单
+     */
+    @PostMapping("/cancelUrgeOrder")
+    @ResponseBody
+    @Log(title = "取消催单", businessType = BusinessType.UPDATE)
+    public AjaxResult cancelUrgeOrder(AlipayDealOrderEntity inputEntity) {
+        inputEntity.setOrderStatus("7");
+        AlipayDealOrderEntity alipayDealOrderEntity = alipayDealOrderEntityService.selectAlipayOrderList(inputEntity).get(0);
+        String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);
+        String urlPath = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_SERVICE_API_KEY, StaticConstants.ALIPAY_SERVICE_API_VALUE_5);
+
+        return alipayDealOrderEntityService.cancelUrgeOrder(alipayDealOrderEntity,ShiroUtils.getSysUser(),ipPort+urlPath);
+    }
+
+    /**
      * 交由财务处理
      */
     @PostMapping("/updataOrder")

@@ -1,25 +1,34 @@
 package com.ruoyi.alipay.service.impl;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.ruoyi.alipay.domain.*;
 import com.ruoyi.alipay.mapper.AlipayDealOrderAppMapper;
 import com.ruoyi.alipay.mapper.AlipayDealOrderEntityMapper;
-import com.ruoyi.alipay.service.IAlipayBankListEntityService;
-import com.ruoyi.alipay.service.IAlipayDealOrderEntityService;
-import com.ruoyi.alipay.service.IAlipayMediumEntityService;
-import com.ruoyi.alipay.service.IAlipayWithdrawEntityService;
+import com.ruoyi.alipay.service.*;
 import com.ruoyi.common.annotation.DataSource;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.StatisticsEntity;
 import com.ruoyi.common.enums.DataSourceType;
+import com.ruoyi.common.enums.DeductStatusEnum;
+import com.ruoyi.common.enums.RefundDeductType;
+import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.http.HttpUtils;
+import com.ruoyi.system.domain.SysUser;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.ruoyi.common.enums.RefundDeductType.DEDUCT_FREEZE_TYPE;
+import static com.ruoyi.common.enums.RefundDeductType.REFUND_FREEZE_TYPE;
 
 /**
  * 交易订单Service业务层处理
@@ -39,6 +48,9 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
     private IAlipayMediumEntityService iAlipayMediumEntityService;
     @Autowired
     private IAlipayBankListEntityService iAlipayBankListEntityService;
+
+    @Autowired
+    private IAlipayUserFundEntityService alipayUserFundEntityService;
 
     /**
      * 查询交易订单
@@ -193,6 +205,100 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int updateAlipayDealOrderEntity(AlipayDealOrderEntity alipayDealOrderEntity) {
         return alipayDealOrderEntityMapper.updateAlipayDealOrderEntity(alipayDealOrderEntity);
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    @Transactional
+    public AjaxResult urgeOrder(AlipayDealOrderEntity alipayDealOrderEntity, SysUser currentUser, String url)
+    {
+        //userId: tanqiuba
+        //amountType: 3
+        //accountBalance: 1843947.433
+        //amount: 100
+        //dealDescribe: test
+        AlipayAmountEntity alipayAmountEntity = new AlipayAmountEntity();
+        alipayAmountEntity.setUserId(alipayDealOrderEntity.getOrderQrUser());
+        alipayAmountEntity.setAmountType(RefundDeductType.DEDUCT_FREEZE_TYPE.getCode()+"");
+        alipayAmountEntity.setAmount(alipayDealOrderEntity.getDealAmount());
+
+        // 获取当前的用户
+//        SysUser currentUser = ShiroUtils.getSysUser();
+        alipayAmountEntity.setAccname(currentUser.getLoginName());
+
+        //获取alipay处理接口URL
+//        String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);
+//        String urlPath = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_SERVICE_API_KEY, StaticConstants.ALIPAY_SERVICE_API_VALUE_5);
+        Map<String, Object> mapParam = Collections.synchronizedMap(Maps.newHashMap());
+        mapParam.put("userId", alipayAmountEntity.getUserId());
+        mapParam.put("amount", alipayAmountEntity.getAmount());
+        mapParam.put("type", alipayAmountEntity.getType());
+        mapParam.put("dealDescribe", "urgeorder");
+        if (alipayAmountEntity.getAmountType().toString().equals(DEDUCT_FREEZE_TYPE.getCode().toString())) {
+            mapParam.put("amountType", DEDUCT_FREEZE_TYPE.getCode());//账户冻结
+            AlipayUserFundEntity alipayUserFundByUserId = alipayUserFundEntityService.findAlipayUserFundByUserId(alipayAmountEntity.getUserId());
+            Double accountBalance = alipayUserFundByUserId.getAccountBalance();
+            if (accountBalance < alipayAmountEntity.getAmount()) {
+               throw new BusinessException("当前账户余额不足，不支持账户冻结");
+            }
+        } else if (alipayAmountEntity.getAmountType().toString().equals(RefundDeductType.DELETE_QUOTA_TYPE.getCode().toString())) {//减少授权额度
+            mapParam.put("amountType", RefundDeductType.DELETE_QUOTA_TYPE.getCode());//账户冻结
+        } else {
+            mapParam.put("amountType", RefundDeductType.DEDUCT_TYPE.getCode());//减款
+        }
+        mapParam.put("accname", currentUser.getLoginName());//申请人
+        mapParam.put("orderStatus", DeductStatusEnum.DEDUCT_STATUS_PROCESS.getCode());
+        mapParam.put("orderId", alipayDealOrderEntity.getOrderId());
+        AjaxResult result = HttpUtils.adminRequest2Gateway(mapParam, url);
+        if(result.isSuccess())
+        {
+            alipayDealOrderEntity.setUrge(1);
+//            alipayDealOrderEntity.setOrderStatus("7");
+            alipayDealOrderEntityMapper.updateAlipayDealOrderEntity(alipayDealOrderEntity);
+        }
+        return result;
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    @Transactional
+    public AjaxResult cancelUrgeOrder(AlipayDealOrderEntity alipayDealOrderEntity, SysUser currentUser, String url)
+    {
+        //userId: tanqiuba
+        //amountType: 3
+        //accountBalance: 1843947.433
+        //amount: 100
+        //dealDescribe: test
+        AlipayAmountEntity alipayAmountEntity = new AlipayAmountEntity();
+        alipayAmountEntity.setUserId(alipayDealOrderEntity.getOrderQrUser());
+        alipayAmountEntity.setAmountType(REFUND_FREEZE_TYPE.getCode()+"");
+        alipayAmountEntity.setAmount(alipayDealOrderEntity.getDealAmount());
+
+        // 获取当前的用户
+//        SysUser currentUser = ShiroUtils.getSysUser();
+        alipayAmountEntity.setAccname(currentUser.getLoginName());
+
+        //获取alipay处理接口URL
+//        String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);
+//        String urlPath = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_SERVICE_API_KEY, StaticConstants.ALIPAY_SERVICE_API_VALUE_5);
+        Map<String, Object> mapParam = Collections.synchronizedMap(Maps.newHashMap());
+        mapParam.put("userId", alipayAmountEntity.getUserId());
+        mapParam.put("amount", alipayAmountEntity.getAmount());
+        mapParam.put("type", alipayAmountEntity.getType());
+        mapParam.put("dealDescribe", "cancelurgeorder");
+
+        mapParam.put("amountType", REFUND_FREEZE_TYPE.getCode());//账户解开冻结
+        mapParam.put("accname", currentUser.getLoginName());//申请人
+        mapParam.put("orderStatus", DeductStatusEnum.DEDUCT_STATUS_PROCESS.getCode());
+        mapParam.put("orderId", alipayDealOrderEntity.getOrderId());
+        AjaxResult result = HttpUtils.adminRequest2Gateway(mapParam, url);
+        if(result.isSuccess())
+        {
+            alipayDealOrderEntity.setUrge(0);
+//            alipayDealOrderEntity.setOrderStatus("7");
+            alipayDealOrderEntityMapper.updateAlipayDealOrderEntity(alipayDealOrderEntity);
+        }
+        return result;
     }
 
     @Override

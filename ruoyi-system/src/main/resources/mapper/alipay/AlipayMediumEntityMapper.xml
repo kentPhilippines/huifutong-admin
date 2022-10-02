@@ -48,6 +48,7 @@
         <result column="todayCountWit" property="todayCountWit"/>
         <result column="sumCountWit" property="sumCountWit"/>
         <result column="autoWit" property="autoWit"/>
+        <result column="coolDownTime" property="coolDownTime"/>
     </resultMap>
 
     <sql id="selectAlipayMediumEntityVo">
@@ -86,7 +87,7 @@
                notfiyMask,
                witAmount,
                auditLog,
-               payInfo,todayCount,sumCount,countLimit,todayCountWit,sumCountWit,autoWit,maxAmount
+               payInfo,todayCount,sumCount,countLimit,todayCountWit,sumCountWit,autoWit,maxAmount,coolDownTime
         from
             alipay_medium
 
@@ -245,6 +246,7 @@
         update alipay_medium
         <trim prefix="SET" suffixOverrides=",">
             <if test="mediumId != null  and mediumId != ''">mediumId = #{mediumId},</if>
+            <if test="coolDownTime != null  ">coolDownTime = #{coolDownTime},</if>
             <if test="account != null  and account != ''">account = #{account},</if>
             <if test="mediumNumber != null  and mediumNumber != ''">mediumNumber = #{mediumNumber},</if>
             <if test="mediumHolder != null  and mediumHolder != ''">mediumHolder = #{mediumHolder},</if>

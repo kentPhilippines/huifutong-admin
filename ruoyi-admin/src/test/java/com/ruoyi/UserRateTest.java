@@ -1,6 +1,5 @@
 package com.ruoyi;
 
-import com.ruoyi.alipay.domain.AlipayBankConfig;
 import com.ruoyi.alipay.mapper.AlipayBankConfigMapper;
 import com.ruoyi.alipay.service.IAlipayBankConfigService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,7 @@ public class UserRateTest {
     @Test
     public void initBank()
     {
-        BankTypeUtil.BANK_MAP_NAME.keySet().forEach(key->{
+        /*BankTypeUtil.BANK_MAP_NAME.keySet().forEach(key->{
             AlipayBankConfig alipayBankConfig = new AlipayBankConfig();
             alipayBankConfig.setCodeValue(key.toString());
             alipayBankConfig.setBankName(BankTypeUtil.BANK_MAP_NAME.get(key).toString());
@@ -29,7 +28,7 @@ public class UserRateTest {
             alipayBankConfigService.insertAlipayBankConfig(alipayBankConfig);
             log.info(key.toString());
         });
-        log.info("done:{}",BankTypeUtil.BANK_MAP_NAME.keySet().size());
+        log.info("done:{}",BankTypeUtil.BANK_MAP_NAME.keySet().size());*/
 
     }
 }
