@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.alipay;
 
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
+import com.ruoyi.alipay.domain.AlipayAmountEntity;
 import com.ruoyi.alipay.domain.AlipayDealOrderEntity;
 import com.ruoyi.alipay.service.IAlipayDealOrderEntityService;
 import com.ruoyi.common.annotation.Log;
@@ -38,6 +39,8 @@ public class AlipayOrderContorller extends BaseController {
     private DictionaryUtils dictionaryUtils;
     @Autowired
     private IAlipayDealOrderEntityService alipayDealOrderEntityService;
+    @Autowired
+    private AlipayAmountEntityController alipayAmountEntityController;
 
     @GetMapping()
     public String orderDeal() {
@@ -77,6 +80,22 @@ public class AlipayOrderContorller extends BaseController {
     @Log(title = "交易订单", businessType = BusinessType.UPDATE)
     public AjaxResult enterOrder(Long id, String orderStatus) {
         AlipayDealOrderEntity order = alipayDealOrderEntityService.selectAlipayDealOrderEntityById(id);
+
+        //催单的无论成功或失败，先取消掉之前的冻结请求
+        if(order.getUrge()==1)
+        {
+            AlipayAmountEntity alipayAmountEntity = new AlipayAmountEntity();
+            alipayAmountEntity.setOrderId(order.getOrderId());
+            alipayAmountEntity.setApproval(ShiroUtils.getLoginName());
+            alipayAmountEntity.setComment("催单解冻");
+            alipayAmountEntity.setOrderStatus("4");
+            AjaxResult ajaxResult = alipayAmountEntityController.reject(alipayAmountEntity);
+            if(!ajaxResult.isSuccess())
+            {
+                return AjaxResult.error("取消催单冻结失败");
+            }
+        }
+
         /**
          * <p>当前订单为成功或者失败的时候禁止修改状态</p>
          */
