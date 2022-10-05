@@ -257,6 +257,7 @@ public class AlipayDealOrderEntityController extends BaseController {
      */
     @PostMapping("/urgeOrder")
     @ResponseBody
+    @RequiresPermissions("orderDeal:qr:urge")
     @Log(title = "催单", businessType = BusinessType.UPDATE)
     public AjaxResult urgeOrder(AlipayDealOrderEntity inputEntity) {
         //inputEntity.setOrderStatus("7");

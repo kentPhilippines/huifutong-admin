@@ -130,6 +130,8 @@
 <script th:inline="javascript">
     //权限
     const detailFlag = [[${@permission.hasPermi('orderDeal:qr:detail')}]];
+    //催单
+    const urgeFlag = [[${@permission.hasPermi('orderDeal:qr:urge')}]];
     const backOrderFlag = [[${@permission.hasPermi('orderDeal:qr:backOrder')}]];
     const notifyFlag = [[${@permission.hasPermi('orderDeal:qr:renotify')}]];
     const updataOrder = [[${@permission.hasPermi('orderDeal:qr:status')}]];
@@ -329,7 +331,7 @@
                             actions.push('<a class="btn btn-danger btn-xs ' + updataOrder + '" href="javascript:void(0)" onclick="onUpdataOrder(\'' + row.id + '\')"><i class="fa fa-google-wallet"></i>转发财务</a> ');
                         }
                         if (row.orderStatus != '2' && row.orderStatus != '4' && row.urge != '1' ) {
-                            actions.push('<a id="urgeBtn" class="btn btn-warning btn-xs ' +  '" href="javascript:void(0)" onclick="urgeOrder(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>催单</a> ');
+                            actions.push('<a id="urgeBtn" class="btn btn-warning btn-xs ' +urgeFlag+  '" href="javascript:void(0)" onclick="urgeOrder(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>催单</a> ');
                         }
                         /*if (row.orderStatus === '7' && row.urge == '1' ) {
                             actions.push('<a class="btn btn-warning btn-xs ' +  '" href="javascript:void(0)" onclick="cancelUrgeOrder(\'' + row.orderId + '\')"><i class="fa fa-bell-o"></i>回退资金</a> ');
