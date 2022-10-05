@@ -281,7 +281,7 @@ public class AlipayDealOrderEntityController extends BaseController {
     /**
      * 取消催单
      */
-    @PostMapping("/cancelUrgeOrder")
+/*    @PostMapping("/cancelUrgeOrder")
     @ResponseBody
     @Log(title = "取消催单", businessType = BusinessType.UPDATE)
     public AjaxResult cancelUrgeOrder(AlipayDealOrderEntity inputEntity) {
@@ -291,7 +291,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         String urlPath = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_SERVICE_API_KEY, StaticConstants.ALIPAY_SERVICE_API_VALUE_5);
 
         return alipayDealOrderEntityService.cancelUrgeOrder(alipayDealOrderEntity,ShiroUtils.getSysUser(),ipPort+urlPath);
-    }
+    }*/
 
     /**
      * 交由财务处理
