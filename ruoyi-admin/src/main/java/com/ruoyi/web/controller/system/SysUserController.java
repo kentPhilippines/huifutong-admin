@@ -81,6 +81,19 @@ public class SysUserController extends BaseController {
         return AjaxResult.success(message);
     }
 
+    /**
+     * 重置用戶的登陸密碼
+     */
+    @Log(title = "重置商户登录次数", businessType = BusinessType.RESET)
+    @PostMapping("resetLoginErrorCountForMerchant")
+    @ResponseBody
+    public AjaxResult resetLoginErrorCountForMerchant(Long id) {
+        String resetPwd = alipayUserInfoService.resetLoginErrorCountForMerchant(id);
+
+        return success("重置成功");
+
+    }
+
     @RequiresPermissions("system:user:view")
     @GetMapping("/importTemplate")
     @ResponseBody

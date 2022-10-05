@@ -11,6 +11,7 @@ import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.HashKit;
 import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,13 @@ public class AlipayUserInfoServiceImpl implements IAlipayUserInfoService {
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
-    private final String LOGIN_RETRY_KEY="LOGIN_RETRY_KEY:";
+    private final String LOGIN_RETRY_KEY="LOGIN_RETRY_KEY:";//卡商登录的key
+
+    private final String MERCHANT_LOGIN_RETRY_KEY=":shiro:cache:loginRecordCache:";//商户登录key
+
+    @Autowired
+    @Value("${otc.appName}")
+    private String appName;
 
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
@@ -42,6 +49,18 @@ public class AlipayUserInfoServiceImpl implements IAlipayUserInfoService {
             throw new BusinessException("ID不能为空或此卡商不存在");
         }
         redisTemplate.delete(LOGIN_RETRY_KEY+userInfo.getUserId());
+        return "";
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public String resetLoginErrorCountForMerchant(Long id) {
+        AlipayUserInfo userInfo=alipayUserInfoMapper.selectAlipayUserInfoById(id);
+        if (userInfo == null) {
+            throw new BusinessException("ID不能为空或此卡商不存在");
+        }
+        String key = appName+"merchant"+MERCHANT_LOGIN_RETRY_KEY+userInfo.getUserId();
+        redisTemplate.delete(key);
         return "";
     }
     /**

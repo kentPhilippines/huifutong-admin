@@ -290,7 +290,7 @@ public class AlipayUserInfoController extends BaseController {
     /**
      * 重置用戶的登陸密碼
      */
-    @Log(title = "重置登录次数", businessType = BusinessType.RESET)
+    @Log(title = "重置卡商登录次数", businessType = BusinessType.RESET)
     @PostMapping("resetLoginErrorCount")
     @ResponseBody
     public AjaxResult resetLoginErrorCount(Long id) {

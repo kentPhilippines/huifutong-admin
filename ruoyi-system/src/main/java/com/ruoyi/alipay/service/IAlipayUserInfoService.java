@@ -16,6 +16,9 @@ public interface IAlipayUserInfoService {
     @DataSource(value = DataSourceType.DEALPAY_SLAVE)
     String resetLoginErrorCount(Long id);
 
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    String resetLoginErrorCountForMerchant(Long id);
+
     /**
      * 查询用户详情
      *
