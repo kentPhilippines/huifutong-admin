@@ -129,6 +129,14 @@ public class SysDictTypeController extends BaseController {
         return "system/dict/data/data";
     }
 
+//    @RequiresPermissions("system:dict:list")
+    @GetMapping("/detail/blackConfig/{dictType}")
+    public String dataManageForBlackList(@PathVariable("dictType") String dictType, ModelMap mmap) {
+        mmap.put("dict", dictTypeService.selectDictTypeByType(dictType));
+        mmap.put("dictList", dictTypeService.selectDictTypeAll());
+        return "system/dict/data/blackConfig";
+    }
+
     @GetMapping("/detailManage/{dictId}")
     public String detailManage(@PathVariable("dictId") Long dictId, ModelMap mmap) {
         mmap.put("dict", dictTypeService.selectDictTypeById(dictId));

@@ -1,13 +1,21 @@
 package com.ruoyi.system.service.impl;
 
+import cn.hutool.json.JSONUtil;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.system.domain.SysDictData;
 import com.ruoyi.system.mapper.SysDictDataMapper;
 import com.ruoyi.system.service.ISysDictDataService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 字典 业务层处理
@@ -15,10 +23,16 @@ import java.util.List;
  * @author ruoyi
  */
 @Service
+@Slf4j
 public class SysDictDataServiceImpl implements ISysDictDataService {
+    private static final String prefixKey = "MERCHANT_BLACK_RULE";
+    @Value("${otc.appName}")
+    private String appName;
     @Resource
     private SysDictDataMapper dictDataMapper;
 
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
     /**
      * 根据条件分页查询字典数据
      *
@@ -72,6 +86,8 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
      */
     @Override
     public int deleteDictDataById(Long dictCode) {
+
+        refreshAllCacheData();
         return dictDataMapper.deleteDictDataById(dictCode);
     }
 
@@ -83,6 +99,8 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
      */
     @Override
     public int deleteDictDataByIds(String ids) {
+
+        refreshAllCacheData();
         return dictDataMapper.deleteDictDataByIds(Convert.toStrArray(ids));
     }
 
@@ -94,7 +112,18 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
      */
     @Override
     public int insertDictData(SysDictData dictData) {
+        refreshAllCacheData();
         return dictDataMapper.insertDictData(dictData);
+    }
+
+    private void refreshAllCacheData()
+    {
+        List<SysDictData> dicts = dictDataMapper.selectDictDataByType("MERCHANT_BLACK_RULE");
+        Map<String, Set<String>> keyAndValues = dicts.stream().collect(Collectors.groupingBy(SysDictData::getDictLabel,Collectors.mapping(SysDictData::getDictValue,Collectors.toSet())));
+
+        redisTemplate.opsForValue().set(prefixKey, JSONUtil.toJsonStr(keyAndValues));
+        //alipayMessageRegCache.put(appName, alipayMessageRegMapper.selectAll());
+        log.info("{} load {} rows AlipayMessageReg success!", prefixKey  , keyAndValues.values().size());
     }
 
     /**
@@ -105,6 +134,8 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
      */
     @Override
     public int updateDictData(SysDictData dictData) {
+        refreshAllCacheData();
+
         return dictDataMapper.updateDictData(dictData);
     }
 
