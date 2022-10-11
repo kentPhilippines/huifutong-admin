@@ -3,10 +3,7 @@ package com.ruoyi.web.controller.system;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -70,12 +67,22 @@ public class SysDictDataController extends BaseController {
         mmap.put("dictType", dictType);
         return prefix + "/add";
     }
+    /**
+     * 新增字典类型
+     */
+    @GetMapping("/addBlackConfig/{dictType}")
+    public String addBlackConfig(@PathVariable("dictType") String dictType, ModelMap mmap) {
+        mmap.put("dictType", dictType);
+        return prefix + "/addBlackConfig";
+    }
 
     @GetMapping("/addManage/{dictType}")
     public String addManage(@PathVariable("dictType") String dictType, ModelMap mmap) {
         mmap.put("dictType", dictType);
         return prefix + "/addManage";
     }
+
+
 
     /**
      * 新增保存字典类型
@@ -89,6 +96,7 @@ public class SysDictDataController extends BaseController {
         return toAjax(dictDataService.insertDictData(dict));
     }
 
+
     /**
      * 修改字典类型
      */
@@ -96,6 +104,15 @@ public class SysDictDataController extends BaseController {
     public String edit(@PathVariable("dictCode") Long dictCode, ModelMap mmap) {
         mmap.put("dict", dictDataService.selectDictDataById(dictCode));
         return prefix + "/edit";
+    }
+
+    /**
+     * 修改字典类型
+     */
+    @GetMapping("/editBlackConfig/{dictCode}")
+    public String editBlackConfig(@PathVariable("dictCode") Long dictCode, ModelMap mmap) {
+        mmap.put("dict", dictDataService.selectDictDataById(dictCode));
+        return prefix + "/editBlackConfig";
     }
 
     @GetMapping("/editManage/{dictCode}")

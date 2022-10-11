@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增字典数据')" />
+</head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-dict-add">
+			<div class="form-group">
+				<label class="col-sm-3 control-label is-required">规则名称：</label>
+				<div class="col-sm-8">
+<!--					<input class="form-control" type="text" name="dictLabel" id="dictLabel" required>-->
+					<select name="dictLabel" class="form-control m-b">
+						<option value="IP" >IP</option>
+						<option value="payName">付款人姓名</option>
+						<option value="limitTime">刷单控制时长</option>
+						<option value="limitCount">刷单控制笔数</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label is-required">规则值：</label>
+				<div class="col-sm-8">
+					<textarea class="form-control" type="text" name="dictValue" id="dictValue" required ></textarea>
+				</div>
+			</div>
+			<div class="form-group" hidden>
+				<label class="col-sm-3 control-label">字典类型：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="dictType" name="dictType" readonly="true" th:value="${dictType}">
+				</div>
+			</div>
+
+		</form>
+	</div>
+	<th:block th:include="include :: footer" />
+	<script type="text/javascript">
+		var prefix = ctx + "system/dict/data";
+	
+		$("#form-dict-add").validate({
+			rules:{
+				dictSort:{
+					digits:true
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	        	$.operate.save(prefix + "/add", $('#form-dict-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>
