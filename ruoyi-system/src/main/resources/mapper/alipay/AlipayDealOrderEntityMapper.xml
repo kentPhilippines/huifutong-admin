@@ -65,10 +65,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         retain3, retain4 , txhash  ,   payImg  , payInfo ,enterPay , lockWit , lockWitTime ,enterPayTime , bankAmountNow,auditLog,autiSuccess,msg,urge  from alipay_deal_order
         <where>
             createTime between #{params.dayStart} and #{params.dayEnd}
-            <if test="orderId != null  and orderId != ''"> and orderId = #{orderId}</if>
-            <if test="associatedId != null  and associatedId != ''"> and associatedId = #{associatedId}</if>
-            <if test="externalOrderId != null  and externalOrderId != ''"> and externalOrderId = #{externalOrderId}</if>
-<!--            <if test="orderId != null  and orderId != ''">  and  orderId = #{orderId} or externalOrderId =  #{orderId} or associatedId = #{orderId}    </if>-->
+<!--            <if test="orderId != null  and orderId != ''"> and orderId = #{orderId}</if>-->
+<!--            <if test="associatedId != null  and associatedId != ''"> and associatedId = #{associatedId}</if>-->
+<!--            <if test="externalOrderId != null  and externalOrderId != ''"> and externalOrderId = #{externalOrderId}</if>-->
+            <if test="orderId != null  and orderId != ''">  and  orderId = #{orderId} or externalOrderId =  #{orderId} or associatedId = #{orderId}    </if>
             <if test="orderStatus != null  and orderStatus != ''"> and orderStatus = #{orderStatus}</if>
             and  (dealAmount > #{params.minAmount}   and  #{params.maxAmount} >  dealAmount  )
             <if test="params.exactlyAmount != null and params.exactlyAmount != ''"> and dealAmount = #{params.exactlyAmount}</if>

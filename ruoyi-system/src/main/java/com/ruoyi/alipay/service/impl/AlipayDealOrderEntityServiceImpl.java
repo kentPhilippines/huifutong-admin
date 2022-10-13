@@ -98,7 +98,7 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public List<AlipayDealOrderEntity> selectAlipayDealOrderEntityList(AlipayDealOrderEntity alipayDealOrderEntity, Boolean isCharen) {
-        this.identifyOrderId(alipayDealOrderEntity);
+        //this.identifyOrderId(alipayDealOrderEntity);
         if (isCharen) {
             return alipayDealOrderEntityMapper.selectAlipayDealOrderEntityListIsCharen(alipayDealOrderEntity);
         } else {
