@@ -1,5 +1,7 @@
 package com.ruoyi.system.service.impl;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.system.domain.SysDictData;
@@ -86,9 +88,9 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
      */
     @Override
     public int deleteDictDataById(Long dictCode) {
-
+        int i = dictDataMapper.deleteDictDataById(dictCode);
         refreshAllCacheData();
-        return dictDataMapper.deleteDictDataById(dictCode);
+        return i;
     }
 
     /**
@@ -99,9 +101,9 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
      */
     @Override
     public int deleteDictDataByIds(String ids) {
-
+        int i = dictDataMapper.deleteDictDataByIds(Convert.toStrArray(ids));
         refreshAllCacheData();
-        return dictDataMapper.deleteDictDataByIds(Convert.toStrArray(ids));
+        return i;
     }
 
     /**
@@ -112,16 +114,20 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
      */
     @Override
     public int insertDictData(SysDictData dictData) {
+        int i = dictDataMapper.insertDictData(dictData);
         refreshAllCacheData();
-        return dictDataMapper.insertDictData(dictData);
+        return i;
     }
 
     private void refreshAllCacheData()
     {
         List<SysDictData> dicts = dictDataMapper.selectDictDataByType("MERCHANT_BLACK_RULE");
-        Map<String, Set<String>> keyAndValues = dicts.stream().collect(Collectors.groupingBy(SysDictData::getDictLabel,Collectors.mapping(SysDictData::getDictValue,Collectors.toSet())));
-
-        redisTemplate.opsForValue().set(prefixKey, JSONUtil.toJsonStr(keyAndValues));
+        Map<String, List<String>> keyAndValues = dicts.stream().collect(Collectors.groupingBy(SysDictData::getDictLabel,Collectors.mapping(SysDictData::getDictValue,Collectors.toList())));
+        String s = JSONUtil.formatJsonStr(JSONUtil.toJsonStr(keyAndValues));
+        s = StrUtil.removeAllLineBreaks(s);
+        log.info("缓存数据为："+s);
+        redisTemplate.opsForValue().set(prefixKey,s);
+        //redisTemplate.opsForHash().putAll(prefixKey, keyAndValues);
         //alipayMessageRegCache.put(appName, alipayMessageRegMapper.selectAll());
         log.info("{} load {} rows AlipayMessageReg success!", prefixKey  , keyAndValues.values().size());
     }
@@ -134,9 +140,10 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
      */
     @Override
     public int updateDictData(SysDictData dictData) {
+        int i = dictDataMapper.updateDictData(dictData);
         refreshAllCacheData();
 
-        return dictDataMapper.updateDictData(dictData);
+        return i;
     }
 
     /**
