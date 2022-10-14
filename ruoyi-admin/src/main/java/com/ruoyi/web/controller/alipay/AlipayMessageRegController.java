@@ -161,6 +161,19 @@ public class AlipayMessageRegController extends BaseController {
             if (StrUtil.isBlank(templateInfoSplitEntity.getTransactionType())){
                 return AjaxResult.error("交易类型不能为空");
             }
+
+            if (StrUtil.isBlank(templateInfoSplitEntity.getBankName())){
+                return AjaxResult.error("银行名称不能为空");
+            }
+
+            if (StrUtil.isBlank(templateInfoSplitEntity.getSourceMsg())){
+                return AjaxResult.error("原始短信不能为空");
+            }
+
+            if (StrUtil.isBlank(templateInfoSplitEntity.getTransactionAmount())){
+                return AjaxResult.error("转账金额不能为空");
+            }
+
             alipayMessageReg = TemplateUtil.insertTemplate(TemplateInfoSplitEntity.of(templateInfoSplitEntity));
             if (null == alipayMessageReg) {
                 return AjaxResult.error("解析为空");
