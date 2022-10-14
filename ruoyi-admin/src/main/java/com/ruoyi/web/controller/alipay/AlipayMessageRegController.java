@@ -5,10 +5,14 @@ import java.util.List;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.ruoyi.alipay.domain.BankInfoSplitEntity;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.TemplateInfoSplitEntity;
 import com.ruoyi.system.service.impl.TemplateUtil;
+import com.ruoyi.web.controller.tool.DateDetail;
+import com.ruoyi.web.controller.tool.NewTemplateEnumTool;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,6 +158,9 @@ public class AlipayMessageRegController extends BaseController {
         AlipayMessageReg alipayMessageReg = null;
         String loginName = ShiroUtils.getLoginName();
         try {
+            if (StrUtil.isBlank(templateInfoSplitEntity.getTransactionType())){
+                return AjaxResult.error("交易类型不能为空");
+            }
             alipayMessageReg = TemplateUtil.insertTemplate(TemplateInfoSplitEntity.of(templateInfoSplitEntity));
             if (null == alipayMessageReg) {
                 return AjaxResult.error("解析为空");
@@ -195,12 +202,15 @@ public class AlipayMessageRegController extends BaseController {
                             String ms=templateFlag.equals("1")?"开启":"关闭";
                             String msg4="模板状态->"+ms+"#";
                             String msg5="模板解析结果->"+s;
+//                            boolean b = NewTemplateEnumTool.checkDate(alipayMessageReg, originText, new BankInfoSplitEntity(), new DateDetail());
+//                            String msg6="五分钟校验结果->"+b;
                             return AjaxResult.success(msg1+msg2+msg3+msg4+msg5);
                         }
                     }
                 }
             }
             return AjaxResult.error("未找到合适模板,请添加模板");
+
         } catch (Exception e) {
             e.printStackTrace();
             return AjaxResult.error(e.getMessage());
