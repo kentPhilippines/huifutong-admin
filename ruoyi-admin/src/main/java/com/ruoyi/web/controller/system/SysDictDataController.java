@@ -35,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/system/dict/data")
 public class SysDictDataController extends BaseController {
     private String prefix = "system/dict/data";
-    @Value("${otc.usdt.rate:http://172.16.32.225:32437/http/rate}")
+    @Value("${otc.usdt.rate}")
     private String otcRate;
 
     @Autowired
@@ -67,6 +67,7 @@ public class SysDictDataController extends BaseController {
         mmap.put("dictType", dictType);
         return prefix + "/add";
     }
+
     /**
      * 新增字典类型
      */
@@ -81,7 +82,6 @@ public class SysDictDataController extends BaseController {
         mmap.put("dictType", dictType);
         return prefix + "/addManage";
     }
-
 
 
     /**
@@ -216,10 +216,9 @@ public class SysDictDataController extends BaseController {
     String getRate(String type) {
         Map<String, Object> data = new HashMap<>();
         data.put("type", type);
-        String params = JSON.toJSONString(data);
         String post = null;
         try {
-            post = HttpUtil.post(otcRate, params);
+            post = HttpUtil.get(otcRate, data);
         } catch (Exception e) {
             logger.error("获取汇率失败", e);
             return null;
@@ -227,5 +226,17 @@ public class SysDictDataController extends BaseController {
         return post;
     }
 
+    public static void main(String[] args) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("type", "sell");
+        String post = null;
+        post = HttpUtil.get("http://127.0.0.1:8081/http/rate", data);
+        System.out.println("出售价格：" + post);
 
+        data.put("type", "sell");
+        String post1 = null;
+        post1 = HttpUtil.get("http://127.0.0.1:8081/http/rate", data);
+        System.out.println("购买价格：" + post1);
+
+    }
 }
