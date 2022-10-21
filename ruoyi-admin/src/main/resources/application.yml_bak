@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: admin
+  profiles:
+    active: dev
+  cloud: # nacos地址
+    nacos:
+      server-addr: 47.242.206.196:8848
+      config:
+        file-extension: yaml
+        namespace: 4ea7a38e-32fd-4ddd-b384-dc5ad4bd753d #dev
+        group: ZB_GROUP
+      discovery:
+#        namespace: a173ae57-6dc2-4f08-bda7-194b5d8ecdaf #pro
+        namespace: 4ea7a38e-32fd-4ddd-b384-dc5ad4bd753d #dev
+        group: ZB_GROUP
+  #logging:
+  #  level:
+  #    root: info

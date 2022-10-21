@@ -1,0 +1,20 @@
+#配置文件默认格式${prefix}-${spring.profile.active}.${file-extension}
+spring:
+  application:
+    name: admin
+  cloud: # nacos地址
+    nacos:
+      server-addr: 47.242.206.196:8848
+      config:
+        file-extension: yaml
+        namespace: 4ea7a38e-32fd-4ddd-b384-dc5ad4bd753d
+        group: ZB_GROUP
+        prefix: admin
+        refresh-enabled: true
+      discovery:
+#        namespace: a173ae57-6dc2-4f08-bda7-194b5d8ecdaf #pro
+        namespace: 4ea7a38e-32fd-4ddd-b384-dc5ad4bd753d
+        group: ZB_GROUP
+  #logging:
+  #  level:
+  #    root: info

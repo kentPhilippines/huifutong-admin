@@ -1,9 +1,9 @@
 package com.ruoyi;
 
-import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
@@ -12,7 +12,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableScheduling //轻量级定时任务
-@NacosPropertySource(dataId = "${nacos.config.data-id}",autoRefreshed = true)
+//@NacosPropertySource(dataId = "${nacos.config.data-id}",autoRefreshed = true)
+@EnableDiscoveryClient
 public class RuoYiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RuoYiApplication.class, args);
