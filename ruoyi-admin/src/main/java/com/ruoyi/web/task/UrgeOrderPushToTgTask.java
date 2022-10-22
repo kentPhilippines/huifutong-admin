@@ -1,4 +1,4 @@
-package com.ruoyi.quartz.task;
+package com.ruoyi.web.task;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.log.Log;
