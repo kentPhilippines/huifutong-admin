@@ -2,8 +2,10 @@ package com.ruoyi.system.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.alicp.jetcache.Cache;
 import com.alicp.jetcache.anno.CacheType;
@@ -14,6 +16,7 @@ import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.system.domain.SysUser;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,6 +25,8 @@ import com.ruoyi.system.mapper.AlipayMessageRegMapper;
 import com.ruoyi.system.domain.AlipayMessageReg;
 import com.ruoyi.system.service.IAlipayMessageRegService;
 import com.ruoyi.common.core.text.Convert;
+
+import static com.ruoyi.system.service.impl.TemplateUtil.NUM;
 
 /**
  * 短信正则模板Service业务层处理
@@ -153,6 +158,36 @@ public class AlipayMessageRegServiceImpl implements IAlipayMessageRegService {
         boolean isMatch = ReUtil.isMatch(pattern, content);
         if (!isMatch) {
             throw new BusinessException("模板与内容不匹配，请检查数据。");
+        }
+        String[] split4 = extractStr.split(";");
+        String myselfTail = StringUtils.equals(split4[1], "@") ? "" : split4[1].trim();
+        String transactionAmount = StringUtils.equals(split4[5], "@") ? "" : split4[5].trim();
+        String balance = StringUtils.equals(split4[6], "@") ? "" : split4[6].trim();
+        if (!StrUtil.isBlank(myselfTail)&&!Pattern.matches(NUM,myselfTail)){
+            throw new BusinessException("模板有误"+JSONUtil.toJsonStr(alipayMessageReg)+"-尾号解析出错:"+myselfTail);
+        }
+
+
+        if (!StrUtil.isBlank(balance)){
+            String balanceStr=balance
+                    .replace(",", "")
+                    .replace("+", "")
+                    .replace("-", "")
+                    .replace(".","");
+            if (!Pattern.matches(NUM,balanceStr)) {
+                throw new BusinessException("模板有误"+JSONUtil.toJsonStr(alipayMessageReg)+"-余额解析出错:"+balanceStr);
+            }
+        }
+
+        if (!StrUtil.isBlank(transactionAmount)){
+            String transactionAmountStr=transactionAmount
+                    .replace(",", "")
+                    .replace("+", "")
+                    .replace("-", "")
+                    .replace(".","");
+            if (!Pattern.matches(NUM,transactionAmountStr)) {
+                throw new BusinessException("模板有误"+JSONUtil.toJsonStr(alipayMessageReg)+"-转账金额解析出错:"+transactionAmountStr);
+            }
         }
         return BankInfoSplitEntity.of(extractStr);
     }

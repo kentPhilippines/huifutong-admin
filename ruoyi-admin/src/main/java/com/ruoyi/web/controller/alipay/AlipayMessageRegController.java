@@ -2,12 +2,14 @@ package com.ruoyi.web.controller.alipay;
 
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.ruoyi.alipay.domain.BankInfoSplitEntity;
+import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.TemplateInfoSplitEntity;
 import com.ruoyi.system.service.impl.TemplateUtil;
@@ -27,6 +29,8 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+
+import static com.ruoyi.system.service.impl.TemplateUtil.NUM;
 
 /**
  * 短信正则模板Controller
@@ -208,6 +212,36 @@ public class AlipayMessageRegController extends BaseController {
                     boolean match = ReUtil.isMatch(regex, originText);
                     if (match){
                         String s = ReUtil.extractMulti(regex, originText, template);
+                        String[] split4 = s.split(";");
+                        String myselfTail = StringUtils.equals(split4[1], "@") ? "" : split4[1].trim();
+                        String transactionAmount = StringUtils.equals(split4[5], "@") ? "" : split4[5].trim();
+                        String balance = StringUtils.equals(split4[6], "@") ? "" : split4[6].trim();
+                        if (!StrUtil.isBlank(myselfTail)&&!Pattern.matches(NUM,myselfTail)){
+                            throw new BusinessException("已找到模板,模板有误"+JSONUtil.toJsonStr(messageReg)+"-尾号解析出错:"+myselfTail);
+                        }
+
+
+                        if (!StrUtil.isBlank(balance)){
+                            String balanceStr=balance
+                                    .replace(",", "")
+                                    .replace("+", "")
+                                    .replace("-", "")
+                                    .replace(".","");
+                            if (!Pattern.matches(NUM,balanceStr)) {
+                                throw new BusinessException("已找到模板,模板有误"+JSONUtil.toJsonStr(messageReg)+"-余额解析出错:"+balanceStr);
+                            }
+                        }
+
+                        if (!StrUtil.isBlank(transactionAmount)){
+                            String transactionAmountStr=transactionAmount
+                                    .replace(",", "")
+                                    .replace("+", "")
+                                    .replace("-", "")
+                                    .replace(".","");
+                            if (!Pattern.matches(NUM,transactionAmountStr)) {
+                                throw new BusinessException("已找到模板,模板有误"+JSONUtil.toJsonStr(messageReg)+"-转账金额解析出错:"+transactionAmountStr);
+                            }
+                        }
                         if (StringUtils.isNotBlank(s)){
                             String msg1="已找到合适模板,原始短信->"+originText+"#";
                             String msg2="匹配正则->"+regex+"#";

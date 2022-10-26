@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.tool;
 
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.ruoyi.alipay.domain.BankInfoSplitEntity;
 import com.ruoyi.common.exception.BusinessException;
@@ -8,6 +10,8 @@ import com.ruoyi.system.domain.AlipayMessageReg;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.regex.Pattern;
 
 
 /**
