@@ -58,11 +58,11 @@ public class UrgeOrderPushToTgTask {
         alipayDealOrderEntity.setUrge(1);
 
         List<AlipayDealOrderEntity> orders = dealOrderEntityService.selectUrgeOrders();
-//        if(CollectionUtils.isEmpty(orders))
-//        {
-//            log.info("当前没有需要处理的催单,{}",new DateTime().toMsStr());
-//            return;
-//        }
+        if(CollectionUtils.isEmpty(orders))
+        {
+            log.info("当前没有需要处理的催单,{}",new DateTime().toMsStr());
+            return;
+        }
 
         String template ="当前有"+orders.size()+"笔催单需要处理：";
 
