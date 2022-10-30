@@ -385,14 +385,10 @@ public class AlipayDealOrderEntityController extends BaseController {
         Collections.sort(list, new Comparator<AlipayUserFundEntity>() {
             @Override
             public int compare(AlipayUserFundEntity o1, AlipayUserFundEntity o2) {
-                int i = 1;
-                if ((o1.getTodayDealAmount() - o1.getTodayOtherWitAmount()) >= (o2.getTodayDealAmount() - o2.getTodayOtherWitAmount())) {
-                    i = -1;
-                } else {
-                    i = 1;
-                }
-                ;
-                return i;
+                double todayIncomeO1 = o1.getTodayDealAmount() - o1.getTodayOtherWitAmount();
+                double todayIncomeO2 = o2.getTodayDealAmount() - o2.getTodayOtherWitAmount();
+
+                return Double.compare(todayIncomeO2,todayIncomeO1);
             }
         });
         if (StrUtil.isNotEmpty(orderId)) {
