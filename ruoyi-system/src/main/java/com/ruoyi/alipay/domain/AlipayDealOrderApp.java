@@ -76,7 +76,7 @@ public class AlipayDealOrderApp extends BaseEntity {
      * 数据修改时间
      */
     @Excel(name = "数据修改时间", width = 30, dateFormat = DatePattern.NORM_DATETIME_PATTERN)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date submitTime;
     /**
      * 状态:1可使用；0不可使用

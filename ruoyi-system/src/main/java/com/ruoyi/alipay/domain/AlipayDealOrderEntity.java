@@ -171,9 +171,9 @@ public class AlipayDealOrderEntity extends BaseEntity {
 
     private Integer lockWit;
     private Integer grabOrder;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date lockWitTime;
-   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date enterPayTime;
     public Integer getGrabOrder() {
         return grabOrder;
@@ -342,7 +342,7 @@ public class AlipayDealOrderEntity extends BaseEntity {
      * 数据修改时间
      */
     @Excel(name = "数据修改时间", width = 30, dateFormat = DatePattern.NORM_DATETIME_PATTERN)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date submitTime;
 
     /**
