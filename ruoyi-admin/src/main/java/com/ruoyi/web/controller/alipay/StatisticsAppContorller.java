@@ -36,7 +36,7 @@ public class StatisticsAppContorller
     @GetMapping("/view")
     public String getStackedAreaChart(ModelMap mmap, String userId) {
         BaseEntity baseEntity = new BaseEntity();
-        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<String, Object>();
         params.put("dayStart", DateUtil.format(DateUtil.offsetMonth(new Date(), -2).toJdkDate(), DatePattern.NORM_DATETIME_PATTERN));
         params.put("dayEnd", DateUtil.format(new Date(), DatePattern.NORM_DATETIME_PATTERN));
         baseEntity.setParams(params);

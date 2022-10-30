@@ -1,13 +1,11 @@
 package com.ruoyi.web.task;
 
-import cn.hutool.core.date.DateTime;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import com.ruoyi.alipay.domain.AlipayDealOrderEntity;
 import com.ruoyi.alipay.service.IAlipayDealOrderEntityService;
-import com.ruoyi.common.utils.http.HttpUtils;
 import com.ruoyi.quartz.api.OrderApi;
-import org.apache.commons.collections.CollectionUtils;
+import com.ruoyi.web.feign.NotifyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -28,6 +26,9 @@ public class UrgeOrderPushToTgTask {
     Log log = LogFactory.get();
     @Autowired
     private OrderApi orderApi;
+
+    @Autowired
+    private NotifyService notifyService;
 
     @Autowired
     private IAlipayDealOrderEntityService dealOrderEntityService;
@@ -57,11 +58,11 @@ public class UrgeOrderPushToTgTask {
         alipayDealOrderEntity.setUrge(1);
 
         List<AlipayDealOrderEntity> orders = dealOrderEntityService.selectUrgeOrders();
-        if(CollectionUtils.isEmpty(orders))
-        {
-            log.info("当前没有需要处理的催单,{}",new DateTime().toMsStr());
-            return;
-        }
+//        if(CollectionUtils.isEmpty(orders))
+//        {
+//            log.info("当前没有需要处理的催单,{}",new DateTime().toMsStr());
+//            return;
+//        }
 
         String template ="当前有"+orders.size()+"笔催单需要处理：";
 
@@ -71,9 +72,10 @@ public class UrgeOrderPushToTgTask {
         template += String.join(";\n", messages);
         String completeUrl = notifyLanUrl+"/tg/push/"+applicationId+"/urge";
         log.info("催单推送信息：{},{}",completeUrl,template);
-        HttpUtils.sendGet(completeUrl,"text="+ URLEncoder.encode(template));
+        String str = notifyService.push(URLEncoder.encode(template),applicationId).toString();
+        //HttpUtils.sendGet(completeUrl,"text="+ URLEncoder.encode(template));
         long h = System.currentTimeMillis();
         long a = h - l;
-        log.info("执行订催单推送方法执行完毕，消耗时间：" + a + "");
+        log.info("执行订催单推送方法执行完毕，消耗时间：" + a + "" +str);
     }
 }
