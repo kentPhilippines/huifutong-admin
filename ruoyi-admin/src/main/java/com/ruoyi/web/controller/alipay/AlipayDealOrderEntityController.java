@@ -161,15 +161,10 @@ public class AlipayDealOrderEntityController extends BaseController {
             alipayDealOrderEntity.setOrderQrUser(alipayDealOrderEntity.getOrderQrUser1());
         }
 
-        //     mmap.put("imgUrl", qrServerAddr + qrServerPath + imgId);
         startPage1();
         List<AlipayDealOrderEntity> list = alipayDealOrderEntityService
                 .selectAlipayDealOrderEntityList(alipayDealOrderEntity, isCharen);
-        //出款操作 做风控判断 填充  riskReason  start
-        if (alipayDealOrderEntity.getOrderType().equals("4")) {
-            alipayDealOrderEntityService.fillRiskReasonForWithdrwal(list);
-        }
-        //做风控判断 填充  riskReason  end
+
         //支付宝扫码 关联查询payinfo from medium start
         List<String> mediumIds = list.stream().filter(order -> order.getRetain1().contains("ALIPAY")).map(AlipayDealOrderEntity::getOrderQr).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(mediumIds)) {
@@ -180,7 +175,7 @@ public class AlipayDealOrderEntityController extends BaseController {
                     order.setPayInfoForImgUrl(mediumEntity.getPayInfo());
                     order.setOrderQr(mediumEntity.getMediumNumber() + ":" + mediumEntity.getMediumHolder() + ":" + mediumEntity.getMediumPhone());
                 } catch (Throwable t) {
-
+                    logger.error("查询存款列表出错",t);
                 }
             });
         }
@@ -217,18 +212,7 @@ public class AlipayDealOrderEntityController extends BaseController {
             if (ObjectUtil.isNotNull(userCollect1.get(order.getOrderQrUser()))) {
                 order.setChannelName(userCollect1.get(order.getOrderQrUser()).getUserName());
             }
-            if (CollUtil.isNotEmpty(orderIds) && "4".equals(alipayDealOrderEntity.getOrderType())) {
 
-                String payImg = order.getPayImg();
-
-                order.setPayImg(qrServerAddr + qrServerPath + payImg);
-                AlipayWithdrawEntity alipayWithdrawEntity = dataMap.get(order.getAssociatedId());
-                try {
-                    order.setBankAccount("入款：" + alipayWithdrawEntity.getBankName() + ":" + alipayWithdrawEntity.getAccname() + ":" + alipayWithdrawEntity.getBankNo() + " 金额 ：" + alipayWithdrawEntity.getAmount());
-                    order.setOrderNo(alipayWithdrawEntity.getOrderId());
-                }catch (Exception e ){
-                }
-            }
             AlipayProductEntity product = prCollect.get(order.getRetain1());
 
 
