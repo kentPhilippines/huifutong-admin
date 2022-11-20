@@ -149,10 +149,117 @@ public class AlipayDealOrderEntityController extends BaseController {
     /**
      * 查询交易订单列表
      */
-    @PostMapping("/list")
+    @PostMapping("/orderType/1/list")
     @RequiresPermissions("orderDeal:qr:list")
     @ResponseBody
-    public TableDataInfo list(AlipayDealOrderEntity alipayDealOrderEntity, Boolean isCharen) {
+    public TableDataInfo depositList(AlipayDealOrderEntity alipayDealOrderEntity, Boolean isCharen) {
+
+        if (null == isCharen) {
+            isCharen = Boolean.FALSE;
+        }
+        if (StrUtil.isNotEmpty(alipayDealOrderEntity.getOrderQrUser1())) {
+            alipayDealOrderEntity.setOrderQrUser(alipayDealOrderEntity.getOrderQrUser1());
+        }
+
+        //     mmap.put("imgUrl", qrServerAddr + qrServerPath + imgId);
+        startPage1();
+        List<AlipayDealOrderEntity> list = alipayDealOrderEntityService
+                .selectAlipayDealOrderEntityList(alipayDealOrderEntity, isCharen);
+        //出款操作 做风控判断 填充  riskReason  start
+        if (alipayDealOrderEntity.getOrderType().equals("4")) {
+            alipayDealOrderEntityService.fillRiskReasonForWithdrwal(list);
+        }
+        //做风控判断 填充  riskReason  end
+        //支付宝扫码 关联查询payinfo from medium start
+        List<String> mediumIds = list.stream().filter(order -> order.getRetain1().contains("ALIPAY")).map(AlipayDealOrderEntity::getOrderQr).collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(mediumIds)) {
+            List<AlipayMediumEntity> mediumEntities = alipayMediumEntityService.selectByMediumIds(mediumIds);
+            list.stream().filter(order -> order.getRetain1().contains("ALIPAY")).forEach(order -> {
+                try {
+                    AlipayMediumEntity mediumEntity = mediumEntities.stream().filter(medium -> medium.getMediumId().equals(order.getOrderQr())).findFirst().get();
+                    order.setPayInfoForImgUrl(mediumEntity.getPayInfo());
+                    order.setOrderQr(mediumEntity.getMediumNumber() + ":" + mediumEntity.getMediumHolder() + ":" + mediumEntity.getMediumPhone());
+                } catch (Throwable t) {
+
+                }
+            });
+        }
+        //支付宝扫码 关联查询payinfo from medium end
+        SysUser user = new SysUser();
+        List<SysUser> sysUsers = userService.selectUserList(user);
+        AlipayProductEntity alipayProductEntity = new AlipayProductEntity();
+        alipayProductEntity.setStatus(1);
+        List<AlipayProductEntity> productlist = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
+        List<AlipayUserFundEntity> listFund = alipayUserFundEntityService.findUserFundAll();
+        ConcurrentHashMap<String, AlipayUserFundEntity> userCollect1 = listFund.stream().collect(Collectors.toConcurrentMap(AlipayUserFundEntity::getUserId, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
+        ConcurrentHashMap<String, AlipayProductEntity> prCollect = productlist.stream().collect(Collectors.toConcurrentMap(AlipayProductEntity::getProductId, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
+        ConcurrentHashMap<String, SysUser> userCollect = new ConcurrentHashMap<String, SysUser>();
+        for (SysUser user1 : sysUsers) {
+            if (StrUtil.isNotBlank(user1.getMerchantId())) {
+                userCollect.put(user1.getMerchantId(), user1);
+            }
+        }
+
+        Map<String, AlipayWithdrawEntity> dataMap = new HashMap<>();
+        List<String> orderIds = list.stream().map(AlipayDealOrderEntity::getAssociatedId).collect(Collectors.toList());
+        if (CollUtil.isNotEmpty(orderIds) && "4".equals(alipayDealOrderEntity.getOrderType())) {
+            List<AlipayWithdrawEntity> alipayWithdrawEntities = iAlipayWithdrawEntityService.selectAlipayWithdrawEntityByIds(orderIds);
+            if (CollUtil.isNotEmpty(alipayWithdrawEntities)) {
+                dataMap = alipayWithdrawEntities.stream().collect(Collectors.toMap(AlipayWithdrawEntity::getOrderId, alipayWithdrawEntity -> alipayWithdrawEntity));
+            }
+        }
+        String qrServerAddr = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_KEY, StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_VALUE);
+        String qrServerPath = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_KEY, StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_PATH);
+        for (AlipayDealOrderEntity order : list) {
+            if (StrUtil.isEmpty(order.getOrderQrUser())) {
+                continue;
+            }
+            if (ObjectUtil.isNotNull(userCollect1.get(order.getOrderQrUser()))) {
+                order.setChannelName(userCollect1.get(order.getOrderQrUser()).getUserName());
+            }
+            if (CollUtil.isNotEmpty(orderIds) && "4".equals(alipayDealOrderEntity.getOrderType())) {
+
+                String payImg = order.getPayImg();
+
+                order.setPayImg(qrServerAddr + qrServerPath + payImg);
+                AlipayWithdrawEntity alipayWithdrawEntity = dataMap.get(order.getAssociatedId());
+                try {
+                    order.setBankAccount("入款：" + alipayWithdrawEntity.getBankName() + ":" + alipayWithdrawEntity.getAccname() + ":" + alipayWithdrawEntity.getBankNo() + " 金额 ：" + alipayWithdrawEntity.getAmount());
+                    order.setOrderNo(alipayWithdrawEntity.getOrderId());
+                }catch (Exception e ){
+                }
+            }
+            AlipayProductEntity product = prCollect.get(order.getRetain1());
+
+
+            if (ObjectUtil.isNotNull(product)) {
+                order.setRetain1(product.getProductName());
+            }
+            if (ObjectUtil.isNotNull(userCollect.get(order.getOrderAccount()))) {
+                order.setUserName(userCollect.get(order.getOrderAccount()).getUserName());
+            }
+        }
+        userCollect = null;
+        AlipayDealOrderEntity deal = alipayDealOrderEntityService.selectAlipayDealOrderEntityListSum(alipayDealOrderEntity, isCharen);
+        if (null != deal && CollUtil.isNotEmpty(list)) {
+            for (int mark = 0; mark < 1; mark++) {
+                list.get(mark).setSunCountAmountFee(deal.getSunCountAmountFee());
+                list.get(mark).setSunCountAmount(deal.getSunCountAmount());
+                list.get(mark).setSunCountActualAmount(deal.getSunCountActualAmount());
+
+            }
+        }
+        return getDataTable(list);
+    }
+
+
+    /**
+     * 查询取款订单列表
+     */
+    @PostMapping("/orderType/4/list")
+    @RequiresPermissions("orderDeal:qr:list")
+    @ResponseBody
+    public TableDataInfo witList(AlipayDealOrderEntity alipayDealOrderEntity, Boolean isCharen) {
 
         if (null == isCharen) {
             isCharen = Boolean.FALSE;
@@ -1021,7 +1128,7 @@ public class AlipayDealOrderEntityController extends BaseController {
     @ResponseBody
     public TableDataInfo witOrderList(AlipayDealOrderEntity alipayDealOrderEntity) {
         alipayDealOrderEntity.setOrderType("4");
-        return list(alipayDealOrderEntity, true);
+        return this.witList(alipayDealOrderEntity, true);
     }
 
 
