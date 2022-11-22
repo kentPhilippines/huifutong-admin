@@ -201,6 +201,11 @@ public class AlipayMessageRegController extends BaseController {
             if (null == alipayMessageReg) {
                 return AjaxResult.error("参数为空,请稍后再试" + JSONUtil.toJsonStr(alipayMessageReg));
             }
+
+            if (StrUtil.isBlank(alipayMessageReg.getBankName())) {
+                return AjaxResult.error("银行名称参数为空,请稍后再试" + JSONUtil.toJsonStr(alipayMessageReg));
+            }
+
             alipayMessageReg.setBankName(templateInfoSplitEntity.getBankName());
             String originText = templateInfoSplitEntity.getSourceMsg();
             List<AlipayMessageReg> alipayMessageRegs = alipayMessageRegService.selectAlipayMessageRegList(alipayMessageReg);
