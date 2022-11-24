@@ -102,7 +102,10 @@ public interface IAlipayDealOrderEntityService {
 
     AlipayDealOrderEntity findOrderByOrderId(String order);
 
-    AlipayDealOrderEntity selectAlipayDealOrderEntityListSum(AlipayDealOrderEntity alipayDealOrderEntity,Boolean flag );
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    AlipayDealOrderEntity findOrderByAssociatedId(String order);
+
+    AlipayDealOrderEntity selectAlipayDealOrderEntityListSum(AlipayDealOrderEntity alipayDealOrderEntity, Boolean flag );
 
     /**
      * 修改原订单金额

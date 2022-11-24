@@ -67,6 +67,8 @@ public class AlipayWithdrawEntityController extends BaseController {
     private IAlipayRunOrderEntityService alipayRunOrderEntityService;
     @Autowired
     private IMerchantInfoEntityService merchantInfoEntityService;
+    @Autowired
+    private IAlipayDealOrderEntityService alipayDealOrderEntityService;
 
     private ReentrantLock reentrantLock = new ReentrantLock();
 
@@ -237,6 +239,12 @@ public class AlipayWithdrawEntityController extends BaseController {
             }
             mapParam.put("ip", IpUtils.getHostIp());
         } else if ("100".equals(alipayWithdrawEntity.getOrderStatus())) {//商户后台大夫推送处理，将订单修改为已推送
+            AlipayDealOrderEntity alipayDealOrder =  alipayDealOrderEntityService.findOrderByOrderId(alipayWithdrawEntity.getOrderId());
+            //订单推送过 不能重复推
+            if(ObjectUtil.isNotNull(alipayDealOrder))
+            {
+                throw new BusinessException("该订单已经推送过");
+            }
             alipayWithdrawEntityService.updateWitStatus(alipayWithdrawEntity.getId());
         }
 
