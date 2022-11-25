@@ -1,36 +1,31 @@
 package com.ruoyi.web.controller.alipay;
 
-import java.util.Date;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.ruoyi.alipay.domain.BankInfoSplitEntity;
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.exception.BusinessException;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.system.domain.AlipayMessageReg;
 import com.ruoyi.system.domain.TemplateInfoSplitEntity;
+import com.ruoyi.system.service.IAlipayMessageRegService;
 import com.ruoyi.system.service.impl.TemplateUtil;
-import com.ruoyi.web.controller.tool.DateDetail;
-import com.ruoyi.web.controller.tool.NewTemplateEnumTool;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.AlipayMessageReg;
-import com.ruoyi.system.service.IAlipayMessageRegService;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
 
-import static com.ruoyi.system.service.impl.TemplateUtil.NUM;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 短信正则模板Controller
@@ -43,6 +38,9 @@ import static com.ruoyi.system.service.impl.TemplateUtil.NUM;
 public class AlipayMessageRegController extends BaseController {
     private String prefix = "system/reg";
     public static final String NUM = "^\\d*$";
+    public static final String NUM1 = "^\\*\\d{1,}\\*$";
+    public static final String NUM2 = "^\\*\\d{1,}$";
+    public static final String NUM3 = "^\\d{1,}\\*{1,}\\d{1,}$";
 
     @Autowired
     private IAlipayMessageRegService alipayMessageRegService;
@@ -100,18 +98,7 @@ public class AlipayMessageRegController extends BaseController {
                     .replaceAll("\\r", "")
                     .replaceAll("\\n", "");
         }
-        if (StrUtil.isBlank(alipayMessageReg.getRemark2())) {
-            return AjaxResult.error("模板过滤关键字不为空:特性文本模板过滤关键字,多个请使用@连接,关键词越多效果越好");
-        }
 
-        if (!Pattern.matches(NUM, alipayMessageReg.getRemark2()) || alipayMessageReg.getRemark2().contains("@")) {
-            String[] split = alipayMessageReg.getRemark2().split("@");
-            for (String s : split) {
-                if (!alipayMessageReg.getSourceMsg().contains(s)) {
-                    return AjaxResult.error("短信未找到此关键字:" + s);
-                }
-            }
-        }
         alipayMessageReg.setSourceMsg(source);
         alipayMessageReg.setCreatedDate(new Date());
         alipayMessageReg.setUpdateBy(ShiroUtils.getSysUser().getLoginName());
@@ -191,16 +178,15 @@ public class AlipayMessageRegController extends BaseController {
                 return AjaxResult.error("转账金额不能为空");
             }
 
-            if (StrUtil.isBlank(templateInfoSplitEntity.getRemark2())) {
-                return AjaxResult.error("模板过滤关键字不为空:特性文本模板过滤关键字,多个请使用@连接,关键词越多效果越好");
-            }
-
-            if (!Pattern.matches(NUM, alipayMessageReg.getRemark2()) || alipayMessageReg.getRemark2().contains("@")) {
-                String[] split = alipayMessageReg.getRemark2().split("@");
-                for (String s : split) {
-                    if (!alipayMessageReg.getSourceMsg().contains(s)) {
-                        return AjaxResult.error("短信未找到此关键字:" + s);
-                    }
+            if (StrUtil.isNotBlank(templateInfoSplitEntity.getMyselfTailNumber())) {
+                boolean matches1 = Pattern.matches(NUM1, templateInfoSplitEntity.getMyselfTailNumber());
+                boolean matches2 = Pattern.matches(NUM2, templateInfoSplitEntity.getMyselfTailNumber());
+                if (matches1 || matches2) {
+                    templateInfoSplitEntity.setTailType(1);
+                }
+                boolean matches3 = Pattern.matches(NUM3, templateInfoSplitEntity.getMyselfTailNumber());
+                if (matches3){
+                    templateInfoSplitEntity.setTailType(2);
                 }
             }
 
@@ -208,6 +194,7 @@ public class AlipayMessageRegController extends BaseController {
             if (null == alipayMessageReg) {
                 return AjaxResult.error("解析为空");
             }
+
             alipayMessageReg.setCreatedDate(new Date());
             alipayMessageReg.setCreateBy(loginName);
             int i = alipayMessageRegService.insertAlipayMessageReg(alipayMessageReg);
@@ -228,7 +215,7 @@ public class AlipayMessageRegController extends BaseController {
                 return AjaxResult.error("参数为空,请稍后再试" + JSONUtil.toJsonStr(alipayMessageReg));
             }
 
-            if (StrUtil.isBlank(alipayMessageReg.getBankName())) {
+            if (StrUtil.isBlank(templateInfoSplitEntity.getBankName())) {
                 return AjaxResult.error("银行名称参数为空,请稍后再试" + JSONUtil.toJsonStr(alipayMessageReg));
             }
 
@@ -247,8 +234,11 @@ public class AlipayMessageRegController extends BaseController {
                         String myselfTail = StringUtils.equals(split4[1], "@") ? "" : split4[1].trim();
                         String transactionAmount = StringUtils.equals(split4[5], "@") ? "" : split4[5].trim();
                         String balance = StringUtils.equals(split4[6], "@") ? "" : split4[6].trim();
-                        if (!StrUtil.isBlank(myselfTail) && !Pattern.matches(NUM, myselfTail)) {
-                            throw new BusinessException("已找到模板,模板有误" + JSONUtil.toJsonStr(messageReg) + "-尾号解析出错:" + myselfTail);
+                        if (!StrUtil.isBlank(myselfTail)) {
+                            String myselfTailStr=myselfTail.replace("*","");
+                            if (!StrUtil.isBlank(myselfTailStr) && !Pattern.matches(NUM, myselfTailStr)) {
+                                throw new BusinessException("已找到模板,模板有误" + JSONUtil.toJsonStr(messageReg) + "-尾号解析出错:" + myselfTail);
+                            }
                         }
 
 

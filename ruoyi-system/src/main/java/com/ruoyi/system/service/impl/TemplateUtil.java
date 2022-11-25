@@ -32,7 +32,7 @@ public class TemplateUtil {
         Integer tailType = templateInfoSplitEntity.getTailType();
         String reTail = "(.*)";
         if (null != tailType && tailType == 1) {
-            reTail = "\\*{1,}(.*)";
+            reTail = "\\*(.*)";
         } else if (null != tailType && tailType == 2) {
             reTail = "\\d{1,}\\*{1,}(.*)";
         }
@@ -153,10 +153,12 @@ public class TemplateUtil {
         String myselfTail = StringUtils.equals(split4[1], "@") ? "" : split4[1].trim();
         String transactionAmount = StringUtils.equals(split4[5], "@") ? "" : split4[5].trim();
         String balance = StringUtils.equals(split4[6], "@") ? "" : split4[6].trim();
-        if (!StrUtil.isBlank(myselfTail)&&!Pattern.matches(NUM,myselfTail)){
-            throw new BusinessException("尾号解析出错:"+myselfTail);
+        if (!StrUtil.isBlank(myselfTail)) {
+            String myselfTailStr=myselfTail.replace("*","");
+            if (!StrUtil.isBlank(myselfTailStr) && !Pattern.matches(NUM, myselfTailStr)) {
+                throw new BusinessException("尾号解析出错:" + myselfTail);
+            }
         }
-
 
         if (!StrUtil.isBlank(balance)){
             String balanceStr=balance
