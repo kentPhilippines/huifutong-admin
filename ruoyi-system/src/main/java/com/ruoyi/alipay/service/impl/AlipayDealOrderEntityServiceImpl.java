@@ -379,6 +379,14 @@ public class AlipayDealOrderEntityServiceImpl implements IAlipayDealOrderEntityS
 
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public AlipayDealOrderEntity findOrderByAssociatedId(String order) {
+        return alipayDealOrderEntityMapper.findOrderByAssociatedId(order);
+    }
+
+
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public AlipayDealOrderEntity selectAlipayDealOrderEntityListSum(AlipayDealOrderEntity alipayDealOrderEntity, Boolean flag) {
 
 
