@@ -71,6 +71,9 @@ public interface IAlipayUserRateEntityService {
      */
     int insertAlipayUserRateEntity_qr(AlipayUserRateEntity alipayUserRateEntity);
 
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    int changeStatusOfDecimal(String id, String userId, String feeType, Integer deci);
+
     /**
      * 费率开关
      *

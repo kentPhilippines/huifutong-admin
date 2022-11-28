@@ -219,6 +219,21 @@ public class AlipayUserRateEntityServiceImpl implements IAlipayUserRateEntitySer
 
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public int changeStatusOfDecimal(String id, String userId, String feeType, Integer deci) {
+
+        AlipayUserInfo result = alipayUserInfoMapper.checkAlipayUserIdUnique(userId);
+        if (result == null) {
+            throw new BusinessException("用户不存在");
+        }
+        if (result.getSwitchs() == 2) {
+            throw new BusinessException("此用户已被停用");
+        }
+
+
+        return alipayUserRateEntityMapper.updateStatusOfDecimal(id, deci);
+    }
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public int changeStatus(String id, String userId, String feeType, String switchs) {
         /*if ("2".equals(feeType) && "1".equals(switchs)) {
             List<AlipayUserRateEntity> list = alipayUserRateEntityMapper.selectListObjectEntityByUserId(userId, feeType);

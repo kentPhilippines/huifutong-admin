@@ -109,6 +109,14 @@ public interface AlipayUserRateEntityMapper {
     int updateStatus(@Param("id") String id, @Param("switchs") String switchs);
 
     /**
+     * @param id
+     * @param deci
+     * @return
+     */
+    @Update("update alipay_user_rate set deci = #{deci} where id = #{id} ")
+    int updateStatusOfDecimal(@Param("id") String id, @Param("deci") Integer deci);
+
+    /**
      *
      * @param userId
      * @param feeType

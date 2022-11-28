@@ -63,6 +63,20 @@ public class AlipayUserRateEntity extends BaseEntity {
     @Excel(name = "用户类型,商户1 码商2")
     private Integer userType;
 
+    public Integer getDeci() {
+        return deci;
+    }
+
+    public void setDeci(Integer deci) {
+        this.deci = deci;
+    }
+
+    /**
+     * 预留，添加业务使用
+     * 金额是否随机小数 0或空是整数金额，1是小数金额
+     */
+    private Integer deci;
+
     private String channelId;
     private String channelFee;
     private String profit;
