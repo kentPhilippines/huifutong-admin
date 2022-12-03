@@ -25,6 +25,7 @@
         <result property="retain3" column="retain3"/>
         <result property="currency" column="currency"/>
         <result property="txhash" column="txhash"/>
+        <result property="actualAmount" column="actualAmount"/>
     </resultMap>
 
     <sql id="selectAlipayDealOrderAppVo">
@@ -36,6 +37,7 @@
                orderStatus,
                dealDescribe,
                orderAmount,
+               actualAmount,
                orderIp,
                appOrderId,
                feeId,
@@ -119,6 +121,7 @@
             <if test="orderStatus != null  and orderStatus != ''">orderStatus,</if>
             <if test="dealDescribe != null  and dealDescribe != ''">dealDescribe,</if>
             <if test="orderAmount != null ">orderAmount,</if>
+            <if test="actualAmount != null ">actualAmount,</if>
             <if test="orderIp != null  and orderIp != ''">orderIp,</if>
             <if test="appOrderId != null  and appOrderId != ''">appOrderId,</if>
             <if test="feeId != null ">feeId,</if>
@@ -138,6 +141,7 @@
             <if test="orderStatus != null  and orderStatus != ''">#{orderStatus},</if>
             <if test="dealDescribe != null  and dealDescribe != ''">#{dealDescribe},</if>
             <if test="orderAmount != null ">#{orderAmount},</if>
+            <if test="actualAmount != null ">#{actualAmount},</if>
             <if test="orderIp != null  and orderIp != ''">#{orderIp},</if>
             <if test="appOrderId != null  and appOrderId != ''">#{appOrderId},</if>
             <if test="feeId != null ">#{feeId},</if>
@@ -161,6 +165,7 @@
             <if test="orderStatus != null  and orderStatus != ''">orderStatus = #{orderStatus},</if>
             <if test="dealDescribe != null  and dealDescribe != ''">dealDescribe = #{dealDescribe},</if>
             <if test="orderAmount != null ">orderAmount = #{orderAmount},</if>
+            <if test="actualAmount != null ">actualAmount = #{actualAmount},</if>
             <if test="orderIp != null  and orderIp != ''">orderIp = #{orderIp},</if>
             <if test="appOrderId != null  and appOrderId != ''">appOrderId = #{appOrderId},</if>
             <if test="feeId != null ">feeId = #{feeId},</if>
