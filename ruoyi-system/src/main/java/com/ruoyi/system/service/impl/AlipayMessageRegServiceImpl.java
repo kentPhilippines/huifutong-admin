@@ -146,8 +146,8 @@ public class AlipayMessageRegServiceImpl implements IAlipayMessageRegService {
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public BankInfoSplitEntity validate(AlipayMessageReg alipayMessageReg) {
-        if (!alipayMessageReg.getTemplateFlag().equals("1")){
-            return null ;
+        if (!alipayMessageReg.getTemplateFlag().equals("1")) {
+            return null;
         }
         String pattern = alipayMessageReg.getRegex();
         String content = alipayMessageReg.getSourceMsg();
@@ -163,30 +163,32 @@ public class AlipayMessageRegServiceImpl implements IAlipayMessageRegService {
         String myselfTail = StringUtils.equals(split4[1], "@") ? "" : split4[1].trim();
         String transactionAmount = StringUtils.equals(split4[5], "@") ? "" : split4[5].trim();
         String balance = StringUtils.equals(split4[6], "@") ? "" : split4[6].trim();
-        if (!StrUtil.isBlank(myselfTail)&&!Pattern.matches(NUM,myselfTail)){
-            throw new BusinessException("模板有误"+JSONUtil.toJsonStr(alipayMessageReg)+"-尾号解析出错:"+myselfTail);
-        }
-
-
-        if (!StrUtil.isBlank(balance)){
-            String balanceStr=balance
-                    .replace(",", "")
-                    .replace("+", "")
-                    .replace("-", "")
-                    .replace(".","");
-            if (!Pattern.matches(NUM,balanceStr)) {
-                throw new BusinessException("模板有误"+JSONUtil.toJsonStr(alipayMessageReg)+"-余额解析出错:"+balanceStr);
+        if (!StrUtil.isBlank(myselfTail)) {
+            String myselfTailStr = myselfTail.replace("*", "");
+            if (!StrUtil.isBlank(myselfTailStr) && !Pattern.matches(NUM, myselfTailStr)) {
+                throw new BusinessException("模板有误" + JSONUtil.toJsonStr(alipayMessageReg) + "-尾号解析出错:" + myselfTail);
             }
         }
 
-        if (!StrUtil.isBlank(transactionAmount)){
-            String transactionAmountStr=transactionAmount
+        if (!StrUtil.isBlank(balance)) {
+            String balanceStr = balance
                     .replace(",", "")
                     .replace("+", "")
                     .replace("-", "")
-                    .replace(".","");
-            if (!Pattern.matches(NUM,transactionAmountStr)) {
-                throw new BusinessException("模板有误"+JSONUtil.toJsonStr(alipayMessageReg)+"-转账金额解析出错:"+transactionAmountStr);
+                    .replace(".", "");
+            if (!Pattern.matches(NUM, balanceStr)) {
+                throw new BusinessException("模板有误" + JSONUtil.toJsonStr(alipayMessageReg) + "-余额解析出错:" + balanceStr);
+            }
+        }
+
+        if (!StrUtil.isBlank(transactionAmount)) {
+            String transactionAmountStr = transactionAmount
+                    .replace(",", "")
+                    .replace("+", "")
+                    .replace("-", "")
+                    .replace(".", "");
+            if (!Pattern.matches(NUM, transactionAmountStr)) {
+                throw new BusinessException("模板有误" + JSONUtil.toJsonStr(alipayMessageReg) + "-转账金额解析出错:" + transactionAmountStr);
             }
         }
         return BankInfoSplitEntity.of(extractStr);
