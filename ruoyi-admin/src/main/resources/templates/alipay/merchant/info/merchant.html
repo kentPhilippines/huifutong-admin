@@ -171,6 +171,7 @@
                         actions.push('<a class="btn btn-primary btn-xs ' + openAccount + '" onclick="$.operate.openAccount(\'' + row.userId + '\', \'添加商户下级账户\',\'openUrl\')"><i class="fa fa-plus"></i>下级开户</a> ');
                         actions.push('<a class="btn btn-info btn-xs '  + '" href="javascript:void(0)" onclick="resetPwd(\'' + row.sysUserId + '\')"><i class="fa fa-key"></i>重置</a> ');
                         actions.push('<a class="btn btn-info btn-xs '  + '" href="javascript:void(0)" onclick="resetMoneyPwd(\'' + row.sysUserId + '\')"><i class="fa fa-key"></i>重置资金密码</a> ');
+                        actions.push('<a class="btn btn-info btn-xs '  + '" href="javascript:void(0)" onclick="resetWithdrawalPwd(\'' + row.id + '\')"><i class="fa fa-key"></i>重置交易密钥</a> ');
                         actions.push('<a class="btn btn-danger btn-xs ' + '" href="javascript:void(0)" onclick="resetErrorLogin(\'' + row.id + '\')"><i class="fa fa-key"></i>重置登陆错误次数</a> ');
                         if (row.isBind === '0') {
                             actions.push('<a class="btn btn-warning btn-xs ' + bindGoogleFlag + '" href="javascript:void(0)" onclick="googleBind(\'' + row.sysUserId + '\',\'' + row.loginName + '\')"><i class="fa fa-close"></i>绑定</a> ');
