@@ -3,7 +3,6 @@ package com.ruoyi.web.controller.system;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpUtil;
-import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -14,7 +13,10 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.HUOBI;
 import com.ruoyi.system.domain.SysDictData;
+import com.ruoyi.system.domain.SysDictType;
 import com.ruoyi.system.service.ISysDictDataService;
+import com.ruoyi.system.service.ISysDictTypeService;
+import com.ruoyi.web.feign.NotifyService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,9 +39,13 @@ public class SysDictDataController extends BaseController {
     private String prefix = "system/dict/data";
     @Value("${otc.usdt.rate}")
     private String otcRate;
-
+    @Autowired
+    private NotifyService aliyunService;
     @Autowired
     private ISysDictDataService dictDataService;
+
+    @Autowired
+    private ISysDictTypeService dictTypeService;
 
     @RequiresPermissions("system:dict:view")
     @GetMapping()
@@ -92,8 +98,23 @@ public class SysDictDataController extends BaseController {
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(@Validated SysDictData dict) {
-        dict.setCreateBy(ShiroUtils.getLoginName());
-        return toAjax(dictDataService.insertDictData(dict));
+        AjaxResult ajax = AjaxResult.success();
+        try {
+            if(dict.getDictType().startsWith("ALIYUN"))
+            {
+                String comment = dictTypeService.selectDictTypeByType(dict.getDictType()).getRemark();
+                logger.info("aliyun addwhitelist :{},{}",comment,dict.getDictValue());
+                aliyunService.addIpWhiteList(comment,dict.getDictValue(),dict.getDictValue());
+            }
+            dict.setCreateBy(ShiroUtils.getLoginName());
+            ajax = toAjax(dictDataService.insertDictData(dict));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            ajax = AjaxResult.error(e.getMessage());
+        }
+
+        return ajax;
     }
 
 
@@ -114,6 +135,35 @@ public class SysDictDataController extends BaseController {
         mmap.put("dict", dictDataService.selectDictDataById(dictCode));
         return prefix + "/editBlackConfig";
     }
+
+    /**
+     * 删除字典类型
+     */
+    @PostMapping("/removeBlackConfig/{dictCode}")
+    @ResponseBody
+    public AjaxResult removeBlackConfig(@PathVariable("dictCode") Long id, ModelMap mmap) {
+
+
+        AjaxResult ajax = AjaxResult.success();
+        try {
+            SysDictData dictData = dictDataService.selectDictDataById(id);
+
+            if(dictData.getDictType().startsWith("ALIYUN"))
+            {
+                SysDictType dictType =  dictTypeService.selectDictTypeByType(dictData.getDictType());
+                aliyunService.deleteIpWhiteList(dictType.getRemark(),dictData.getDictValue(),dictData.getDictValue());
+            }
+            ajax = toAjax(dictDataService.deleteDictDataByIds(id+""));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            ajax = AjaxResult.error(e.getMessage());
+        }
+
+        return ajax;
+    }
+
+
 
     @GetMapping("/editManage/{dictCode}")
     public String editManage(@PathVariable("dictCode") Long dictCode, ModelMap mmap) {
@@ -155,6 +205,8 @@ public class SysDictDataController extends BaseController {
     @PostMapping("/remove")
     @ResponseBody
     public AjaxResult remove(String ids) {
+
+
         return toAjax(dictDataService.deleteDictDataByIds(ids));
     }
 

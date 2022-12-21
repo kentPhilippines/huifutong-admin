@@ -19,6 +19,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 数据字典信息
@@ -132,8 +134,11 @@ public class SysDictTypeController extends BaseController {
 //    @RequiresPermissions("system:dict:list")
     @GetMapping("/detail/blackConfig/{dictType}")
     public String dataManageForBlackList(@PathVariable("dictType") String dictType, ModelMap mmap) {
+//        List<String> list= Stream.of("MERCHANT_BLACK_RULE","ALIYUN_ADMIN_WHITELIST","ALIYUN_ADMINOUT_WHITELIST","ALIYUN_API_WHITELIST","ALIYUN_API_WHITELIST_1","ALIYUN_API_WHITELIST_2").collect(Collectors.toList());
+        List<String> list= Stream.of("MERCHANT_BLACK_RULE").collect(Collectors.toList());
+        List dictList = dictTypeService.selectDictTypeAll().stream().filter(e->list.contains(e.getDictType()) || e.getDictType().startsWith("ALIYUN")).collect(Collectors.toList());
         mmap.put("dict", dictTypeService.selectDictTypeByType(dictType));
-        mmap.put("dictList", dictTypeService.selectDictTypeAll());
+        mmap.put("dictList", dictList);
         return "system/dict/data/blackConfig";
     }
 
