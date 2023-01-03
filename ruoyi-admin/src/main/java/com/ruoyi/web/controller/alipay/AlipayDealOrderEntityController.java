@@ -31,7 +31,7 @@ import com.ruoyi.web.event.UpdateLockWitEvent;
 import com.ruoyi.web.event.UpdateLockWitEventSource;
 import com.ruoyi.web.event.UpdateWitCardDealerEvent;
 import com.ruoyi.web.event.UpdateWitCardDealerEventSource;
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -879,7 +879,11 @@ public class AlipayDealOrderEntityController extends BaseController {
             List<AlipayUserInfo> alipayUserInfos = alipayUserInfoService.selectAlipayUserInfoList(userInfo);
             AlipayUserInfo first = CollUtil.getFirst(alipayUserInfos);
             data.setAppOrderId(data.getAppOrderId() + "_1");
-            AlipayUserRateEntity userRate = alipayUserRateEntityService.findUserByChannel(dataOrigin.getOrderAccount(), product, orderQrUser);//商户费率
+
+            String appProduct = "";//商户产品
+            appProduct = data.getRetain1();
+
+            AlipayUserRateEntity userRate = alipayUserRateEntityService.findUserByChannel(dataOrigin.getOrderAccount(), appProduct, orderQrUser);//商户费率
             String channel = "";
             Double fee = userRate.getFee();//当前用户交易费率
             // 1   商户  2 卡商   3 渠道
