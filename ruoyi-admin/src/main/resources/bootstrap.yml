@@ -4,7 +4,7 @@ spring:
     name: admin
   cloud: # nacos地址
     nacos:
-      server-addr: 47.242.206.196:8848
+      server-addr: mse-c14908614-p.nacos-ans.mse.aliyuncs.com:8848
       #      server-addr: 172.16.32.220:8848 #内网
       config:
         file-extension: yaml
