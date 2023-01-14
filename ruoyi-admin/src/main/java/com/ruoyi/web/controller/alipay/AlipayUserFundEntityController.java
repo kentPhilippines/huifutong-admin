@@ -24,6 +24,7 @@ import com.ruoyi.framework.shiro.service.SysPasswordService;
 import com.ruoyi.framework.util.DictionaryUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.SysUser;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -171,7 +172,8 @@ public class AlipayUserFundEntityController extends BaseController {
      * 新增加款页面显示
      */
     @GetMapping("/refund/{userId}")
-    @RequiresPermissions("fund:refund:add")
+//    @RequiresPermissions("fund:refund:add")
+    @RequiresPermissions(value = {"fund:refund:add","fund:refundCardDealer:add"},logical = Logical.OR)
     public String refund(@PathVariable("userId") String userId, ModelMap mmap) {
         AlipayUserFundEntity userFundEntity = new AlipayUserFundEntity();
         userFundEntity.setUserId(userId);
@@ -189,7 +191,7 @@ public class AlipayUserFundEntityController extends BaseController {
      * 新增加款页面显示
      */
     @GetMapping("/addFreezeUrl/{userId}")
-    @RequiresPermissions("fund:refund:add")
+    @RequiresPermissions("fund:refund:addFreezeFlag")
     public String addFreezeUrl(@PathVariable("userId") String userId, ModelMap mmap) {
         AlipayUserFundEntity userFundEntity = new AlipayUserFundEntity();
         userFundEntity.setUserId(userId);
@@ -213,7 +215,7 @@ public class AlipayUserFundEntityController extends BaseController {
     }
 
     @GetMapping("/deleteFreezeUrl/{userId}")
-    @RequiresPermissions("fund:refund:deduct")
+    @RequiresPermissions("fund:refund:deleteFreezeFlag")
     public String deleteFreezeUrl(@PathVariable("userId") String userId, ModelMap mmap) {
         AlipayUserFundEntity userFundEntity = new AlipayUserFundEntity();
         userFundEntity.setUserId(userId);
@@ -226,6 +228,7 @@ public class AlipayUserFundEntityController extends BaseController {
      * 增加授权页面
      */
     @GetMapping("/addQuotaUrl/{userId}")
+    @RequiresPermissions("fund:refund:addQuotaFlag")
     public String addQuotaUrl(@PathVariable("userId") String userId, ModelMap mmap) {
         AlipayUserFundEntity userFundEntity = new AlipayUserFundEntity();
         userFundEntity.setUserId(userId);
@@ -241,7 +244,7 @@ public class AlipayUserFundEntityController extends BaseController {
      * @return
      */
     @GetMapping("/deleteQuotaUrl/{userId}")
-    @RequiresPermissions("fund:refund:deduct")
+    @RequiresPermissions("fund:refund:deleteQuotaFlag")
     public String deleteQuotaUrl(@PathVariable("userId") String userId, ModelMap mmap) {
         AlipayUserFundEntity userFundEntity = new AlipayUserFundEntity();
         userFundEntity.setUserId(userId);

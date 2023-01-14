@@ -76,12 +76,21 @@
 <script th:inline="javascript">
     //卡商押金
     var refundDepositFlag = [[${@permission.hasPermi('fund:refund:deposit')}]];
-    var refundFlag = [[${@permission.hasPermi('fund:refund:add')}]];
+
+    //卡商加减款
+    var addCardDealerFlag = [[${@permission.hasPermi('fund:refundCardDealer:add')}]];
+    var deductCardDealerFlag = [[${@permission.hasPermi('fund:refundCardDealer:deduct')}]];
+
+    //商户加减款
+    var addFlag = [[${@permission.hasPermi('fund:refund:add')}]];
     var deductFlag = [[${@permission.hasPermi('fund:refund:deduct')}]];
+
+    //商户冻结的权限
     var addFreezeFlag = [[${@permission.hasPermi('fund:refund:addFreezeFlag')}]];
-    var addQuotaFlag = [[${@permission.hasPermi('fund:refund:addFreezeFlag')}]];
     var deleteFreezeFlag = [[${@permission.hasPermi('fund:refund:deleteFreezeFlag')}]];
-    var deleteQuotaFlag = [[${@permission.hasPermi('fund:refund:deleteFreezeFlag')}]];
+    //商户授权的权限
+    var addQuotaFlag = [[${@permission.hasPermi('fund:refund:addQuotaFlag')}]];
+    var deleteQuotaFlag = [[${@permission.hasPermi('fund:refund:deleteQuotaFlag')}]];
     var userType = [[${@dict.getType('userType')}]];
     var prefix = ctx + "alipay/fund";
 
@@ -255,11 +264,14 @@
                             //卡商才可以修改押金
                             if(row.userType == 2 ) {
                                 actions.push('<a class="btn btn-primary btn-xs ' + refundDepositFlag + '" onclick="$.operate.openAccount(\'' + row.userId + '\',\'押金修改\',\'depositUrl\')"><i class="fa "></i>押金修改</a> ');
+                                actions.push('<a class="btn btn-primary btn-xs ' + addCardDealerFlag + '" onclick="$.operate.openAccount(\'' + row.userId + '\',\'资金账户加款\',\'openUrl\')"><i class="fa fa-plus"></i>加款</a> ');
+                                actions.push('<a class="btn btn-danger btn-xs ' + deductCardDealerFlag + '" onclick="$.operate.openAccount(\'' + row.userId + '\',\'资金账户减款\',\'updateUrl\')"><i class="fa fa-minus"></i>减款</a> ');
                             }
-                            actions.push('<a class="btn btn-primary btn-xs ' + refundFlag + '" onclick="$.operate.openAccount(\'' + row.userId + '\',\'资金账户加款\',\'openUrl\')"><i class="fa fa-plus"></i>加款</a> ');
-                            actions.push('<a class="btn btn-danger btn-xs ' + deductFlag + '" onclick="$.operate.openAccount(\'' + row.userId + '\',\'资金账户减款\',\'updateUrl\')"><i class="fa fa-minus"></i>减款</a> ');
+
                             //商户修改授权
                             if(row.userType == 1 ) {
+                                actions.push('<a class="btn btn-primary btn-xs ' + addFlag + '" onclick="$.operate.openAccount(\'' + row.userId + '\',\'资金账户加款\',\'openUrl\')"><i class="fa fa-plus"></i>加款</a> ');
+                                actions.push('<a class="btn btn-danger btn-xs ' + deductFlag + '" onclick="$.operate.openAccount(\'' + row.userId + '\',\'资金账户减款\',\'updateUrl\')"><i class="fa fa-minus"></i>减款</a> ');
                                 actions.push('<a class="btn btn-primary btn-xs ' + addFreezeFlag + '" onclick="$.operate.openAccount(\'' + row.userId + '\',\'资金账户解冻\',\'addFreezeFlag\')"><i class="fa fa-plus"></i>账户解冻</a> ');
                                 actions.push('<a class="btn btn-danger btn-xs ' + deleteFreezeFlag + '" onclick="$.operate.openAccount(\'' + row.userId + '\',\'资金账户冻结\',\'deleteFreezeFlag\')"><i class="fa fa-minus"></i>账户冻结</a> ');
                                 actions.push('<a class="btn btn-primary btn-xs ' + addQuotaFlag + '" onclick="$.operate.openAccount(\'' + row.userId + '\',\'增加账户授权\',\'addQuotaFlag\')"><i class="fa fa-plus"></i>增加账户授权</a> ');
