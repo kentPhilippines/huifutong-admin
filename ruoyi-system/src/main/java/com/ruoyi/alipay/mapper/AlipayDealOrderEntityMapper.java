@@ -123,7 +123,7 @@ public interface AlipayDealOrderEntityMapper {
     @Select("select orderQr,SUM(dealAmount) dealAmount  from alipay_deal_order ado where orderType =4 and orderStatus =1 group by orderQr")
     List<AlipayDealOrderEntity> getSumAmountOfPendingWithdral();
 
-    @Select("select orderQrUser,SUM(dealAmount) dealAmount  from alipay_deal_order ado where orderType =4 and orderStatus =1 group by orderQrUser")
+    @Select("select orderQrUser,SUM(dealAmount) dealAmount  from alipay_deal_order ado where orderType =4 and orderStatus =1 and TO_DAYS( NOW( ) ) - TO_DAYS( ado.createTime) <= 3 group by orderQrUser")
     List<AlipayDealOrderEntity> getSumAmountOfPendingWithdralGroupByQrUser();
 
 
