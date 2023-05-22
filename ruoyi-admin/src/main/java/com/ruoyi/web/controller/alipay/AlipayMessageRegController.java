@@ -1,8 +1,10 @@
 package com.ruoyi.web.controller.alipay;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -10,6 +12,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.exception.BusinessException;
+import com.ruoyi.common.utils.http.HttpUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.AlipayMessageReg;
@@ -24,6 +27,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -103,7 +107,37 @@ public class AlipayMessageRegController extends BaseController {
         alipayMessageReg.setCreatedDate(new Date());
         alipayMessageReg.setUpdateBy(ShiroUtils.getSysUser().getLoginName());
         alipayMessageRegService.validate(alipayMessageReg);//校验不通过会丢异常
-        return toAjax(alipayMessageRegService.insertAlipayMessageReg(alipayMessageReg));
+        AjaxResult ajaxResult = toAjax(alipayMessageRegService.insertAlipayMessageReg(alipayMessageReg));
+        ThreadUtil.execute(() -> {
+            refreshApk();
+        });
+        return ajaxResult;
+    }
+
+    static String[] names = new String[]{
+            "http://47.242.24.220:19988",
+            "http://47.243.240.206:9997",
+            "http://47.243.173.99:33999",
+            "http://190.92.236.120:6621",
+            "http://190.92.236.120:22113"
+    };
+
+
+    /**
+     * 刷新apk
+     */
+    public void refreshApk() {
+        String s=null;
+            for (String name : names) {
+                try {
+                     s= HttpUtil.get(name + "/http/load");
+                }catch (Exception e){
+                    s=null;
+                }
+                if (s==null||s.contains("html")){
+                    continue;
+                }
+        }
     }
 
     @PostMapping("/validate")
@@ -185,7 +219,7 @@ public class AlipayMessageRegController extends BaseController {
                     templateInfoSplitEntity.setTailType(1);
                 }
                 boolean matches3 = Pattern.matches(NUM3, templateInfoSplitEntity.getMyselfTailNumber());
-                if (matches3){
+                if (matches3) {
                     templateInfoSplitEntity.setTailType(2);
                 }
             }
@@ -198,6 +232,9 @@ public class AlipayMessageRegController extends BaseController {
             alipayMessageReg.setCreatedDate(new Date());
             alipayMessageReg.setCreateBy(loginName);
             int i = alipayMessageRegService.insertAlipayMessageReg(alipayMessageReg);
+            ThreadUtil.execute(() -> {
+                refreshApk();
+            });
             return toAjax(i);
         } catch (Exception e) {
             e.printStackTrace();
@@ -235,7 +272,7 @@ public class AlipayMessageRegController extends BaseController {
                         String transactionAmount = StringUtils.equals(split4[5], "@") ? "" : split4[5].trim();
                         String balance = StringUtils.equals(split4[6], "@") ? "" : split4[6].trim();
                         if (!StrUtil.isBlank(myselfTail)) {
-                            String myselfTailStr=myselfTail.replace("*","");
+                            String myselfTailStr = myselfTail.replace("*", "");
                             if (!StrUtil.isBlank(myselfTailStr) && !Pattern.matches(NUM, myselfTailStr)) {
                                 throw new BusinessException("已找到模板,模板有误" + JSONUtil.toJsonStr(messageReg) + "-尾号解析出错:" + myselfTail);
                             }
