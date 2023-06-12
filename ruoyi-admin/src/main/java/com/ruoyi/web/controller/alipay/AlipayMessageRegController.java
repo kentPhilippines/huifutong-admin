@@ -115,11 +115,7 @@ public class AlipayMessageRegController extends BaseController {
     }
 
     static String[] names = new String[]{
-            "http://47.242.24.220:19988",
-            "http://47.243.240.206:9997",
-            "http://47.243.173.99:33999",
-            "http://190.92.236.120:6621",
-            "http://190.92.236.120:22113"
+            "http://190.92.236.120:6621"
     };
 
 
