@@ -263,7 +263,7 @@
                         if (row.userId != '所有') {
                             //卡商才可以修改押金
                             if(row.userType == 2 ) {
-                                actions.push('<a class="btn btn-primary btn-xs ' + refundDepositFlag + '" onclick="$.operate.openAccount(\'' + row.userId + '\',\'押金修改\',\'depositUrl\')"><i class="fa "></i>押金修改</a> ');
+                                actions.push('<a   class="btn btn-primary btn-xs ' + refundDepositFlag + '" onclick="$.operate.openAccount(\'' + row.userId + '\',\'押金修改\',\'depositUrl\')"><i class="fa "></i>押金修改</a> ');
                                 actions.push('<a class="btn btn-primary btn-xs ' + addCardDealerFlag + '" onclick="$.operate.openAccount(\'' + row.userId + '\',\'资金账户加款\',\'openUrl\')"><i class="fa fa-plus"></i>加款</a> ');
                                 actions.push('<a class="btn btn-danger btn-xs ' + deductCardDealerFlag + '" onclick="$.operate.openAccount(\'' + row.userId + '\',\'资金账户减款\',\'updateUrl\')"><i class="fa fa-minus"></i>减款</a> ');
                             }

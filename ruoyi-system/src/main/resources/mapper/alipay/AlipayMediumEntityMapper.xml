@@ -48,6 +48,7 @@
         <result column="todayCountWit" property="todayCountWit"/>
         <result column="sumCountWit" property="sumCountWit"/>
         <result column="autoWit" property="autoWit"/>
+        <result column="autowitstatus" property="autowitstatus"/>
         <result column="coolDownTime" property="coolDownTime"/>
     </resultMap>
 
@@ -87,6 +88,7 @@
                notfiyMask,
                witAmount,
                auditLog,
+               autowitstatus,
                payInfo,todayCount,sumCount,countLimit,todayCountWit,sumCountWit,autoWit,maxAmount,coolDownTime
         from
             alipay_medium
@@ -129,6 +131,7 @@
         notfiyMask,
         witAmount,
         auditLog,
+        autowitstatus,
         payInfo,todayCount,sumCount,countLimit,todayCountWit,sumCountWit,autoWit,maxAmount
         from
         <if test="params.isHistoryQuery == null  or params.isHistoryQuery == ''">
@@ -170,6 +173,7 @@
             <if test="sumCount != null  and sumCount != ''"> and sumCount = #{sumCount}</if>
             <if test="countLimit != null  and countLimit != ''">and countLimit = #{countLimit}</if>
             <if test="todayCountWit != null  and todayCountWit != ''">and todayCountWit = #{todayCountWit}</if>
+            <if test="autowitstatus != null  and autowitstatus != ''">and autowitstatus = #{autowitstatus}</if>
             <if test="sumCountWit != null  and sumCountWit != ''">and sumCountWit = #{sumCountWit}</if>
         </where>
         order by mountNow desc
@@ -281,6 +285,7 @@
             <if test="sumCountWit != null  and sumCountWit != ''"> sumCountWit = #{sumCountWit},</if>
             <if test="payInfo != null  and payInfo != ''"> payInfo = #{payInfo},</if>
             <if test="autoWit != null  "> autoWit = #{autoWit},</if>
+            <if test="autowitstatus != null  "> autowitstatus = #{autowitstatus},</if>
         </trim>
         where id = #{id}
     </update>
@@ -321,6 +326,7 @@
             <if test="todayCountWit != null  and todayCountWit != ''"> todayCountWit = #{todayCountWit},</if>
             <if test="sumCountWit != null  and sumCountWit != ''"> sumCountWit = #{sumCountWit},</if>
             <if test="autoWit != null"> autoWit = #{autoWit},</if>
+            <if test="autowitstatus != null"> autowitstatus = #{autowitstatus},</if>
         </trim>
         where account = #{params.bankName}
     </update>
@@ -352,6 +358,7 @@
             <if test="todayCountWit != null  and todayCountWit != ''"> todayCountWit = #{todayCountWit},</if>
             <if test="sumCountWit != null  and sumCountWit != ''"> sumCountWit = #{sumCountWit},</if>
             <if test="autoWit != null"> autoWit = #{autoWit},</if>
+            <if test="autowitstatus != null"> autowitstatus = #{autowitstatus},</if>
         </trim>
         where code = #{code}
     </update>

@@ -43,30 +43,33 @@ public class AlipayMediumEntity extends BaseEntity {
     private String startTime;//接单开始时间  格式    hh:mm:ss
     private String endTime;//接单结束 时间
     private Integer isClickPay;// 收款户名验证是否验证户名   1 验证    0 不验证
+    private Integer autoWit;// 收款户名验证是否验证户名   1 验证    0 不验证
     private Long sc;//接单间隔秒数
     private Integer todayCount;//当日交易笔数
     private Integer sumCount;//累计交易笔数
     private Integer countLimit;//日交易限制笔数
-    private Integer autoWit;//1 开启。0 关闭 默认 关闭  自动出款
+    private Integer autowitstatus;//1 开启。0 关闭 默认 关闭  自动出款
 
     private Integer coolDownTime;//接单冷却时间
 
     private Integer todayCountWit;//当日出款笔数
     private Integer sumCountWit;//累计出款笔数
-    public Integer getAutoWit() {
-        return autoWit;
-    }
-    public BigDecimal getMaxAmount() {
+     public BigDecimal getMaxAmount() {
         return maxAmount;
+    }
+
+    public Integer getAutowitstatus() {
+        return autowitstatus;
+    }
+
+    public void setAutowitstatus(Integer autowitstatus) {
+        this.autowitstatus = autowitstatus;
     }
 
     public void setMaxAmount(BigDecimal maxAmount) {
         this.maxAmount = maxAmount;
     }
-    public void setAutoWit(Integer autoWit) {
-        this.autoWit = autoWit;
-    }
-    public Integer getTodayCountWit() {
+     public Integer getTodayCountWit() {
         return todayCountWit;
     }
 
@@ -204,9 +207,21 @@ public class AlipayMediumEntity extends BaseEntity {
     }
 
 
+    public Integer getCoolDownTime() {
+        return coolDownTime;
+    }
 
+    public void setCoolDownTime(Integer coolDownTime) {
+        this.coolDownTime = coolDownTime;
+    }
 
+    public Integer getAutoWit() {
+        return autoWit;
+    }
 
+    public void setAutoWit(Integer autoWit) {
+        this.autoWit = autoWit;
+    }
 
     public String getCre() {
         return cre;
