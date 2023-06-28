@@ -1930,6 +1930,7 @@ var table = {
                     data: options.data
                 };
                 $.get(options.url, function (data) {
+                    data = JSON.parse(data);
                     var treeId = $("#treeId").val();
                     tree = $.fn.zTree.init($("#" + options.id), setting, data);
                     $._tree = tree;
