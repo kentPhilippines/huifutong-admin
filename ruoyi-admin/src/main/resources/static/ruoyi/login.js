@@ -1,22 +1,21 @@
-
-$(function() {
-	validateKickout();
+$(function () {
+    validateKickout();
     validateRule();
-	$('.imgcode').click(function() {
-		var url = ctx + "captcha/captchaImage?type=" + captchaType + "&s=" + Math.random();
-		$(".imgcode").attr("src", url);
-	});
+    $('.imgcode').click(function () {
+        var url = ctx + "captcha/captchaImage?type=" + captchaType + "&s=" + Math.random();
+        $(".imgcode").attr("src", url);
+    });
 });
 
 $.validator.setDefaults({
-    submitHandler: function() {
-		login();
+    submitHandler: function () {
+        login();
     }
 });
 
 function login() {
-	$.modal.loading($("#btnSubmit").data("loading"));
-	var username = $.common.trim($("input[name='username']").val());
+    $.modal.loading($("#btnSubmit").data("loading"));
+    var username = $.common.trim($("input[name='username']").val());
     var password = $.common.trim($("input[name='password']").val());
     var validateCode = $("input[name='validateCode']").val();
     var rememberMe = $("input[name='rememberme']").is(':checked');
@@ -26,17 +25,18 @@ function login() {
         data: {
             "username": username,
             "password": password,
-            "validateCode" : validateCode,
+            "validateCode": validateCode,
             "rememberMe": rememberMe
         },
-        success: function(r) {
+        success: function (r) {
+            r = JSON.parse(r);
             if (r.code == 0) {
                 location.href = ctx + 'index';
             } else {
-            	$.modal.closeLoading();
-            	$('.imgcode').click();
-            	$(".code").val("");
-            	$.modal.msg(r.msg);
+                $.modal.closeLoading();
+                $('.imgcode').click();
+                $(".code").val("");
+                $.modal.msg(r.msg);
             }
         }
     });
@@ -65,26 +65,26 @@ function validateRule() {
 }
 
 function validateKickout() {
-	if (getParam("kickout") == 1) {
-	    layer.alert("<font color='red'>您已在别处登录，请您修改密码或重新登录</font>", {
-	        icon: 0,
-	        title: "系统提示"
-	    },
-	    function(index) {
-	        //关闭弹窗
-	        layer.close(index);
-	        if (top != self) {
-	            top.location = self.location;
-	        } else {
-	            var url  =  location.search;
-	            if (url) {
-	                var oldUrl  = window.location.href;
-	                var newUrl  = oldUrl.substring(0,  oldUrl.indexOf('?'));
-	                self.location  = newUrl;
-	            }
-	        }
-	    });
-	}
+    if (getParam("kickout") == 1) {
+        layer.alert("<font color='red'>您已在别处登录，请您修改密码或重新登录</font>", {
+                icon: 0,
+                title: "系统提示"
+            },
+            function (index) {
+                //关闭弹窗
+                layer.close(index);
+                if (top != self) {
+                    top.location = self.location;
+                } else {
+                    var url = location.search;
+                    if (url) {
+                        var oldUrl = window.location.href;
+                        var newUrl = oldUrl.substring(0, oldUrl.indexOf('?'));
+                        self.location = newUrl;
+                    }
+                }
+            });
+    }
 }
 
 function getParam(paramName) {
@@ -95,7 +95,6 @@ function getParam(paramName) {
 }
 
 function bind() {
-    debugger;
     let username = $.common.trim($("input[name='username']").val());
     let password = $.common.trim($("input[name='password']").val());
     $.ajax({
@@ -105,7 +104,8 @@ function bind() {
             "username": username,
             "password": password
         },
-        success: function(r) {
+        success: function (r) {
+            r = JSON.parse(r);
             if (r.code == 0) {
                 $.modal.openCode("请扫码", r.data.google, "400px", "400px", null);
             } else {
