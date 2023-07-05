@@ -75,7 +75,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label is-required">userId：</label>
             <div class="col-sm-8">
-                <input id="subject" name="subject" class="form-control" type="text" value="王小二"
+                <input id="userId" name="userId" class="form-control" type="text" value="王小二"
                        required>
             </div>
         </div>
@@ -133,7 +133,8 @@
         $("#content").text("");
         var url = "/alipay/demo/deposit";
         var formData = convertFormToJSON($("#form-merchant-add"));;
-        // var formData = $("#form-merchant-add").serializeJSON();
+        var formData1  = $("#form-merchant-add").serialize();;
+        console.log(formData1);
 
         console.log(formData);
         $.ajax({
