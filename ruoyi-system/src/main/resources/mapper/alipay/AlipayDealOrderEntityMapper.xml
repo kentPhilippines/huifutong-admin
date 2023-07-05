@@ -74,6 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="params.exactlyAmount != null and params.exactlyAmount != ''"> and dealAmount = #{params.exactlyAmount}</if>
             <if test="dealFee != null "> and dealFee = #{dealFee}</if>
             <if test="actualAmount != null "> and actualAmount = #{actualAmount}</if>
+            <if test="grabOrder != null "> and grabOrder = #{grabOrder}</if>
             <if test="orderType != null  and orderType != ''"> and orderType = #{orderType}</if>
             <if test="orderAccount != null  and orderAccount != ''"> and (orderQrUser = #{orderAccount}  or orderAccount = #{orderAccount} )   </if>
             <if test="orderQr != null  and orderQr != ''"> and orderQr  like concat('%', #{orderQr} , '%')</if>
