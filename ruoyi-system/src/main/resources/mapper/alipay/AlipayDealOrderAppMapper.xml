@@ -26,6 +26,8 @@
         <result property="currency" column="currency"/>
         <result property="txhash" column="txhash"/>
         <result property="actualAmount" column="actualAmount"/>
+        <result property="request" column="request"/>
+        <result property="response" column="response"/>
     </resultMap>
 
     <sql id="selectAlipayDealOrderAppVo">
@@ -49,7 +51,9 @@
                retain1,
                retain2,
                retain3,
-               txhash
+               txhash,
+               request,
+               response
         from alipay_deal_order_app
     </sql>
 
@@ -75,6 +79,8 @@
             <if test="retain2 != null  and retain2 != ''">and retain2 = #{retain2}</if>
             <if test="retain3 != null  and retain3 != ''">and retain3 = #{retain3}</if>
             <if test="currency != null  and currency != ''">and currency = #{currency}</if>
+            <if test="request != null  and request != ''">and request = #{request}</if>
+            <if test="response != null  and response != ''">and response = #{response}</if>
         </where>
         order by id desc
     </select>

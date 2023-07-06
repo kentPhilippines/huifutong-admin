@@ -71,7 +71,8 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">创建时间：</label>
             <div class="col-sm-8">
-                <span class="form-control" style="border: 0;" th:text="${#dates.format(alipayDealOrderApp.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                <span class="form-control" style="border: 0;"
+                      th:text="${#dates.format(alipayDealOrderApp.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
             </div>
         </div>
         <div class="form-group">
@@ -90,6 +91,26 @@
             <label class="col-sm-3 control-label">交易备注：</label>
             <div class="col-sm-8">
                 <span class="form-control" style="border: 0;" th:text="${alipayDealOrderApp.dealDescribe}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">商户请求参数：</label>
+            <div class="col-sm-8">
+                <pre v-pre="" data-lang="Java">
+                    <code class="lang-Java" th:text="${alipayDealOrderApp.request}">
+
+                    </code>
+                </pre>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">商户响应参数：</label>
+            <div class="col-sm-8">
+                <pre v-pre="" data-lang="Java">
+                    <code class="lang-Java" th:text="${alipayDealOrderApp.response}">
+
+                    </code>
+                </pre>
             </div>
         </div>
     </form>

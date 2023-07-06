@@ -17,22 +17,20 @@ import java.util.List;
 
 /**
  * bankconfigController
- * 
+ *
  * @author ruoyi
  * @date 2022-07-07
  */
 @Controller
 @RequestMapping("/system/bankConfig")
-public class AlipayBankConfigController extends BaseController
-{
+public class AlipayBankConfigController extends BaseController {
     private String prefix = "system/bankconfig";
 
     @Autowired
     private IAlipayBankConfigService alipayBankConfigService;
 
     @GetMapping()
-    public String config()
-    {
+    public String config() {
         return prefix + "/config";
     }
 
@@ -41,8 +39,7 @@ public class AlipayBankConfigController extends BaseController
      */
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(AlipayBankConfig alipayBankConfig)
-    {
+    public TableDataInfo list(AlipayBankConfig alipayBankConfig) {
         startPage();
         List<AlipayBankConfig> list = alipayBankConfigService.selectAlipayBankConfigList(alipayBankConfig);
         return getDataTable(list);
@@ -54,8 +51,7 @@ public class AlipayBankConfigController extends BaseController
     @Log(title = "bankconfig", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(AlipayBankConfig alipayBankConfig)
-    {
+    public AjaxResult export(AlipayBankConfig alipayBankConfig) {
         List<AlipayBankConfig> list = alipayBankConfigService.selectAlipayBankConfigList(alipayBankConfig);
         ExcelUtil<AlipayBankConfig> util = new ExcelUtil<AlipayBankConfig>(AlipayBankConfig.class);
         return util.exportExcel(list, "config");
@@ -65,8 +61,7 @@ public class AlipayBankConfigController extends BaseController
      * 新增bankconfig
      */
     @GetMapping("/add")
-    public String add()
-    {
+    public String add() {
         return prefix + "/add";
     }
 
@@ -76,8 +71,7 @@ public class AlipayBankConfigController extends BaseController
     @Log(title = "bankconfig", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(AlipayBankConfig alipayBankConfig)
-    {
+    public AjaxResult addSave(AlipayBankConfig alipayBankConfig) {
         return toAjax(alipayBankConfigService.insertAlipayBankConfig(alipayBankConfig));
     }
 
@@ -85,8 +79,7 @@ public class AlipayBankConfigController extends BaseController
      * 修改bankconfig
      */
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Integer id, ModelMap mmap)
-    {
+    public String edit(@PathVariable("id") Integer id, ModelMap mmap) {
         AlipayBankConfig alipayBankConfig = alipayBankConfigService.selectAlipayBankConfigById(id);
         mmap.put("alipayBankConfig", alipayBankConfig);
         return prefix + "/edit";
@@ -98,8 +91,7 @@ public class AlipayBankConfigController extends BaseController
     @Log(title = "bankconfig", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(AlipayBankConfig alipayBankConfig)
-    {
+    public AjaxResult editSave(AlipayBankConfig alipayBankConfig) {
         return toAjax(alipayBankConfigService.updateAlipayBankConfig(alipayBankConfig));
     }
 
@@ -107,10 +99,9 @@ public class AlipayBankConfigController extends BaseController
      * 删除bankconfig
      */
     @Log(title = "bankconfig", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
+    @PostMapping("/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
-    {
+    public AjaxResult remove(String ids) {
         return toAjax(alipayBankConfigService.deleteAlipayBankConfigByIds(ids));
     }
 }
