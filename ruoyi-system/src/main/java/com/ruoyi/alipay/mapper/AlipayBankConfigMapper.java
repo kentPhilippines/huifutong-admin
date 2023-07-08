@@ -6,15 +6,14 @@ import java.util.List;
 
 /**
  * bankconfigMapper接口
- * 
+ *
  * @author ruoyi
  * @date 2022-07-07
  */
-public interface AlipayBankConfigMapper 
-{
+public interface AlipayBankConfigMapper {
     /**
      * 查询bankconfig
-     * 
+     *
      * @param id bankconfigID
      * @return bankconfig
      */
@@ -22,7 +21,7 @@ public interface AlipayBankConfigMapper
 
     /**
      * 查询bankconfig列表
-     * 
+     *
      * @param alipayBankConfig bankconfig
      * @return bankconfig集合
      */
@@ -30,7 +29,7 @@ public interface AlipayBankConfigMapper
 
     /**
      * 新增bankconfig
-     * 
+     *
      * @param alipayBankConfig bankconfig
      * @return 结果
      */
@@ -38,7 +37,7 @@ public interface AlipayBankConfigMapper
 
     /**
      * 修改bankconfig
-     * 
+     *
      * @param alipayBankConfig bankconfig
      * @return 结果
      */
@@ -46,7 +45,7 @@ public interface AlipayBankConfigMapper
 
     /**
      * 删除bankconfig
-     * 
+     *
      * @param id bankconfigID
      * @return 结果
      */
@@ -54,7 +53,7 @@ public interface AlipayBankConfigMapper
 
     /**
      * 批量删除bankconfig
-     * 
+     *
      * @param ids 需要删除的数据ID
      * @return 结果
      */

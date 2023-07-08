@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.alipay;
 
+import cn.hutool.core.util.StrUtil;
 import com.ruoyi.alipay.domain.AlipayBankListEntity;
 import com.ruoyi.alipay.service.IAlipayBankListEntityService;
 import com.ruoyi.common.annotation.Log;
@@ -42,6 +43,7 @@ public class AlipayBankListEntityController extends BaseController {
     @ResponseBody
     public TableDataInfo list(AlipayBankListEntity alipayBankListEntity) {
         startPage();
+        alipayBankListEntity.setAccount("PAYURL");
         List<AlipayBankListEntity> list = alipayBankListEntityService.selectAlipayBankListEntityList(alipayBankListEntity);
         return getDataTable(list);
     }
@@ -77,10 +79,25 @@ public class AlipayBankListEntityController extends BaseController {
     /**
      * 新增保存银行卡列表
      */
-    @Log(title = "银行卡列表", businessType = BusinessType.INSERT)
+    @Log(title = "新增银行卡", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(AlipayBankListEntity alipayBankListEntity) {
+        if (StrUtil.isEmpty(alipayBankListEntity.getAccountHolder())) {
+            alipayBankListEntity.setAccountHolder("PAYURL");
+        }
+        if (StrUtil.isEmpty(alipayBankListEntity.getOpenAccountBank())) {
+            alipayBankListEntity.setOpenAccountBank("测试");
+        }
+        if (StrUtil.isEmpty(alipayBankListEntity.getBankType())) {
+            alipayBankListEntity.setBankType("1");
+        }
+        if (StrUtil.isEmpty(alipayBankListEntity.getBankcode())) {
+            alipayBankListEntity.setBankcode("ICC");
+        }
+        if (StrUtil.isEmpty(alipayBankListEntity.getAccount())) {
+            alipayBankListEntity.setAccount("PAYURL");
+        }
         return toAjax(alipayBankListEntityService.insertAlipayBankListEntity(alipayBankListEntity));
     }
 

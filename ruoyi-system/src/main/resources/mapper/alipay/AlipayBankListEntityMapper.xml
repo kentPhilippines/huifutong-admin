@@ -127,7 +127,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <update id="deleteAlipayBankListEntityByIds" parameterType="String">
-        delete from alipay_chanel_fee where id in
+        delete from alipay_bank_list where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
