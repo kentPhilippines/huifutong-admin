@@ -446,4 +446,6 @@ public class AlipayUserRateEntityController extends BaseController {
         return;
     }
 
+
+
 }

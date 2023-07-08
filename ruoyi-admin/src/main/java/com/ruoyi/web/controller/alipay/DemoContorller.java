@@ -55,6 +55,7 @@ public class DemoContorller extends BaseController {
     @ResponseBody
     public String deposit(@Valid DepositRequestVO deal)
     {
+        logger.info("-----{}",JSONUtil.toJsonStr(deal));
         String userId = deal.getUserId();
         userId = userId == null?deal.getAppId():"";
         Map<String, Object> parMap = new HashMap<>();

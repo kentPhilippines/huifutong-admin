@@ -148,16 +148,14 @@
         $("#content").text("");
         var url = "/alipay/demo/wit";
         var formData = convertFormToJSON($("#form-merchant-add"));;
+        var formData1  = $("#form-merchant-add").serialize();;
         // var formData = $("#form-merchant-add").serializeJSON();
 
         console.log(formData);
         $.ajax({
-            cache: false,
             type: "POST",
             url: url,
-            dataType: "json",
-            data: formData,
-            async: true,
+            data: formData1,
             success: function (data) {
 
                 $("#content").text(JSON.stringify(data));
