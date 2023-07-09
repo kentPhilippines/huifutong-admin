@@ -29,7 +29,6 @@ function login() {
             "rememberMe": rememberMe
         },
         success: function (r) {
-            r = JSON.parse(r);
             if (r.code == 0) {
                 location.href = ctx + 'index';
             } else {
