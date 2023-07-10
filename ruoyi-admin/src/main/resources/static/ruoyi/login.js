@@ -104,7 +104,6 @@ function bind() {
             "password": password
         },
         success: function (r) {
-            r = JSON.parse(r);
             if (r.code == 0) {
                 $.modal.openCode("请扫码", r.data.google, "400px", "400px", null);
             } else {
