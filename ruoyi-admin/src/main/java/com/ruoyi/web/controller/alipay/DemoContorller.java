@@ -5,6 +5,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.ruoyi.alipay.domain.AlipayUserInfo;
+import com.ruoyi.alipay.service.IAlipayUserInfoService;
 import com.ruoyi.alipay.service.IMerchantInfoEntityService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.web.controller.alipay.bean.DepositRequestVO;
@@ -51,46 +52,29 @@ public class DemoContorller extends BaseController {
     }
 
 
+    @Autowired
+    private IAlipayUserInfoService alipayUserInfoService;
     @PostMapping(value = "/deposit")
     @ResponseBody
     public String deposit(@Valid DepositRequestVO deal)
     {
         logger.info("-----{}",JSONUtil.toJsonStr(deal));
-        String userId = deal.getUserId();
-        userId = userId == null?deal.getAppId():"";
-        Map<String, Object> parMap = new HashMap<>();
-        AlipayUserInfo userInfo = new AlipayUserInfo();
-        userInfo.setUserId(userId);
-        List<AlipayUserInfo> alipayUserInfos = merchantInfoEntityService.selectMerchantInfoEntityList(userInfo);
+        AlipayUserInfo merchantInfoByUserId = alipayUserInfoService.findMerchantInfoByUserId(deal.getAppId());
         SimpleDateFormat d = new SimpleDateFormat("yyyyMMddHHmmss");
-        String key = alipayUserInfos.get(0).getPayPasword();//交易密钥
-        String publicKey = alipayUserInfos.get(0).getPublicKey();
-        String dealurl = alipayUserInfos.get(0).getDealUrl();
-
-        long amount = RandomUtil.randomLong(102, 1000);
-//        deal.setAmount(300 + "");//金额
-//		deal.setAppId(userid);//商户号
-//        deal.setApplyDate(d.format(new Date()));
-//        deal.setNotifyUrl("http://starpay168.com:5055");
-//        deal.setPageUrl("http://starpay168.com:5055");
-//        deal.setOrderId(IdUtil.objectId());
-//        deal.setPassCode("KDD_ALIPAY");
-//        deal.setSubject("订单交易");
-//        deal.setUserId("张三");  //to userid
+        String key = merchantInfoByUserId.getPayPasword();//交易密钥
+        String dealurl = merchantInfoByUserId.getDealUrl();
         Map<String, Object> objectToMap = JSONUtil.toBean(JSONUtil.toJsonStr(deal),Map.class);
         String createParam = createParam(objectToMap);
-        System.out.println("签名前请求串：" + createParam);
+        logger.info("签名前请求串：" + createParam);
         String md5 = getKeyedDigestUTF8(createParam + key);
-        System.out.println("签名：" + md5);
+        logger.info("签名：" + md5);
         deal.setSign(md5);
         Map<String, Object> objectToMap2 = JSONUtil.toBean(JSONUtil.toJsonStr(deal),Map.class);
         String createParam2 = createParam(objectToMap2);
-        System.out.println("加密前字符串：" + createParam2);
-        System.out.println("加密前json字符串：" + JSONUtil.toJsonStr(objectToMap2));
-
+        logger.info("加密前字符串：" + createParam2);
+        logger.info("加密前json字符串：" + JSONUtil.toJsonStr(objectToMap2));
         String post = HttpUtil.post(dealurl+"/v2/deal/pay", JSONUtil.toJsonStr(objectToMap2));
-        System.out.println("相应结果集：" + post);
-
+        logger.info("相应结果集：" + post);
         return post;
     }
 
@@ -98,40 +82,23 @@ public class DemoContorller extends BaseController {
     @ResponseBody
     public String wit(@Valid WithdrawRequestVO deal)
     {
-        String userId = deal.getAppid();
-        Map<String, Object> parMap = new HashMap<>();
-        AlipayUserInfo userInfo = new AlipayUserInfo();
-        userInfo.setUserId(userId);
-        List<AlipayUserInfo> alipayUserInfos = merchantInfoEntityService.selectMerchantInfoEntityList(userInfo);
+        logger.info("-----{}",JSONUtil.toJsonStr(deal));
+        AlipayUserInfo merchantInfoByUserId = alipayUserInfoService.findMerchantInfoByUserId(deal.getAppid());
         SimpleDateFormat d = new SimpleDateFormat("yyyyMMddHHmmss");
-        String key = alipayUserInfos.get(0).getPayPasword();//交易密钥
-        String publicKey = alipayUserInfos.get(0).getPublicKey();
-        String dealurl = alipayUserInfos.get(0).getDealUrl();
-
-        long amount = RandomUtil.randomLong(102, 1000);
-//        deal.setAmount(300 + "");//金额
-//		deal.setAppId(userid);//商户号
-//        deal.setApplyDate(d.format(new Date()));
-//        deal.setNotifyUrl("http://starpay168.com:5055");
-//        deal.setPageUrl("http://starpay168.com:5055");
-//        deal.setOrderId(IdUtil.objectId());
-//        deal.setPassCode("KDD_ALIPAY");
-//        deal.setSubject("订单交易");
-//        deal.setUserId("张三");  //to userid
+        String key = merchantInfoByUserId.getPayPasword();//交易密钥
+        String dealurl = merchantInfoByUserId.getDealUrl();
         Map<String, Object> objectToMap = JSONUtil.toBean(JSONUtil.toJsonStr(deal),Map.class);
         String createParam = createParam(objectToMap);
-        System.out.println("签名前请求串：" + createParam);
+        logger.info("签名前请求串：" + createParam);
         String md5 = getKeyedDigestUTF8(createParam + key);
-        System.out.println("签名：" + md5);
+        logger.info("签名：" + md5);
         deal.setSign(md5);
         Map<String, Object> objectToMap2 = JSONUtil.toBean(JSONUtil.toJsonStr(deal),Map.class);
         String createParam2 = createParam(objectToMap2);
-        System.out.println("加密前字符串：" + createParam2);
-        System.out.println("加密前json字符串：" + JSONUtil.toJsonStr(objectToMap2));
-
+        logger.info("加密前字符串：" + createParam2);
+        logger.info("加密前json字符串：" + JSONUtil.toJsonStr(objectToMap2));
         String post = HttpUtil.post(dealurl+"/v2/deal/wit", JSONUtil.toJsonStr(objectToMap2));
-        System.out.println("相应结果集：" + post);
-
+        logger.info("相应结果集：" + post);
         return post;
     }
 
