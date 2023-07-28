@@ -230,6 +230,17 @@ public class AlipayWithdrawEntity extends BaseEntity {
     @Excel(name = "1数据可用2数据无用")
     private Integer status;
 
+    public Integer getExported() {
+        return exported;
+    }
+
+    public void setExported(Integer exported) {
+        this.exported = exported;
+    }
+
+    @Excel(name = "0未导出1已导出")
+    private Integer exported;
+
     /**
      * 备用字段添加业务使用
      */

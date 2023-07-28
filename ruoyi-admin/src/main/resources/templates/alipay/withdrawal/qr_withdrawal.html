@@ -55,7 +55,11 @@
             <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="payfor:withdrawal:qr:export">
                 <i class="fa fa-download"></i> 导出
             </a>
+            <a class="btn btn-warning" onclick="$.operate.exportSelect('批量导出数据')" shiro:hasPermission="payfor:withdrawal:qr:export">
+                <i class="fa fa-download"></i> 导出支付宝（导出成功的支付宝单子，只能导出一次）
+            </a>
         </div>
+
         <div class="col-sm-12 select-table table-striped">
             <table id="bootstrap-table"></table>
         </div>
@@ -72,6 +76,7 @@
         var options = {
             url: prefix + "/qr/list",
             updateUrl: prefix + "/qr/edit/{id}",
+            exportUrlAll: prefix + "/qr/export/{ids}",
             exportUrl: prefix + "/qr/export",
             modalName: "会员提现记录",
             showFooter: true,
