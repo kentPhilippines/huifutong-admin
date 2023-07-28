@@ -31,6 +31,11 @@ public interface AlipayWithdrawEntityMapper {
      */
     List<AlipayWithdrawEntity> selectAlipayWithdrawEntityByIds(List<String> orderIds);
 
+
+
+    List<AlipayWithdrawEntity> selectAlipayWithdrawEntityByIds2(List<String> ids);
+    int updateByIds(List<String> ids);
+
     /**
      * 查询会员提现记录列表
      *

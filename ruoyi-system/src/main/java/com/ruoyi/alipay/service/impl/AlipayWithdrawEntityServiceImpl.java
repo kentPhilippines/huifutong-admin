@@ -1,5 +1,6 @@
 package com.ruoyi.alipay.service.impl;
 
+import com.google.common.collect.Sets;
 import com.ruoyi.alipay.domain.AlipayWithdrawEntity;
 import com.ruoyi.alipay.mapper.AlipayWithdrawEntityMapper;
 import com.ruoyi.alipay.service.IAlipayWithdrawEntityService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 会员提现记录Service业务层处理
@@ -21,6 +23,7 @@ import java.util.List;
 public class AlipayWithdrawEntityServiceImpl implements IAlipayWithdrawEntityService {
     @Resource
     private AlipayWithdrawEntityMapper alipayWithdrawEntityMapper;
+
     /**
      * 查询会员提现记录
      *
@@ -49,6 +52,19 @@ public class AlipayWithdrawEntityServiceImpl implements IAlipayWithdrawEntitySer
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public List<AlipayWithdrawEntity> selectAlipayWithdrawEntityList(AlipayWithdrawEntity alipayWithdrawEntity) {
         return alipayWithdrawEntityMapper.selectAlipayWithdrawEntityList(alipayWithdrawEntity);
+    }
+
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayWithdrawEntity> exportNotExportedList(List<String> ids) {
+
+        List<AlipayWithdrawEntity> notExportedList = alipayWithdrawEntityMapper.selectAlipayWithdrawEntityByIds2(ids)
+                .stream()
+                .filter(e -> e.getExported() == 0 && e.getOrderStatus().equals("4") && Sets.newHashSet("ALIPAY","支付宝").contains(e.getBankcode()))
+                .collect(Collectors.toList());
+        alipayWithdrawEntityMapper.updateByIds(ids);
+        return notExportedList;
     }
 
     @Override

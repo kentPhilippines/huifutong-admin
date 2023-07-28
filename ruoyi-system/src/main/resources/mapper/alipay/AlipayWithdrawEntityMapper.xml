@@ -13,6 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="accname"    column="accname"    />
         <result property="orderStatus"    column="orderStatus"    />
         <result property="bankName"    column="bankName"    />
+        <result property="bankcode"    column="bankcode"    />
         <result property="amount"    column="amount"    />
         <result property="amount1"    column="amount1"    />
         <result property="fee"    column="fee"    />
@@ -40,13 +41,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="sunCountAmountFee" column="sunCountAmountFee"/>
         <result property="sunCountActualAmount" column="sunCountActualAmount"/>
         <result property="sgin" column="sgin"/>
+        <result property="exported" column="exported"/>
     </resultMap>
 
     <sql id="selectAlipayWithdrawEntityVo">
         select id, orderId, userId, withdrawType, bankNo, accname,  sgin ,
          orderStatus, bankName, amount,amount1, fee,fee1, actualAmount,actualAmount1, mobile,
          notify, createTime, submitTime, status, retain1, retain2, apply, comment, approval,witChannel,witType,
-        channelId,appOrderId,currency ,txhash,ethFee
+        channelId,appOrderId,currency ,txhash,ethFee,exported,bankcode
           from alipay_withdraw
     </sql>
 
@@ -68,6 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="appOrderId != null  and appOrderId != ''">and appOrderId = #{appOrderId}</if>
             <if test="witChannel != null  and witChannel != ''">and witChannel = #{witChannel}</if>
             <if test="currency != null  and currency != ''">and currency = #{currency}</if>
+            <if test="exported != null  ">and exported = #{exported}</if>
         </where>
         order by id desc
     </select>
@@ -82,6 +85,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where orderId in
         <foreach collection="list" item="orderId" open="(" separator="," close=")">
             #{orderId}
+        </foreach>
+    </select>
+
+
+    <select id="selectAlipayWithdrawEntityByIds2" parameterType="String" resultMap="AlipayWithdrawEntityResult">
+        <include refid="selectAlipayWithdrawEntityVo"/>
+        where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
         </foreach>
     </select>
 
@@ -106,6 +118,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bankName != null  and bankName != ''">and bankName like concat('%', #{bankName}, '%')</if>
             <if test="mobile != null  and mobile != ''">and mobile = #{mobile}</if>
             <if test="status != null ">and status = #{status}</if>
+            <if test="exported != null ">and exported = #{exported}</if>
             <if test="retain1 != null and retain1 != '' ">and retain1 = #{retain1}</if>
             <if test="channelId != null  and channelId != ''">and channelId = #{channelId}</if>
             <if test="appOrderId != null  and appOrderId != ''">and appOrderId = #{appOrderId}</if>
@@ -116,6 +129,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     </select>
+
+    <update id="updateByIds" parameterType="String">
+        update  alipay_withdraw set exported=1 where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+<!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+    </update>
 
 
 </mapper>

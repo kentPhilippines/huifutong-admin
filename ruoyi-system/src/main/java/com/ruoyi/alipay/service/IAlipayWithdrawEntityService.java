@@ -35,7 +35,7 @@ public interface IAlipayWithdrawEntityService {
      * @return 会员提现记录集合
      */
     List<AlipayWithdrawEntity> selectAlipayWithdrawEntityList(AlipayWithdrawEntity alipayWithdrawEntity);
-
+    List<AlipayWithdrawEntity> exportNotExportedList(List<String> ids);
     /**
      * 查询商户提现统计数据
      *

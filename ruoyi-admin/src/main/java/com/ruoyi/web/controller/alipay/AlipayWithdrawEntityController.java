@@ -4,9 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.alicp.jetcache.Cache;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.CreateCache;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.ruoyi.alipay.domain.*;
 import com.ruoyi.alipay.service.*;
@@ -91,6 +93,23 @@ public class AlipayWithdrawEntityController extends BaseController {
         List<AlipayWithdrawEntity> list = alipayWithdrawEntityService
                 .selectAlipayWithdrawEntityList(alipayWithdrawEntity);
         return getDataTable(list);
+    }
+
+
+    @PostMapping("/qr/export/{ids}")
+    @ResponseBody
+    public AjaxResult qr_list(@PathVariable("ids") String ids) {
+        List<String> idList = Lists.newArrayList( ids.split(","));
+        List<AlipayWithdrawEntity> list = alipayWithdrawEntityService.exportNotExportedList(idList);
+        List<AlipayWithdrawExportEntity> exportList = JSONUtil.toList(JSONUtil.parseArray(JSONUtil.toJsonStr(list)),AlipayWithdrawExportEntity.class);
+        ExcelUtil<AlipayWithdrawExportEntity> util = new ExcelUtil<AlipayWithdrawExportEntity>(AlipayWithdrawExportEntity.class);
+        return util.exportExcel(exportList, "withdrawal");
+
+//        startPage();
+//        alipayWithdrawEntity.setWithdrawType("2");
+//        List<AlipayWithdrawEntity> list = alipayWithdrawEntityService
+//                .selectAlipayWithdrawEntityList(alipayWithdrawEntity);
+//        return getDataTable(list);
     }
 
     @RequiresPermissions("merchant:withdrawal:view")
