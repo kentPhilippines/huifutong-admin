@@ -58,10 +58,10 @@ public class AlipayWithdrawEntityServiceImpl implements IAlipayWithdrawEntitySer
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public List<AlipayWithdrawEntity> exportNotExportedList(List<String> ids) {
-
         List<AlipayWithdrawEntity> notExportedList = alipayWithdrawEntityMapper.selectAlipayWithdrawEntityByIds2(ids)
                 .stream()
-                .filter(e -> e.getExported() == 0 && e.getOrderStatus().equals("4") && Sets.newHashSet("ALIPAY","支付宝").contains(e.getBankcode()))
+                .filter(e -> e.getOrderStatus().equals("4") && Sets.newHashSet("ALIPAY","支付宝").contains(e.getBankcode()))
+                .peek(e -> e.setBankcode("支付宝"))
                 .collect(Collectors.toList());
         alipayWithdrawEntityMapper.updateByIds(ids);
         return notExportedList;
