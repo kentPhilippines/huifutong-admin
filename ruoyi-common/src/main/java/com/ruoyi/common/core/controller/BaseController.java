@@ -38,6 +38,7 @@ import java.util.Map;
 public class BaseController {
     protected final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
+
     /**
      * 将前台传递过来的日期格式的字符串，自动转化为Date类型
      */
