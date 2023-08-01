@@ -38,6 +38,14 @@ public interface SysNoticeMapper {
     public int insertNotice(SysNotice notice);
 
     /**
+     * 查询主键
+     *
+     * @param notice 公告信息
+     * @return 结果
+     */
+    public Long selectKeyId();
+
+    /**
      * 修改公告
      *
      * @param notice 公告信息
