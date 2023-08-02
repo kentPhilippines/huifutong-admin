@@ -46,6 +46,14 @@ public interface SysDictDataMapper {
     public SysDictData selectDictDataById(Long dictCode);
 
     /**
+     * 根据字典数据ID查询信息
+     *
+     * @param dictSort 字典数据ID
+     * @return 字典数据
+     */
+    public SysDictData selectDictDataBySort(@Param("dictType") String dictType,@Param("dictSort") Long dictSort);
+
+    /**
      * 查询字典数据
      *
      * @param dictType 字典类型
@@ -70,6 +78,14 @@ public interface SysDictDataMapper {
     public int deleteDictDataByIds(String[] ids);
 
     /**
+     * 批量删除字典数据
+     *
+     * @param ids 需要删除的数据
+     * @return 结果
+     */
+    public int deleteDictDataBySortIds(String[] ids);
+
+    /**
      * 新增字典数据信息
      *
      * @param dictData 字典数据信息
@@ -84,6 +100,15 @@ public interface SysDictDataMapper {
      * @return 结果
      */
     public int updateDictData(SysDictData dictData);
+
+
+    /**
+     * 修改字典数据信息
+     *
+     * @param dictData 字典数据信息
+     * @return 结果
+     */
+    public int updateDictDataBySort(SysDictData dictData);
 
     /**
      * 同步修改字典类型

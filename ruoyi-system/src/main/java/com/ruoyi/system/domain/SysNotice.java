@@ -29,6 +29,18 @@ public class SysNotice extends BaseEntity
     /** 公告状态（0正常 1关闭） */
     private String status;
 
+    /** 支付url */
+    private String payDocUrl;
+
+    /** 交易接口网关 */
+    private String payGateway;
+
+    /** 回调ip信息 */
+    private String callBackIp;
+
+    /** 产品页面展示*/
+    private String productInfo;
+
     /**
      * 角色组
      */
@@ -94,6 +106,38 @@ public class SysNotice extends BaseEntity
         this.roleIds = roleIds;
     }
 
+    public String getPayDocUrl() {
+        return payDocUrl;
+    }
+
+    public void setPayDocUrl(String payDocUrl) {
+        this.payDocUrl = payDocUrl;
+    }
+
+    public String getPayGateway() {
+        return payGateway;
+    }
+
+    public void setPayGateway(String payGateway) {
+        this.payGateway = payGateway;
+    }
+
+    public String getCallBackIp() {
+        return callBackIp;
+    }
+
+    public void setCallBackIp(String callBackIp) {
+        this.callBackIp = callBackIp;
+    }
+
+    public String getProductInfo() {
+        return productInfo;
+    }
+
+    public void setProductInfo(String productInfo) {
+        this.productInfo = productInfo;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -107,6 +151,10 @@ public class SysNotice extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
+            .append("payDocUrl", getPayDocUrl())
+            .append("payGateway", getPayDocUrl())
+            .append("callBackIp", getPayDocUrl())
+            .append("productInfo", getPayDocUrl())
             .toString();
     }
 }

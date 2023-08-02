@@ -26,6 +26,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectNoticeVo"/>
         where notice_id = #{noticeId}
     </select>
+
+
+    <select id="selectKeyId" resultType="Long">
+        select max(notice_id) from sys_notice;
+    </select>
     
     <select id="selectNoticeList" parameterType="SysNotice" resultMap="SysNoticeResult">
         <include refid="selectNoticeVo"/>

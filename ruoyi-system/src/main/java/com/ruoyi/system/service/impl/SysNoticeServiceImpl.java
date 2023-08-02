@@ -1,14 +1,22 @@
 package com.ruoyi.system.service.impl;
 
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.domain.*;
+import com.ruoyi.system.mapper.AlipayMessageRegMapper;
+import com.ruoyi.system.mapper.SysDictDataMapper;
+import com.ruoyi.system.mapper.SysDictTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.common.core.text.Convert;
-import com.ruoyi.system.domain.SysNotice;
 import com.ruoyi.system.mapper.SysNoticeMapper;
 import com.ruoyi.system.service.ISysNoticeService;
+
+import javax.annotation.Resource;
 
 /**
  * 公告 服务层实现
@@ -21,6 +29,12 @@ public class SysNoticeServiceImpl implements ISysNoticeService {
     @Autowired
     private SysNoticeMapper noticeMapper;
 
+    @Resource
+    private SysDictTypeMapper sysDictTypeMapper;
+
+    @Resource
+    private SysDictDataMapper sysDictDataMapper;
+
     /**
      * 查询公告信息
      *
@@ -29,7 +43,20 @@ public class SysNoticeServiceImpl implements ISysNoticeService {
      */
     @Override
     public SysNotice selectNoticeById(Long noticeId) {
-        return noticeMapper.selectNoticeById(noticeId);
+        SysNotice sysNotice = noticeMapper.selectNoticeById(noticeId);
+        List<SysDictData> sysDictDatas = sysDictDataMapper.selectDictDataByType("NOTICE89757");
+        if (CollectionUtil.isNotEmpty(sysDictDatas)) {
+            for (SysDictData sysDictData : sysDictDatas) {
+                if (sysNotice.getNoticeId().equals(sysDictData.getDictSort())) {
+                    sysNotice.setCallBackIp(sysDictData.getDictLabel());
+                    sysNotice.setPayGateway(sysDictData.getDictValue());
+                    sysNotice.setProductInfo(sysDictData.getRemark());
+                    sysNotice.setPayDocUrl(sysDictData.getCssClass());
+                    break;
+                }
+            }
+        }
+        return sysNotice;
     }
 
     /**
@@ -40,7 +67,22 @@ public class SysNoticeServiceImpl implements ISysNoticeService {
      */
     @Override
     public List<SysNotice> selectNoticeList(SysNotice notice) {
-        return noticeMapper.selectNoticeList(notice);
+        List<SysNotice> sysNotices = noticeMapper.selectNoticeList(notice);
+        List<SysDictData> notice89757 = sysDictDataMapper.selectDictDataByType("NOTICE89757");
+        if (CollectionUtil.isNotEmpty(notice89757)){
+            for (SysNotice sysNotice : sysNotices) {
+                for (SysDictData sysDictData : notice89757) {
+                    if (sysNotice.getNoticeId().equals(sysDictData.getDictSort())){
+                        sysNotice.setCallBackIp(sysDictData.getDictLabel());
+                        sysNotice.setPayGateway(sysDictData.getDictValue());
+                        sysNotice.setProductInfo(sysDictData.getRemark());
+                        sysNotice.setPayDocUrl(sysDictData.getCssClass());
+                        break;
+                    }
+                }
+            }
+        }
+        return sysNotices;
     }
 
     /**
@@ -54,7 +96,25 @@ public class SysNoticeServiceImpl implements ISysNoticeService {
         Long[] roles = notice.getRoleIds();
         String roleIds = StringUtils.join(roles, ",");
         notice.setRemark(roleIds);
-        return noticeMapper.insertNotice(notice);
+        int i = noticeMapper.insertNotice(notice);
+        Long id = noticeMapper.selectKeyId();
+        SysDictType notice89757 = sysDictTypeMapper.selectDictTypeByType("NOTICE89757");
+        if (null == notice89757) {
+            SysDictType sysDictType = new SysDictType();
+            sysDictType.setDictName("公告信息89757");
+            sysDictType.setStatus("0");
+            sysDictType.setDictType("NOTICE89757");
+            sysDictTypeMapper.insertDictType(sysDictType);
+        }
+        SysDictData sysDictData = new SysDictData();
+        sysDictData.setDictType("NOTICE89757");
+        sysDictData.setCssClass(notice.getPayDocUrl());
+        sysDictData.setDictLabel(notice.getCallBackIp());
+        sysDictData.setDictValue(notice.getPayGateway());
+        sysDictData.setRemark(notice.getProductInfo());
+        sysDictData.setDictSort(id);
+        sysDictDataMapper.insertDictData(sysDictData);
+        return i;
     }
 
     /**
@@ -72,7 +132,28 @@ public class SysNoticeServiceImpl implements ISysNoticeService {
         } else {
             notice.setRemark(roleIds);
         }
-        return noticeMapper.updateNotice(notice);
+
+        int i = noticeMapper.updateNotice(notice);
+        SysDictType notice89757 = sysDictTypeMapper.selectDictTypeByType("NOTICE89757");
+        if (null == notice89757) {
+            return 0;
+        }
+        SysDictData sysDictData = new SysDictData();
+        sysDictData.setDictType("NOTICE89757");
+        sysDictData.setCssClass(notice.getPayDocUrl());
+        sysDictData.setDictLabel(notice.getCallBackIp());
+        sysDictData.setDictValue(notice.getPayGateway());
+        sysDictData.setRemark(notice.getProductInfo());
+        SysDictData sysDictData1 = sysDictDataMapper.selectDictDataBySort("NOTICE89757",notice.getNoticeId());
+        if (null==sysDictData1){
+            Long id = noticeMapper.selectKeyId();
+            sysDictData.setDictSort(id);
+            sysDictDataMapper.insertDictData(sysDictData);
+        }else {
+            sysDictData.setDictSort(notice.getNoticeId());
+            sysDictDataMapper.updateDictDataBySort(sysDictData);
+        }
+        return i;
     }
 
     /**
@@ -83,7 +164,9 @@ public class SysNoticeServiceImpl implements ISysNoticeService {
      */
     @Override
     public int deleteNoticeByIds(String ids) {
-        return noticeMapper.deleteNoticeByIds(Convert.toStrArray(ids));
+        int i = noticeMapper.deleteNoticeByIds(Convert.toStrArray(ids));
+        sysDictDataMapper.deleteDictDataBySortIds(Convert.toStrArray(ids));
+        return i;
     }
 
     @Override
