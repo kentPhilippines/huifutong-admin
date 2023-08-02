@@ -189,15 +189,15 @@
                         return statusToolsDecimal(row);
                     }
                 },
-                {
-                    field: 'test',
-                    title: '测试',
-                    formatter: function (value, row, index) {
-                        if (row.switchs == 1) {
-                            return '<i class=\"btn btn-link btn-xs\" style="cursor:pointer;" title="拉单测试"onclick="payTest(\'' + row.userId + '\',\'' + row.id + '\')"><i class="fa fa-google-wallet"></i> 拉单测试' + '</i> ';
-                        }
-                    }
-                },
+<!--                {-->
+<!--                    field: 'test',-->
+<!--                    title: '测试',-->
+<!--                    formatter: function (value, row, index) {-->
+<!--                        if (row.switchs == 1) {-->
+<!--                            return '<i class=\"btn btn-link btn-xs\" style="cursor:pointer;" title="拉单测试"onclick="payTest(\'' + row.userId + '\',\'' + row.id + '\')"><i class="fa fa-google-wallet"></i> 拉单测试' + '</i> ';-->
+<!--                        }-->
+<!--                    }-->
+<!--                },-->
                 {
                     field: 'createTime',
                     title: '创建时间',

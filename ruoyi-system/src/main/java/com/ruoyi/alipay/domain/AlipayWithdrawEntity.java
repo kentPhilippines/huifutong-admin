@@ -43,7 +43,6 @@ public class AlipayWithdrawEntity extends BaseEntity {
     private String sunCountAmount = "0";
     private String sunCountAmountFee = "0";
     private String sunCountActualAmount = "0";
-
     public String getSunCountActualAmount() {
         return sunCountActualAmount;
     }
@@ -360,6 +359,15 @@ public class AlipayWithdrawEntity extends BaseEntity {
      */
     @Excel(name = "审核意见")
     private String comment;
+    /**
+     * 请求参数
+     */
+    private String request;
+    /**
+     * 响应参数
+     */
+    private String response;
+
 
     public void setId(Long id) {
         this.id = id;
@@ -567,6 +575,22 @@ public class AlipayWithdrawEntity extends BaseEntity {
     @Override
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getRequest() {
+        return request;
+    }
+
+    public void setRequest(String request) {
+        this.request = request;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
     }
 
     @Override

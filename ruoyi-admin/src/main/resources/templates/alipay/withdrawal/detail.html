@@ -88,6 +88,25 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="col-sm-3 control-label">商户请求参数：</label>
+            <div class="col-sm-8">
+                <pre v-pre="" data-lang="Java">
+                    <code class="lang-Java" th:text="${alipayWithdrawEntity.request}">
+
+                    </code>
+                </pre>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">商户响应参数：</label>
+            <div class="col-sm-8">
+                <pre v-pre="" data-lang="Java">
+                    <code class="lang-Java" th:text="${alipayWithdrawEntity.response}">
+
+                    </code>
+                </pre>
+            </div>
+        <div class="form-group">
             <label class="col-sm-3 control-label">审核意见：</label>
             <div class="col-sm-8">
                 <span class="form-control" style="border: 0;" th:text="${alipayWithdrawEntity.comment}"></span>

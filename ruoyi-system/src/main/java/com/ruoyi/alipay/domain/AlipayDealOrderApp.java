@@ -53,7 +53,6 @@ public class AlipayDealOrderApp extends BaseEntity {
     private Double orderAmount;
 
 
-
     /**
      * 订单金额(原始金额)
      */
@@ -81,10 +80,18 @@ public class AlipayDealOrderApp extends BaseEntity {
      */
     private String back;
     /**
+     * 订单请求参数
+     */
+    private String reqParam;
+    /**
+     * 订单响应参数
+     */
+    private String resParam;
+    /**
      * 数据修改时间
      */
     @Excel(name = "数据修改时间", width = 30, dateFormat = DatePattern.NORM_DATETIME_PATTERN)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date submitTime;
     /**
      * 状态:1可使用；0不可使用
