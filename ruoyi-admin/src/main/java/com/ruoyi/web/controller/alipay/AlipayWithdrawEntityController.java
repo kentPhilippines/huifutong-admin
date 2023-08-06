@@ -18,6 +18,7 @@ import com.ruoyi.common.constant.StaticConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.StatisticsEntity;
+import com.ruoyi.common.core.domain.WitStatisticsEntity;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.exception.BusinessException;
@@ -373,9 +374,9 @@ public class AlipayWithdrawEntityController extends BaseController {
     @PostMapping("/statistics/merchant/wit")
     @ResponseBody
     public TableDataInfo staWit(StatisticsEntity statisticsEntity) {
-        List<StatisticsEntity> staList = new ArrayList<>();
+        List<WitStatisticsEntity> staList = new ArrayList<>();
         startPage();
-        staList = alipayWithdrawEntityService.statisticsWit(statisticsEntity);
+        staList = alipayWithdrawEntityService.statisticsWitForDay(statisticsEntity);
 
 
         return getDataTable(staList);

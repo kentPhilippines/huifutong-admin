@@ -6,6 +6,7 @@ import com.ruoyi.alipay.mapper.AlipayWithdrawEntityMapper;
 import com.ruoyi.alipay.service.IAlipayWithdrawEntityService;
 import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.core.domain.StatisticsEntity;
+import com.ruoyi.common.core.domain.WitStatisticsEntity;
 import com.ruoyi.common.enums.DataSourceType;
 import org.springframework.stereotype.Service;
 
@@ -98,6 +99,38 @@ public class AlipayWithdrawEntityServiceImpl implements IAlipayWithdrawEntitySer
 
 
         List<StatisticsEntity> staList = alipayWithdrawEntityMapper.statisticsWit(statisticsEntity);
+
+
+        return staList;
+    }
+
+
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<WitStatisticsEntity> statisticsWitForDay(StatisticsEntity statisticsEntity) {
+        /**
+         * #########  查询类型包括
+         * 1,账户类型
+         * 2,代付金额累计
+         * 3,代付手续费累计
+         * 4,api 和后台代付划分
+         * 5,不同渠道代付划分
+         * ############以上是商·户维度数据
+         */
+
+
+        /**
+         * ##############
+         * 渠道维度数据
+         * 1,账户类型
+         * 2,代付金额累计
+         * 3,代付手续费累计
+         * 4,api 和后台代付划分
+         */
+
+
+        List<WitStatisticsEntity> staList = alipayWithdrawEntityMapper.statisticsWitForDay(statisticsEntity);
 
 
         return staList;

@@ -2,6 +2,7 @@ package com.ruoyi.alipay.service;
 
 import com.ruoyi.alipay.domain.AlipayWithdrawEntity;
 import com.ruoyi.common.core.domain.StatisticsEntity;
+import com.ruoyi.common.core.domain.WitStatisticsEntity;
 
 import java.util.List;
 
@@ -53,6 +54,15 @@ public interface IAlipayWithdrawEntityService {
      * @return
      */
     List<StatisticsEntity> statisticsWit(StatisticsEntity statisticsEntity);
+
+
+    /**
+     * 代付数据统计ForDay
+     *
+     * @param statisticsEntity
+     * @return
+     */
+    List<WitStatisticsEntity> statisticsWitForDay(StatisticsEntity statisticsEntity);
 
     /**
      * 修改代付订单为已推送状态

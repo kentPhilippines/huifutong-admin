@@ -2,6 +2,7 @@ package com.ruoyi.alipay.mapper;
 
 import com.ruoyi.alipay.domain.AlipayWithdrawEntity;
 import com.ruoyi.common.core.domain.StatisticsEntity;
+import com.ruoyi.common.core.domain.WitStatisticsEntity;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -73,6 +74,31 @@ public interface AlipayWithdrawEntityMapper {
             "group by userId, witChannel ,channelId , retain1" +
             "</script>")
     List<StatisticsEntity> statisticsWit(@Param("statisticsEntity") StatisticsEntity statisticsEntity);
+
+
+
+    @Select("<script>\n" +
+            "    SELECT\n" +
+            "        userId,\n" +
+            "        SUM(CASE WHEN orderStatus = 2 THEN 1 ELSE 0 END) AS totalSuccessOrders,\n" +
+            "        SUM(CASE WHEN orderStatus = 1 THEN 1 ELSE 0 END) AS totalPendingOrders,\n" +
+            "        SUM(CASE WHEN orderStatus = 3 THEN 1 ELSE 0 END) AS totalFailureOrders,\n" +
+            "        COUNT(*) AS totalTransactions,\n" +
+            "        SUM(CASE WHEN orderStatus = 1 THEN amount ELSE 0 END) AS totalPendingAmount,\n" +
+            "        SUM(CASE WHEN orderStatus = 2 THEN amount ELSE 0 END) AS totalSuccessAmount,\n" +
+            "        SUM(CASE WHEN orderStatus = 3 THEN amount ELSE 0 END) AS totalFailureAmount,\n" +
+            "        COALESCE(SUM(fee), 0) AS totalFee,\n" +
+            "        SUM(CASE WHEN orderStatus = 1 THEN actualAmount ELSE 0 END) AS totalPendingActualAmount,\n" +
+            "        SUM(CASE WHEN orderStatus = 2 THEN actualAmount ELSE 0 END) AS totalSuccessActualAmount,\n" +
+            "        SUM(CASE WHEN orderStatus = 3 THEN actualAmount ELSE 0 END) AS totalFailureActualAmount\n" +
+            "    FROM alipay_withdraw\n" +
+            "    WHERE createTime BETWEEN #{statisticsEntity.params.dayStart} AND #{statisticsEntity.params.dayEnd} AND status = 1\n" +
+            "    <if test=\"statisticsEntity.userId != null and statisticsEntity.userId != ''\">\n" +
+            "        AND userId = #{statisticsEntity.userId}\n" +
+            "    </if>\n" +
+            "    GROUP BY userId\n" +
+            "</script>\n")
+    List<WitStatisticsEntity> statisticsWitForDay(@Param("statisticsEntity") StatisticsEntity statisticsEntity);
 
 
     @Update("update alipay_withdraw set orderStatus = 4 where id = #{id}")
