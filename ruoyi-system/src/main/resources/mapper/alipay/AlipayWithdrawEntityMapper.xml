@@ -42,13 +42,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="sunCountActualAmount" column="sunCountActualAmount"/>
         <result property="sgin" column="sgin"/>
         <result property="exported" column="exported"/>
+        <result property="payStatus" column="payStatus"/>
     </resultMap>
 
     <sql id="selectAlipayWithdrawEntityVo">
         select id, orderId, userId, withdrawType, bankNo, accname,  sgin ,
          orderStatus, bankName, amount,amount1, fee,fee1, actualAmount,actualAmount1, mobile,
          notify, createTime, submitTime, status, retain1, retain2, apply, comment, approval,witChannel,witType,
-        channelId,appOrderId,currency ,txhash,ethFee,exported,bankcode,request,response
+        channelId,appOrderId,currency ,txhash,ethFee,exported,bankcode,request,response,payStatus
           from alipay_withdraw
     </sql>
 

@@ -176,7 +176,12 @@
                     field: 'orderStatus',
                     title: '订单状态',
                     formatter: function (value, row, index) {
-                        return $.table.selectDictLabel(orderStatus, value);
+                        var table = '<ul>'
+                        if(row.payStatus == 1 || row.payStatus== '1'){
+                            table += '<li>' + '<span class="badge badge-primary"> 已扣款结算 </span>' + '</li>'
+                        }
+                        table += '<li>' + $.table.selectDictLabel(orderStatus, value) + '</li></ul>'
+                        return table;
                     }
                 },
                 {
@@ -197,17 +202,6 @@
                         table += '<li>' + '开户行：' + row.bankName + '</li>'
                         table += '</ul>'
                         return table;
-                    }
-                },
-                {
-                    field: 'withdrawType',
-                    title: '提现类型',
-                    formatter: function (value, row, index) {
-                        if (row.withdrawType === '1') {
-                            return '商户提现';
-                        } else if (row.withdrawType === '2') {
-                            return '卡商提现';
-                        }
                     }
                 },
                 {
