@@ -200,6 +200,17 @@ public class AlipayWithdrawEntity extends BaseEntity {
     @Excel(name = "真实到账金额")
     private Double actualAmount;
     private String actualAmount1;
+    @Excel(name = "结算", readConverterExp = "0=未扣款结算,1=已扣款结算")
+    private String payStatus;
+
+    public String getPayStatus() {
+        return payStatus;
+    }
+
+    public void setPayStatus(String payStatus) {
+        this.payStatus = payStatus;
+    }
+
     /**
      * 手机号
      */
