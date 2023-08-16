@@ -1,21 +1,87 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
-    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style type="text/css">
-        .align-center {
-            position: fixed;
-            left: 30%;
-            top: 40%;
+    <title>公告信息</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F5F5F5; /* 浅灰色 */
+        }
+        .container {
+            max-width: 100%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .notice {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .notice h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+        .notice p {
+            margin: 10px 0;
+            font-size: 18px;
+            color: #666;
         }
     </style>
 
+    <script>
+        function filterNotices() {
+            var selectedValue = document.getElementById("noticeFilter").value;
+            var allNotices = document.getElementsByClassName("notice");
+            var noticeContainer = document.getElementById("noticeContainer"); // 获取公告内容的父容器
+
+            for (var i = 0; i < allNotices.length; i++) {
+                var notice = allNotices[i];
+                var dataType = notice.getAttribute("data-type");
+
+                if (selectedValue === "all" || dataType === selectedValue) {
+                    notice.style.display = "block";
+                } else {
+                    notice.style.display = "none";
+                }
+            }
+
+            if (selectedValue === "all") {
+                noticeContainer.style.height = "auto"; // 恢复默认高度
+            } else {
+                noticeContainer.style.height = "100%"; // 设置高度为100%
+            }
+        }
+
+    </script>
+
 </head>
 <body>
-<div class="align-center"
-     style="letter-spacing:5px; font-size: 45px; font-family: 微软雅黑, 宋体, Arial Narrow, Helvetica, sans-serifs">
-    欢迎[[${@globalConfig.siteName}]]后台管理系统
+<div class="container">
+    <div class="header">
+        <h1>公告信息</h1>
+        <label for="noticeFilter">选择公告类型：</label>
+        <select id="noticeFilter" onchange="filterNotices()">
+            <option value="all">全部</option>
+            <option th:each="notice : ${notices}" th:value="${notice.noticeTitle}" th:text="${notice.noticeTitle}"></option>
+        </select>
+    </div>
+    <div th:each="notice : ${notices}" class="notice" th:attr="data-type=${notice.noticeTitle}">
+        <h2 th:text="${notice.noticeTitle}">公告标题</h2>
+        <p th:utext="${notice.noticeContent}">公告内容</p>
+    </div>
 </div>
 </body>
 </html>
