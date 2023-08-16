@@ -113,6 +113,22 @@ public class AlipayWithdrawEntityController extends BaseController {
 //        return getDataTable(list);
     }
 
+    @PostMapping("/qr/export/bank/{ids}")
+    @ResponseBody
+    public AjaxResult qr_list_bank(@PathVariable("ids") String ids) {
+        List<String> idList = Lists.newArrayList( ids.split(","));
+        List<AlipayWithdrawEntity> list = alipayWithdrawEntityService.exportNotExportedListBank(idList);
+        List<AlipayWithdrawExportEntity> exportList = JSONUtil.toList(JSONUtil.parseArray(JSONUtil.toJsonStr(list)),AlipayWithdrawExportEntity.class);
+        ExcelUtil<AlipayWithdrawExportEntity> util = new ExcelUtil<AlipayWithdrawExportEntity>(AlipayWithdrawExportEntity.class);
+        return util.exportExcel(exportList, "withdrawal");
+
+//        startPage();
+//        alipayWithdrawEntity.setWithdrawType("2");
+//        List<AlipayWithdrawEntity> list = alipayWithdrawEntityService
+//                .selectAlipayWithdrawEntityList(alipayWithdrawEntity);
+//        return getDataTable(list);
+    }
+
     @RequiresPermissions("merchant:withdrawal:view")
     @GetMapping("/merchant")
     public String merchant_withdrawal(ModelMap modelMap) {

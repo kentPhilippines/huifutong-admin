@@ -67,6 +67,17 @@ public class AlipayWithdrawEntityServiceImpl implements IAlipayWithdrawEntitySer
         alipayWithdrawEntityMapper.updateByIds(ids);
         return notExportedList;
     }
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayWithdrawEntity> exportNotExportedListBank(List<String> ids) {
+        List<AlipayWithdrawEntity> notExportedList = alipayWithdrawEntityMapper.selectAlipayWithdrawEntityByIds2(ids)
+                .stream()
+                .filter(e -> e.getOrderStatus().equals("4") && Sets.newHashSet("BANK_WIT","支付宝").contains(e.getWitType()))
+               // .peek(e -> e.setBankcode( e.getBankcode()))
+                .collect(Collectors.toList());
+        alipayWithdrawEntityMapper.updateByIds(ids);
+        return notExportedList;
+    }
 
     @Override
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)

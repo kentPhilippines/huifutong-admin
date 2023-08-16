@@ -99,6 +99,9 @@
             <a class="btn btn-warning" onclick="$.operate.exportSelect('批量导出数据')" shiro:hasPermission="withdrawal:alipay:merchant:exportalipay">
                 <i class="fa fa-download"></i> 导出支付宝订单
             </a>
+            <a class="btn btn-warning" onclick="$.operate.exportSelect('批量导出数据')" shiro:hasPermission="withdrawal:alipay:merchant:exportalipay">
+                <i class="fa fa-download"></i> 导出银行卡订单
+            </a>
             <a class="btn btn-primary" onclick="$.operate.statistics('统计当天代付数据')"
                shiro:hasPermission="wit:order:statistics:chanel">
                 <i class="fa fa-bar-chart"></i> 当天数据统计
@@ -126,6 +129,7 @@
             statisticsUrl: prefix + "/statistics/merchant/channelWit",
             exportUrl: prefix + "/merchant/export",
             exportUrlAll: prefix + "/qr/export/{ids}",
+            exportUrlAllBank: prefix + "/qr/export/bank/{ids}",
             showFooter: true,
             modalName: "会员提现记录",
             rowStyle: function (row, index) {

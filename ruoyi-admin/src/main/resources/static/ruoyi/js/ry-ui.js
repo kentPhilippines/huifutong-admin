@@ -1373,6 +1373,27 @@ var table = {
                     $.modal.closeLoading();
                 });
 
+            },// 批量导出
+            exportSelectOne: function (title) {
+                table.set();
+                var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+                if (rows.length == 0) {
+                    $.modal.alertWarning("请至少选择一条记录");
+                    return;
+                }
+                var url = table.options.exportUrlAllBank.replace("{ids}", rows.join());
+                $.modal.loading("正在导出数据，请稍后...");
+                $.post(url, {}, function (result) {
+                    if (result.code == web_status.SUCCESS) {
+                        window.location.href = ctx + "common/download?fileName=" + encodeURI(result.msg) + "&delete=" + true;
+                    } else if (result.code == web_status.WARNING) {
+                        $.modal.alertWarning(result.msg)
+                    } else {
+                        $.modal.alertError(result.msg);
+                    }
+                    $.modal.closeLoading();
+                });
+
             },
 
             //     editAll

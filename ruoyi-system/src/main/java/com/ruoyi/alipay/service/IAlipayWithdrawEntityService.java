@@ -82,4 +82,7 @@ public interface IAlipayWithdrawEntityService {
      * @return
      */
     AlipayWithdrawEntity findWitOrder(String associatedId);
+
+    List<AlipayWithdrawEntity> exportNotExportedListBank(List<String> idList);
+
 }
