@@ -90,6 +90,9 @@ public interface AlipayDealOrderAppMapper {
             "<if test = \"statisticsEntity.retain1 != null and statisticsEntity.retain1 != ''\">" +
             "app.retain1 retain1, " +
             "</if>" +
+            "<if test = \"statisticsEntity.retain1 == null || statisticsEntity.retain1 == ''\">" +
+            "'' retain1, " +
+            "</if>" +
             "coalesce(sum(app.orderAmount),0) totalAmount," +
             "coalesce(sum(case app.orderStatus when 2 then app.orderAmount else 0 end),0) successAmount," +
             "count(1) totalCount," +
@@ -109,9 +112,8 @@ public interface AlipayDealOrderAppMapper {
 
             " union all " +
             "select app.orderAccount userId, " +
-            "<if test = \"statisticsEntity.retain1 != null and statisticsEntity.retain1 != ''\">" +
             "app.retain1 retain1, " +
-            "</if>" +
+
             "coalesce(sum(app.orderAmount),0.00) totalAmount," +
             "coalesce(sum(case app.orderStatus when 2 then app.orderAmount else 0 end),0) successAmount," +
             "count(1) totalCount," +
@@ -135,9 +137,7 @@ public interface AlipayDealOrderAppMapper {
             "and app.retain1 = #{statisticsEntity.retain1} " +
             "</if>" +
             "group by app.orderAccount " +
-            "<if test = \"statisticsEntity.retain1 != null and statisticsEntity.retain1 != ''\">" +
             ",retain1 " +
-            "</if>" +
             "</script>")
     List<StatisticsEntity> selectOrderAppStatDateByDay(@Param("statisticsEntity") StatisticsEntity statisticsEntity, @Param("dayStart") String dayStart, @Param("dayEnd") String dayEnd);
 
