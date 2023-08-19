@@ -67,29 +67,18 @@
                 {field: 'userName', title: '商户名称'},
                 {field: 'agent', title: '上级代理'},
                 {
-                    field: 'switchs', title: '状态',
-                    formatter: function (value, row, index) {
-                        if (row.switchs == '1') {
-                            return '<span style="color: #00B83F">开启</span>';
-                        } else if (row.switchs == '2') {
-                            return '<span style="color: #cc0000">关闭</span>';
-                        }
-                    }
-                },
-                {
-                    visible: editFlagAdmin == 'hidden' ? false : true,
                     title: '代付反查',
                     align: 'enterWitOpen',
                     formatter: function (value, row, index) {
                         return statusTools(row, 'enterWitOpen');
                     }
                 },
-                {field: 'minAmount', title: '最小金额'},
+           /*     {field: 'minAmount', title: '最小金额'},
                 {field: 'maxAmount', title: '最大金额'},
                 {field: 'totalAmount', title: '总金额'},
-                {field: 'timesTotal', title: '下单次数'},
-                {field: 'startTime', title: '开始时间'},
-                {field: 'endTime', title: '结束时间'},
+                {field: 'timesTotal', title: '下单次数'},*/
+              /*  {field: 'startTime', title: '开始时间'},
+                {field: 'endTime', title: '结束时间'},*/
                 {
                     field: 'witip', title: '代付IP',
                     formatter: function (value, row, index) {

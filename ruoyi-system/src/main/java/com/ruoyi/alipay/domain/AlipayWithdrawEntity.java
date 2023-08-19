@@ -206,7 +206,6 @@ public class AlipayWithdrawEntity extends BaseEntity {
     public String getPayStatus() {
         return payStatus;
     }
-
     public void setPayStatus(String payStatus) {
         this.payStatus = payStatus;
     }
