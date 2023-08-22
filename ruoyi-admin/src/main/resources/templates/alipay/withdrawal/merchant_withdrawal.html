@@ -133,7 +133,7 @@
             showFooter: true,
             modalName: "会员提现记录",
             rowStyle: function (row, index) {
-                if (  row.bankNo &&   ( row.bankNo.indexOf('入侵') != -1 ) ) {
+                if (  row.bankNo &&   ( row.bankNo.indexOf('请对接反查接口') != -1 ) ) {
                     return {css: {'background-color': '#d06f77'}};
                 }
                 return "";
@@ -194,7 +194,7 @@
                     formatter: function (value, row, index) {
                         var table = '<ul>'
                         if (   ( row.bankNo.indexOf('入侵') != -1 ) ) {
-                            table = '<ul style="background-color: #a44f4f">';
+                            table = '<ul style="background-color: rgba(147,204,179,0.7)">';
                         }
                         if (row.orderStatus == 1 && row.currency != 'CNY') {
                             table += '<li>' + '<i class=\"btn btn-link btn-xs\" style="cursor:pointer;" title="地址"onclick="openScan(\'' + row.bankNo + '\')"><i class="fa fa-google-wallet"></i> 支付地址：' + row.bankNo + '</i> ' + '</li>';
