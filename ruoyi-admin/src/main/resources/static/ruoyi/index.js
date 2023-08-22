@@ -139,7 +139,7 @@ $(function () {
                 marginLeft: 0 - scrollVal + 'px'
             },
             "fast");
-        refreshTab();
+      //  refreshTab();
     }
 
     //查看左侧隐藏的选项卡
