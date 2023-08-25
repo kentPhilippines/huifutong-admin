@@ -56,6 +56,14 @@
                             </select>
                         </li>
                         <li class="select-selectpicker">
+                            <label>是否挂起： </label>
+                            <select data-none-selected-text="请选择" id="moreMacth" name="moreMacth">
+                                <option value="">所有</option>
+                                <option value="1">挂起</option>
+                                <option value="2">自动推送</option>
+                            </select>
+                        </li>
+                        <li class="select-selectpicker">
                             <label>配置出款渠道：</label>
                             <select class="selectpicker" data-none-selected-text="请选择" id="witChannel"
                                     name="witChannel">
@@ -106,6 +114,18 @@
                shiro:hasPermission="wit:order:statistics:chanel">
                 <i class="fa fa-bar-chart"></i> 当天数据统计
             </a>
+            <a class="btn btn-primary multiple disabled" onclick="$.operate.editAll('批量挂起/停止挂起')">
+                <i class="fa fa-remove"></i> 批量挂起/停止挂起
+            </a>
+            <a class="btn btn-primary multiple disabled" onclick="$.operate.editAllPush('批量推送')">
+                <i class="fa fa-bar-chart"></i> 批量审核
+            </a>
+            <a class="btn btn-primary multiple disabled" onclick="$.operate.editAllChannel('批量修改出款渠道')">
+                <i class="fa fa-bar-chart"></i> 批量修改出款渠道
+            </a>
+            <a class="btn btn-primary multiple disabled" onclick="$.operate.editWating('修改等待时间')">
+                <i class="fa fa-remove"></i> 修改等待时间
+            </a>
         </div>
         <div class="col-sm-12 select-table table-striped">
             <table id="bootstrap-table"></table>
@@ -123,11 +143,16 @@
     $(function () {
         var options = {
             url: prefix + "/merchant/list",
+            editChannelUrl: prefix + "/merchant/editChannel/{id}",
+            editAllChannelUrl: prefix + "/merchant/editAllChannel/{ids}",
             updateUrl: prefix + "/merchant/edit/{id}",
             detailUrl: prefix + "/merchant/detail/{id}",
             ethFeeUrl: prefix + "/merchant/ethFee/{id}",
             statisticsUrl: prefix + "/statistics/merchant/channelWit",
+            editAllPush: prefix + "/merchant/editAllPush/{ids}",
+            editWating: prefix + "/merchant/editWating/{ids}",
             exportUrl: prefix + "/merchant/export",
+            updateUrlAll: prefix + "/merchant/edits/{ids}",
             exportUrlAll: prefix + "/qr/export/{ids}",
             exportUrlAllBank: prefix + "/qr/export/bank/{ids}",
             showFooter: true,
@@ -183,6 +208,9 @@
                         var table = '<ul>'
                         if(row.payStatus == 1 || row.payStatus== '1'){
                             table += '<li>' + '<span class="badge badge-primary"> 已扣款结算 </span>' + '</li>'
+                        }
+                        if(row.moreMacth == 1 || row.moreMacth== '1'){
+                            table += '<li>' + '<span class="badge badge-danger"> 已挂起 </span>' + '</li>'
                         }
                         table += '<li>' + $.table.selectDictLabel(orderStatus, value) + '</li></ul>'
                         return table;
@@ -253,8 +281,20 @@
                 {
                     field: 'createTime', title: '时间', formatter: function (value, row, index) {
                         var table = '<ul>'
+                        table += '<li>' + '等待时间：' + row.watingTime + '秒</li>'
                         table += '<li>' + '创建时间：' + row.createTime + '</li>'
                         table += '<li>' + '修改时间：' + row.submitTime + '</li>'
+                        if(  2 !=  row.orderStatus ){
+                            table += '<strong><li color="#FF0000"   > 处理时间 ' +'<span id = '+row.appOrderId +' ></span>' + '</li></strong>'
+                            window.setInterval(function () {
+                                var date1 = new Date()
+                                var date2 = new Date(row.submitTime)
+                                var s1 = date1.getTime(), s2 = date2.getTime();
+                                var total = (s1 - s2 ) / 1000;//当前时间差
+                                total =  parseInt(total)
+                                $('#'+row.appOrderId+'').html('<s></s>' + total + '秒');
+                            }, 1000);
+                        }
                         table += '</ul>'
                         return table;
                     }
@@ -265,7 +305,9 @@
                     formatter: function (value, row, index) {
                         var table = '<ul>'
                         table += '<li>' + '配置出款渠道：' + row.witChannel + '</li>'
-                        table += '<li>' + '实际出款渠道：' + row.channelId + '</li>'
+                        if(null != row.channelId){
+                            table += '<li>' + '实际出款渠道：' + row.channelId + '</li>'
+                        }
                         table += '<li>' + '代付产品类型：' + row.witType + '</li>'
                         table += '</ul>'
                         return table;
@@ -297,6 +339,7 @@
     /* 状态显示 */
     function check(row) {
         var actions = [];
+        actions.push('<a class="btn btn-success btn-xs ' + approvalFlag + '" href="javascript:void(0)" onclick="$.operate.editChannel(\'' + row.id + '\')"><i class="fa fa-shield"></i> 修改出款渠道</a>')
         if (row.orderStatus === '4' || row.orderStatus === '1') {
             actions.push('<a class="btn btn-success btn-xs ' + approvalFlag + '" href="javascript:void(0)" onclick="$.operate.approval(\'' + row.id + '\')"><i class="fa fa-shield"></i> 审核</a>')
         } else if (row.orderStatus === '2' || row.orderStatus === '3') {

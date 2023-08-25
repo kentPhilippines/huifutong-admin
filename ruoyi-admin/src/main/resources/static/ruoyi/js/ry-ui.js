@@ -1147,7 +1147,22 @@ var table = {
                 };
                 $.modal.openOptions(options);
             },
-
+            // 修改渠道
+            editChannel: function (id) {
+                var url = "/404.html";
+                if ($.common.isNotEmpty(id)) {
+                    url = table.options.editChannelUrl.replace("{id}", id);
+                } else {
+                    var id = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+                    if (id.length == 0) {
+                        $.modal.alertWarning("请至少选择一条记录");
+                        return;
+                    }
+                    url = table.options.editChannelUrl.replace("{id}", id);
+                }
+                $.modal.approvalOpen("修改渠道" + table.options.modalName, url);
+                //return url;
+            },
             ethFee: function (id, width, height) {
                 table.set();
                 var _url = $.operate.ethFeeUrl1(id);
@@ -1339,6 +1354,26 @@ var table = {
                     $.operate.submit(url, "post", "json", data);
                 });
             },
+            editAllChannel: function (title) {
+                table.set();
+                var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+                if (rows.length == 0) {
+                    $.modal.alertWarning("请至少选择一条记录");
+                    return;
+                }
+                var url = table.options.editAllChannelUrl.replace("{ids}", rows.join());
+                $.modal.open(title, url);
+            },
+            editWating: function (title) {
+                table.set();
+                var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+                if (rows.length == 0) {
+                    $.modal.alertWarning("请至少选择一条记录");
+                    return;
+                }
+                var url = table.options.editWating.replace("{ids}", rows.join());
+                $.modal.open(title, url);
+            },
 
             // 批量修改信息
             editAll: function (title) {
@@ -1351,7 +1386,16 @@ var table = {
                 var url = table.options.updateUrlAll.replace("{ids}", rows.join());
                 $.modal.open(title, url);
             },
-
+            editAllPush: function (title) {
+                table.set();
+                var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+                if (rows.length == 0) {
+                    $.modal.alertWarning("请至少选择一条记录");
+                    return;
+                }
+                var url = table.options.editAllPush.replace("{ids}", rows.join());
+                $.modal.open(title, url);
+            },
             // 批量导出
             exportSelect: function (title) {
                 table.set();

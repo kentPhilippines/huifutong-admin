@@ -9,6 +9,7 @@ import com.ruoyi.alipay.domain.util.DesUtil2;
 import com.ruoyi.alipay.domain.util.EncryptHexUtil;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -21,7 +22,23 @@ import java.util.Date;
  * @author kiwi
  * @date 2020-03-17
  */
+@Data
 public class AlipayWithdrawEntity extends BaseEntity {
+
+
+
+
+
+
+    private String pushOrder;//推送字段  1 默认       3 上游驳回
+
+    private String macthMsg;  ///撮合订单 解释
+    private Integer macthStatus;  ///撮合订单 状态   1已撮合 未支付     2 已撮合 已支付
+    private Integer macthLock;  /// 撮合锁定当前不可以进行任何操作，  默认不锁定 0    1 锁定
+    private Integer moreMacth;  /// 是否可以多次撮合[是否挂起]， 0 不可以  1 可以      可以就是挂起
+    private Integer macthCount;  ///  撮合次数
+    private Integer watingTime;  ///  撮合次数
+
     /* BigDecimal usdt ,   //花费usdt
            price  ,    //汽油价格
            used,       //使用汽油数

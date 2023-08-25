@@ -1,8 +1,10 @@
 package com.ruoyi.alipay.service;
 
 import com.ruoyi.alipay.domain.AlipayWithdrawEntity;
+import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.core.domain.StatisticsEntity;
 import com.ruoyi.common.core.domain.WitStatisticsEntity;
+import com.ruoyi.common.enums.DataSourceType;
 
 import java.util.List;
 
@@ -13,6 +15,9 @@ import java.util.List;
  * @date 2020-03-17
  */
 public interface IAlipayWithdrawEntityService {
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    void updateWithdrawEntityById(AlipayWithdrawEntity alipayWithdrawEntity);
+
     /**
      * 查询会员提现记录
      *
@@ -84,5 +89,11 @@ public interface IAlipayWithdrawEntityService {
     AlipayWithdrawEntity findWitOrder(String associatedId);
 
     List<AlipayWithdrawEntity> exportNotExportedListBank(List<String> idList);
+
+    void batchUpdateMacthMoreWatingTime(String ids, String watingTime);
+
+    void batchUpdateMacthMore(String ids, Integer status, String watingTime);
+
+    void batchUpdateChannel(List<AlipayWithdrawEntity> alipayWithdrawEntitys);
 
 }

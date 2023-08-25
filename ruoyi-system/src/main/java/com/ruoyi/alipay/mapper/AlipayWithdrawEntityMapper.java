@@ -117,4 +117,11 @@ public interface AlipayWithdrawEntityMapper {
      */
     @Select("select * from alipay_withdraw where   orderId = #{orderId}")
     AlipayWithdrawEntity findWitOrder(@Param("orderId")String orderId);
+    @Update("update alipay_withdraw set watingTime = #{watingTime}   where id = #{id}")
+    void batchUpdateMacthMoreWatingTime(@Param("id") String id,@Param("watingTime") Integer watingTime);
+    @Update("update alipay_withdraw set moreMacth = #{moreMacth}   where id = #{id}")
+    void updateMacthMoreById(String id, Integer moreMacth);
+
+    void updateByPrimaryKeySelective(AlipayWithdrawEntity alipayWithdrawEntity);
+
 }
