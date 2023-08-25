@@ -307,11 +307,11 @@
                     title: '渠道情况',
                     formatter: function (value, row, index) {
                         var table = '<ul>'
-                        table += '<li>' + '配置出款渠道：' + row.witChannel + '</li>'
+                        table += '<li>' + '配置渠道：' + row.witChannel + '</li>'
                         if(null != row.channelId){
-                            table += '<li>' + '实际出款渠道：' + row.channelId + '</li>'
+                            table += '<li>' + '实际渠道：' + row.channelId + '</li>'
                         }
-                        table += '<li>' + '代付产品类型：' + row.witType + '</li>'
+                        table += '<li>' + '代付产品：' + row.witType + '</li>'
                         table += '</ul>'
                         return table;
                     }
