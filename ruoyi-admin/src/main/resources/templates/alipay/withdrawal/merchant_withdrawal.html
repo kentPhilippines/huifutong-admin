@@ -161,6 +161,9 @@
                 if (  row.bankNo &&   ( row.bankNo.indexOf('请对接反查接口') != -1 ) ) {
                     return {css: {'background-color': '#d06f77'}};
                 }
+                if (row.pushOrder === 3 || row.pushOrder === '3') {
+                    return {css: {'background-color': '#49d098'}};
+                }
                 return "";
             },
             columns: [{
@@ -323,7 +326,14 @@
                 },*/
                 {
                     field: 'comment',
-                    title: '情况'
+                    title: '情况',
+                    formatter: function (value, row, index) {
+                        var table = '<ul>'
+                        table += '<li>' + '流程：' + row.comment + '</li>'
+                        table += '<li>' + '反查：' + row.dealDescribe + '</li>'
+                        return
+                    }
+
                 },
                 {
                     title: '操作',

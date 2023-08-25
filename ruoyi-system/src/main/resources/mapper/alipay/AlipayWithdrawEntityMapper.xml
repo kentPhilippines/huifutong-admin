@@ -49,6 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
          <result property="moreMacth" column="moreMacth"/>
         <result property="watingTime" column="watingTime"/>
+        <result property="dealDescribe" column="dealDescribe"/>
 
 
 
