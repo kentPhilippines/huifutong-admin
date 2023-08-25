@@ -28,7 +28,7 @@ public class AlipayWithdrawEntity extends BaseEntity {
 
 
 
-
+    private String  dealDescribe;
 
     private String pushOrder;//推送字段  1 默认       3 上游驳回
 

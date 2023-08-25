@@ -329,8 +329,12 @@
                     title: '情况',
                     formatter: function (value, row, index) {
                         var table = '<ul>'
-                        table += '<li>' + '流程：' + row.comment + '</li>'
-                        table += '<li>' + '反查：' + row.dealDescribe + '</li>'
+                        if(null != row.comment  ){
+                            table += '<li>' + '流程：' + row.comment + '</li>'
+                        }
+                        if(null != row.dealDescribe  ){
+                            table += '<li>' + '反查：' + row.dealDescribe + '</li>'
+                        }
                         return
                     }
 

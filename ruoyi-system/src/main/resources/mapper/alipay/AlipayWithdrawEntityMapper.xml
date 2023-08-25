@@ -59,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, orderId, userId, withdrawType, bankNo, accname,  sgin ,
          orderStatus, bankName, amount,amount1, fee,fee1, actualAmount,actualAmount1, mobile,
          notify, createTime, submitTime, status, retain1, retain2, apply, comment, approval,witChannel,witType,
-        channelId,appOrderId,currency ,txhash,ethFee,exported,bankcode,request,response,payStatus, moreMacth,  watingTime
+        channelId,appOrderId,currency ,txhash,ethFee,exported,bankcode,request,response,payStatus, moreMacth,  watingTime ,dealDescribe
           from alipay_withdraw
     </sql>
 
