@@ -231,7 +231,7 @@
                             table += '<li>' + '<i class=\"btn btn-link btn-xs\" style="cursor:pointer;" title="地址"onclick="openScan(\'' + row.bankNo + '\')"><i class="fa fa-google-wallet"></i> 支付地址：' + row.bankNo + '</i> ' + '</li>';
                         } else {
 
-                            table += '<li>' + '银行卡号：' + row.bankNo + '</li>'
+                            table += '<li>' + '账号：' + row.bankNo + '</li>'
                         }
                         table += '<li>' + '开户人：' + row.accname + '</li>'
                         table += '<li>' + '开户行：' + row.bankName + '</li>'
@@ -335,7 +335,8 @@
                         if(null != row.dealDescribe  ){
                             table += '<li>' + '反查：' + row.dealDescribe + '</li>'
                         }
-                        return
+                        table += '</ul>'
+                        return table;
                     }
 
                 },
