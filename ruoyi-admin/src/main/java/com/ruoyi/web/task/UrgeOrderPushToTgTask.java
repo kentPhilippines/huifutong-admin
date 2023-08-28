@@ -65,7 +65,6 @@ public class UrgeOrderPushToTgTask {
             log.info("当前没有需要处理的催单,{}",new DateTime().toMsStr());
             return;
         }
-
         String template ="当前有"+orders.size()+"笔催单需要处理：";
 
         List<String> messages = orders.stream().map(order->{

@@ -268,9 +268,9 @@
 
                 },
                 {
-                    field: 'orderQr', title: '银行卡信息', formatter: function (value, row, index) {
+                    field: 'orderQr', title: '信息', formatter: function (value, row, index) {
                         var table = '<table>'
-                        table += '<tr><td>' + '银行卡：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>' + '</tr></td>'
+                        table += '<tr><td>' + '账号：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>' + '</tr></td>'
                         if (null != row.payInfo && '' != row.payInfo) {
                             var valueWithBr = row.payInfo.replace(/;/g, '<br>');
                             table += '<tr><td  > ' + '回调：' + row.payInfo + '</td></tr>'

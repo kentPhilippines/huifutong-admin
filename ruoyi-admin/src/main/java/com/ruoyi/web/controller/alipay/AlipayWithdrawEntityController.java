@@ -599,5 +599,34 @@ public class AlipayWithdrawEntityController extends BaseController {
         mmap.put("rete", strBuilder.toString());
         return prefix + "/editWating";
     }
+    @GetMapping("/merchant/editChannel/{id}")
+    public String editChannel(@PathVariable("id") Long id, ModelMap mmap) {
+        AlipayWithdrawEntity alipayWithdrawEntity = alipayWithdrawEntityService.selectAlipayWithdrawEntityById(id);
+        mmap.put("alipayWithdrawEntity", alipayWithdrawEntity);
+        AlipayUserInfo userInfo = alipayUserInfoServiceImpl.findMerchantInfoByUserId(alipayWithdrawEntity.getUserId());
+        mmap.put("autoWit", userInfo.getAutoWit());
+        List<AlipayUserFundEntity> rateList = alipayUserFundEntityService.findUserFundRate();//查询所有渠道账户
+        AlipayProductEntity alipayProductEntity = new AlipayProductEntity();
+        alipayProductEntity.setStatus(1);
+        alipayProductEntity.setProductCode("1");
+        List<AlipayProductEntity> productlist = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
+        mmap.put("channelList", rateList);
+        mmap.put("productList", productlist);
+        return prefix + "/editChannel";
+    }
+    @PostMapping("/merchant/editChannel")
+    @ResponseBody
+    public AjaxResult editChannel(AlipayWithdrawEntity alipayWithdrawEntity) {
+
+        try {
+            alipayWithdrawEntityService.updateWithdrawEntityById(alipayWithdrawEntity);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return AjaxResult.error(e.getMessage());
+        }
+
+        return AjaxResult.success();
+    }
 
 }
