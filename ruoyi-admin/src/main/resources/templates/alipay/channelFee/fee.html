@@ -71,6 +71,7 @@
      <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('alipay:channelFee:edit')}]];
         var removeFlag = [[${@permission.hasPermi('alipay:channelFee:remove')}]];
+        const editFlagAdmin = [[${@permission.hasPermi('control:account:merchant:admin')}]];
         var prefix = ctx + "alipay/channelFee";
         $(function() {
             var options = {
