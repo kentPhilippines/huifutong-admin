@@ -171,9 +171,12 @@ public class AlipayDealOrderEntityController extends BaseController {
             List<AlipayMediumEntity> mediumEntities = alipayMediumEntityService.selectByMediumIds(mediumIds);
             list.stream().filter(order -> order.getRetain1().contains("ALIPAY")).forEach(order -> {
                 try {
-                    AlipayMediumEntity mediumEntity = mediumEntities.stream().filter(medium -> medium.getMediumId().equals(order.getOrderQr())).findFirst().get();
-                    order.setPayInfoForImgUrl(mediumEntity.getPayInfo());
-                    order.setOrderQr(mediumEntity.getMediumNumber() + ":" + mediumEntity.getMediumHolder() + ":" + mediumEntity.getMediumPhone());
+                    Optional<AlipayMediumEntity> mediumEntityOptional = mediumEntities.stream().filter(medium -> medium.getMediumId().equals(order.getOrderQr())).findFirst();
+                    mediumEntityOptional.ifPresent(mediumEntity->{
+                        order.setPayInfoForImgUrl(mediumEntity.getPayInfo());
+                        order.setOrderQr(mediumEntity.getMediumNumber() + ":" + mediumEntity.getMediumHolder() + ":" + mediumEntity.getMediumPhone());
+                    });
+
                 } catch (Throwable t) {
                     logger.error("查询存款列表出错",t);
                 }
