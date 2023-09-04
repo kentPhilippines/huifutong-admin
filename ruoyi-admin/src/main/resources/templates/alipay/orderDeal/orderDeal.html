@@ -260,7 +260,10 @@
                         table += '<tr><td>' + '金额：' + row.dealAmount + '</td></tr>'
                         table += '<tr><td><span > 状态：<strong>' + $.table.selectDictLabel(orderstatusDatas, row.orderStatus) + '</strong></span></td></tr>'
                         if (1 == row.orderType) {
-                            table += '<tr><td>' + '付款人：' + row.payer + '</td></tr>'
+                             if(null != row.payer ){
+                                 table += '<tr><td>' + '付款人：' + row.payer + '</td></tr>'
+                             }
+
                         }
                         table += '</table>'
                         return table;
@@ -270,8 +273,13 @@
                 {
                     field: 'orderQr', title: '信息', formatter: function (value, row, index) {
                         var table = '<table>'
-                        table += '<tr><td>' + '账号：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>' + '</tr></td>'
-                        if (null != row.payInfo && '' != row.payInfo) {
+
+                        if( null != row.orderQr){
+                            table += '<tr><td>' + '账号：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>' + '</tr></td>'
+                        }else{
+                            table += '<tr><td> 收款信息請質詢三方通道</tr></td>'
+                        }
+                         if (null != row.payInfo && '' != row.payInfo) {
                             var valueWithBr = row.payInfo.replace(/;/g, '<br>');
                             table += '<tr><td  > ' + '回调：' + row.payInfo + '</td></tr>'
 
@@ -287,7 +295,7 @@
                         }
                         table += '</table>'
                         return table;
-                    }, visible: false
+                    }/*, visible: false*/
                 },
                 /*                {   field: 'orderQr',       title: '关联二维码'  },*/
                 /*

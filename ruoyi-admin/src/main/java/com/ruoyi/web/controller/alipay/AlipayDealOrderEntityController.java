@@ -98,16 +98,12 @@ public class AlipayDealOrderEntityController extends BaseController {
     public String orderDeal(ModelMap mmap) {
         AlipayProductEntity alipayProductEntity = new AlipayProductEntity();
         alipayProductEntity.setStatus(1);
+        alipayProductEntity.setProductCode("2");
         //查询产品类型下拉菜单
         List<AlipayProductEntity> list = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
         mmap.put("productList", list);
         List<AlipayUserFundEntity> rateList = alipayUserFundEntityService.findUserFundRate();
         mmap.put("rateList", rateList);
-        //获取二维码服务器地址
-        String qrServerAddr = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_KEY, StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_VALUE);
-        String qrServerPath = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_KEY, StaticConstants.ALIPAY_QR_CODE_SERVER_ADDR_PATH);
-        mmap.put("imgUrl", qrServerAddr + qrServerPath);
-
         List<AlipayUserInfo> userInfos = alipayUserInfoService.selectAllUserInfoList(new AlipayUserInfo());
         Map<String,Long> userIdMapToId = userInfos.stream().collect(Collectors.toMap(x-> x.getUserId(), x-> x.getId()+60000L));
         mmap.put("userIdMapToId", userIdMapToId);
@@ -119,6 +115,7 @@ public class AlipayDealOrderEntityController extends BaseController {
     public String orderDealWit(ModelMap mmap) {
         AlipayProductEntity alipayProductEntity = new AlipayProductEntity();
         alipayProductEntity.setStatus(1);
+        alipayProductEntity.setProductCode("1");
         //查询产品类型下拉菜单
         List<AlipayProductEntity> list = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
         mmap.put("productList", list);
@@ -136,6 +133,7 @@ public class AlipayDealOrderEntityController extends BaseController {
     public String orderDealWitOrder(ModelMap mmap) {
         AlipayProductEntity alipayProductEntity = new AlipayProductEntity();
         alipayProductEntity.setStatus(1);
+        alipayProductEntity.setProductCode("1");
         //查询产品类型下拉菜单
         List<AlipayProductEntity> list = iAlipayProductService.selectAlipayProductList(alipayProductEntity);
         mmap.put("productList", list);
