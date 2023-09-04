@@ -55,13 +55,13 @@ public class DruidConfig {
         return druidProperties.dataSource(dataSource);
     }
 
-    @Bean
+/*    @Bean
     @ConfigurationProperties("spring.datasource.druid.dealpay")
     @ConditionalOnProperty(prefix = "spring.datasource.druid.alipay", name = "enabled", havingValue = "true")
     public DataSource dealpayDataSource(DruidProperties druidProperties) {
         DruidDataSource dataSource = DruidDataSourceBuilder.create().build();
         return druidProperties.dataSource(dataSource);
-    }
+    }*/
 
     @Bean(name = "dynamicDataSource")
     @Primary
@@ -69,8 +69,8 @@ public class DruidConfig {
         Map<Object, Object> targetDataSources = new HashMap<>();
         targetDataSources.put(DataSourceType.MASTER.name(), masterDataSource);
         setDataSource(targetDataSources, DataSourceType.ALIPAY_SLAVE.name(), "alipayDataSource");
-        setDataSource(targetDataSources, DataSourceType.PAY_SLAVE.name(), "payDataSource");
-        setDataSource(targetDataSources, DataSourceType.DEALPAY_SLAVE.name(), "dealpayDataSource");
+       // setDataSource(targetDataSources, DataSourceType.PAY_SLAVE.name(), "payDataSource");
+       // setDataSource(targetDataSources, DataSourceType.DEALPAY_SLAVE.name(), "dealpayDataSource");
         return new DynamicDataSource(masterDataSource, targetDataSources);
     }
 
