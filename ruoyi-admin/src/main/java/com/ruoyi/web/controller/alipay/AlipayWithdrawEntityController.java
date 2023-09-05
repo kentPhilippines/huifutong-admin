@@ -442,7 +442,7 @@ public class AlipayWithdrawEntityController extends BaseController {
     @GetMapping("/merchant/editAllPush/{ids}")
     public String editAllPush(@PathVariable("ids") String ids, ModelMap mmap) {
         mmap.put("ids", ids);
-        List<AlipayWithdrawEntity> alipayWithdrawEntitys = alipayWithdrawEntityService.selectAlipayWithdrawEntityByIds(CollUtil.list(true, ids.split(",")));
+        List<AlipayWithdrawEntity> alipayWithdrawEntitys = alipayWithdrawEntityService.selectAlipayWithdrawEntityByIds1(CollUtil.list(true, ids.split(",")));
         StrBuilder strBuilder = StrBuilder.create();
         for (AlipayWithdrawEntity entity : alipayWithdrawEntitys) {
             strBuilder.append("id:").append(entity.getId()).append(" 系统订单：").append(entity.getOrderId()).append(" ") ;
@@ -552,7 +552,7 @@ public class AlipayWithdrawEntityController extends BaseController {
     @GetMapping("/merchant/editAllChannel/{ids}")
     public String editAllChannel(@PathVariable("ids") String ids, ModelMap mmap) {
         mmap.put("ids", ids);
-        List<AlipayWithdrawEntity> alipayWithdrawEntitys = alipayWithdrawEntityService.selectAlipayWithdrawEntityByIds(CollUtil.list(true, ids.split(",")));
+        List<AlipayWithdrawEntity> alipayWithdrawEntitys = alipayWithdrawEntityService.selectAlipayWithdrawEntityByIds1(CollUtil.list(true, ids.split(",")));
         StrBuilder strBuilder = StrBuilder.create();
         for (AlipayWithdrawEntity entity : alipayWithdrawEntitys) {
             strBuilder.append("id:").append(entity.getId()).append(" 系统订单：").append(entity.getOrderId()).append(" ") ;
@@ -575,7 +575,7 @@ public class AlipayWithdrawEntityController extends BaseController {
     @ResponseBody
     public AjaxResult editAllChannel(String ids,String witChannel,String witType) {
 
-        List<AlipayWithdrawEntity> alipayWithdrawEntitys = alipayWithdrawEntityService.selectAlipayWithdrawEntityByIds(CollUtil.list(true, ids.split(",")));
+        List<AlipayWithdrawEntity> alipayWithdrawEntitys = alipayWithdrawEntityService.selectAlipayWithdrawEntityByIds1(CollUtil.list(true, ids.split(",")));
 
         alipayWithdrawEntitys.stream().forEach(e->{
             e.setWitChannel(witChannel);
@@ -588,7 +588,7 @@ public class AlipayWithdrawEntityController extends BaseController {
     @GetMapping("/merchant/editWating/{ids}")
     public String editWating(@PathVariable("ids") String ids, ModelMap mmap) {
         mmap.put("ids", ids);
-        List<AlipayWithdrawEntity> alipayWithdrawEntitys = alipayWithdrawEntityService.selectAlipayWithdrawEntityByIds(CollUtil.list(true, ids.split(",")));
+        List<AlipayWithdrawEntity> alipayWithdrawEntitys = alipayWithdrawEntityService.selectAlipayWithdrawEntityByIds1(CollUtil.list(true, ids.split(",")));
         StrBuilder strBuilder = StrBuilder.create();
         for (AlipayWithdrawEntity entity : alipayWithdrawEntitys) {
             strBuilder.append("  id:").append(entity.getId()).append(" 系统订单：").append(entity.getOrderId()).append(" ").append("配置渠道：");

@@ -123,5 +123,5 @@ public interface AlipayWithdrawEntityMapper {
     void updateMacthMoreById(String id, Integer moreMacth);
 
     void updateByPrimaryKeySelective(AlipayWithdrawEntity alipayWithdrawEntity);
-
+ 
 }

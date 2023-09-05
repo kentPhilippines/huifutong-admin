@@ -104,8 +104,8 @@ $(function () {
                     $(this).show().siblings('.RuoYi_iframe').hide();
                 }
             });
-         //   $(element).addClass('active').siblings('.menuTab').removeClass('active');
-            $(element).addClass('active');
+          $(element).addClass('active').siblings('.menuTab').removeClass('active');
+      //      $(element).addClass('active');
 
             scrollToTab(element);
         }

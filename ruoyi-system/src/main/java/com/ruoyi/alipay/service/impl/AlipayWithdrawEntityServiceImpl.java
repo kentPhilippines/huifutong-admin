@@ -205,6 +205,13 @@ public class AlipayWithdrawEntityServiceImpl implements IAlipayWithdrawEntitySer
         });
 
     }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayWithdrawEntity> selectAlipayWithdrawEntityByIds1(List<String> list) {
+        return alipayWithdrawEntityMapper.selectAlipayWithdrawEntityByIds2(list);
+    }
+
     @Autowired
     private AlipayChanelFeeMapper alipayChanelFeeMapper;
     @Override

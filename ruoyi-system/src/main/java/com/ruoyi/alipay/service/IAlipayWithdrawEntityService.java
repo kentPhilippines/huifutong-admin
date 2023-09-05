@@ -96,4 +96,7 @@ public interface IAlipayWithdrawEntityService {
 
     void batchUpdateChannel(List<AlipayWithdrawEntity> alipayWithdrawEntitys);
 
+    List<AlipayWithdrawEntity> selectAlipayWithdrawEntityByIds1(List<String> list);
+
+
 }
