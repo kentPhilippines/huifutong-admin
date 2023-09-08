@@ -1,15 +1,13 @@
 package com.ruoyi.framework.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.framework.shiro.realm.UserRealm;
-import com.ruoyi.framework.shiro.session.OnlineSessionDAO;
 import com.ruoyi.framework.shiro.session.OnlineSessionFactory;
 import com.ruoyi.framework.shiro.web.filter.LogoutFilter;
 import com.ruoyi.framework.shiro.web.filter.captcha.CaptchaValidateFilter;
 import com.ruoyi.framework.shiro.web.filter.kickout.KickoutSessionFilter;
-import com.ruoyi.framework.shiro.web.filter.online.OnlineSessionFilter;
-import com.ruoyi.framework.shiro.web.filter.sync.SyncOnlineSessionFilter;
 import com.ruoyi.framework.shiro.web.session.OnlineWebSessionManager;
 import com.ruoyi.framework.shiro.web.session.SpringSessionValidationScheduler;
 import org.apache.shiro.cache.CacheManager;
@@ -22,6 +20,7 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
+import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -143,23 +142,20 @@ public class ShiroConfig {
      *
      * @return
      */
-    public RedisManager redisManager() {
-        RedisManager redisManager = new RedisManager();
-        redisManager.setHost(redisHost);
-        redisManager.setPort(redisPort);
-        redisManager.setPassword(redisPassword);
-        redisManager.setDatabase(databse);
-        // 配置过期时间
-//        redisManager.setExpire(1800);
-        return redisManager;
-    }
 
+    @Bean
+    public RedisCacheManager redisCacheManager() {
+        RedisCacheManager redisCacheManager = new RedisCacheManager();
+        redisCacheManager.setRedisManager(redisManager());
+        redisCacheManager.setPrincipalIdFieldName("userId");
+        return redisCacheManager;
+    }
     /**
      * cacheManager
      *
      * @return
      */
-    @Bean
+  /*  @Bean
     public RedisCacheManager cacheManager() {
         RedisCacheManager redisCacheManager = new RedisCacheManager();
         redisCacheManager.setRedisManager(redisManager());
@@ -169,7 +165,7 @@ public class ShiroConfig {
         // 设置信息缓存时间
         redisCacheManager.setExpire(86400);
         return redisCacheManager;
-    }
+    }*/
     /**
      * 自定义Realm
      */
@@ -183,12 +179,31 @@ public class ShiroConfig {
     /**
      * 自定义sessionDAO会话
      */
-    @Bean
+ /*   @Bean
     public OnlineSessionDAO sessionDAO() {
         OnlineSessionDAO sessionDAO = new OnlineSessionDAO();
         return sessionDAO;
+    }*/
+
+    @Bean
+    public RedisSessionDAO redisSessionDAO() {
+        RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
+        redisSessionDAO.setRedisManager(redisManager());
+        redisSessionDAO.setExpire(expireTime * 60);
+        return redisSessionDAO;
     }
 
+    @Bean
+    public RedisManager redisManager() {
+        RedisManager redisManager = new RedisManager();
+        redisManager.setHost(redisHost + ":" + redisPort);
+        redisManager.setDatabase(databse);
+        if (StringUtils.isNotEmpty(redisPassword)) {
+            redisManager.setPassword(redisPassword);
+        }
+        redisManager.setTimeout(expireTime * 60);
+        return redisManager;
+    }
     /**
      * 自定义sessionFactory会话
      */
@@ -205,7 +220,7 @@ public class ShiroConfig {
     public OnlineWebSessionManager sessionManager() {
         OnlineWebSessionManager manager = new OnlineWebSessionManager();
         // 加入缓存管理器
-        manager.setCacheManager(cacheManager());
+        manager.setCacheManager(redisCacheManager());
         // 删除过期的session
         manager.setDeleteInvalidSessions(true);
         // 设置全局session超时时间
@@ -217,7 +232,7 @@ public class ShiroConfig {
         // 是否定时检查session
         manager.setSessionValidationSchedulerEnabled(true);
         // 自定义SessionDao
-        manager.setSessionDAO(sessionDAO());
+        manager.setSessionDAO(redisSessionDAO());
         // 自定义sessionFactory
         manager.setSessionFactory(sessionFactory());
         return manager;
@@ -234,7 +249,7 @@ public class ShiroConfig {
         // 记住我
         securityManager.setRememberMeManager(rememberMeManager());
         // 注入缓存管理器;
-        securityManager.setCacheManager(cacheManager());
+        securityManager.setCacheManager(redisCacheManager());
         // session管理器
         securityManager.setSessionManager(sessionManager());
         return securityManager;
@@ -245,7 +260,7 @@ public class ShiroConfig {
      */
     public LogoutFilter logoutFilter() {
         LogoutFilter logoutFilter = new LogoutFilter();
-        logoutFilter.setCacheManager(cacheManager());
+        logoutFilter.setCacheManager(redisCacheManager());
         logoutFilter.setLoginUrl(loginUrl);
         return logoutFilter;
     }
@@ -287,8 +302,8 @@ public class ShiroConfig {
         // filterChainDefinitionMap.putAll(SpringUtils.getBean(IMenuService.class).selectPermsAll());
 
         Map<String, Filter> filters = new LinkedHashMap<String, Filter>();
-        filters.put("onlineSession", onlineSessionFilter());
-        filters.put("syncOnlineSession", syncOnlineSessionFilter());
+     //   filters.put("onlineSession", onlineSessionFilter());
+    //    filters.put("syncOnlineSession", syncOnlineSessionFilter());
         filters.put("captchaValidate", captchaValidateFilter());
         filters.put("kickout", kickoutSessionFilter());
         // 注销成功，则跳转到指定页面
@@ -296,7 +311,7 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilters(filters);
 
         // 所有请求需要认证
-        filterChainDefinitionMap.put("/**", "user,kickout,onlineSession,syncOnlineSession");
+        filterChainDefinitionMap.put("/**", "user,kickout");//加入本地过滤器
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         return shiroFilterFactoryBean;
@@ -305,21 +320,21 @@ public class ShiroConfig {
     /**
      * 自定义在线用户处理过滤器
      */
-    @Bean
+/*    @Bean
     public OnlineSessionFilter onlineSessionFilter() {
         OnlineSessionFilter onlineSessionFilter = new OnlineSessionFilter();
         onlineSessionFilter.setLoginUrl(loginUrl);
         return onlineSessionFilter;
     }
 
-    /**
+    *//**
      * 自定义在线用户同步过滤器
-     */
+     *//*
     @Bean
     public SyncOnlineSessionFilter syncOnlineSessionFilter() {
         SyncOnlineSessionFilter syncOnlineSessionFilter = new SyncOnlineSessionFilter();
         return syncOnlineSessionFilter;
-    }
+    }*/
 
     /**
      * 自定义验证码过滤器
@@ -359,7 +374,7 @@ public class ShiroConfig {
      */
     public KickoutSessionFilter kickoutSessionFilter() {
         KickoutSessionFilter kickoutSessionFilter = new KickoutSessionFilter();
-        kickoutSessionFilter.setCacheManager(cacheManager());
+        kickoutSessionFilter.setCacheManager(redisCacheManager());
         kickoutSessionFilter.setSessionManager(sessionManager());
         // 同一个用户最大的会话数，默认-1无限制；比如2的意思是同一个用户允许最多同时两个人登录
         kickoutSessionFilter.setMaxSession(maxSession);

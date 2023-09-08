@@ -27,12 +27,12 @@ import java.util.TimerTask;
 public class AsyncFactory {
     private static final Logger sys_user_logger = LoggerFactory.getLogger("sys-user");
 
-    /**
+ /*   *//**
      * 同步session到数据库
      *
      * @param session 在线用户会话
      * @return 任务task
-     */
+     *//*
     public static TimerTask syncSessionToDb(final OnlineSession session) {
         return new TimerTask() {
             @Override
@@ -54,7 +54,7 @@ public class AsyncFactory {
             }
         };
     }
-
+*/
     /**
      * 操作日志记录
      *
