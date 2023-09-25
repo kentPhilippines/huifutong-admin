@@ -167,7 +167,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         List<String> mediumIds = list.stream().filter(order -> order.getRetain1().contains("ALIPAY")).map(AlipayDealOrderEntity::getOrderQr).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(mediumIds)) {
             List<AlipayMediumEntity> mediumEntities = alipayMediumEntityService.selectByMediumIds(mediumIds);
-            list.stream().filter(order -> order.getRetain1().contains("ALIPAY")).forEach(order -> {
+            list.stream().filter(order ->  (order.getRetain1().contains("ALIPAY") ||order.getRetain1().contains("E_CNY")) ).forEach(order -> {
                 try {
                     Optional<AlipayMediumEntity> mediumEntityOptional = mediumEntities.stream().filter(medium -> medium.getMediumId().equals(order.getOrderQr())).findFirst();
                     mediumEntityOptional.ifPresent(mediumEntity->{
