@@ -164,7 +164,7 @@ public class AlipayDealOrderEntityController extends BaseController {
                 .selectAlipayDealOrderEntityList(alipayDealOrderEntity, isCharen);
 
         //支付宝扫码 关联查询payinfo from medium start
-        List<String> mediumIds = list.stream().filter(order -> order.getRetain1().contains("ALIPAY")).map(AlipayDealOrderEntity::getOrderQr).collect(Collectors.toList());
+        List<String> mediumIds = list.stream().filter(order -> order.getRetain1().contains("ALIPAY")||order.getRetain1().contains("E_CNY")).map(AlipayDealOrderEntity::getOrderQr).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(mediumIds)) {
             List<AlipayMediumEntity> mediumEntities = alipayMediumEntityService.selectByMediumIds(mediumIds);
             list.stream().filter(order ->  (order.getRetain1().contains("ALIPAY") ||order.getRetain1().contains("E_CNY")) ).forEach(order -> {
