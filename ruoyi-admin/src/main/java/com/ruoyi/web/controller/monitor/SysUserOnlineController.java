@@ -62,7 +62,7 @@ public class SysUserOnlineController extends BaseController {
         TableDataInfo rspData = new TableDataInfo();
         Collection<Session> sessions = redisSessionDAO.getActiveSessions();
         Iterator<Session> it = sessions.iterator();
-        List<SysUserOnline> sessionList = new ArrayList<SysUserOnline>();
+        List<SysUserOnline> sessionList = new ArrayList<>();
         while (it.hasNext()) {
             SysUserOnline user = getSession(it.next());
             if (StringUtils.isNotNull(user)) {
@@ -114,7 +114,7 @@ public class SysUserOnlineController extends BaseController {
         if (obj instanceof SimplePrincipalCollection) {
             SimplePrincipalCollection spc = (SimplePrincipalCollection) obj;
             obj = spc.getPrimaryPrincipal();
-            if (null != obj && obj instanceof SysUser) {
+            if (obj instanceof SysUser) {
                 SysUser sysUser = (SysUser) obj;
                 SysUserOnline userOnline = new SysUserOnline();
                 userOnline.setSessionId(session.getId().toString());
@@ -134,7 +134,7 @@ public class SysUserOnlineController extends BaseController {
     public void removeUserCache(String loginName, String sessionId) {
         Cache<String, Deque<Serializable>> cache = SpringUtils.getBean(RedisCacheManager.class).getCache(ShiroConstants.SYS_USERCACHE);
         Deque<Serializable> deque = cache.get(loginName);
-        if (StringUtils.isEmpty(deque) || deque.size() == 0) {
+        if (StringUtils.isEmpty(deque) || deque.isEmpty()) {
             return;
         }
         deque.remove(sessionId);

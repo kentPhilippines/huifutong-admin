@@ -21,17 +21,13 @@ import java.util.List;
 
 
 /**
- * 商户风控Controller
- *
- * @author ruoyi
- * @date 2020-03-23
  */
 @Controller
 @RequestMapping("/control/account")
 public class MerchantControlController extends BaseController {
 
-    private String prefix = "control/account";
-    private String bankcardControl_prefix = "control/bankCard";
+    private final String prefix = "control/account";
+    private final String bankcardControl_prefix = "control/bankCard";
 
     @Autowired
     private IMerchantInfoEntityService merchantInfoEntityService;
@@ -125,8 +121,6 @@ public class MerchantControlController extends BaseController {
 
     /**
      * 显示码商列表
-     *
-     * @return
      */
     @GetMapping("/qr/show")
     public String qr() {
