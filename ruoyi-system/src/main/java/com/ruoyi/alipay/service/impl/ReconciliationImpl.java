@@ -15,6 +15,7 @@ import com.ruoyi.dealpay.service.IDealpayRunOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -273,6 +274,7 @@ public class ReconciliationImpl implements Reconciliation {
 //            String s = url + text + id;
 //            HttpUtil.get(s);
 //        });
+
     }
 
 

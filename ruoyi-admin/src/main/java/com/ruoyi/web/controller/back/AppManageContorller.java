@@ -42,9 +42,9 @@ import java.util.stream.Collectors;
 @Controller
 public class AppManageContorller extends BaseController {
     private static final String AMOUNT_TYPE_APP = "3";//商户主动申请补单订单类型
-    private String prefix = "merchant/other";
-    private String prefixRate = "merchant/rate";
-    private String prefixFransfer = "merchant/transfer";
+    private final String prefix = "merchant/other";
+    private final String prefixRate = "merchant/rate";
+    private final String prefixFransfer = "merchant/transfer";
     @Autowired
     private IAlipayAmountEntityService alipayAmountEntityService;
     @Autowired
@@ -72,8 +72,6 @@ public class AppManageContorller extends BaseController {
 
     /**
      * <p>补单申请接口</p>
-     *
-     * @return
      */
     @PostMapping("/add")
     @ResponseBody
@@ -182,7 +180,7 @@ public class AppManageContorller extends BaseController {
     private IAlipayUserFundEntityService alipayUserFundEntityService;
 
     @GetMapping("/transfer")
-    public String transfer(ModelMap modelMap) {
+    public String transfer( ) {
         return prefixFransfer + "/transfer";
     }
 
@@ -223,13 +221,13 @@ public class AppManageContorller extends BaseController {
         dictData.setDictType("system_bankcode");
         //正式环境解注
         //验证谷歌验证码
-        String googleCode = amountEntity.getParams().get("googleCode").toString();
-        int is = googleUtils.verifyGoogleCode(currentUser.getLoginName(), googleCode);
-        if (is == 0) {
+      //  String googleCode = amountEntity.getParams().get("googleCode").toString();
+     //   int is = googleUtils.verifyGoogleCode(currentUser.getLoginName(), googleCode);
+      /*  if (is == 0) {
             //  return AjaxResult.error("未绑定谷歌验证器");
         } else if (is - 1 > 0) {
             //   return AjaxResult.error("谷歌验证码验证失败");
-        }
+        }*/
         AlipayAmountEntity amount = new AlipayAmountEntity();
         amount.setAmountType("7");//订单类型
         amount.setUserId(currentUser.getMerchantId());//转账人

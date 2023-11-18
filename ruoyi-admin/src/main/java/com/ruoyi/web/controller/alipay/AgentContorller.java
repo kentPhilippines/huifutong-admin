@@ -2,7 +2,6 @@ package com.ruoyi.web.controller.alipay;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.system.UserInfo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.alipay.domain.AlipayCorrelation;
