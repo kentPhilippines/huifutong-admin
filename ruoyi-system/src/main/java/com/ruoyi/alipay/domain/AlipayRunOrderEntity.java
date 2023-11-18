@@ -1,5 +1,6 @@
 package com.ruoyi.alipay.domain;
 
+import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.date.DatePattern;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.ruoyi.alipay.domain.util.RunOrderType;
@@ -28,6 +29,7 @@ public class AlipayRunOrderEntity extends BaseEntity {
     /**
      * 流水订单id(全局唯一索引)
      */
+    @Alias(value="流水订单id")
     @Excel(name = "流水订单id")
     @ExcelProperty(value = "流水订单id", index = 3)
     private String orderId;
@@ -35,6 +37,7 @@ public class AlipayRunOrderEntity extends BaseEntity {
     /**
      * 关联订单号(普通索引)
      */
+    @Alias(value="关联订单号")
     @Excel(name = "关联订单号")
     @ExcelProperty(value = "关联订单号", index = 3)
     private String associatedId;
@@ -43,13 +46,14 @@ public class AlipayRunOrderEntity extends BaseEntity {
      * 关联账户
      */
     @Excel(name = "关联账户")
+    @Alias(value="关联账户")
     @ExcelProperty(value = "关联账户", index = 3)
     private String orderAccount;
 
     /**
      * 流水类型(1充值交易,2系统加款,3交易手续费,4系统扣款,5代付,6代付手续费,7冻结,8解冻,9代付手手续费冻结,10代付冻结,11增加交易点数,12点数扣除,13代理商分润，14码商分润，17人工加点数，18人工减点数，19 卡商交易加钱)
      */
-
+    @Alias(value="流水类型")
     @Excel(name = "流水类型", readConverterExp =
                     "8=代付失败解冻," +
                     "9=代付手续费," +
@@ -85,48 +89,56 @@ public class AlipayRunOrderEntity extends BaseEntity {
     /**
      * 流水金额
      */
+    @Alias(value="流水金额")
     @Excel(name = "流水金额")
     @ExcelProperty(value = "流水金额", index = 3)
     private Double amount;
     /**
      * 流水关联ip
      */
+    @Alias(value="流水关联ip")
     @Excel(name = "流水关联ip")
     @ExcelProperty(value = "流水关联ip", index = 3)
     private String generationIp;
     /**
      * 流水描述
      */
+    @Alias(value="流水描述")
     @Excel(name = "流水描述")
     @ExcelProperty(value = "流水描述", index = 3)
     private String dealDescribe;
     /**
      * 入款记录账户
      */
+    @Alias(value="入款记录账户")
     @Excel(name = "入款记录账户")
     @ExcelProperty(value = "入款记录账户", index = 3)
     private String acountR;
     /**
      * 出款记录账户
      */
+    @Alias(value="出款记录账户")
     @Excel(name = "出款记录账户")
     @ExcelProperty(value = "出款记录账户", index = 3)
     private String accountW;
     /**
      * 数据最近一次修改时间
      */
+    @Alias(value="数据最近一次修改时间")
     @Excel(name = "数据最近一次修改时间", width = 30, dateFormat = DatePattern.NORM_DATETIME_PATTERN)
     @ExcelProperty(value = "数据最后修改时间", index = 3)
     private Date submitTime;
     /**
      * 流水状态  1.自然状态 2.人工操作
      */
+    @Alias(value="流水状态")
     @Excel(name = "流水状态", readConverterExp = "1=自然状态,2=人工操作")
     @ExcelProperty(value = "流水状态", index = 3)
     private String runType;
     /**
      * 1支出0收入
      */
+    @Alias(value="财务类型")
     @Excel(name = "财务类型", readConverterExp = "1=支出,0=收入")
     @ExcelProperty(value = "财务类型", index = 3)
     private String amountType;
@@ -134,10 +146,12 @@ public class AlipayRunOrderEntity extends BaseEntity {
     /**
      * 状态:1可使用；0不可使用
      */
+
     private Integer status;
     /**
      * 当前账户余额
      */
+    @Alias(value="当前账户余额")
     @Excel(name = "当前账户余额")
     @ExcelProperty(value = "当前账户余额", index = 3)
     private Double amountNow;
@@ -153,6 +167,7 @@ public class AlipayRunOrderEntity extends BaseEntity {
     /**
      * 备用字段添加业务使用
      */
+    @Alias(value="代理商分润账户来源")
     @Excel(name = "代理商分润账户来源")
     private String retain4;
 

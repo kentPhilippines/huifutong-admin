@@ -2,11 +2,9 @@ package com.ruoyi.alipay.service.impl;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpUtil;
 import com.ruoyi.alipay.domain.*;
 import com.ruoyi.alipay.service.IAlipayDealOrderAppService;
 import com.ruoyi.alipay.service.IAlipayRunOrderEntityService;
@@ -266,15 +264,15 @@ public class ReconciliationImpl implements Reconciliation {
     }
 
     void msg(String text1) {
-        ThreadUtil.execute(() -> {
-            String url = "http://172.29.17.155:8889/api/send?text=";
-            String text = HttpUtil.encode(text1, "UTF-8");
-            String id = "&id=";
-            String ids = "-1001464340513";
-            id += ids;
-            String s = url + text + id;
-            HttpUtil.get(s);
-        });
+//        ThreadUtil.execute(() -> {
+//            String url = "http://172.29.17.155:8889/api/send?text=";
+//            String text = HttpUtil.encode(text1, "UTF-8");
+//            String id = "&id=";
+//            String ids = "-1001464340513";
+//            id += ids;
+//            String s = url + text + id;
+//            HttpUtil.get(s);
+//        });
     }
 
 

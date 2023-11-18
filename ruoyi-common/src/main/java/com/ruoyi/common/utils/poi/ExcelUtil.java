@@ -1,47 +1,8 @@
 package com.ruoyi.common.utils.poi;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DataValidation;
-import org.apache.poi.ss.usermodel.DataValidationConstraint;
-import org.apache.poi.ss.usermodel.DataValidationHelper;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.ss.util.CellRangeAddressList;
-import org.apache.poi.xssf.streaming.SXSSFSheet;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFDataValidation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cn.hutool.core.text.csv.CsvUtil;
+import cn.hutool.core.text.csv.CsvWriter;
+import cn.hutool.core.util.CharsetUtil;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.annotation.Excel.ColumnType;
 import com.ruoyi.common.annotation.Excel.Type;
@@ -53,6 +14,21 @@ import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.reflect.ReflectUtils;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFDataValidation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * Excel相关处理
@@ -273,6 +249,78 @@ public class ExcelUtil<T> {
         this.init(null, sheetName, Type.IMPORT);
         return exportExcel();
     }
+
+
+
+    /**
+     * 导出csv格式工具类
+     * 创建文件并放置数据  这里放置了表头一行数据
+     * @param result 导出数据
+     * @param fileName1 文件名
+     */
+    public AjaxResult exportCsv(List result,String fileName1){
+        String fileName = encodingFilenameCsv(fileName1);
+        try {
+            File csvFile = new File(getAbsoluteFile(fileName));
+//            if (!csvFile.exists()) {
+//                csvFile.mkdirs();
+//            }//构造文件
+            //导入HuTool中CSV工具包的CsvWriter类
+            //设置导出字符类型, CHARSET_UTF_8
+//            CsvWriter writer = CsvUtil.getWriter(csvFile, CharsetUtil.CHARSET_UTF_8);
+
+            CsvWriter writer = CsvUtil.getWriter(csvFile, CharsetUtil.CHARSET_GBK);
+            writer.writeBeans(result);//通过CsvWriter中的write方法写入数据
+            writer.close();   //关闭CsvWriter
+            //保存文件
+//            FileInputStream fileInputStream=new FileInputStream(csvFile);
+//            this.saveFile(fileInputStream,csvFile.getName());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return AjaxResult.success(fileName);
+    }
+
+    /**
+     * 文件保存 覆盖保存
+     * @param inputStream
+     * @param fileName
+     */
+    private void saveFile(InputStream inputStream, String fileName) {
+        OutputStream os = null;
+        try {
+            //保存文件路径
+            // 1K的数据缓冲 1024000 1M
+            byte[] bs = new byte[1024000];
+            // 读取到的数据长度
+            int len;
+            // 输出的文件流保存到本地文件
+            File tempFile = new File(fileName);
+            if (!tempFile.exists()) {
+                tempFile.mkdirs();
+            }
+
+            os = new FileOutputStream(fileName);
+            // 开始读取
+            while ((len = inputStream.read(bs)) != -1) {
+                os.write(bs, 0, len);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 完毕，关闭所有链接
+            try {
+                os.close();
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     /**
      * 对list数据源将其里面的数据导入到excel表单
@@ -586,6 +634,11 @@ public class ExcelUtil<T> {
      */
     public String encodingFilename(String filename) {
         filename = UUID.randomUUID().toString() + "_" + filename + ".xlsx";
+        return filename;
+    }
+
+    public String encodingFilenameCsv(String filename) {
+        filename = UUID.randomUUID().toString() + "_" + filename + ".csv";
         return filename;
     }
 

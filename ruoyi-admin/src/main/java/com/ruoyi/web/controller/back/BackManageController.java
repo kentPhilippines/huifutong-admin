@@ -42,6 +42,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -190,7 +192,7 @@ public class BackManageController extends BaseController {
     @Log(title = "商户资金流水导出", businessType = BusinessType.EXPORT)
     @PostMapping("/running/export")
     @ResponseBody
-    public AjaxResult export(AlipayRunOrderEntity alipayRunOrderEntity) {
+    public AjaxResult export(AlipayRunOrderEntity alipayRunOrderEntity, HttpServletResponse response) throws IOException {
         SysUser sysUser = ShiroUtils.getSysUser();
         alipayRunOrderEntity.setOrderAccount(sysUser.getMerchantId());
         startPage();
@@ -201,7 +203,7 @@ public class BackManageController extends BaseController {
             runorder.setAcountR(null);
         }
         ExcelUtil<AlipayRunOrderEntity> util = new ExcelUtil<AlipayRunOrderEntity>(AlipayRunOrderEntity.class);
-        return util.exportExcel(list, "running");
+        return util.exportCsv(list, "running");
     }
 
     @Autowired
