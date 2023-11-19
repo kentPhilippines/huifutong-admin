@@ -203,7 +203,7 @@ public class BackManageController extends BaseController {
             runorder.setAcountR(null);
         }
         ExcelUtil<AlipayRunOrderEntity> util = new ExcelUtil<AlipayRunOrderEntity>(AlipayRunOrderEntity.class);
-        return util.exportCsv(list, "running");
+        return util.exportExcel(list, "running");
     }
 
     @Autowired
