@@ -32,7 +32,7 @@ public class AsyncFactory {
      *
      * @param session 在线用户会话
      * @return 任务task
-     *//*
+     */
     public static TimerTask syncSessionToDb(final OnlineSession session) {
         return new TimerTask() {
             @Override
@@ -50,11 +50,10 @@ public class AsyncFactory {
                 online.setOs(session.getOs());
                 online.setStatus(session.getStatus());
                 SpringUtils.getBean(ISysUserOnlineService.class).saveOnline(online);
-
             }
         };
     }
-*/
+
     /**
      * 操作日志记录
      *
