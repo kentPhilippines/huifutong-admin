@@ -55,7 +55,7 @@
                 <!--                        <li><a class="menuItem" th:href="@{/home/page}">后台主页</a></li>-->
                 <!--                    </ul>-->
                 <!--                </li>-->
-                <li th:each="menu : ${menus}" class="active">
+                <li th:each="menu : ${menus}"  >
                     <a th:class="@{${menu.url != '' && menu.url != '#'} ? ${menu.target}}"
                        th:href="@{${menu.url == ''} ? |#| : ${menu.url}}">
                         <i class="fa fa-bar-chart-o" th:class="${menu.icon}"></i>
