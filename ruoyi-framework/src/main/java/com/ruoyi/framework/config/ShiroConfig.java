@@ -145,6 +145,7 @@ public class ShiroConfig {
      *
      * @return
      */
+    @Bean
     public RedisManager redisManager() {
         RedisManager redisManager = new RedisManager();
         redisManager.setHost(redisHost);
@@ -169,14 +170,14 @@ public class ShiroConfig {
      * @return
      */
  @Bean
-    public RedisCacheManager cacheManager() {
+    public RedisCacheManager cacheManagerR() {
         RedisCacheManager redisCacheManager = new RedisCacheManager();
         redisCacheManager.setRedisManager(redisManager());
         // 选择属性字段作为缓存标识，这里选择account字段
         redisCacheManager.setPrincipalIdFieldName("userId");
         redisCacheManager.setKeyPrefix(appName+":"+RedisCacheManager.DEFAULT_CACHE_KEY_PREFIX);
         // 设置信息缓存时间
-        redisCacheManager.setExpire(6400);
+        redisCacheManager.setExpire(86400);
         return redisCacheManager;
     }
     /**
@@ -214,7 +215,7 @@ public class ShiroConfig {
     public OnlineWebSessionManager sessionManager() {
         OnlineWebSessionManager manager = new OnlineWebSessionManager();
         // 加入缓存管理器
-        manager.setCacheManager(cacheManager());
+        manager.setCacheManager(cacheManagerR());
         // 删除过期的session
         manager.setDeleteInvalidSessions(true);
         // 设置全局session超时时间
@@ -243,7 +244,7 @@ public class ShiroConfig {
         // 记住我
         securityManager.setRememberMeManager(rememberMeManager());
         // 注入缓存管理器;
-        securityManager.setCacheManager(cacheManager());
+        securityManager.setCacheManager(cacheManagerR());
         // session管理器
         securityManager.setSessionManager(sessionManager());
         return securityManager;
@@ -254,7 +255,7 @@ public class ShiroConfig {
      */
     public LogoutFilter logoutFilter() {
         LogoutFilter logoutFilter = new LogoutFilter();
-        logoutFilter.setCacheManager(cacheManager());
+        logoutFilter.setCacheManager(cacheManagerR());
         logoutFilter.setLoginUrl(loginUrl);
         return logoutFilter;
     }
@@ -368,7 +369,7 @@ public class ShiroConfig {
      */
     public KickoutSessionFilter kickoutSessionFilter() {
         KickoutSessionFilter kickoutSessionFilter = new KickoutSessionFilter();
-        kickoutSessionFilter.setCacheManager(cacheManager());
+        kickoutSessionFilter.setCacheManager(cacheManagerR());
         kickoutSessionFilter.setSessionManager(sessionManager());
         // 同一个用户最大的会话数，默认-1无限制；比如2的意思是同一个用户允许最多同时两个人登录
         kickoutSessionFilter.setMaxSession(maxSession);
