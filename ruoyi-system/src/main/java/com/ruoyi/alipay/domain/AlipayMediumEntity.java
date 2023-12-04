@@ -27,6 +27,7 @@ public class AlipayMediumEntity extends BaseEntity {
     private  String deposit ;
     private  String fund ;
     private  String freezeBalance ;
+    private  String medFreezeBalance ;
     private  String payInfo ;
     private  String cre ;
     private BigDecimal toDayDeal;//当日入款
@@ -60,6 +61,14 @@ public class AlipayMediumEntity extends BaseEntity {
 
     public Integer getAutowitstatus() {
         return autowitstatus;
+    }
+
+    public String getMedFreezeBalance() {
+        return medFreezeBalance;
+    }
+
+    public void setMedFreezeBalance(String medFreezeBalance) {
+        this.medFreezeBalance = medFreezeBalance;
     }
 
     public void setAutowitstatus(Integer autowitstatus) {

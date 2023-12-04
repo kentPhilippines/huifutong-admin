@@ -105,7 +105,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         List<AlipayUserFundEntity> rateList = alipayUserFundEntityService.findUserFundRate();
         mmap.put("rateList", rateList);
         List<AlipayUserInfo> userInfos = alipayUserInfoService.selectAllUserInfoList(new AlipayUserInfo());
-        Map<String,Long> userIdMapToId = userInfos.stream().collect(Collectors.toMap(x-> x.getUserId(), x-> x.getId()+60000L));
+        Map<String, Long> userIdMapToId = userInfos.stream().collect(Collectors.toMap(x -> x.getUserId(), x -> x.getId() + 60000L));
         mmap.put("userIdMapToId", userIdMapToId);
         return prefix + "/orderDeal";
     }
@@ -122,7 +122,7 @@ public class AlipayDealOrderEntityController extends BaseController {
         List<AlipayUserFundEntity> rateList = alipayUserFundEntityService.findUserFundRate();
 
         List<AlipayUserInfo> userInfos = alipayUserInfoService.selectAllUserInfoList(new AlipayUserInfo());
-        Map<String,Long> userIdMapToId = userInfos.stream().collect(Collectors.toMap(x-> x.getUserId(), x-> x.getId()+60000L));
+        Map<String, Long> userIdMapToId = userInfos.stream().collect(Collectors.toMap(x -> x.getUserId(), x -> x.getId() + 60000L));
         mmap.put("userIdMapToId", userIdMapToId);
 
         return prefix + "/orderDealWit";
@@ -164,19 +164,19 @@ public class AlipayDealOrderEntityController extends BaseController {
                 .selectAlipayDealOrderEntityList(alipayDealOrderEntity, isCharen);
 
         //支付宝扫码 关联查询payinfo from medium start
-        List<String> mediumIds = list.stream().filter(order -> order.getRetain1().contains("ALIPAY")||order.getRetain1().contains("E_CNY")).map(AlipayDealOrderEntity::getOrderQr).collect(Collectors.toList());
+        List<String> mediumIds = list.stream().filter(order -> order.getRetain1().contains("ALIPAY") || order.getRetain1().contains("E_CNY")).map(AlipayDealOrderEntity::getOrderQr).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(mediumIds)) {
             List<AlipayMediumEntity> mediumEntities = alipayMediumEntityService.selectByMediumIds(mediumIds);
-            list.stream().filter(order ->  (order.getRetain1().contains("ALIPAY") ||order.getRetain1().contains("E_CNY")) ).forEach(order -> {
+            list.stream().filter(order -> (order.getRetain1().contains("ALIPAY") || order.getRetain1().contains("E_CNY"))).forEach(order -> {
                 try {
                     Optional<AlipayMediumEntity> mediumEntityOptional = mediumEntities.stream().filter(medium -> medium.getMediumId().equals(order.getOrderQr())).findFirst();
-                    mediumEntityOptional.ifPresent(mediumEntity->{
+                    mediumEntityOptional.ifPresent(mediumEntity -> {
                         order.setPayInfoForImgUrl(mediumEntity.getPayInfo());
-                        order.setOrderQr(mediumEntity.getMediumNumber() + ":" + mediumEntity.getMediumHolder() + ":" + mediumEntity.getMediumPhone());
+                        order.setOrderQr(mediumEntity.getMediumNumber() + ":" + mediumEntity.getMediumHolder() + ":" + mediumEntity.getMediumPhone()  );
                     });
 
                 } catch (Throwable t) {
-                    logger.error("查询存款列表出错",t);
+                    logger.error("查询存款列表出错", t);
                 }
             });
         }
@@ -197,10 +197,10 @@ public class AlipayDealOrderEntityController extends BaseController {
                 dataMap = alipayWithdrawEntities.stream().collect(Collectors.toMap(AlipayWithdrawEntity::getOrderId, alipayWithdrawEntity -> alipayWithdrawEntity));
             }
         }
-        ConcurrentHashMap<String, SysUser>  userCollect =   sysUsers.stream().filter(e->StrUtil.isNotEmpty(e.getMerchantId())).collect(Collectors.toConcurrentMap(SysUser::getMerchantId, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
+        ConcurrentHashMap<String, SysUser> userCollect = sysUsers.stream().filter(e -> StrUtil.isNotEmpty(e.getMerchantId())).collect(Collectors.toConcurrentMap(SysUser::getMerchantId, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
         ConcurrentHashMap<String, SysUser> finalUserCollect = userCollect;
         list.stream().forEach(
-                e->{
+                e -> {
                     e.setRetain1(prCollect.get(e.getRetain1()).getProductName());
                     e.setChannelName(userCollect1.get(e.getOrderQrUser()).getUserName());
                     e.setUserName(finalUserCollect.get(e.getOrderAccount()).getUserName());
@@ -299,7 +299,7 @@ public class AlipayDealOrderEntityController extends BaseController {
                 try {
                     order.setBankAccount("入款：" + alipayWithdrawEntity.getBankName() + ":" + alipayWithdrawEntity.getAccname() + ":" + alipayWithdrawEntity.getBankNo() + " 金额 ：" + alipayWithdrawEntity.getAmount());
                     order.setOrderNo(alipayWithdrawEntity.getOrderId());
-                }catch (Exception e ){
+                } catch (Exception e) {
                 }
             }
             AlipayProductEntity product = prCollect.get(order.getRetain1());
@@ -336,19 +336,17 @@ public class AlipayDealOrderEntityController extends BaseController {
         //inputEntity.setOrderStatus("7");
         //inputEntity.setUrge(0);
         AlipayDealOrderEntity alipayDealOrderEntity = alipayDealOrderEntityService.selectAlipayDealOrderEntityByOrderId(inputEntity.getOrderId());
-        if(alipayDealOrderEntity ==null || alipayDealOrderEntity.getUrge()==1)
-        {
+        if (alipayDealOrderEntity == null || alipayDealOrderEntity.getUrge() == 1) {
             return AjaxResult.error("订单不存在或已催单");
         }
-        if(alipayDealOrderEntity.getOrderStatus().equals("2") || alipayDealOrderEntity.getOrderStatus().equals("4"))
-        {
+        if (alipayDealOrderEntity.getOrderStatus().equals("2") || alipayDealOrderEntity.getOrderStatus().equals("4")) {
             return AjaxResult.error("订单已成功或失败，无法催单");
         }
 
         String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);
         String urlPath = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_SERVICE_API_KEY, StaticConstants.ALIPAY_SERVICE_API_VALUE_5);
 
-        return alipayDealOrderEntityService.urgeOrder(alipayDealOrderEntity,ShiroUtils.getSysUser(),ipPort+urlPath);
+        return alipayDealOrderEntityService.urgeOrder(alipayDealOrderEntity, ShiroUtils.getSysUser(), ipPort + urlPath);
     }
 
     /**
@@ -426,8 +424,8 @@ public class AlipayDealOrderEntityController extends BaseController {
         try {
             reentrantLock.tryLock(10, TimeUnit.SECONDS);
             String s = cache.get(orderId);
-            if (cache.get(orderId) != null && !loginName.equals(cache.get(orderId)) ){
-                mmap.put("errorMessage", "不允许重复操作,请联系："+cache.get(orderId)+"，操作");
+            if (cache.get(orderId) != null && !loginName.equals(cache.get(orderId))) {
+                mmap.put("errorMessage", "不允许重复操作,请联系：" + cache.get(orderId) + "，操作");
                 return prefix + "/business";
             }
             cache.put(orderId, loginName);
@@ -461,7 +459,7 @@ public class AlipayDealOrderEntityController extends BaseController {
                 double todayIncomeO1 = o1.getTodayDealAmount() - o1.getTodayOtherWitAmount();
                 double todayIncomeO2 = o2.getTodayDealAmount() - o2.getTodayOtherWitAmount();
 
-                return Double.compare(todayIncomeO2,todayIncomeO1);
+                return Double.compare(todayIncomeO2, todayIncomeO1);
             }
         });
         if (StrUtil.isNotEmpty(orderId)) {
@@ -525,8 +523,8 @@ public class AlipayDealOrderEntityController extends BaseController {
                 ShiroUtils.getLoginName();
         try {
             reentrantLock.tryLock(10, TimeUnit.SECONDS);
-            if (cache.get(orderId) != null&& !loginName.equals(cache.get(orderId))) {
-                return error("不允许重复操作,请联系："+cache.get(orderId)+"，操作");
+            if (cache.get(orderId) != null && !loginName.equals(cache.get(orderId))) {
+                return error("不允许重复操作,请联系：" + cache.get(orderId) + "，操作");
             }
             cache.put(orderId, loginName);
         } catch (InterruptedException e) {
@@ -570,18 +568,18 @@ public class AlipayDealOrderEntityController extends BaseController {
                 AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
                 alipayMediumEntity.setMediumNumber(mediumNumber);
 
-               // List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
-                AlipayMediumEntity   first  =  alipayMediumEntityService.findBankNo(mediumNumber);
+                // List<AlipayMediumEntity> list = alipayMediumEntityService.selectAlipayMediumEntityList(alipayMediumEntity);
+                AlipayMediumEntity first = alipayMediumEntityService.findBankNo(mediumNumber);
 
-            //    if (CollUtil.isNotEmpty(list)) {
-            //        AlipayMediumEntity first = CollUtil.getFirst(list);
-                    String mediumHolder = first.getMediumHolder();//开户人
-                    String account = first.getAccount();//开户行
-                    String mediumNumber1 = first.getMediumNumber();//银行卡号
-                    String mediumPhone = first.getMediumPhone();
-                    bankInfo = account + MARK + mediumHolder + MARK + mediumNumber1 + MARK + "电话" + MARK + mediumPhone;
-                    orderBankNew = mediumNumber;
-              //  }
+                //    if (CollUtil.isNotEmpty(list)) {
+                //        AlipayMediumEntity first = CollUtil.getFirst(list);
+                String mediumHolder = first.getMediumHolder();//开户人
+                String account = first.getAccount();//开户行
+                String mediumNumber1 = first.getMediumNumber();//银行卡号
+                String mediumPhone = first.getMediumPhone();
+                bankInfo = account + MARK + mediumHolder + MARK + mediumNumber1 + MARK + "电话" + MARK + mediumPhone;
+                orderBankNew = mediumNumber;
+                //  }
             }
             i = alipayDealOrderEntityService.updateOrderQr(orderId, qrcodeId, bankInfo, rate.getId(), fee, profit);
         } catch (Throwable t) {
@@ -633,8 +631,8 @@ public class AlipayDealOrderEntityController extends BaseController {
         //根据用户分组出 在途出款的金额
         try {
             reentrantLock.tryLock(10, TimeUnit.SECONDS);
-            if (cache.get(orderId) != null &&   !loginName.equals(cache.get(orderId))) {
-                return error("不允许重复操作,请联系："+cache.get(orderId)+"，操作");
+            if (cache.get(orderId) != null && !loginName.equals(cache.get(orderId))) {
+                return error("不允许重复操作,请联系：" + cache.get(orderId) + "，操作");
             }
             cache.put(orderId, loginName);
         } catch (InterruptedException e) {
@@ -675,8 +673,7 @@ public class AlipayDealOrderEntityController extends BaseController {
             fee = fee * nowAmount;
             Double profit = Double.valueOf(orderEntityList.getRetain3());
             profit = Double.valueOf(orderEntityList.getDealFee()) - fee;
-            if(nowAmount==0)
-            {
+            if (nowAmount == 0) {
                 return error("拆单后金额不能为0");
             }
             int a = alipayDealOrderEntityService.updateAmountOrder(nowAmount, orderId, fee, profit);

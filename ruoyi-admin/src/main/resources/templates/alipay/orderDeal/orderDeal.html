@@ -55,7 +55,8 @@
 
                         <li class="select-selectpicker">
                             <label>订单类型：</label>
-                            <select class="selectpicker" data-none-selected-text="请选择" id="orderType" name="orderType"
+                            <select class="selectpicker" data-none-selected-text="请选择" id="orderType"
+                                    name="orderType"
                                     data-width="100px">
                                 <option value="">所有</option>
                                 <option value="1" th:selected="1">商户渠道主交易订单</option>
@@ -260,9 +261,9 @@
                         table += '<tr><td>' + '金额：' + row.dealAmount + '</td></tr>'
                         table += '<tr><td><span > 状态：<strong>' + $.table.selectDictLabel(orderstatusDatas, row.orderStatus) + '</strong></span></td></tr>'
                         if (1 == row.orderType) {
-                             if(null != row.payer ){
-                                 table += '<tr><td>' + '付款人：' + row.payer + '</td></tr>'
-                             }
+                            if (null != row.payer) {
+                                table += '<tr><td>' + '付款人：' + row.payer + '</td></tr>'
+                            }
 
                         }
                         table += '</table>'
@@ -274,21 +275,19 @@
                     field: 'orderQr', title: '信息', formatter: function (value, row, index) {
                         var table = '<table>'
 
-                        if( null != row.orderQr){
+                        if (null != row.orderQr) {
                             table += '<tr><td>' + '账号：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>' + '</tr></td>'
-                        }else{
+                        } else {
                             table += '<tr><td> 收款信息請質詢三方通道</tr></td>'
                         }
-                         if (null != row.payInfo && '' != row.payInfo) {
+                        if (null != row.payInfoForImgUrl && '' != row.payInfoForImgUrl) {
+                            //    var src = "https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=" + row.payInfoForImgUrl;
+                            table += '<tr><td>' + '信息：<img src="' + row.payInfoForImgUrl + '"></td></tr>';
+                        }
+                        if (null != row.payInfo && '' != row.payInfo) {
                             var valueWithBr = row.payInfo.replace(/;/g, '<br>');
                             table += '<tr><td  > ' + '回调：' + row.payInfo + '</td></tr>'
-
-
                             //    '<tr><td>回调：<a class="' + '" href="javascript:void(0)" onclick="layer.open({content: \''+valueWithBr+'\'})">'+ '<p style="display: block;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;width: 200px;">'+row.payInfo+'</p>'+'</a>';
-                        }
-                        if (null != row.payInfoForImgUrl && '' != row.payInfoForImgUrl) {
-                            var src = "https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=" + row.payInfoForImgUrl;
-                            table += '<tr><td>' + '二维码：<img src="' + src + '"></td></tr>';
                         }
                         if (1 == row.orderType && 'YES' == row.isNotify) {
                             table += '<tr><td>' + '商户回调已发送' + '</td></tr>'

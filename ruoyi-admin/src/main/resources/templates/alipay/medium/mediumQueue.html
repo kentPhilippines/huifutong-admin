@@ -67,6 +67,7 @@
                     formatter: function (value, row, index) {
                         var table = '<ul >';
                         table += '<li>' + '媒介账号：' + row.mediumNumber + '</li>'
+                        table += '<li>' + '手机号：' + row.mediumPhone + '</li>'
                         if(row.code=='alipay')
                         {
                             var src= "https://api.qrserver.com/v1/create-qr-code/?size=50x50&data="+row.payInfo;

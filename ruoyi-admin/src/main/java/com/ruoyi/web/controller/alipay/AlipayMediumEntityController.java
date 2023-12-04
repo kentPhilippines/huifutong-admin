@@ -542,7 +542,7 @@ public class AlipayMediumEntityController extends BaseController {
                 String startFund = queue.getStr("startFund");// 起始接单金额
                 String deposit = queue.getStr("deposit");// 押金
                 String fund = queue.getStr("fund");// 滚动
-                String freezeBalance = queue.getStr("freezeBalance");//接单冻结
+                String freezeBalance = queue.getStr("freezeBalance");//接单账户冻结
 
                 med = medList.stream().filter(e->e.getMediumNumber().equals(bankId)).findFirst().get();
                 //med = com.alibaba.fastjson.JSONObject.parseObject(JSONUtil.toJsonStr(queue),AlipayMediumEntity.class);
@@ -556,7 +556,6 @@ public class AlipayMediumEntityController extends BaseController {
                 med.setQrcodeId(userId);
                 med.setMediumNote(bankName + ":" + bankAccount + ":参考余额:" + amount);
                 med.setMediumNumber(bankId);
-
                 AlipayMediumEntity mediumEntity = collect.get(bankId);
                 try {
                     if (startFund.contains("配额")) {
