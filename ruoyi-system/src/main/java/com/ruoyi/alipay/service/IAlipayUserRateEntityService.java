@@ -140,4 +140,8 @@ public interface IAlipayUserRateEntityService {
 
 
     AlipayUserRateEntity findBankcardRate(String orderQrUser, String product, int i);
+
+    void delectUser(String userId);
+
+    void delectChannel(String userId);
 }

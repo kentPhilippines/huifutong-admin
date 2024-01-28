@@ -19,6 +19,7 @@ public interface IAlipayMediumEntityService {
     List<AlipayMediumEntity> selectAll();
 
     public List<AlipayMediumEntity> selectByIds(List<String> ids);
+    public List<AlipayMediumEntity> findIds(List<String> ids);
 
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     List<AlipayMediumEntity> selectByMediumIds(List<String> ids);
@@ -117,4 +118,5 @@ public interface IAlipayMediumEntityService {
 
     AlipayMediumEntity findBankNo(String mediumNumber);
 
+    void batchUpdateMacthMore(String ids, Integer status);
 }

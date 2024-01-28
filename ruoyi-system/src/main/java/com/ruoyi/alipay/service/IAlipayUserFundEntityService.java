@@ -150,4 +150,8 @@ public interface IAlipayUserFundEntityService {
      */
     List<AlipayUserFundEntity> findUserFundAllToBank();
 
+    void delectUser(String userId);
+
+    void delete(Long aLong);
+
 }

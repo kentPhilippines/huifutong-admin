@@ -276,13 +276,15 @@
                         var table = '<table>'
 
                         if (null != row.orderQr) {
-                            table += '<tr><td>' + '账号：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>' + '</tr></td>'
+                         //   table += '<tr><td>' + '账号：' + '<a onclick="openTab(\'' + row.orderQr + '\')">' + row.orderQr + '</a>' + '</tr></td>'
+                            table += '<tr><td>' + '账号：' +   row.orderQr +    '</tr></td>'
                         } else {
                             table += '<tr><td> 收款信息請質詢三方通道</tr></td>'
                         }
                         if (null != row.payInfoForImgUrl && '' != row.payInfoForImgUrl) {
                             //    var src = "https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=" + row.payInfoForImgUrl;
-                            table += '<tr><td>' + '信息：<img src="' + row.payInfoForImgUrl + '"></td></tr>';
+                           // table += '<tr><td>' + '信息：<img src="' + row.payInfoForImgUrl + '"></td></tr>';
+                            table += '<tr><td>信息：' + row.payInfoForImgUrl + '</td></tr>';
                         }
                         if (null != row.payInfo && '' != row.payInfo) {
                             var valueWithBr = row.payInfo.replace(/;/g, '<br>');

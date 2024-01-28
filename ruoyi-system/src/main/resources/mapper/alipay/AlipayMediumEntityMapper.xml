@@ -200,6 +200,14 @@
             #{item}
         </foreach>
     </select>
+ <select id="findIds" parameterType="java.util.List" resultMap="AlipayMediumEntityResult">
+        <include refid="selectAlipayMediumEntityVo"/>
+        where id in
+
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 
     <insert id="insertAlipayMediumEntity" parameterType="AlipayMediumEntity" useGeneratedKeys="true" keyProperty="id">
         insert into alipay_medium

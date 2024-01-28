@@ -362,6 +362,18 @@ public class AlipayUserRateEntityServiceImpl implements IAlipayUserRateEntitySer
 
     }
 
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public void delectUser(String userId) {
+        alipayUserRateEntityMapper.delectUser(userId);
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public void delectChannel(String userId) {
+        alipayUserRateEntityMapper.delectChannel(userId);
+    }
+
 
     /**
      * 无限级代理递归检测费率

@@ -11,6 +11,7 @@ import com.ruoyi.alipay.domain.AlipayUserInfo;
 import com.ruoyi.alipay.service.IAlipayMediumEntityService;
 import com.ruoyi.alipay.service.IAlipayUserFundEntityService;
 import com.ruoyi.alipay.service.IAlipayUserInfoService;
+import com.ruoyi.alipay.service.IAlipayUserRateEntityService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.StaticConstants;
 import com.ruoyi.common.core.controller.BaseController;
@@ -206,7 +207,8 @@ public class AlipayUserInfoController extends BaseController {
         }*/
         return toAjax(alipayUserInfoService.updateAlipayUserInfo(alipayUserInfo));
     }
-
+    @Autowired
+    private IAlipayUserRateEntityService alipayUserRateEntityService;
     /**
      * 删除用户详情(调用api)
      */
@@ -214,21 +216,11 @@ public class AlipayUserInfoController extends BaseController {
     @PostMapping("/remove")
     @ResponseBody
     public AjaxResult remove(String ids) {
-        //获取alipay处理接口URL
-        StringBuffer url = new StringBuffer();
-        String ip = null;
-//        StaticConstants.ALIPAY_IP_PORT;
-        //获取数据库内请求路径
-        String path = dictionaryUtils.getApiUrlPath("alipay_api_address", "update_user_status");
-        Map<String, Object> mapParam = Maps.newHashMap();
-        mapParam.put("ids", ids);
-        String flag = HttpUtils.sendPost(url.append(ip).append(path).toString(), MapDataUtil.createParam(mapParam));
-        switch (flag) {
-            case "ConnectException":
-                throw new BusinessException("操作失败，请求alipay接口地址超时,URL=" + url);
-        }
-        int i = flag == "true" ? 0 : 1;
-        return toAjax(i);
+        AlipayUserInfo userInfo = alipayUserInfoService.selectAlipayUserInfoById(Long.valueOf(ids));
+        alipayUserInfoService.deleteAlipayUserInfoByIds(ids);
+        alipayUserFundEntityService.delectUser(userInfo.getUserId());
+        alipayUserRateEntityService.delectUser(userInfo.getUserId());
+        return toAjax(1 );
 
     }
 

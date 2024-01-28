@@ -67,6 +67,8 @@
     const resetPwdFlag = [[${@permission.hasPermi('system:user:resetPwd')}]];
     const resetMoneyPwdFlag = [[${@permission.hasPermi('system:user:resetMoneyPwd')}]];
     const bindGoogleFlag = [[${@permission.hasPermi('system:user:bind')}]];
+    var removeFlag = [[${@permission.hasPermi('alipay:channel:remove')}]];
+
     const prefixControl = ctx + "control/account";
     $(function () {
         var options = {
@@ -188,6 +190,7 @@
                         } else {
                             actions.push('<a class="btn btn-primary btn-xs ' + bindGoogleFlag + '" href="javascript:void(0)" onclick="googleUnbind(\'' + row.sysUserId + '\',\'' + row.loginName + '\')"><i class="fa fa-check"></i>解绑google</a>');
                         }
+                        actions.push('<a class="btn btn-danger btn-xs  " href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
                 }]

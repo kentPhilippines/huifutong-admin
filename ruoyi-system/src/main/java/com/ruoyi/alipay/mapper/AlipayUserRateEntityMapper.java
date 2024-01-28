@@ -1,6 +1,7 @@
 package com.ruoyi.alipay.mapper;
 
 import com.ruoyi.alipay.domain.AlipayUserRateEntity;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -218,4 +219,9 @@ public interface AlipayUserRateEntityMapper {
 
     @Select("select * from alipay_user_rate where     payTypr = #{payTypr} and userId = #{userId}")
     List<AlipayUserRateEntity>  findFeeByProduct(@Param("userId")String userId, @Param("payTypr")String payTypr);
+
+    @Delete(" delete from  alipay_user_rate where userId = #{userId}")
+    void delectUser(@Param("userId")String userId);
+    @Delete(" delete from  alipay_user_rate where channelId = #{userId}")
+    void delectChannel(@Param("userId") String userId);
 }

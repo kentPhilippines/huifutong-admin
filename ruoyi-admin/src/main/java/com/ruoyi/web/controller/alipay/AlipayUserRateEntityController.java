@@ -147,6 +147,7 @@ public class AlipayUserRateEntityController extends BaseController {
         }
         return null;
     }
+
     @Autowired
     private DictionaryUtils dictionaryUtils;
     @Autowired
@@ -169,9 +170,9 @@ public class AlipayUserRateEntityController extends BaseController {
 
         DealpayUserInfoEntity dealpayUserInfoEntity = new DealpayUserInfoEntity();
         // List<DealpayUserInfoEntity> list = dealpayUserInfoService.selectdealpayUserInfoByAgent(dealpayUserInfoEntity);
-        List<AlipayUserInfo> arlist =  new ArrayList<>();
+        List<AlipayUserInfo> arlist = new ArrayList<>();
         List<SysDictData> qrcodeId = sysDictDataServiceImpl.selectDictDataByType("qrcodeId");
-        for (SysDictData data  : qrcodeId){
+        for (SysDictData data : qrcodeId) {
             String dictLabel = data.getDictLabel();
             String dictValue = data.getDictValue();
             AlipayUserInfo info = new AlipayUserInfo();
@@ -182,8 +183,8 @@ public class AlipayUserRateEntityController extends BaseController {
         if (alipayUserRateEntity == null) {
             throw new BusinessException("费率不存在");
         }
-        if(StringUtils.isEmpty(alipayUserRateEntity.getQueueList())){
-            mmap.put("qrInfo",arlist);
+        if (StringUtils.isEmpty(alipayUserRateEntity.getQueueList())) {
+            mmap.put("qrInfo", arlist);
         } else {
             String[] str = alipayUserRateEntity.getQueueList().split(",");
             List<String> qrlist = Arrays.asList(str);
@@ -192,7 +193,7 @@ public class AlipayUserRateEntityController extends BaseController {
                     item.setCheckFlag(true);
                 }
             }
-            mmap.put("qrInfo",arlist);
+            mmap.put("qrInfo", arlist);
         }
         return prefix + "/edit";
     }
@@ -243,19 +244,24 @@ public class AlipayUserRateEntityController extends BaseController {
             AlipayChanelFee channelBy = alipayChanelFeeService.findChannelBy(rate.getChannelId(), rate.getPayTypr());
             String channelRFee = channelBy.getChannelRFee();
             a = new BigDecimal("" + rate.getFee());
-            if (rate.getFeeType().toString().equals(PAY_TYPE)) {
-                rate.setChannelFee(channelRFee);
-                rate.setProfit(String.valueOf(a.subtract(new BigDecimal(channelRFee))));
-            } else {
-                rate.setChannelFee(channelBy.getChannelDFee());
-                rate.setProfit(String.valueOf(a.subtract(new BigDecimal(channelBy.getChannelDFee()))));
+            try {
+                if (rate.getFeeType().toString().equals(PAY_TYPE)) {
+                    rate.setChannelFee(channelRFee);
+                    rate.setProfit(String.valueOf(a.subtract(new BigDecimal(channelRFee))));
+                } else {
+                    rate.setChannelFee(channelBy.getChannelDFee());
+                    rate.setProfit(String.valueOf(a.subtract(new BigDecimal(channelBy.getChannelDFee()))));
+                }
+                if (ObjectUtil.isNotNull(channel)) {
+                    rate.setChannelId(channel.getUserName());
+                }
+                if (ObjectUtil.isNotNull(product)) {
+                    rate.setPayTypr(product.getProductName());
+                }
+            } catch (Throwable s) {
+                logger.error("異常", s);
             }
-            if (ObjectUtil.isNotNull(channel)) {
-                rate.setChannelId(channel.getUserName());
-            }
-            if (ObjectUtil.isNotNull(product)) {
-                rate.setPayTypr(product.getProductName());
-            }
+
         }
         return getDataTable(list);
     }
@@ -384,7 +390,7 @@ public class AlipayUserRateEntityController extends BaseController {
         if (ObjectUtil.isNull(channel)) {
             return error("当前渠道未接通，请联系技术人员对接");
         }
-        int i =alipayUserRateEntityService.updateAlipayUserRateEntity(alipayUserRateEntity);
+        int i = alipayUserRateEntityService.updateAlipayUserRateEntity(alipayUserRateEntity);
         //todo 这里做商户费率缓存给网关抢单查询的时候调用
         alipayUserRateEntityService.getAndRefreshAlipayMerchantRateCache("2");
         return toAjax(i);
@@ -445,7 +451,6 @@ public class AlipayUserRateEntityController extends BaseController {
         }
         return;
     }
-
 
 
 }

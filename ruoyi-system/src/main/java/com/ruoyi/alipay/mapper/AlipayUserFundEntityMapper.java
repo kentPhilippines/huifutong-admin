@@ -3,10 +3,7 @@ package com.ruoyi.alipay.mapper;
 import com.ruoyi.alipay.domain.AlipayUserFundEntity;
 import com.ruoyi.alipay.domain.AlipayUserInfo;
 import com.ruoyi.common.core.domain.BaseEntity;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -143,7 +140,6 @@ public interface AlipayUserFundEntityMapper {
     AlipayUserFundEntity findFundBak(@Param("starTime") String starTime, @Param("userId") String userId, @Param("endTime") String endTime);
 
 
-
     @Select("<script>" +
             "        select id, userId, userName, cashBalance, rechargeNumber, freezeBalance, accountBalance,\n" +
             "         sumDealAmount, sumRechargeAmount, sumProfit, sumAgentProfit, sumOrderCount, todayDealAmount,\n" +
@@ -168,4 +164,10 @@ public interface AlipayUserFundEntityMapper {
 
     @Select("select userId  ,userName, accountBalance, rechargeNumber , freezeBalance  ,todayDealAmount , todayOtherWitAmount , todayProfit , userType from alipay_user_fund where userType = 2  order by  todayProfit desc")
     List<AlipayUserFundEntity> findUserFundAllToBank();
+
+    @Delete("delete from alipay_user_fund where userId  = #{userId} ")
+    void delectUser(@Param("userId") String userId);
+    @Delete("delete from alipay_user_fund where id  = #{id} ")
+    void delete(@Param("id") Long id);
+
 }

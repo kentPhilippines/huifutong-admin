@@ -5,6 +5,7 @@ import com.ruoyi.alipay.domain.AlipayUserFundEntity;
 import com.ruoyi.alipay.domain.AlipayUserInfo;
 import com.ruoyi.alipay.service.IAlipayUserFundEntityService;
 import com.ruoyi.alipay.service.IAlipayUserInfoService;
+import com.ruoyi.alipay.service.IAlipayUserRateEntityService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -12,6 +13,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.HashKit;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -30,6 +32,8 @@ import java.util.List;
 public class AipayChannelContorller extends BaseController {
     private String prefix = "alipay/channel";
     @Autowired private IAlipayUserInfoService alipayUserInfoService;
+    @Autowired
+    private IAlipayUserRateEntityService alipayUserRateEntityService;
     @GetMapping()
     public String list() {
         return prefix + "/list";
@@ -116,6 +120,19 @@ public class AipayChannelContorller extends BaseController {
             });
         }
         throw new BusinessException("操作失败，修改失败");
+    }
+    @RequiresPermissions("alipay:channel:remove")
+    @Log(title = "渠道", businessType = BusinessType.DELETE)
+    @PostMapping("/remove")
+    @ResponseBody
+    public AjaxResult remove(String ids) {
+        AlipayUserFundEntity alipayUserFundEntity=  alipayUserFundEntityService.selectAlipayUserFundEntityById(Long.valueOf(ids));
+        alipayUserFundEntityService.delete(Long.valueOf(ids));
+        AlipayUserInfo alipayUserInfo= alipayUserInfoService.findMerchantInfoByUserId(alipayUserFundEntity.getUserId());
+        alipayUserInfoService.deleteAlipayUserInfoByIds(String.valueOf(alipayUserInfo.getId()));
+        alipayUserRateEntityService.delectUser(alipayUserInfo.getUserId());
+        alipayUserRateEntityService.delectChannel(alipayUserInfo.getUserId());
+        return toAjax( 1);
     }
 
 }

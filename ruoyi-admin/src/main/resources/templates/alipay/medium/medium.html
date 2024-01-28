@@ -73,17 +73,12 @@
 
         <div class="btn-group-sm" id="toolbar" role="group">
 
-            <a class="btn btn-primary" onclick="$.operate.openAccount(1,'修改银行风控规则','editAmountByBank')">
-                <i class="fa fa-bar-chart"></i> 根据银行名称修改风控规则
+            <a class="btn btn-info" onclick="$.operate.editWating('批量删除')">
+                <i class="fa fa-upload"></i> 批量删除
             </a>
-            <a class="btn btn-primary" onclick="$.operate.openAccount(1,'修改姓名验证','editVerifyStatus')">
-                <i class="fa fa-bar-chart"></i> 修改姓名验证
-            </a>
-            <a class="btn btn-info" onclick="$.table.importExcel()">
-                <i class="fa fa-upload"></i> 导入姓名验证状态
-            </a>
-            <a class="btn btn-info" onclick="$('#isHistoryQuery').val('1');$.table.search();">
-                <i class="fa fa-upload"></i> 查询历史数据
+            <a class="btn btn-primary" onclick="$.operate.editAll('批量挂起/停止挂起')"
+             >
+                <i class="fa fa-bar-chart"></i>   批量状态处理
             </a>
         </div>
         <div class="col-sm-12 select-table table-striped">
@@ -107,6 +102,8 @@
             url: prefix + "/list",
             createUrl: prefix + "/add",
             updateUrl: prefix + "/edit/{id}",
+            updateUrlAll: prefix + "/edits/{ids}",
+            editWating: prefix + "/removes/{ids}",
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
             editAmountUrl: prefix + "/editAmount/{id}",
@@ -121,6 +118,11 @@
             columns: [{
                 checkbox: true
             },
+                {
+                    field: 'id',
+                    title: '数据ID',
+                    visible: false
+                },
                 {
                     field: 'mediumNumber',
                     title: '媒介信息',

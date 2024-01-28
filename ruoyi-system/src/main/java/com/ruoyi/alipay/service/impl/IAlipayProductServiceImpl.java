@@ -6,6 +6,7 @@ import com.ruoyi.alipay.service.IAlipayProductService;
 import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.enums.DataSourceType;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,7 +22,8 @@ public class IAlipayProductServiceImpl implements IAlipayProductService {
     AlipayProductMapper alipayProductMapper;
 
     /**
-     *  产品查询有效数据
+     * 产品查询有效数据
+     *
      * @param alipayProductEntity
      * @return
      */
@@ -53,6 +55,7 @@ public class IAlipayProductServiceImpl implements IAlipayProductService {
 
     /**
      * 、<p>删除产品列表</p>
+     *
      * @param ids
      * @return
      */
@@ -69,8 +72,8 @@ public class IAlipayProductServiceImpl implements IAlipayProductService {
     }
 
     /**
-     *
      * <p>查询添加产品是否存在</p>
+     *
      * @param productId
      * @return
      */
@@ -83,7 +86,7 @@ public class IAlipayProductServiceImpl implements IAlipayProductService {
     @Override
     @DataSource(DataSourceType.ALIPAY_SLAVE)
     public List<AlipayProductEntity> selectProductTypeListToWeb() {
-       return alipayProductMapper.selectAlipayProductTypeListToWeb();
+        return alipayProductMapper.selectAlipayProductTypeListToWeb();
     }
 
 }

@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.alipay;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
@@ -72,8 +73,7 @@ public class AlipayMediumEntityController extends BaseController {
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(AlipayMediumEntity alipayMediumEntity) {
-        if(StringUtils.isNotBlank(alipayMediumEntity.getMediumNumber()))
-        {
+        if (StringUtils.isNotBlank(alipayMediumEntity.getMediumNumber())) {
             alipayMediumEntity.setMediumNumberJiami(DesUtil.encryptHex(alipayMediumEntity.getMediumNumber()));
         }
         startPage();
@@ -81,7 +81,7 @@ public class AlipayMediumEntityController extends BaseController {
 
         //根据用户查询出相关的通道费率  如果包含小额BANK_WIT_S  就返回给前端
         List ids = list.stream().map(AlipayMediumEntity::getQrcodeId).distinct().collect(Collectors.toList());
-        List<AlipayUserRateEntity> userRateEntities =alipayUserRateEntityService.findRates(String.join(",", ids),"BANK_WIT_S");
+        List<AlipayUserRateEntity> userRateEntities = alipayUserRateEntityService.findRates(String.join(",", ids), "BANK_WIT_S");
         List smallUserIds = userRateEntities.stream().map(AlipayUserRateEntity::getUserId).collect(Collectors.toList());
         list.stream().filter(entity -> smallUserIds.contains(entity.getQrcodeId())).forEach(entity -> entity.setSmall(true));
         //解密卡号
@@ -93,10 +93,9 @@ public class AlipayMediumEntityController extends BaseController {
         if (StrUtil.isNotEmpty(alipayMediumEntity.getQrcodeId())) {
             AlipayMediumEntity mediumEntity = null;
             //有标识就查询历史数据
-            if(alipayMediumEntity.getParams().containsKey("isHistoryQuery") && alipayMediumEntity.getParams().get("isHistoryQuery").toString().equals("1")  )
-            {
+            if (alipayMediumEntity.getParams().containsKey("isHistoryQuery") && alipayMediumEntity.getParams().get("isHistoryQuery").toString().equals("1")) {
                 mediumEntity = alipayMediumEntityService.findBankSumBak(alipayMediumEntity.getQrcodeId());
-            }else {
+            } else {
                 mediumEntity = alipayMediumEntityService.findBankSum(alipayMediumEntity.getQrcodeId());
             }
             if (null != mediumEntity && CollUtil.isNotEmpty(list)) {
@@ -162,6 +161,67 @@ public class AlipayMediumEntityController extends BaseController {
         return prefix + "/editAmountByCode";
     }
 
+    @GetMapping("/edits/{ids}")
+    public String edit(@PathVariable("ids") String ids, ModelMap mmap) {
+        mmap.put("ids", ids);
+        List<String> list = Arrays.asList(ids.split(","));
+        List<AlipayMediumEntity> alipayMediumEntities = alipayMediumEntityService.findIds(list);
+        StrBuilder strBuilder = StrBuilder.create();
+        for (AlipayMediumEntity entity : alipayMediumEntities) {
+            strBuilder.append("id:").append(entity.getId()).append(" 账户编号：").append(entity.getMediumNumber()).append(" ").append("原状态：");
+            if (entity.getStatus() == 1) {
+                strBuilder.append("开启");
+            } else if (entity.getStatus() == 0) {
+                strBuilder.append("关闭");
+            }
+            strBuilder.append(" ");
+        }
+        mmap.put("rete", strBuilder.toString());
+        return prefix + "/edits";
+    }
+
+    @GetMapping("/removes/{ids}")
+    public String ramoves(@PathVariable("ids") String ids, ModelMap mmap) {
+        mmap.put("ids", ids);
+        List<String> list = Arrays.asList(ids.split(","));
+        List<AlipayMediumEntity> alipayMediumEntities = alipayMediumEntityService.findIds(list);
+        StrBuilder strBuilder = StrBuilder.create();
+        for (AlipayMediumEntity entity : alipayMediumEntities) {
+            strBuilder.append("id:").append(entity.getId()).append(" 账户编号：").append(entity.getMediumNumber()).append(" ").append("原状态：");
+            if (entity.getStatus() == 1) {
+                strBuilder.append("开启");
+            } else if (entity.getStatus() == 0) {
+                strBuilder.append("关闭");
+            }
+            strBuilder.append(" ");
+        }
+        mmap.put("rete", strBuilder.toString());
+        return prefix + "/removes";
+    }
+
+    @Log(title = "批量修改媒介状态", businessType = BusinessType.UPDATE)
+    @PostMapping("/edits")
+    @ResponseBody
+    public AjaxResult editsSave(String ids, Integer status) {
+        alipayMediumEntityService.batchUpdateMacthMore(ids, status);
+        return AjaxResult.success();
+    }
+
+    @Log(title = "账号批量删除", businessType = BusinessType.UPDATE)
+    @PostMapping("/removes")
+    @ResponseBody
+    public AjaxResult ramoves(String ids) {
+        List<String> list = Arrays.asList(ids.split(","));
+        list.stream().forEach(e -> {
+            AlipayMediumEntity alipayMediumEntity = new AlipayMediumEntity();
+            alipayMediumEntity.setId(Long.valueOf(e));
+            SysUser currentUser = ShiroUtils.getSysUser();
+            alipayMediumEntityService.deleteAlipayMediumEntityById(alipayMediumEntity, currentUser);
+        });
+        return toAjax(1);
+
+    }
+
     /**
      * 修改银行名称
      */
@@ -176,7 +236,7 @@ public class AlipayMediumEntityController extends BaseController {
      * 修改姓名验证
      */
     @GetMapping("/editVerifyStatus")
-    public String editVerifyStatus( ModelMap mmap) {
+    public String editVerifyStatus(ModelMap mmap) {
         mmap.put("alipayMediumEntity", new AlipayMediumEntity());
         mmap.put("banks", alipayMediumEntityService.findAllBankNames());
         return prefix + "/editVerifyStatus";
@@ -544,7 +604,7 @@ public class AlipayMediumEntityController extends BaseController {
                 String fund = queue.getStr("fund");// 滚动
                 String freezeBalance = queue.getStr("freezeBalance");//接单账户冻结
 
-                med = medList.stream().filter(e->e.getMediumNumber().equals(bankId)).findFirst().get();
+                med = medList.stream().filter(e -> e.getMediumNumber().equals(bankId)).findFirst().get();
                 //med = com.alibaba.fastjson.JSONObject.parseObject(JSONUtil.toJsonStr(queue),AlipayMediumEntity.class);
 
                 med.setDeposit(deposit);
@@ -609,13 +669,12 @@ public class AlipayMediumEntityController extends BaseController {
                             med.setIsRed(1);
                         }
                         //冲正风控
-                        if("6".equals(error))
-                        {
-                            med.setCode(med.getCode()+" 风控");
+                        if ("6".equals(error)) {
+                            med.setCode(med.getCode() + " 风控");
                         }
                     }
                 } catch (Exception c) {
-                    logger.error("exception:",c);
+                    logger.error("exception:", c);
                 }
                 if (CollectionUtil.isNotEmpty(userCollect)) {
                     AlipayUserInfo alipayUserInfo = userCollect.get(userId);

@@ -201,9 +201,15 @@ public class AlipayDealOrderEntityController extends BaseController {
         ConcurrentHashMap<String, SysUser> finalUserCollect = userCollect;
         list.stream().forEach(
                 e -> {
-                    e.setRetain1(prCollect.get(e.getRetain1()).getProductName());
-                    e.setChannelName(userCollect1.get(e.getOrderQrUser()).getUserName());
-                    e.setUserName(finalUserCollect.get(e.getOrderAccount()).getUserName());
+                    try {
+                        e.setRetain1(prCollect.get(e.getRetain1()).getProductName());
+                        e.setChannelName(userCollect1.get(e.getOrderQrUser()).getUserName());
+                        e.setUserName(finalUserCollect.get(e.getOrderAccount()).getUserName());
+                    }catch (Throwable s ){
+                        logger.error("異常",s);
+                        logger.info(e.toString());
+                    }
+
                 }
         );
         AlipayDealOrderEntity deal = alipayDealOrderEntityService.selectAlipayDealOrderEntityListSum(alipayDealOrderEntity, isCharen);
@@ -244,10 +250,10 @@ public class AlipayDealOrderEntityController extends BaseController {
         }
         //做风控判断 填充  riskReason  end
         //支付宝扫码 关联查询payinfo from medium start
-        List<String> mediumIds = list.stream().filter(order -> order.getRetain1().contains("ALIPAY")).map(AlipayDealOrderEntity::getOrderQr).collect(Collectors.toList());
+        List<String> mediumIds = list.stream().filter(order -> order.getRetain1().contains("ALIPAY") || order.getRetain1().contains("E_CNY")).map(AlipayDealOrderEntity::getOrderQr).collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(mediumIds)) {
             List<AlipayMediumEntity> mediumEntities = alipayMediumEntityService.selectByMediumIds(mediumIds);
-            list.stream().filter(order -> order.getRetain1().contains("ALIPAY")).forEach(order -> {
+            list.stream().filter(order -> order.getRetain1().contains("ALIPAY")  || order.getRetain1().contains("E_CNY")).forEach(order -> {
                 try {
                     AlipayMediumEntity mediumEntity = mediumEntities.stream().filter(medium -> medium.getMediumId().equals(order.getOrderQr())).findFirst().get();
                     order.setPayInfoForImgUrl(mediumEntity.getPayInfo());

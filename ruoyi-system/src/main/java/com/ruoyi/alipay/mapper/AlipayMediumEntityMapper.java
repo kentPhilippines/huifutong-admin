@@ -3,6 +3,7 @@ package com.ruoyi.alipay.mapper;
 import com.ruoyi.alipay.domain.AlipayMediumEntity;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -14,7 +15,10 @@ import java.util.List;
  */
 public interface AlipayMediumEntityMapper {
     public List<AlipayMediumEntity> selectAlipayMediumEntityByIds(List list);
+    public List<AlipayMediumEntity> findIds(List list);
+
     public List<AlipayMediumEntity> selectByMediumIds(List list);
+
     /**
      * 查询收款媒介列
      *
@@ -57,7 +61,6 @@ public interface AlipayMediumEntityMapper {
     public int updateAlipayMediumEntityByBankName(AlipayMediumEntity alipayMediumEntity);
 
 
-
     /**
      * 根据code修改上限金额
      *
@@ -85,21 +88,19 @@ public interface AlipayMediumEntityMapper {
     AlipayMediumEntity findUserId(@Param("mediumNumber") String mediumNumber);
 
 
-
-
     @Select(
             "SELECT  sum(mountNow) as mountNow ,   " +
-            "sum(mountSystem) as mountSystem , " +
-            " 'all' as amounttype " +
-            "from   alipay_medium   " +
-            "WHERE  qrcodeId  =  #{userId}  and isDeal  = '2'      " +
-            "union all  " +
-            "SELECT  " +
-            "sum(mountNow) as mountNow ,  " +
-            "sum(mountSystem) as mountSystem, " +
-            " 'open' as amounttype  " +
-            "from  alipay_medium  " +
-            "WHERE  qrcodeId  = #{userId} and isDeal  = '2' and status = 1  ")
+                    "sum(mountSystem) as mountSystem , " +
+                    " 'all' as amounttype " +
+                    "from   alipay_medium   " +
+                    "WHERE  qrcodeId  =  #{userId}  and isDeal  = '2'      " +
+                    "union all  " +
+                    "SELECT  " +
+                    "sum(mountNow) as mountNow ,  " +
+                    "sum(mountSystem) as mountSystem, " +
+                    " 'open' as amounttype  " +
+                    "from  alipay_medium  " +
+                    "WHERE  qrcodeId  = #{userId} and isDeal  = '2' and status = 1  ")
     List<AlipayMediumEntity> findBankSum(@Param("userId") String userId);
 
     @Select(
@@ -118,8 +119,6 @@ public interface AlipayMediumEntityMapper {
     List<AlipayMediumEntity> findBankSumBak(@Param("userId") String userId);
 
 
-
-
     @Select("select * from alipay_medium where   isDeal  = '2' and status = 1")
     List<AlipayMediumEntity> findOpenMed();
 
@@ -131,13 +130,15 @@ public interface AlipayMediumEntityMapper {
     List<AlipayMediumEntity> findAll();
 
 
-
-
     @Select(" select sum(mountNow) as mountNow ,  sum( toDayDeal - toDayWit  + yseToday ) as toDayDeal  , qrcodeId  from huifutong_alipay.alipay_medium group by qrcodeId ")
     List<AlipayMediumEntity> findMedSum();
 
     @Select("select * from alipay_medium  where     mediumNumber in (#{mediumNumber} , #{bankNo})   and isDeal  = '2' and status = 1  ")
-    AlipayMediumEntity findBankNo( @Param("mediumNumber") String mediumNumber,@Param("bankNo")  String bankNo);
+    AlipayMediumEntity findBankNo(@Param("mediumNumber") String mediumNumber, @Param("bankNo") String bankNo);
+
+
+    @Update(" update  alipay_medium set status  = #{ status } where id  = #{id}")
+    void updateMacthMoreById(@Param("id") String id,@Param("status") Integer status);
 
 
 }

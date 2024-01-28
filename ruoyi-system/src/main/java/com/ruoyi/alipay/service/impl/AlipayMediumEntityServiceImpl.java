@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,6 +48,11 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
     @DataSource(value = DataSourceType.ALIPAY_SLAVE)
     public List<AlipayMediumEntity> selectByIds(List<String> ids) {
         return alipayMediumEntityMapper.selectAlipayMediumEntityByIds(ids);
+    }
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public List<AlipayMediumEntity> findIds(List<String> ids) {
+        return alipayMediumEntityMapper.findIds(ids);
     }
 
 
@@ -285,5 +291,13 @@ public class AlipayMediumEntityServiceImpl implements IAlipayMediumEntityService
 
       return   alipayMediumEntityMapper.findBankNo(mediumNumber,bankNo);
 
+    }
+
+    @Override
+    @DataSource(value = DataSourceType.ALIPAY_SLAVE)
+    public void batchUpdateMacthMore(String ids, Integer status) {
+        Arrays.stream(ids.split(",")).forEach(id->{
+            alipayMediumEntityMapper.updateMacthMoreById(id,status);
+        });
     }
 }
