@@ -65,4 +65,6 @@ public interface IAlipayChanelFeeService
     public AlipayChanelFee findChannelBy(String channelId, String payTypr);
 
     List<AlipayProductEntity> findProductByName(String merchantId);
+
+    void deleteChannel(String userId);
 }

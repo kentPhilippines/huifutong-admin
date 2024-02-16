@@ -1374,7 +1374,16 @@ var table = {
                 var url = table.options.editWating.replace("{ids}", rows.join());
                 $.modal.open(title, url);
             },
-
+            editMed: function (title) {
+                table.set();
+                var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
+                if (rows.length == 0) {
+                    $.modal.alertWarning("请至少选择一条记录");
+                    return;
+                }
+                var url = table.options.editAmountUrlByBankName.replace("{ids}", rows.join());
+                $.modal.open(title, url);
+            },
             // 批量修改信息
             editAll: function (title) {
                 table.set();
