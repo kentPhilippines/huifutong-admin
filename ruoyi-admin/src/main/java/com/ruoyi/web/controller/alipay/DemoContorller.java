@@ -73,7 +73,7 @@ public class DemoContorller extends BaseController {
         String createParam2 = createParam(objectToMap2);
         logger.info("加密前字符串：" + createParam2);
         logger.info("加密前json字符串：" + JSONUtil.toJsonStr(objectToMap2));
-        String post = HttpUtil.post(dealurl+"/v2/deal/pay", JSONUtil.toJsonStr(objectToMap2));
+        String post = HttpUtil.post("http://alipay:9010/v2/deal/pay", JSONUtil.toJsonStr(objectToMap2));
         logger.info("相应结果集：" + post);
         return post;
     }
@@ -97,7 +97,7 @@ public class DemoContorller extends BaseController {
         String createParam2 = createParam(objectToMap2);
         logger.info("加密前字符串：" + createParam2);
         logger.info("加密前json字符串：" + JSONUtil.toJsonStr(objectToMap2));
-        String post = HttpUtil.post(dealurl+"/v2/deal/wit", JSONUtil.toJsonStr(objectToMap2));
+        String post = HttpUtil.post(dealurl+"http://alipay:9010/v2/deal/wit", JSONUtil.toJsonStr(objectToMap2));
         logger.info("相应结果集：" + post);
         return post;
     }

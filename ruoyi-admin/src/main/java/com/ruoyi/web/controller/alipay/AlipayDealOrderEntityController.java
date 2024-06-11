@@ -201,15 +201,9 @@ public class AlipayDealOrderEntityController extends BaseController {
         ConcurrentHashMap<String, SysUser> finalUserCollect = userCollect;
         list.stream().forEach(
                 e -> {
-                    try {
-                        e.setRetain1(prCollect.get(e.getRetain1()).getProductName());
-                        e.setChannelName(userCollect1.get(e.getOrderQrUser()).getUserName());
-                        e.setUserName(finalUserCollect.get(e.getOrderAccount()).getUserName());
-                    }catch (Throwable s ){
-                        logger.error("異常",s);
-                        logger.info(e.toString());
-                    }
-
+                    e.setRetain1(prCollect.get(e.getRetain1()).getProductName());
+                    e.setChannelName(userCollect1.get(e.getOrderQrUser()).getUserName());
+                    e.setUserName(finalUserCollect.get(e.getOrderAccount()).getUserName());
                 }
         );
         AlipayDealOrderEntity deal = alipayDealOrderEntityService.selectAlipayDealOrderEntityListSum(alipayDealOrderEntity, isCharen);
