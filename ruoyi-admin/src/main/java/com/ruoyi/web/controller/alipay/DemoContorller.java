@@ -7,7 +7,9 @@ import cn.hutool.json.JSONUtil;
 import com.ruoyi.alipay.domain.AlipayUserInfo;
 import com.ruoyi.alipay.service.IAlipayUserInfoService;
 import com.ruoyi.alipay.service.IMerchantInfoEntityService;
+import com.ruoyi.common.constant.StaticConstants;
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.framework.util.DictionaryUtils;
 import com.ruoyi.web.controller.alipay.bean.DepositRequestVO;
 import com.ruoyi.web.controller.alipay.bean.WithdrawRequestVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,8 @@ import java.util.Map;
 @RequestMapping("/alipay/demo")
 @Controller
 public class DemoContorller extends BaseController {
-
+    @Autowired
+    private DictionaryUtils dictionaryUtils;
     @Autowired
     private IMerchantInfoEntityService merchantInfoEntityService;
 
@@ -73,7 +76,10 @@ public class DemoContorller extends BaseController {
         String createParam2 = createParam(objectToMap2);
         logger.info("加密前字符串：" + createParam2);
         logger.info("加密前json字符串：" + JSONUtil.toJsonStr(objectToMap2));
-        String post = HttpUtil.post("http://alipay:9010/v2/deal/pay", JSONUtil.toJsonStr(objectToMap2));
+        String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);
+        String urlPath = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_SERVICE_API_KEY, StaticConstants.ALIPAY_SERVICE_API_VALUE_6);
+
+        String post = HttpUtil.post(ipPort+"/v2/deal/pay", JSONUtil.toJsonStr(objectToMap2));
         logger.info("相应结果集：" + post);
         return post;
     }
@@ -97,7 +103,9 @@ public class DemoContorller extends BaseController {
         String createParam2 = createParam(objectToMap2);
         logger.info("加密前字符串：" + createParam2);
         logger.info("加密前json字符串：" + JSONUtil.toJsonStr(objectToMap2));
-        String post = HttpUtil.post(dealurl+"http://alipay:9010/v2/deal/wit", JSONUtil.toJsonStr(objectToMap2));
+        String ipPort = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_IP_URL_KEY, StaticConstants.ALIPAY_IP_URL_VALUE);
+
+        String post = HttpUtil.post(ipPort+"/v2/deal/wit", JSONUtil.toJsonStr(objectToMap2));
         logger.info("相应结果集：" + post);
         return post;
     }
