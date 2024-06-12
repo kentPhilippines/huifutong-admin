@@ -1,7 +1,6 @@
 package com.ruoyi.web.controller.alipay;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.ruoyi.alipay.domain.AlipayUserInfo;
@@ -24,8 +23,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/alipay/demo")
@@ -80,7 +77,7 @@ public class DemoContorller extends BaseController {
         String urlPath = dictionaryUtils.getApiUrlPath(StaticConstants.ALIPAY_SERVICE_API_KEY, StaticConstants.ALIPAY_SERVICE_API_VALUE_6);
 
         String post = HttpUtil.post(ipPort+"/v2/deal/pay", JSONUtil.toJsonStr(objectToMap2));
-        logger.info("相应结果集：" + post);
+        logger.info(ipPort+"/v2/deal/pay"+"相应结果集：" + post);
         return post;
     }
 
