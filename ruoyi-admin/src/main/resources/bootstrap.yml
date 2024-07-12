@@ -9,14 +9,16 @@ spring:
       config:
         file-extension: yaml
         #        namespace: a173ae57-6dc2-4f08-bda7-194b5d8ecdaf #pro
-        namespace: test
+        namespace: public #dev
         group: ZB_GROUP
         #prefix: ${spring.application.name}
+        #        refresh-enabled: true
         refresh-enabled: true
       discovery:
         #        namespace: a173ae57-6dc2-4f08-bda7-194b5d8ecdaf #pro
-        namespace: test
+        namespace: public #dev
         group: ZB_GROUP
   #logging:
   #  level:
   #    root: info
+
