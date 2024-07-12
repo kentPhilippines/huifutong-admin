@@ -30,6 +30,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="expireTime != null "> and expire_time = #{expireTime}</if>
         </where>
     </select>
+
+    <select id="selectUserByLoginNames" parameterType="java.util.List" resultMap="SysUserGoogleResult">
+        <include refid="selectSysUserGoogleVo"/>
+        where login_name in
+        <foreach collection="list" item="loginName" open="(" separator="," close=")">
+            #{loginName}
+        </foreach>
+    </select>
     
     <select id="selectSysUserGoogleById" parameterType="Long" resultMap="SysUserGoogleResult">
         <include refid="selectSysUserGoogleVo"/>

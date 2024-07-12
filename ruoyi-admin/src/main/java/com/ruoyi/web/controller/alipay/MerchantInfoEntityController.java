@@ -21,13 +21,17 @@ import com.ruoyi.framework.util.DictionaryUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.domain.SysUser;
+import com.ruoyi.system.domain.SysUserGoogle;
+import com.ruoyi.system.service.ISysUserGoogleService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.web.controller.tool.RandomValue;
+import lombok.val;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -56,6 +60,8 @@ public class MerchantInfoEntityController extends BaseController {
     private SysPasswordService passwordService;
     @Autowired
     private ISysUserService userService;
+    @Autowired
+    private ISysUserGoogleService googleService;
 
 
     @GetMapping()
@@ -79,7 +85,9 @@ public class MerchantInfoEntityController extends BaseController {
         if (CollectionUtils.isNotEmpty(userInfolist)) {
             List<String> loginNames = userInfolist.stream().map(AlipayUserInfo::getUserId).collect(Collectors.toList());
             List<SysUser> sysUsers = userService.selectUserByLoginNames(loginNames);
+            List<SysUserGoogle> goolgeUsers = googleService.selectSysUserGoogleList(loginNames);
             ConcurrentHashMap<String, SysUser> value = sysUsers.stream().collect(Collectors.toConcurrentMap(SysUser::getMerchantId, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
+            ConcurrentHashMap<String, SysUserGoogle> googleMaps = goolgeUsers.stream().collect(Collectors.toConcurrentMap(SysUserGoogle::getLoginName, Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
             userInfolist.stream().forEach(tmp -> {
                 SysUser user = value.get(tmp.getUserId());
                 if (null != user) {
@@ -87,6 +95,11 @@ public class MerchantInfoEntityController extends BaseController {
                     tmp.setIsBind(user.getIsBind());
                     tmp.setSysUserId(user.getUserId());
                     tmp.setLoginName(user.getLoginName());
+                }
+                val googleUser = googleMaps.get(tmp.getUserId());
+                if(!ObjectUtils.isEmpty(googleUser))
+                {
+                    tmp.setGoogleKey(googleUser.getSecretKey());
                 }
             });
         }

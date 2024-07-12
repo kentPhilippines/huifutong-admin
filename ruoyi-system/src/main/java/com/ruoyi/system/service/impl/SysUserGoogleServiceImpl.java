@@ -1,15 +1,15 @@
 package com.ruoyi.system.service.impl;
 
-import java.util.List;
-
+import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.system.domain.SysUserGoogle;
+import com.ruoyi.system.mapper.SysUserGoogleMapper;
+import com.ruoyi.system.service.ISysUserGoogleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.system.mapper.SysUserGoogleMapper;
-import com.ruoyi.system.domain.SysUserGoogle;
-import com.ruoyi.system.service.ISysUserGoogleService;
-import com.ruoyi.common.core.text.Convert;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 谷歌验证器Service业务层处理
@@ -42,6 +42,11 @@ public class SysUserGoogleServiceImpl implements ISysUserGoogleService {
     @Override
     public List<SysUserGoogle> selectSysUserGoogleList(SysUserGoogle sysUserGoogle) {
         return sysUserGoogleMapper.selectSysUserGoogleList(sysUserGoogle);
+    }
+
+    @Override
+    public List<SysUserGoogle> selectSysUserGoogleList(List<String> loginNames) {
+        return sysUserGoogleMapper.selectUserByLoginNames(loginNames);
     }
 
     /**

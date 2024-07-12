@@ -35,6 +35,16 @@ public class AlipayUserInfo extends BaseEntity {
     private Double sumProfit;
     private Double todayProfit;//当日利润
 
+    public String getGoogleKey() {
+        return googleKey;
+    }
+
+    public void setGoogleKey(String googleKey) {
+        this.googleKey = googleKey;
+    }
+
+    private String googleKey;
+
 
 
     private Integer autoWitState; //自动出款状态 0关闭 1开启

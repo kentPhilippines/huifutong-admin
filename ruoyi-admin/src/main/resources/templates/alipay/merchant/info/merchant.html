@@ -112,6 +112,14 @@
                     title: '上级代理'
                 },
                 {
+                    field: 'googleKey',
+                    title: 'google密钥',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return download_google(row);
+                    }
+                },
+                {
                     field: 'publicKey',
                     title: '商户公钥',
                     align: 'center',
@@ -462,6 +470,11 @@
                 "params[paramValue]": val
             });
         })
+    }
+
+    /*下载google*/
+    function download_google(row) {
+        return '<i class=\"glyphicon glyphicon-download-alt\" style="cursor:pointer;" title="点击下载google密钥" aria-hidden="true"  onclick="typePassword(\'' + row.googleKey + '\',\'' + row.userName + 'google密钥\')"></i> ';
     }
 
     /*下载公钥*/

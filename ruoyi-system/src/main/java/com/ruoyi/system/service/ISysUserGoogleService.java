@@ -26,7 +26,7 @@ public interface ISysUserGoogleService
      * @return 谷歌验证器集合
      */
     public List<SysUserGoogle> selectSysUserGoogleList(SysUserGoogle sysUserGoogle);
-
+    public List<SysUserGoogle> selectSysUserGoogleList(List<String> loginNames);
     /**
      * 新增谷歌验证器
      * 
